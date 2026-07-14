@@ -1,0 +1,1624 @@
+{
+  "id": 3008,
+  "name": "螟蝗战首",
+  "buff": {
+    "name": "末法余烬",
+    "desc": "拥有<color=#f29e38ff>【坚防守备】</color>的敌方单位被<color=#f29e38ff>弱点击破</color>时，使我方全体解除控制状态、立即行动并回复生命值。\\n敌方全体受到的忆灵技伤害提高<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>，战技伤害提高<color=#f29e38ff><unbreak>#2[i]%</unbreak></color>。",
+    "param": [
+      0.25,
+      0.15
+    ]
+  },
+  "buff_list1": [
+    {
+      "name": "智圆行方",
+      "desc": "我方队伍中存在智识命途的角色时，我方全体全属性抗性穿透提高<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>。",
+      "param": [
+        0.15
+      ]
+    },
+    {
+      "name": "石破天惊",
+      "desc": "我方全体造成的终结技伤害提高<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>，效果抵抗提高<color=#f29e38ff><unbreak>#2[i]%</unbreak></color>。",
+      "param": [
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "name": "破釜沉舟",
+      "desc": "我方目标消耗自身生命值后，造成的伤害提高<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>，持续<color=#f29e38ff><unbreak>#2[i]</unbreak></color>回合。",
+      "param": [
+        0.55,
+        3
+      ]
+    }
+  ],
+  "buff_list2": [
+    {
+      "name": "雷厉风行",
+      "desc": "我方目标击破敌方目标弱点时，使我方全体目标速度提高<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>，持续<color=#f29e38ff><unbreak>#2[i]</unbreak></color>回合。",
+      "param": [
+        0.2,
+        2
+      ]
+    },
+    {
+      "name": "枯木逢春",
+      "desc": "任意我方目标被消耗生命值后，回复<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>的消耗生命值，每回合最多通过该方式回复<color=#f29e38ff><unbreak>#2[i]%</unbreak></color>生命值。",
+      "param": [
+        0.6,
+        0.5
+      ]
+    },
+    {
+      "name": "追亡逐北",
+      "desc": "我方目标造成的追加攻击伤害提高<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>，对弱点击破状态下的敌方目标额外提高<color=#f29e38ff><unbreak>#2[i]%</unbreak></color>。",
+      "param": [
+        0.3,
+        0.3
+      ]
+    }
+  ],
+  "buff_list3": [],
+  "begin_time": "",
+  "end_time": "",
+  "level": [
+    {
+      "id": 30081,
+      "name": "螟蝗战首·难度<unbreak>01</unbreak>",
+      "challenge": [
+        {
+          "name": "获得#1分",
+          "param": 4000
+        },
+        {
+          "name": "获得#1分",
+          "param": 5200
+        },
+        {
+          "name": "获得#1分",
+          "param": 6600
+        }
+      ],
+      "damage_type1": [
+        "Physical",
+        "Ice",
+        "Quantum",
+        "Imaginary"
+      ],
+      "damage_type2": [
+        "Physical",
+        "Fire",
+        "Wind",
+        "Quantum"
+      ],
+      "maze_group_id1": 3,
+      "maze_group_id2": 7,
+      "boss_monster_id1": 802501101,
+      "boss_monster_id2": 203401401,
+      "boss_monster_id1_skill_list": [
+        802501101,
+        802501102,
+        802501103,
+        802501104,
+        802501105,
+        802501106,
+        802501107,
+        802501108,
+        802501109,
+        802501110,
+        802501111,
+        802501112,
+        802501113,
+        802501114,
+        802501115,
+        802501116
+      ],
+      "boss_monster_id2_skill_list": [
+        203401401,
+        203401402,
+        203401403,
+        203401404,
+        203401405,
+        203401406,
+        203401407,
+        203401408,
+        203401409,
+        203401410,
+        203401411,
+        203401412,
+        203401413,
+        203401414
+      ],
+      "boss_monster_config1": {
+        "difficulty": 1,
+        "difficulty_list": [
+          1,
+          1,
+          3,
+          4
+        ],
+        "tag_list": [
+          {
+            "name": "坚防守备",
+            "desc": "首领幻影受到的伤害降低<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>。<color=#f29e38ff>弱点击破</color>后，行动额外延后，受到的伤害提高<color=#f29e38ff><unbreak>#2[i]%</unbreak></color>。",
+            "param": [
+              0.5,
+              1,
+              1.5
+            ],
+            "skill_id": 300402105,
+            "param_fix": [
+              0.5,
+              1,
+              1.5,
+              1
+            ],
+            "child": []
+          },
+          {
+            "name": "虫卵分裂",
+            "desc": "首领幻影每回合结束时获得一定数量的<color=#f29e38ff><u>虫卵</u></color>。首领幻影可以消耗虫卵强化虫群召唤物，使其获得1层【生长激素】。",
+            "param": [],
+            "skill_id": null,
+            "param_fix": [],
+            "child": [
+              {
+                "name": "虫卵",
+                "desc": "首领幻影每回合结束时获得一定数量的虫卵。首领幻影可以消耗虫卵强化虫群召唤物，使其获得1层【生长激素】。",
+                "param": []
+              }
+            ]
+          },
+          {
+            "name": "激素分泌",
+            "desc": "首领幻影每召唤一定数量的虫群召唤物，其召唤的下一只召唤物将自带1层【<color=#f29e38ff><u>生长激素</u></color>】。",
+            "param": [],
+            "skill_id": null,
+            "param_fix": [],
+            "child": [
+              {
+                "name": "生长激素",
+                "desc": "每层【生长激素】提高一定的攻击力，最高可叠加3层。叠加到3层时还将为虫群召唤物解锁额外能力。",
+                "param": []
+              }
+            ]
+          },
+          {
+            "name": "虫卵爆发",
+            "desc": "首领幻影每回合结束时和通过【筑巢育卵】获得的虫卵数量提高。",
+            "param": [],
+            "skill_id": null,
+            "param_fix": [],
+            "child": []
+          }
+        ],
+        "difficulty_guide_list": [
+          {
+            "desc": "首领幻影受到的伤害降低<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>。<color=#f29e38ff>弱点击破</color>后，行动额外延后，受到的伤害提高<color=#f29e38ff><unbreak>#2[i]%</unbreak></color>。",
+            "param": [
+              0.5,
+              1,
+              1.5
+            ],
+            "skill_id": 300402105,
+            "param_fix": [
+              0.5,
+              1,
+              1.5,
+              1
+            ]
+          },
+          {
+            "desc": "首领幻影每回合结束时获得一定数量的<color=#f29e38ff>【虫卵】</color>，受到<color=#f29e38ff>【蛰亡语】或【蚀亡语】</color>攻击时，会损失1点虫卵，并且会受到更高的伤害。",
+            "param": [],
+            "skill_id": null,
+            "param_fix": []
+          },
+          {
+            "desc": "首领幻影可以消耗【虫卵】强化虫群召唤物，使其获得1层<color=#f29e38ff>【生长激素】</color>，每层使攻击力提高，达到3层时获得额外强化。",
+            "param": [],
+            "skill_id": null,
+            "param_fix": []
+          }
+        ],
+        "text_guide_list": [
+          "优先<color=#f29e38ff>消灭召唤物</color>，利用召唤物的<color=#f29e38ff>【蛰亡语】或【蚀亡语】</color>攻击削减首领幻影的虫卵和韧性。",
+          "使用具有<color=#f29e38ff>群攻</color>能力的技能，在消灭召唤物的同时攻击首领幻影。",
+          "当我方陷入<color=#f29e38ff>量子纠缠或者怒噪</color>状态时，使用技能<color=#f29e38ff>解除异常状态</color>。"
+        ],
+        "phase_list": [
+          {
+            "name": "阶段一：初入虫巢",
+            "desc": "首领幻影每回合结束时获得一定数量的虫卵。首领幻影可以消耗虫卵强化虫群召唤物，使其获得1层【生长激素】。",
+            "answer": "应对策略：在首领幻影拥有虫卵时，优先消灭召唤物，利用召唤物的【蛰亡语】或【蚀亡语】攻击削减首领幻影的虫卵。",
+            "difficulty": 1,
+            "skill_list": [
+              100911,
+              100912
+            ]
+          },
+          {
+            "name": "阶段二：厄运虫灾",
+            "desc": "首领幻影的【虫海吞噬】触发时会召唤更多的召唤物，并会召唤【次蛰虫】。",
+            "answer": "应对策略：优先消灭【次蛰虫】，防止受到【引爆扩散】的攻击而陷入怒噪状态。",
+            "difficulty": 1,
+            "skill_list": [
+              100921,
+              100922
+            ]
+          }
+        ]
+      },
+      "boss_monster_config2": {
+        "difficulty": 1,
+        "difficulty_list": [
+          1,
+          1,
+          3,
+          4
+        ],
+        "tag_list": [
+          {
+            "name": "坚防守备",
+            "desc": "首领幻影受到的伤害降低<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>。<color=#f29e38ff>弱点击破</color>后，行动额外延后，受到的伤害提高<color=#f29e38ff><unbreak>#2[i]%</unbreak></color>。",
+            "param": [
+              0.5,
+              1,
+              1.5
+            ],
+            "skill_id": 203401410,
+            "param_fix": [
+              0.5,
+              1,
+              1.5
+            ],
+            "child": []
+          },
+          {
+            "name": "宁枉勿纵",
+            "desc": "首领幻影在施放【裂地三舍，寸草不留】时，将会消灭其他所有狼卒。",
+            "param": [],
+            "skill_id": null,
+            "param_fix": [],
+            "child": []
+          },
+          {
+            "name": "狼顾鸱张",
+            "desc": "首领幻影在进入第二阶段后，【孤战】期间每回合可再次行动。",
+            "param": [],
+            "skill_id": null,
+            "param_fix": [],
+            "child": []
+          },
+          {
+            "name": "至死方休",
+            "desc": "首领幻影在进入【孤战】后，受到的伤害额外降低<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>。",
+            "param": [
+              0.6
+            ],
+            "skill_id": 203401413,
+            "param_fix": [
+              0.15
+            ],
+            "child": []
+          }
+        ],
+        "difficulty_guide_list": [
+          {
+            "desc": "首领幻影受到的伤害降低<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>。<color=#f29e38ff>弱点击破</color>后，行动额外延后，受到的伤害提高<color=#f29e38ff><unbreak>#2[i]%</unbreak></color>。",
+            "param": [
+              0.5,
+              1,
+              1.5
+            ],
+            "skill_id": 203401410,
+            "param_fix": [
+              0.5,
+              1,
+              1.5
+            ]
+          },
+          {
+            "desc": "首领幻影进入【噬月】状态时，会解除弱点保护，我方需要选择1名最强的角色与首领幻影进行【孤战】，【孤战】期间除被选择的角色及其召唤的目标外，其他我方目标处于离场状态。",
+            "param": [],
+            "skill_id": null,
+            "param_fix": []
+          },
+          {
+            "desc": "我方在击杀敌方狼卒时，会获得【血涌】，进入【孤战】的角色和召唤的目标会根据【血涌】层数获得强化。",
+            "param": [],
+            "skill_id": null,
+            "param_fix": []
+          }
+        ],
+        "text_guide_list": [
+          "在首领幻影尚未进入【噬月】状态时，优先消灭狼卒，为我方提供【血涌】并使首领幻影快速进入【噬月】状态。",
+          "在首领幻影即将进入【噬月】状态时，保存实力以应对【孤战】。",
+          "在进行【孤战】时，若选择的我方角色存在召唤的目标，召唤的目标将一同进入【孤战】。"
+        ],
+        "phase_list": [
+          {
+            "name": "阶段一：风雷激荡",
+            "desc": "首领幻影进入【噬月】状态时，我方需要选择1名最强的角色与首领幻影进行【孤战】。",
+            "answer": "应对策略：在首领幻影进入【噬月】状态前，尽可能击杀狼卒以获得强化。",
+            "difficulty": 1,
+            "skill_list": [
+              101011,
+              101012
+            ]
+          },
+          {
+            "name": "阶段二：吞天噬月",
+            "desc": "首领幻影的技能会对狼卒造成伤害，且进入【噬月】状态时会获得额外强化。",
+            "answer": "应对策略：在首领幻影行动前击杀狼卒，防止狼卒被首领幻影消灭。",
+            "difficulty": 1,
+            "skill_list": [
+              101021
+            ]
+          }
+        ]
+      },
+      "event_id_list1": [
+        {
+          "stage_id": 420251,
+          "stage_type": "Challenge",
+          "stage_name": 16651606798498340272,
+          "hard_level_group": 1,
+          "level": 60,
+          "elite_group": 701,
+          "level_graph_path": "Config/Level/StageCommonTemplate.json",
+          "stage_ability_config": [],
+          "battle_scoring_group": 902,
+          "sub_level_graphs": [],
+          "stage_config_data": [
+            {
+              "jdkamoanicm": "_Wave",
+              "mojjbfbkbnc": "1"
+            },
+            {
+              "jdkamoanicm": "_IsEliteBattle",
+              "mojjbfbkbnc": "1"
+            },
+            {
+              "jdkamoanicm": "_BGM",
+              "mojjbfbkbnc": "State_Herta_Space_Station_Combat_Swarm"
+            },
+            {
+              "jdkamoanicm": "_BindingMazeBuff",
+              "mojjbfbkbnc": "3110008"
+            }
+          ],
+          "monster_list": [
+            {
+              "monster0": 802501101
+            }
+          ],
+          "level_lose_condition": [
+            "[CDT_WaitCustomString:Level_SpecialLose]"
+          ],
+          "level_win_condition": [
+            "[CDT_WaitCustomString:Level_SpecialWin]"
+          ],
+          "forbid_exit_battle": true,
+          "monster_warning_ratio": 1,
+          "trial_avatar_list": []
+        }
+      ],
+      "event_id_list2": [
+        {
+          "stage_id": 420241,
+          "stage_type": "Challenge",
+          "stage_name": 12811059761001697875,
+          "hard_level_group": 1,
+          "level": 60,
+          "elite_group": 701,
+          "level_graph_path": "Config/Level/StageCommonTemplate.json",
+          "stage_ability_config": [],
+          "battle_scoring_group": 902,
+          "sub_level_graphs": [],
+          "stage_config_data": [
+            {
+              "jdkamoanicm": "_Wave",
+              "mojjbfbkbnc": "1"
+            },
+            {
+              "jdkamoanicm": "_IsEliteBattle",
+              "mojjbfbkbnc": "1"
+            },
+            {
+              "jdkamoanicm": "_BGM",
+              "mojjbfbkbnc": "State_Xianzhou_Combat_LycanKing"
+            },
+            {
+              "jdkamoanicm": "_BindingMazeBuff",
+              "mojjbfbkbnc": "3110008"
+            }
+          ],
+          "monster_list": [
+            {
+              "monster0": 203401401
+            }
+          ],
+          "level_lose_condition": [
+            "[CDT_WaitCustomString:Level_SpecialLose]"
+          ],
+          "level_win_condition": [
+            "[CDT_WaitCustomString:Level_SpecialWin]"
+          ],
+          "forbid_exit_battle": true,
+          "monster_warning_ratio": 1,
+          "trial_avatar_list": []
+        }
+      ]
+    },
+    {
+      "id": 30082,
+      "name": "螟蝗战首·难度<unbreak>02</unbreak>",
+      "challenge": [
+        {
+          "name": "获得#1分",
+          "param": 4000
+        },
+        {
+          "name": "获得#1分",
+          "param": 5200
+        },
+        {
+          "name": "获得#1分",
+          "param": 6600
+        }
+      ],
+      "damage_type1": [
+        "Physical",
+        "Ice",
+        "Quantum",
+        "Imaginary"
+      ],
+      "damage_type2": [
+        "Physical",
+        "Fire",
+        "Wind",
+        "Quantum"
+      ],
+      "maze_group_id1": 3,
+      "maze_group_id2": 7,
+      "boss_monster_id1": 802501102,
+      "boss_monster_id2": 203401402,
+      "boss_monster_id1_skill_list": [
+        802501101,
+        802501102,
+        802501103,
+        802501104,
+        802501105,
+        802501106,
+        802501107,
+        802501108,
+        802501109,
+        802501110,
+        802501111,
+        802501112,
+        802501113,
+        802501114,
+        802501115,
+        802501116
+      ],
+      "boss_monster_id2_skill_list": [
+        203401401,
+        203401402,
+        203401403,
+        203401404,
+        203401405,
+        203401406,
+        203401407,
+        203401408,
+        203401409,
+        203401410,
+        203401411,
+        203401412,
+        203401413,
+        203401414
+      ],
+      "boss_monster_config1": {
+        "difficulty": 2,
+        "difficulty_list": [
+          1,
+          1,
+          3,
+          4
+        ],
+        "tag_list": [
+          {
+            "name": "坚防守备",
+            "desc": "首领幻影受到的伤害降低<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>。<color=#f29e38ff>弱点击破</color>后，行动额外延后，受到的伤害提高<color=#f29e38ff><unbreak>#2[i]%</unbreak></color>。",
+            "param": [
+              0.5,
+              1,
+              1.5
+            ],
+            "skill_id": 300402105,
+            "param_fix": [
+              0.5,
+              1,
+              1.5,
+              1
+            ],
+            "child": []
+          },
+          {
+            "name": "虫卵分裂",
+            "desc": "首领幻影每回合结束时获得一定数量的<color=#f29e38ff><u>虫卵</u></color>。首领幻影可以消耗虫卵强化虫群召唤物，使其获得1层【生长激素】。",
+            "param": [],
+            "skill_id": null,
+            "param_fix": [],
+            "child": [
+              {
+                "name": "虫卵",
+                "desc": "首领幻影每回合结束时获得一定数量的虫卵。首领幻影可以消耗虫卵强化虫群召唤物，使其获得1层【生长激素】。",
+                "param": []
+              }
+            ]
+          },
+          {
+            "name": "激素分泌",
+            "desc": "首领幻影每召唤一定数量的虫群召唤物，其召唤的下一只召唤物将自带1层【<color=#f29e38ff><u>生长激素</u></color>】。",
+            "param": [],
+            "skill_id": null,
+            "param_fix": [],
+            "child": [
+              {
+                "name": "生长激素",
+                "desc": "每层【生长激素】提高一定的攻击力，最高可叠加3层。叠加到3层时还将为虫群召唤物解锁额外能力。",
+                "param": []
+              }
+            ]
+          },
+          {
+            "name": "虫卵爆发",
+            "desc": "首领幻影每回合结束时和通过【筑巢育卵】获得的虫卵数量提高。",
+            "param": [],
+            "skill_id": null,
+            "param_fix": [],
+            "child": []
+          }
+        ],
+        "difficulty_guide_list": [
+          {
+            "desc": "首领幻影受到的伤害降低<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>。<color=#f29e38ff>弱点击破</color>后，行动额外延后，受到的伤害提高<color=#f29e38ff><unbreak>#2[i]%</unbreak></color>。",
+            "param": [
+              0.5,
+              1,
+              1.5
+            ],
+            "skill_id": 300402105,
+            "param_fix": [
+              0.5,
+              1,
+              1.5,
+              1
+            ]
+          },
+          {
+            "desc": "首领幻影每回合结束时获得一定数量的<color=#f29e38ff>【虫卵】</color>，受到<color=#f29e38ff>【蛰亡语】或【蚀亡语】</color>攻击时，会损失1点虫卵，并且会受到更高的伤害。",
+            "param": [],
+            "skill_id": null,
+            "param_fix": []
+          },
+          {
+            "desc": "首领幻影可以消耗【虫卵】强化虫群召唤物，使其获得1层<color=#f29e38ff>【生长激素】</color>，每层使攻击力提高，达到3层时获得额外强化。",
+            "param": [],
+            "skill_id": null,
+            "param_fix": []
+          }
+        ],
+        "text_guide_list": [
+          "优先<color=#f29e38ff>消灭召唤物</color>，利用召唤物的<color=#f29e38ff>【蛰亡语】或【蚀亡语】</color>攻击削减首领幻影的虫卵和韧性。",
+          "使用具有<color=#f29e38ff>群攻</color>能力的技能，在消灭召唤物的同时攻击首领幻影。",
+          "当我方陷入<color=#f29e38ff>量子纠缠或者怒噪</color>状态时，使用技能<color=#f29e38ff>解除异常状态</color>。"
+        ],
+        "phase_list": [
+          {
+            "name": "阶段一：初入虫巢",
+            "desc": "首领幻影每回合结束时获得一定数量的虫卵。首领幻影可以消耗虫卵强化虫群召唤物，使其获得1层【生长激素】。",
+            "answer": "应对策略：在首领幻影拥有虫卵时，优先消灭召唤物，利用召唤物的【蛰亡语】或【蚀亡语】攻击削减首领幻影的虫卵。",
+            "difficulty": 1,
+            "skill_list": [
+              100911,
+              100912
+            ]
+          },
+          {
+            "name": "阶段二：厄运虫灾",
+            "desc": "首领幻影的【虫海吞噬】触发时会召唤更多的召唤物，并会召唤【次蛰虫】。",
+            "answer": "应对策略：优先消灭【次蛰虫】，防止受到【引爆扩散】的攻击而陷入怒噪状态。",
+            "difficulty": 1,
+            "skill_list": [
+              100921,
+              100922
+            ]
+          }
+        ]
+      },
+      "boss_monster_config2": {
+        "difficulty": 2,
+        "difficulty_list": [
+          1,
+          1,
+          3,
+          4
+        ],
+        "tag_list": [
+          {
+            "name": "坚防守备",
+            "desc": "首领幻影受到的伤害降低<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>。<color=#f29e38ff>弱点击破</color>后，行动额外延后，受到的伤害提高<color=#f29e38ff><unbreak>#2[i]%</unbreak></color>。",
+            "param": [
+              0.5,
+              1,
+              1.5
+            ],
+            "skill_id": 203401410,
+            "param_fix": [
+              0.5,
+              1,
+              1.5
+            ],
+            "child": []
+          },
+          {
+            "name": "宁枉勿纵",
+            "desc": "首领幻影在施放【裂地三舍，寸草不留】时，将会消灭其他所有狼卒。",
+            "param": [],
+            "skill_id": null,
+            "param_fix": [],
+            "child": []
+          },
+          {
+            "name": "狼顾鸱张",
+            "desc": "首领幻影在进入第二阶段后，【孤战】期间每回合可再次行动。",
+            "param": [],
+            "skill_id": null,
+            "param_fix": [],
+            "child": []
+          },
+          {
+            "name": "至死方休",
+            "desc": "首领幻影在进入【孤战】后，受到的伤害额外降低<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>。",
+            "param": [
+              0.6
+            ],
+            "skill_id": 203401413,
+            "param_fix": [
+              0.15
+            ],
+            "child": []
+          }
+        ],
+        "difficulty_guide_list": [
+          {
+            "desc": "首领幻影受到的伤害降低<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>。<color=#f29e38ff>弱点击破</color>后，行动额外延后，受到的伤害提高<color=#f29e38ff><unbreak>#2[i]%</unbreak></color>。",
+            "param": [
+              0.5,
+              1,
+              1.5
+            ],
+            "skill_id": 203401410,
+            "param_fix": [
+              0.5,
+              1,
+              1.5
+            ]
+          },
+          {
+            "desc": "首领幻影进入【噬月】状态时，会解除弱点保护，我方需要选择1名最强的角色与首领幻影进行【孤战】，【孤战】期间除被选择的角色及其召唤的目标外，其他我方目标处于离场状态。",
+            "param": [],
+            "skill_id": null,
+            "param_fix": []
+          },
+          {
+            "desc": "我方在击杀敌方狼卒时，会获得【血涌】，进入【孤战】的角色和召唤的目标会根据【血涌】层数获得强化。",
+            "param": [],
+            "skill_id": null,
+            "param_fix": []
+          }
+        ],
+        "text_guide_list": [
+          "在首领幻影尚未进入【噬月】状态时，优先消灭狼卒，为我方提供【血涌】并使首领幻影快速进入【噬月】状态。",
+          "在首领幻影即将进入【噬月】状态时，保存实力以应对【孤战】。",
+          "在进行【孤战】时，若选择的我方角色存在召唤的目标，召唤的目标将一同进入【孤战】。"
+        ],
+        "phase_list": [
+          {
+            "name": "阶段一：风雷激荡",
+            "desc": "首领幻影进入【噬月】状态时，我方需要选择1名最强的角色与首领幻影进行【孤战】。",
+            "answer": "应对策略：在首领幻影进入【噬月】状态前，尽可能击杀狼卒以获得强化。",
+            "difficulty": 1,
+            "skill_list": [
+              101011,
+              101012
+            ]
+          },
+          {
+            "name": "阶段二：吞天噬月",
+            "desc": "首领幻影的技能会对狼卒造成伤害，且进入【噬月】状态时会获得额外强化。",
+            "answer": "应对策略：在首领幻影行动前击杀狼卒，防止狼卒被首领幻影消灭。",
+            "difficulty": 1,
+            "skill_list": [
+              101021
+            ]
+          }
+        ]
+      },
+      "event_id_list1": [
+        {
+          "stage_id": 420252,
+          "stage_type": "Challenge",
+          "stage_name": 16651606798498340272,
+          "hard_level_group": 1,
+          "level": 70,
+          "elite_group": 702,
+          "level_graph_path": "Config/Level/StageCommonTemplate.json",
+          "stage_ability_config": [],
+          "battle_scoring_group": 902,
+          "sub_level_graphs": [],
+          "stage_config_data": [
+            {
+              "jdkamoanicm": "_Wave",
+              "mojjbfbkbnc": "1"
+            },
+            {
+              "jdkamoanicm": "_IsEliteBattle",
+              "mojjbfbkbnc": "1"
+            },
+            {
+              "jdkamoanicm": "_BGM",
+              "mojjbfbkbnc": "State_Herta_Space_Station_Combat_Swarm"
+            },
+            {
+              "jdkamoanicm": "_BindingMazeBuff",
+              "mojjbfbkbnc": "3110008"
+            }
+          ],
+          "monster_list": [
+            {
+              "monster0": 802501102
+            }
+          ],
+          "level_lose_condition": [
+            "[CDT_WaitCustomString:Level_SpecialLose]"
+          ],
+          "level_win_condition": [
+            "[CDT_WaitCustomString:Level_SpecialWin]"
+          ],
+          "forbid_exit_battle": true,
+          "monster_warning_ratio": 1,
+          "trial_avatar_list": []
+        }
+      ],
+      "event_id_list2": [
+        {
+          "stage_id": 420242,
+          "stage_type": "Challenge",
+          "stage_name": 12811059761001697875,
+          "hard_level_group": 1,
+          "level": 70,
+          "elite_group": 702,
+          "level_graph_path": "Config/Level/StageCommonTemplate.json",
+          "stage_ability_config": [],
+          "battle_scoring_group": 902,
+          "sub_level_graphs": [],
+          "stage_config_data": [
+            {
+              "jdkamoanicm": "_Wave",
+              "mojjbfbkbnc": "1"
+            },
+            {
+              "jdkamoanicm": "_IsEliteBattle",
+              "mojjbfbkbnc": "1"
+            },
+            {
+              "jdkamoanicm": "_BGM",
+              "mojjbfbkbnc": "State_Xianzhou_Combat_LycanKing"
+            },
+            {
+              "jdkamoanicm": "_BindingMazeBuff",
+              "mojjbfbkbnc": "3110008"
+            }
+          ],
+          "monster_list": [
+            {
+              "monster0": 203401402
+            }
+          ],
+          "level_lose_condition": [
+            "[CDT_WaitCustomString:Level_SpecialLose]"
+          ],
+          "level_win_condition": [
+            "[CDT_WaitCustomString:Level_SpecialWin]"
+          ],
+          "forbid_exit_battle": true,
+          "monster_warning_ratio": 1,
+          "trial_avatar_list": []
+        }
+      ]
+    },
+    {
+      "id": 30083,
+      "name": "螟蝗战首·难度<unbreak>03</unbreak>",
+      "challenge": [
+        {
+          "name": "获得#1分",
+          "param": 4000
+        },
+        {
+          "name": "获得#1分",
+          "param": 5200
+        },
+        {
+          "name": "获得#1分",
+          "param": 6600
+        }
+      ],
+      "damage_type1": [
+        "Physical",
+        "Ice",
+        "Quantum",
+        "Imaginary"
+      ],
+      "damage_type2": [
+        "Physical",
+        "Fire",
+        "Wind",
+        "Quantum"
+      ],
+      "maze_group_id1": 3,
+      "maze_group_id2": 7,
+      "boss_monster_id1": 802501103,
+      "boss_monster_id2": 203401403,
+      "boss_monster_id1_skill_list": [
+        802501101,
+        802501102,
+        802501103,
+        802501104,
+        802501105,
+        802501106,
+        802501107,
+        802501108,
+        802501109,
+        802501110,
+        802501111,
+        802501112,
+        802501113,
+        802501114,
+        802501115,
+        802501116
+      ],
+      "boss_monster_id2_skill_list": [
+        203401401,
+        203401402,
+        203401403,
+        203401404,
+        203401405,
+        203401406,
+        203401407,
+        203401408,
+        203401409,
+        203401410,
+        203401411,
+        203401412,
+        203401413,
+        203401414
+      ],
+      "boss_monster_config1": {
+        "difficulty": 3,
+        "difficulty_list": [
+          1,
+          1,
+          3,
+          4
+        ],
+        "tag_list": [
+          {
+            "name": "坚防守备",
+            "desc": "首领幻影受到的伤害降低<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>。<color=#f29e38ff>弱点击破</color>后，行动额外延后，受到的伤害提高<color=#f29e38ff><unbreak>#2[i]%</unbreak></color>。",
+            "param": [
+              0.5,
+              1,
+              1.5
+            ],
+            "skill_id": 300402105,
+            "param_fix": [
+              0.5,
+              1,
+              1.5,
+              1
+            ],
+            "child": []
+          },
+          {
+            "name": "虫卵分裂",
+            "desc": "首领幻影每回合结束时获得一定数量的<color=#f29e38ff><u>虫卵</u></color>。首领幻影可以消耗虫卵强化虫群召唤物，使其获得1层【生长激素】。",
+            "param": [],
+            "skill_id": null,
+            "param_fix": [],
+            "child": [
+              {
+                "name": "虫卵",
+                "desc": "首领幻影每回合结束时获得一定数量的虫卵。首领幻影可以消耗虫卵强化虫群召唤物，使其获得1层【生长激素】。",
+                "param": []
+              }
+            ]
+          },
+          {
+            "name": "激素分泌",
+            "desc": "首领幻影每召唤一定数量的虫群召唤物，其召唤的下一只召唤物将自带1层【<color=#f29e38ff><u>生长激素</u></color>】。",
+            "param": [],
+            "skill_id": null,
+            "param_fix": [],
+            "child": [
+              {
+                "name": "生长激素",
+                "desc": "每层【生长激素】提高一定的攻击力，最高可叠加3层。叠加到3层时还将为虫群召唤物解锁额外能力。",
+                "param": []
+              }
+            ]
+          },
+          {
+            "name": "虫卵爆发",
+            "desc": "首领幻影每回合结束时和通过【筑巢育卵】获得的虫卵数量提高。",
+            "param": [],
+            "skill_id": null,
+            "param_fix": [],
+            "child": []
+          }
+        ],
+        "difficulty_guide_list": [
+          {
+            "desc": "首领幻影受到的伤害降低<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>。<color=#f29e38ff>弱点击破</color>后，行动额外延后，受到的伤害提高<color=#f29e38ff><unbreak>#2[i]%</unbreak></color>。",
+            "param": [
+              0.5,
+              1,
+              1.5
+            ],
+            "skill_id": 300402105,
+            "param_fix": [
+              0.5,
+              1,
+              1.5,
+              1
+            ]
+          },
+          {
+            "desc": "首领幻影每回合结束时获得一定数量的<color=#f29e38ff>【虫卵】</color>，受到<color=#f29e38ff>【蛰亡语】或【蚀亡语】</color>攻击时，会损失1点虫卵，并且会受到更高的伤害。",
+            "param": [],
+            "skill_id": null,
+            "param_fix": []
+          },
+          {
+            "desc": "首领幻影可以消耗【虫卵】强化虫群召唤物，使其获得1层<color=#f29e38ff>【生长激素】</color>，每层使攻击力提高，达到3层时获得额外强化。",
+            "param": [],
+            "skill_id": null,
+            "param_fix": []
+          }
+        ],
+        "text_guide_list": [
+          "优先<color=#f29e38ff>消灭召唤物</color>，利用召唤物的<color=#f29e38ff>【蛰亡语】或【蚀亡语】</color>攻击削减首领幻影的虫卵和韧性。",
+          "使用具有<color=#f29e38ff>群攻</color>能力的技能，在消灭召唤物的同时攻击首领幻影。",
+          "当我方陷入<color=#f29e38ff>量子纠缠或者怒噪</color>状态时，使用技能<color=#f29e38ff>解除异常状态</color>。"
+        ],
+        "phase_list": [
+          {
+            "name": "阶段一：初入虫巢",
+            "desc": "首领幻影每回合结束时获得一定数量的虫卵。首领幻影可以消耗虫卵强化虫群召唤物，使其获得1层【生长激素】。",
+            "answer": "应对策略：在首领幻影拥有虫卵时，优先消灭召唤物，利用召唤物的【蛰亡语】或【蚀亡语】攻击削减首领幻影的虫卵。",
+            "difficulty": 1,
+            "skill_list": [
+              100911,
+              100912
+            ]
+          },
+          {
+            "name": "阶段二：厄运虫灾",
+            "desc": "首领幻影的【虫海吞噬】触发时会召唤更多的召唤物，并会召唤【次蛰虫】。",
+            "answer": "应对策略：优先消灭【次蛰虫】，防止受到【引爆扩散】的攻击而陷入怒噪状态。",
+            "difficulty": 1,
+            "skill_list": [
+              100921,
+              100922
+            ]
+          }
+        ]
+      },
+      "boss_monster_config2": {
+        "difficulty": 3,
+        "difficulty_list": [
+          1,
+          1,
+          3,
+          4
+        ],
+        "tag_list": [
+          {
+            "name": "坚防守备",
+            "desc": "首领幻影受到的伤害降低<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>。<color=#f29e38ff>弱点击破</color>后，行动额外延后，受到的伤害提高<color=#f29e38ff><unbreak>#2[i]%</unbreak></color>。",
+            "param": [
+              0.5,
+              1,
+              1.5
+            ],
+            "skill_id": 203401410,
+            "param_fix": [
+              0.5,
+              1,
+              1.5
+            ],
+            "child": []
+          },
+          {
+            "name": "宁枉勿纵",
+            "desc": "首领幻影在施放【裂地三舍，寸草不留】时，将会消灭其他所有狼卒。",
+            "param": [],
+            "skill_id": null,
+            "param_fix": [],
+            "child": []
+          },
+          {
+            "name": "狼顾鸱张",
+            "desc": "首领幻影在进入第二阶段后，【孤战】期间每回合可再次行动。",
+            "param": [],
+            "skill_id": null,
+            "param_fix": [],
+            "child": []
+          },
+          {
+            "name": "至死方休",
+            "desc": "首领幻影在进入【孤战】后，受到的伤害额外降低<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>。",
+            "param": [
+              0.6
+            ],
+            "skill_id": 203401413,
+            "param_fix": [
+              0.15
+            ],
+            "child": []
+          }
+        ],
+        "difficulty_guide_list": [
+          {
+            "desc": "首领幻影受到的伤害降低<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>。<color=#f29e38ff>弱点击破</color>后，行动额外延后，受到的伤害提高<color=#f29e38ff><unbreak>#2[i]%</unbreak></color>。",
+            "param": [
+              0.5,
+              1,
+              1.5
+            ],
+            "skill_id": 203401410,
+            "param_fix": [
+              0.5,
+              1,
+              1.5
+            ]
+          },
+          {
+            "desc": "首领幻影进入【噬月】状态时，会解除弱点保护，我方需要选择1名最强的角色与首领幻影进行【孤战】，【孤战】期间除被选择的角色及其召唤的目标外，其他我方目标处于离场状态。",
+            "param": [],
+            "skill_id": null,
+            "param_fix": []
+          },
+          {
+            "desc": "我方在击杀敌方狼卒时，会获得【血涌】，进入【孤战】的角色和召唤的目标会根据【血涌】层数获得强化。",
+            "param": [],
+            "skill_id": null,
+            "param_fix": []
+          }
+        ],
+        "text_guide_list": [
+          "在首领幻影尚未进入【噬月】状态时，优先消灭狼卒，为我方提供【血涌】并使首领幻影快速进入【噬月】状态。",
+          "在首领幻影即将进入【噬月】状态时，保存实力以应对【孤战】。",
+          "在进行【孤战】时，若选择的我方角色存在召唤的目标，召唤的目标将一同进入【孤战】。"
+        ],
+        "phase_list": [
+          {
+            "name": "阶段一：风雷激荡",
+            "desc": "首领幻影进入【噬月】状态时，我方需要选择1名最强的角色与首领幻影进行【孤战】。",
+            "answer": "应对策略：在首领幻影进入【噬月】状态前，尽可能击杀狼卒以获得强化。",
+            "difficulty": 1,
+            "skill_list": [
+              101011,
+              101012
+            ]
+          },
+          {
+            "name": "阶段二：吞天噬月",
+            "desc": "首领幻影的技能会对狼卒造成伤害，且进入【噬月】状态时会获得额外强化。",
+            "answer": "应对策略：在首领幻影行动前击杀狼卒，防止狼卒被首领幻影消灭。",
+            "difficulty": 1,
+            "skill_list": [
+              101021
+            ]
+          }
+        ]
+      },
+      "event_id_list1": [
+        {
+          "stage_id": 420253,
+          "stage_type": "Challenge",
+          "stage_name": 16651606798498340272,
+          "hard_level_group": 1,
+          "level": 80,
+          "elite_group": 703,
+          "level_graph_path": "Config/Level/StageCommonTemplate.json",
+          "stage_ability_config": [],
+          "battle_scoring_group": 902,
+          "sub_level_graphs": [],
+          "stage_config_data": [
+            {
+              "jdkamoanicm": "_Wave",
+              "mojjbfbkbnc": "1"
+            },
+            {
+              "jdkamoanicm": "_IsEliteBattle",
+              "mojjbfbkbnc": "1"
+            },
+            {
+              "jdkamoanicm": "_BGM",
+              "mojjbfbkbnc": "State_Herta_Space_Station_Combat_Swarm"
+            },
+            {
+              "jdkamoanicm": "_BindingMazeBuff",
+              "mojjbfbkbnc": "3110008"
+            }
+          ],
+          "monster_list": [
+            {
+              "monster0": 802501103
+            }
+          ],
+          "level_lose_condition": [
+            "[CDT_WaitCustomString:Level_SpecialLose]"
+          ],
+          "level_win_condition": [
+            "[CDT_WaitCustomString:Level_SpecialWin]"
+          ],
+          "forbid_exit_battle": true,
+          "monster_warning_ratio": 1,
+          "trial_avatar_list": []
+        }
+      ],
+      "event_id_list2": [
+        {
+          "stage_id": 420243,
+          "stage_type": "Challenge",
+          "stage_name": 12811059761001697875,
+          "hard_level_group": 1,
+          "level": 80,
+          "elite_group": 703,
+          "level_graph_path": "Config/Level/StageCommonTemplate.json",
+          "stage_ability_config": [],
+          "battle_scoring_group": 902,
+          "sub_level_graphs": [],
+          "stage_config_data": [
+            {
+              "jdkamoanicm": "_Wave",
+              "mojjbfbkbnc": "1"
+            },
+            {
+              "jdkamoanicm": "_IsEliteBattle",
+              "mojjbfbkbnc": "1"
+            },
+            {
+              "jdkamoanicm": "_BGM",
+              "mojjbfbkbnc": "State_Xianzhou_Combat_LycanKing"
+            },
+            {
+              "jdkamoanicm": "_BindingMazeBuff",
+              "mojjbfbkbnc": "3110008"
+            }
+          ],
+          "monster_list": [
+            {
+              "monster0": 203401403
+            }
+          ],
+          "level_lose_condition": [
+            "[CDT_WaitCustomString:Level_SpecialLose]"
+          ],
+          "level_win_condition": [
+            "[CDT_WaitCustomString:Level_SpecialWin]"
+          ],
+          "forbid_exit_battle": true,
+          "monster_warning_ratio": 1,
+          "trial_avatar_list": []
+        }
+      ]
+    },
+    {
+      "id": 30084,
+      "name": "螟蝗战首·难度<unbreak>04</unbreak>",
+      "challenge": [
+        {
+          "name": "获得#1分",
+          "param": 4000
+        },
+        {
+          "name": "获得#1分",
+          "param": 5200
+        },
+        {
+          "name": "获得#1分",
+          "param": 6600
+        }
+      ],
+      "damage_type1": [
+        "Physical",
+        "Ice",
+        "Quantum",
+        "Imaginary"
+      ],
+      "damage_type2": [
+        "Physical",
+        "Fire",
+        "Wind",
+        "Quantum"
+      ],
+      "maze_group_id1": 3,
+      "maze_group_id2": 7,
+      "boss_monster_id1": 802501104,
+      "boss_monster_id2": 203401404,
+      "boss_monster_id1_skill_list": [
+        802501101,
+        802501102,
+        802501103,
+        802501104,
+        802501105,
+        802501106,
+        802501107,
+        802501108,
+        802501109,
+        802501110,
+        802501111,
+        802501112,
+        802501113,
+        802501114,
+        802501115,
+        802501116
+      ],
+      "boss_monster_id2_skill_list": [
+        203401401,
+        203401402,
+        203401403,
+        203401404,
+        203401405,
+        203401406,
+        203401407,
+        203401408,
+        203401409,
+        203401410,
+        203401411,
+        203401412,
+        203401413,
+        203401414
+      ],
+      "boss_monster_config1": {
+        "difficulty": 4,
+        "difficulty_list": [
+          1,
+          1,
+          3,
+          4
+        ],
+        "tag_list": [
+          {
+            "name": "坚防守备",
+            "desc": "首领幻影受到的伤害降低<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>。<color=#f29e38ff>弱点击破</color>后，行动额外延后，受到的伤害提高<color=#f29e38ff><unbreak>#2[i]%</unbreak></color>。",
+            "param": [
+              0.5,
+              1,
+              1.5
+            ],
+            "skill_id": 300402105,
+            "param_fix": [
+              0.5,
+              1,
+              1.5,
+              1
+            ],
+            "child": []
+          },
+          {
+            "name": "虫卵分裂",
+            "desc": "首领幻影每回合结束时获得一定数量的<color=#f29e38ff><u>虫卵</u></color>。首领幻影可以消耗虫卵强化虫群召唤物，使其获得1层【生长激素】。",
+            "param": [],
+            "skill_id": null,
+            "param_fix": [],
+            "child": [
+              {
+                "name": "虫卵",
+                "desc": "首领幻影每回合结束时获得一定数量的虫卵。首领幻影可以消耗虫卵强化虫群召唤物，使其获得1层【生长激素】。",
+                "param": []
+              }
+            ]
+          },
+          {
+            "name": "激素分泌",
+            "desc": "首领幻影每召唤一定数量的虫群召唤物，其召唤的下一只召唤物将自带1层【<color=#f29e38ff><u>生长激素</u></color>】。",
+            "param": [],
+            "skill_id": null,
+            "param_fix": [],
+            "child": [
+              {
+                "name": "生长激素",
+                "desc": "每层【生长激素】提高一定的攻击力，最高可叠加3层。叠加到3层时还将为虫群召唤物解锁额外能力。",
+                "param": []
+              }
+            ]
+          },
+          {
+            "name": "虫卵爆发",
+            "desc": "首领幻影每回合结束时和通过【筑巢育卵】获得的虫卵数量提高。",
+            "param": [],
+            "skill_id": null,
+            "param_fix": [],
+            "child": []
+          }
+        ],
+        "difficulty_guide_list": [
+          {
+            "desc": "首领幻影受到的伤害降低<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>。<color=#f29e38ff>弱点击破</color>后，行动额外延后，受到的伤害提高<color=#f29e38ff><unbreak>#2[i]%</unbreak></color>。",
+            "param": [
+              0.5,
+              1,
+              1.5
+            ],
+            "skill_id": 300402105,
+            "param_fix": [
+              0.5,
+              1,
+              1.5,
+              1
+            ]
+          },
+          {
+            "desc": "首领幻影每回合结束时获得一定数量的<color=#f29e38ff>【虫卵】</color>，受到<color=#f29e38ff>【蛰亡语】或【蚀亡语】</color>攻击时，会损失1点虫卵，并且会受到更高的伤害。",
+            "param": [],
+            "skill_id": null,
+            "param_fix": []
+          },
+          {
+            "desc": "首领幻影可以消耗【虫卵】强化虫群召唤物，使其获得1层<color=#f29e38ff>【生长激素】</color>，每层使攻击力提高，达到3层时获得额外强化。",
+            "param": [],
+            "skill_id": null,
+            "param_fix": []
+          }
+        ],
+        "text_guide_list": [
+          "优先<color=#f29e38ff>消灭召唤物</color>，利用召唤物的<color=#f29e38ff>【蛰亡语】或【蚀亡语】</color>攻击削减首领幻影的虫卵和韧性。",
+          "使用具有<color=#f29e38ff>群攻</color>能力的技能，在消灭召唤物的同时攻击首领幻影。",
+          "当我方陷入<color=#f29e38ff>量子纠缠或者怒噪</color>状态时，使用技能<color=#f29e38ff>解除异常状态</color>。"
+        ],
+        "phase_list": [
+          {
+            "name": "阶段一：初入虫巢",
+            "desc": "首领幻影每回合结束时获得一定数量的虫卵。首领幻影可以消耗虫卵强化虫群召唤物，使其获得1层【生长激素】。",
+            "answer": "应对策略：在首领幻影拥有虫卵时，优先消灭召唤物，利用召唤物的【蛰亡语】或【蚀亡语】攻击削减首领幻影的虫卵。",
+            "difficulty": 1,
+            "skill_list": [
+              100911,
+              100912
+            ]
+          },
+          {
+            "name": "阶段二：厄运虫灾",
+            "desc": "首领幻影的【虫海吞噬】触发时会召唤更多的召唤物，并会召唤【次蛰虫】。",
+            "answer": "应对策略：优先消灭【次蛰虫】，防止受到【引爆扩散】的攻击而陷入怒噪状态。",
+            "difficulty": 1,
+            "skill_list": [
+              100921,
+              100922
+            ]
+          }
+        ]
+      },
+      "boss_monster_config2": {
+        "difficulty": 4,
+        "difficulty_list": [
+          1,
+          1,
+          3,
+          4
+        ],
+        "tag_list": [
+          {
+            "name": "坚防守备",
+            "desc": "首领幻影受到的伤害降低<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>。<color=#f29e38ff>弱点击破</color>后，行动额外延后，受到的伤害提高<color=#f29e38ff><unbreak>#2[i]%</unbreak></color>。",
+            "param": [
+              0.5,
+              1,
+              1.5
+            ],
+            "skill_id": 203401410,
+            "param_fix": [
+              0.5,
+              1,
+              1.5
+            ],
+            "child": []
+          },
+          {
+            "name": "宁枉勿纵",
+            "desc": "首领幻影在施放【裂地三舍，寸草不留】时，将会消灭其他所有狼卒。",
+            "param": [],
+            "skill_id": null,
+            "param_fix": [],
+            "child": []
+          },
+          {
+            "name": "狼顾鸱张",
+            "desc": "首领幻影在进入第二阶段后，【孤战】期间每回合可再次行动。",
+            "param": [],
+            "skill_id": null,
+            "param_fix": [],
+            "child": []
+          },
+          {
+            "name": "至死方休",
+            "desc": "首领幻影在进入【孤战】后，受到的伤害额外降低<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>。",
+            "param": [
+              0.6
+            ],
+            "skill_id": 203401413,
+            "param_fix": [
+              0.15
+            ],
+            "child": []
+          }
+        ],
+        "difficulty_guide_list": [
+          {
+            "desc": "首领幻影受到的伤害降低<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>。<color=#f29e38ff>弱点击破</color>后，行动额外延后，受到的伤害提高<color=#f29e38ff><unbreak>#2[i]%</unbreak></color>。",
+            "param": [
+              0.5,
+              1,
+              1.5
+            ],
+            "skill_id": 203401410,
+            "param_fix": [
+              0.5,
+              1,
+              1.5
+            ]
+          },
+          {
+            "desc": "首领幻影进入【噬月】状态时，会解除弱点保护，我方需要选择1名最强的角色与首领幻影进行【孤战】，【孤战】期间除被选择的角色及其召唤的目标外，其他我方目标处于离场状态。",
+            "param": [],
+            "skill_id": null,
+            "param_fix": []
+          },
+          {
+            "desc": "我方在击杀敌方狼卒时，会获得【血涌】，进入【孤战】的角色和召唤的目标会根据【血涌】层数获得强化。",
+            "param": [],
+            "skill_id": null,
+            "param_fix": []
+          }
+        ],
+        "text_guide_list": [
+          "在首领幻影尚未进入【噬月】状态时，优先消灭狼卒，为我方提供【血涌】并使首领幻影快速进入【噬月】状态。",
+          "在首领幻影即将进入【噬月】状态时，保存实力以应对【孤战】。",
+          "在进行【孤战】时，若选择的我方角色存在召唤的目标，召唤的目标将一同进入【孤战】。"
+        ],
+        "phase_list": [
+          {
+            "name": "阶段一：风雷激荡",
+            "desc": "首领幻影进入【噬月】状态时，我方需要选择1名最强的角色与首领幻影进行【孤战】。",
+            "answer": "应对策略：在首领幻影进入【噬月】状态前，尽可能击杀狼卒以获得强化。",
+            "difficulty": 1,
+            "skill_list": [
+              101011,
+              101012
+            ]
+          },
+          {
+            "name": "阶段二：吞天噬月",
+            "desc": "首领幻影的技能会对狼卒造成伤害，且进入【噬月】状态时会获得额外强化。",
+            "answer": "应对策略：在首领幻影行动前击杀狼卒，防止狼卒被首领幻影消灭。",
+            "difficulty": 1,
+            "skill_list": [
+              101021
+            ]
+          }
+        ]
+      },
+      "event_id_list1": [
+        {
+          "stage_id": 420254,
+          "stage_type": "Challenge",
+          "stage_name": 16651606798498340272,
+          "hard_level_group": 1,
+          "level": 90,
+          "elite_group": 82,
+          "level_graph_path": "Config/Level/StageCommonTemplate.json",
+          "stage_ability_config": [],
+          "battle_scoring_group": 902,
+          "sub_level_graphs": [],
+          "stage_config_data": [
+            {
+              "jdkamoanicm": "_Wave",
+              "mojjbfbkbnc": "1"
+            },
+            {
+              "jdkamoanicm": "_IsEliteBattle",
+              "mojjbfbkbnc": "1"
+            },
+            {
+              "jdkamoanicm": "_BGM",
+              "mojjbfbkbnc": "State_Herta_Space_Station_Combat_Swarm"
+            },
+            {
+              "jdkamoanicm": "_BindingMazeBuff",
+              "mojjbfbkbnc": "3110008"
+            }
+          ],
+          "monster_list": [
+            {
+              "monster0": 802501104
+            }
+          ],
+          "level_lose_condition": [
+            "[CDT_WaitCustomString:Level_SpecialLose]"
+          ],
+          "level_win_condition": [
+            "[CDT_WaitCustomString:Level_SpecialWin]"
+          ],
+          "forbid_exit_battle": true,
+          "monster_warning_ratio": 1,
+          "trial_avatar_list": []
+        }
+      ],
+      "event_id_list2": [
+        {
+          "stage_id": 420244,
+          "stage_type": "Challenge",
+          "stage_name": 12811059761001697875,
+          "hard_level_group": 1,
+          "level": 90,
+          "elite_group": 704,
+          "level_graph_path": "Config/Level/StageCommonTemplate.json",
+          "stage_ability_config": [],
+          "battle_scoring_group": 902,
+          "sub_level_graphs": [],
+          "stage_config_data": [
+            {
+              "jdkamoanicm": "_Wave",
+              "mojjbfbkbnc": "1"
+            },
+            {
+              "jdkamoanicm": "_IsEliteBattle",
+              "mojjbfbkbnc": "1"
+            },
+            {
+              "jdkamoanicm": "_BGM",
+              "mojjbfbkbnc": "State_Xianzhou_Combat_LycanKing"
+            },
+            {
+              "jdkamoanicm": "_BindingMazeBuff",
+              "mojjbfbkbnc": "3110008"
+            }
+          ],
+          "monster_list": [
+            {
+              "monster0": 203401404
+            }
+          ],
+          "level_lose_condition": [
+            "[CDT_WaitCustomString:Level_SpecialLose]"
+          ],
+          "level_win_condition": [
+            "[CDT_WaitCustomString:Level_SpecialWin]"
+          ],
+          "forbid_exit_battle": true,
+          "monster_warning_ratio": 1,
+          "trial_avatar_list": []
+        }
+      ]
+    }
+  ]
+}

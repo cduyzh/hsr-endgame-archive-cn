@@ -1,0 +1,1863 @@
+{
+  "id": 2015,
+  "name": "叙事分析",
+  "buff": {
+    "name": null,
+    "desc": null,
+    "param": []
+  },
+  "option": [
+    {
+      "name": "共相",
+      "desc": "「战意汹涌」期间，我方全体速度提高<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>，消耗所有【回音】攻击时恢复1个战技点。",
+      "param": [
+        0.4,
+        3
+      ]
+    },
+    {
+      "name": "悖论",
+      "desc": "我方全体攻击没有对应属性弱点的敌人也能削减韧性，效果等同于原削韧值的<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>，无法与其他无视弱点属性削韧效果叠加。「战意汹涌」期间，敌方目标受到的击破伤害提高<color=#f29e38ff><unbreak>#2[i]%</unbreak></color>。",
+      "param": [
+        0.5,
+        0.3,
+        3
+      ]
+    },
+    {
+      "name": "神谱",
+      "desc": "消耗【回音】造成伤害后，我方全体造成的伤害提高<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>，持续<color=#f29e38ff><unbreak>#2[i]</unbreak></color>回合。",
+      "param": [
+        0.6,
+        1
+      ]
+    }
+  ],
+  "sub_option": [
+    {
+      "name": "终结技攻击",
+      "desc": "我方施放终结技攻击敌方目标后，每击中1个敌方目标，使我方额外积累<color=#f29e38ff><unbreak>#1[i]</unbreak></color>点「战意值」。",
+      "param": [
+        5
+      ]
+    },
+    {
+      "name": "战熄潮平",
+      "desc": "敌方目标被任意单位消灭后，为我方全体附上1层【回音】。",
+      "param": []
+    },
+    {
+      "name": "战意汹涌",
+      "desc": "进入「战意汹涌」时，消耗所有【回音】，每层【回音】对随机敌方目标造成1次固定数值的伤害。「战意汹涌」期间，敌方目标受到的伤害提高<color=#f29e38ff><unbreak>#3[i]%</unbreak></color>，且被任意单位消灭后额外为我方全体附上1层【回音】，当【回音】叠加至<color=#f29e38ff><unbreak>#1[i]</unbreak></color>层或以上时，消耗所有【回音】，每层【回音】对随机敌方目标造成1次固定数值的伤害。",
+      "param": [
+        10,
+        1.2,
+        0.5
+      ]
+    }
+  ],
+  "begin_time": "",
+  "end_time": "",
+  "level": [
+    {
+      "id": 20151,
+      "name": "叙事分析其一",
+      "challenge": [
+        {
+          "name": "获得#1分",
+          "param": 40000
+        },
+        {
+          "name": "获得#1分",
+          "param": 50000
+        },
+        {
+          "name": "获得#1分",
+          "param": 60000
+        }
+      ],
+      "damage_type1": [
+        "Physical",
+        "Thunder"
+      ],
+      "damage_type2": [
+        "Wind",
+        "Quantum"
+      ],
+      "maze_group_id1": 6,
+      "maze_group_id2": 7,
+      "npc_monster_id_list1": [
+        2013020
+      ],
+      "npc_monster_id_list2": [
+        4033010
+      ],
+      "event_id_list1": [
+        {
+          "stage_id": 30313011,
+          "stage_type": "Challenge",
+          "stage_name": 17363227603743607405,
+          "hard_level_group": 1,
+          "level": 55,
+          "level_graph_path": "Config/Level/StageCommonTemplate.json",
+          "stage_ability_config": [],
+          "battle_scoring_group": 203,
+          "sub_level_graphs": [],
+          "stage_config_data": [
+            {
+              "jdkamoanicm": "_Wave",
+              "mojjbfbkbnc": "3"
+            },
+            {
+              "jdkamoanicm": "_IsEliteBattle",
+              "mojjbfbkbnc": "1"
+            },
+            {
+              "jdkamoanicm": "_StageInfiniteGroup",
+              "mojjbfbkbnc": "30313011"
+            },
+            {
+              "jdkamoanicm": "_CreateBattleEvent",
+              "mojjbfbkbnc": "31001"
+            },
+            {
+              "jdkamoanicm": "_ChallengeStoryType",
+              "mojjbfbkbnc": "2"
+            }
+          ],
+          "monster_list": [
+            {
+              "monster0": 4032030,
+              "monster1": 1012010,
+              "monster2": 300205006,
+              "monster3": 4032030,
+              "monster4": 1012010
+            },
+            {
+              "monster0": 201302012
+            },
+            {
+              "monster0": 201302012
+            }
+          ],
+          "level_lose_condition": [],
+          "level_win_condition": [],
+          "release": true,
+          "forbid_exit_battle": true,
+          "monster_warning_ratio": 1.1,
+          "trial_avatar_list": []
+        }
+      ],
+      "event_id_list2": [
+        {
+          "stage_id": 30313012,
+          "stage_type": "Challenge",
+          "stage_name": 14552693742518040294,
+          "hard_level_group": 1,
+          "level": 55,
+          "level_graph_path": "Config/Level/StageCommonTemplate.json",
+          "stage_ability_config": [],
+          "battle_scoring_group": 203,
+          "sub_level_graphs": [],
+          "stage_config_data": [
+            {
+              "jdkamoanicm": "_Wave",
+              "mojjbfbkbnc": "3"
+            },
+            {
+              "jdkamoanicm": "_IsEliteBattle",
+              "mojjbfbkbnc": "1"
+            },
+            {
+              "jdkamoanicm": "_StageInfiniteGroup",
+              "mojjbfbkbnc": "30313012"
+            },
+            {
+              "jdkamoanicm": "_CreateBattleEvent",
+              "mojjbfbkbnc": "31001"
+            },
+            {
+              "jdkamoanicm": "_ChallengeStoryType",
+              "mojjbfbkbnc": "2"
+            }
+          ],
+          "monster_list": [
+            {
+              "monster0": 2032020,
+              "monster1": 4012030,
+              "monster2": 300205006,
+              "monster3": 2032020,
+              "monster4": 4012030
+            },
+            {
+              "monster0": 403301002
+            },
+            {
+              "monster0": 403301002
+            }
+          ],
+          "level_lose_condition": [],
+          "level_win_condition": [],
+          "release": true,
+          "forbid_exit_battle": true,
+          "monster_warning_ratio": 1.1,
+          "trial_avatar_list": []
+        }
+      ],
+      "infinite_list1": {
+        "303130111": {
+          "infinite_wave_id": 303130111,
+          "monster_group_id_list": [
+            8003060,
+            4032030,
+            1012010,
+            300205006,
+            4032030,
+            1012010,
+            4032030,
+            1012010,
+            4032030,
+            1012010,
+            4032030,
+            4032030,
+            1012010,
+            4032030,
+            1012010,
+            4032030,
+            1012010,
+            300205006,
+            4032030,
+            1012010,
+            4032030,
+            1012010,
+            4032030,
+            1012010,
+            4032030,
+            1012010
+          ],
+          "max_monster_count": 25,
+          "max_teammate_count": 5,
+          "ability": "FantasticStory_Wave_Ability_0001",
+          "param_list": [
+            0,
+            0.5
+          ],
+          "clear_previous_ability": true,
+          "elite_group": 55
+        },
+        "303130112": {
+          "infinite_wave_id": 303130112,
+          "monster_group_id_list": [
+            3002030,
+            8012010,
+            300304002,
+            3002030,
+            8012010,
+            3002030,
+            8012010,
+            3002030,
+            8012010,
+            3002030,
+            8012010,
+            3002030,
+            8012010,
+            3002030,
+            8012010,
+            3002030,
+            8012010,
+            3002030,
+            8012010,
+            3002030,
+            8012010,
+            3002030,
+            8012010,
+            3002030,
+            8012010,
+            3002030,
+            8012010,
+            3002030,
+            8012010,
+            3002030,
+            8012010,
+            3002030,
+            8012010,
+            3002030,
+            8012010,
+            3002030,
+            8012010,
+            3002030,
+            8012010,
+            3002030,
+            8012010
+          ],
+          "max_monster_count": 45,
+          "max_teammate_count": 5,
+          "ability": "FantasticStory_Wave_Ability_0001",
+          "param_list": [
+            0,
+            1.4
+          ],
+          "clear_previous_ability": true,
+          "elite_group": 55
+        },
+        "303130113": {
+          "infinite_wave_id": 303130113,
+          "monster_group_id_list": [
+            8002010,
+            2012010,
+            201302012,
+            8002010,
+            2012010,
+            8002010,
+            2012010,
+            8002010,
+            2012010,
+            8002010,
+            2012010,
+            8002010,
+            2012010,
+            8002010,
+            2012010,
+            8002010,
+            2012010,
+            8002010,
+            2012010,
+            8002010,
+            2012010,
+            8002010,
+            2012010,
+            8002010,
+            2012010,
+            8002010,
+            2012010,
+            8002010,
+            2012010,
+            8002010,
+            2012010,
+            8002010,
+            2012010,
+            8002010,
+            2012010,
+            8002010,
+            2012010,
+            8002010,
+            2012010,
+            8002010,
+            2012010
+          ],
+          "max_monster_count": 45,
+          "max_teammate_count": 5,
+          "ability": "FantasticStory_Wave_Ability_0001",
+          "param_list": [
+            0.1,
+            4.2
+          ],
+          "clear_previous_ability": true,
+          "elite_group": 55
+        }
+      },
+      "infinite_list2": {
+        "303130121": {
+          "infinite_wave_id": 303130121,
+          "monster_group_id_list": [
+            8003060,
+            2032020,
+            4012030,
+            300205006,
+            2032020,
+            4012030,
+            2032020,
+            4012030,
+            2032020,
+            4012030,
+            2032020,
+            2032020,
+            4012030,
+            2032020,
+            4012030,
+            2032020,
+            4012030,
+            300205006,
+            2032020,
+            4012030,
+            2032020,
+            4012030,
+            2032020,
+            4012030,
+            2032020,
+            4012030
+          ],
+          "max_monster_count": 25,
+          "max_teammate_count": 5,
+          "ability": "FantasticStory_Wave_Ability_0001",
+          "param_list": [
+            0,
+            0.5
+          ],
+          "clear_previous_ability": true,
+          "elite_group": 55
+        },
+        "303130122": {
+          "infinite_wave_id": 303130122,
+          "monster_group_id_list": [
+            1002040,
+            1022010,
+            800301020,
+            1002040,
+            1022010,
+            1002040,
+            1022010,
+            1002040,
+            1022010,
+            1002040,
+            1022010,
+            1002040,
+            1022010,
+            1002040,
+            1022010,
+            1002040,
+            1022010,
+            1002040,
+            1022010,
+            1002040,
+            1022010,
+            1002040,
+            1022010,
+            1002040,
+            1022010,
+            1002040,
+            1022010,
+            1002040,
+            1022010,
+            1002040,
+            1022010,
+            1002040,
+            1022010,
+            1002040,
+            1022010,
+            1002040,
+            1022010,
+            1002040,
+            1022010,
+            1002040,
+            1022010
+          ],
+          "max_monster_count": 45,
+          "max_teammate_count": 5,
+          "ability": "FantasticStory_Wave_Ability_0001",
+          "param_list": [
+            0,
+            1.4
+          ],
+          "clear_previous_ability": true,
+          "elite_group": 55
+        },
+        "303130123": {
+          "infinite_wave_id": 303130123,
+          "monster_group_id_list": [
+            4022010,
+            2022110,
+            403301002,
+            4022010,
+            2022110,
+            4022010,
+            2022110,
+            4022010,
+            2022110,
+            4022010,
+            2022110,
+            4022010,
+            2022110,
+            4022010,
+            2022110,
+            4022010,
+            2022110,
+            4022010,
+            2022110,
+            4022010,
+            2022110,
+            4022010,
+            2022110,
+            4022010,
+            2022110,
+            4022010,
+            2022110,
+            4022010,
+            2022110,
+            4022010,
+            2022110,
+            4022010,
+            2022110,
+            4022010,
+            2022110,
+            4022010,
+            2022110,
+            4022010,
+            2022110,
+            4022010,
+            2022110
+          ],
+          "max_monster_count": 45,
+          "max_teammate_count": 5,
+          "ability": "FantasticStory_Wave_Ability_0001",
+          "param_list": [
+            0.1,
+            4.2
+          ],
+          "clear_previous_ability": true,
+          "elite_group": 55
+        }
+      }
+    },
+    {
+      "id": 20152,
+      "name": "叙事分析其二",
+      "challenge": [
+        {
+          "name": "获得#1分",
+          "param": 40000
+        },
+        {
+          "name": "获得#1分",
+          "param": 50000
+        },
+        {
+          "name": "获得#1分",
+          "param": 60000
+        }
+      ],
+      "damage_type1": [
+        "Physical",
+        "Ice"
+      ],
+      "damage_type2": [
+        "Quantum",
+        "Imaginary"
+      ],
+      "maze_group_id1": 6,
+      "maze_group_id2": 7,
+      "npc_monster_id_list1": [
+        2023030
+      ],
+      "npc_monster_id_list2": [
+        4023010
+      ],
+      "event_id_list1": [
+        {
+          "stage_id": 30313021,
+          "stage_type": "Challenge",
+          "stage_name": 7086853316639384589,
+          "hard_level_group": 1,
+          "level": 65,
+          "level_graph_path": "Config/Level/StageCommonTemplate.json",
+          "stage_ability_config": [],
+          "battle_scoring_group": 203,
+          "sub_level_graphs": [],
+          "stage_config_data": [
+            {
+              "jdkamoanicm": "_Wave",
+              "mojjbfbkbnc": "3"
+            },
+            {
+              "jdkamoanicm": "_IsEliteBattle",
+              "mojjbfbkbnc": "1"
+            },
+            {
+              "jdkamoanicm": "_StageInfiniteGroup",
+              "mojjbfbkbnc": "30313021"
+            },
+            {
+              "jdkamoanicm": "_CreateBattleEvent",
+              "mojjbfbkbnc": "31001"
+            },
+            {
+              "jdkamoanicm": "_ChallengeStoryType",
+              "mojjbfbkbnc": "2"
+            }
+          ],
+          "monster_list": [
+            {
+              "monster0": 4012040,
+              "monster1": 2002030,
+              "monster2": 300205006,
+              "monster3": 4012040,
+              "monster4": 2002030
+            },
+            {
+              "monster0": 202303016
+            },
+            {
+              "monster0": 202303016
+            }
+          ],
+          "level_lose_condition": [],
+          "level_win_condition": [],
+          "release": true,
+          "forbid_exit_battle": true,
+          "monster_warning_ratio": 1.1,
+          "trial_avatar_list": []
+        }
+      ],
+      "event_id_list2": [
+        {
+          "stage_id": 30313022,
+          "stage_type": "Challenge",
+          "stage_name": 8036735044007088635,
+          "hard_level_group": 1,
+          "level": 65,
+          "level_graph_path": "Config/Level/StageCommonTemplate.json",
+          "stage_ability_config": [],
+          "battle_scoring_group": 203,
+          "sub_level_graphs": [],
+          "stage_config_data": [
+            {
+              "jdkamoanicm": "_Wave",
+              "mojjbfbkbnc": "3"
+            },
+            {
+              "jdkamoanicm": "_IsEliteBattle",
+              "mojjbfbkbnc": "1"
+            },
+            {
+              "jdkamoanicm": "_StageInfiniteGroup",
+              "mojjbfbkbnc": "30313022"
+            },
+            {
+              "jdkamoanicm": "_CreateBattleEvent",
+              "mojjbfbkbnc": "31001"
+            },
+            {
+              "jdkamoanicm": "_ChallengeStoryType",
+              "mojjbfbkbnc": "2"
+            }
+          ],
+          "monster_list": [
+            {
+              "monster0": 2002020,
+              "monster1": 8012030,
+              "monster2": 300205006,
+              "monster3": 2002020,
+              "monster4": 8012030
+            },
+            {
+              "monster0": 402301002
+            },
+            {
+              "monster0": 402301002
+            }
+          ],
+          "level_lose_condition": [],
+          "level_win_condition": [],
+          "release": true,
+          "forbid_exit_battle": true,
+          "monster_warning_ratio": 1.1,
+          "trial_avatar_list": []
+        }
+      ],
+      "infinite_list1": {
+        "303130211": {
+          "infinite_wave_id": 303130211,
+          "monster_group_id_list": [
+            8003060,
+            4012040,
+            2002030,
+            300205006,
+            4012040,
+            2002030,
+            4012040,
+            2002030,
+            4012040,
+            2002030,
+            4012040,
+            4012040,
+            2002030,
+            4012040,
+            2002030,
+            4012040,
+            2002030,
+            300205006,
+            4012040,
+            2002030,
+            4012040,
+            2002030,
+            4012040,
+            2002030,
+            4012040,
+            2002030
+          ],
+          "max_monster_count": 25,
+          "max_teammate_count": 5,
+          "ability": "FantasticStory_Wave_Ability_0001",
+          "param_list": [
+            0,
+            0.5
+          ],
+          "clear_previous_ability": true,
+          "elite_group": 56
+        },
+        "303130212": {
+          "infinite_wave_id": 303130212,
+          "monster_group_id_list": [
+            1002050,
+            1002030,
+            100301035,
+            1002050,
+            1002030,
+            1002050,
+            1002030,
+            1002050,
+            1002030,
+            1002050,
+            1002030,
+            1002050,
+            1002030,
+            1002050,
+            1002030,
+            1002050,
+            1002030,
+            1002050,
+            1002030,
+            1002050,
+            1002030,
+            1002050,
+            1002030,
+            1002050,
+            1002030,
+            1002050,
+            1002030,
+            1002050,
+            1002030,
+            1002050,
+            1002030,
+            1002050,
+            1002030,
+            1002050,
+            1002030,
+            1002050,
+            1002030,
+            1002050,
+            1002030,
+            1002050,
+            1002030
+          ],
+          "max_monster_count": 45,
+          "max_teammate_count": 5,
+          "ability": "FantasticStory_Wave_Ability_0001",
+          "param_list": [
+            0,
+            1.4
+          ],
+          "clear_previous_ability": true,
+          "elite_group": 56
+        },
+        "303130213": {
+          "infinite_wave_id": 303130213,
+          "monster_group_id_list": [
+            4032030,
+            2022060,
+            202303016,
+            4032030,
+            2022060,
+            4032030,
+            2022060,
+            4032030,
+            2022060,
+            4032030,
+            2022060,
+            4032030,
+            2022060,
+            4032030,
+            2022060,
+            4032030,
+            2022060,
+            4032030,
+            2022060,
+            4032030,
+            2022060,
+            4032030,
+            2022060,
+            4032030,
+            2022060,
+            4032030,
+            2022060,
+            4032030,
+            2022060,
+            4032030,
+            2022060,
+            4032030,
+            2022060,
+            4032030,
+            2022060,
+            4032030,
+            2022060,
+            4032030,
+            2022060,
+            4032030,
+            2022060
+          ],
+          "max_monster_count": 45,
+          "max_teammate_count": 5,
+          "ability": "FantasticStory_Wave_Ability_0001",
+          "param_list": [
+            0.1,
+            4.2
+          ],
+          "clear_previous_ability": true,
+          "elite_group": 56
+        }
+      },
+      "infinite_list2": {
+        "303130221": {
+          "infinite_wave_id": 303130221,
+          "monster_group_id_list": [
+            8003060,
+            1002020,
+            8012030,
+            300205006,
+            1002020,
+            8012030,
+            1002020,
+            8012030,
+            1002020,
+            8012030,
+            1002020,
+            1002020,
+            8012030,
+            1002020,
+            8012030,
+            1002020,
+            8012030,
+            300205006,
+            1002020,
+            8012030,
+            1002020,
+            8012030,
+            1002020,
+            8012030,
+            1002020,
+            8012030
+          ],
+          "max_monster_count": 25,
+          "max_teammate_count": 5,
+          "ability": "FantasticStory_Wave_Ability_0001",
+          "param_list": [
+            0,
+            0.5
+          ],
+          "clear_previous_ability": true,
+          "elite_group": 56
+        },
+        "303130222": {
+          "infinite_wave_id": 303130222,
+          "monster_group_id_list": [
+            4012010,
+            4022010,
+            402302002,
+            4012010,
+            4022010,
+            4012010,
+            4022010,
+            4012010,
+            4022010,
+            4012010,
+            4022010,
+            4012010,
+            4022010,
+            4012010,
+            4022010,
+            4012010,
+            4022010,
+            4012010,
+            4022010,
+            4012010,
+            4022010,
+            4012010,
+            4022010,
+            4012010,
+            4022010,
+            4012010,
+            4022010,
+            4012010,
+            4022010,
+            4012010,
+            4022010,
+            4012010,
+            4022010,
+            4012010,
+            4022010,
+            4012010,
+            4022010,
+            4012010,
+            4022010,
+            4012010,
+            4022010
+          ],
+          "max_monster_count": 45,
+          "max_teammate_count": 5,
+          "ability": "FantasticStory_Wave_Ability_0001",
+          "param_list": [
+            0,
+            1.4
+          ],
+          "clear_previous_ability": true,
+          "elite_group": 56
+        },
+        "303130223": {
+          "infinite_wave_id": 303130223,
+          "monster_group_id_list": [
+            4022010,
+            8022010,
+            402301002,
+            4022010,
+            8022010,
+            4022010,
+            8022010,
+            4022010,
+            8022010,
+            4022010,
+            8022010,
+            4022010,
+            8022010,
+            4022010,
+            8022010,
+            4022010,
+            8022010,
+            4022010,
+            8022010,
+            4022010,
+            8022010,
+            4022010,
+            8022010,
+            4022010,
+            8022010,
+            4022010,
+            8022010,
+            4022010,
+            8022010,
+            4022010,
+            8022010,
+            4022010,
+            8022010,
+            4022010,
+            8022010,
+            4022010,
+            8022010,
+            4022010,
+            8022010,
+            4022010,
+            8022010
+          ],
+          "max_monster_count": 45,
+          "max_teammate_count": 5,
+          "ability": "FantasticStory_Wave_Ability_0001",
+          "param_list": [
+            0.1,
+            4.2
+          ],
+          "clear_previous_ability": true,
+          "elite_group": 56
+        }
+      }
+    },
+    {
+      "id": 20153,
+      "name": "叙事分析其三",
+      "challenge": [
+        {
+          "name": "获得#1分",
+          "param": 40000
+        },
+        {
+          "name": "获得#1分",
+          "param": 50000
+        },
+        {
+          "name": "获得#1分",
+          "param": 60000
+        }
+      ],
+      "damage_type1": [
+        "Physical",
+        "Thunder"
+      ],
+      "damage_type2": [
+        "Wind",
+        "Quantum"
+      ],
+      "maze_group_id1": 6,
+      "maze_group_id2": 7,
+      "npc_monster_id_list1": [
+        2013020
+      ],
+      "npc_monster_id_list2": [
+        4033010
+      ],
+      "event_id_list1": [
+        {
+          "stage_id": 30313031,
+          "stage_type": "Challenge",
+          "stage_name": 17363227603743607405,
+          "hard_level_group": 1,
+          "level": 75,
+          "level_graph_path": "Config/Level/StageCommonTemplate.json",
+          "stage_ability_config": [],
+          "battle_scoring_group": 203,
+          "sub_level_graphs": [],
+          "stage_config_data": [
+            {
+              "jdkamoanicm": "_Wave",
+              "mojjbfbkbnc": "3"
+            },
+            {
+              "jdkamoanicm": "_IsEliteBattle",
+              "mojjbfbkbnc": "1"
+            },
+            {
+              "jdkamoanicm": "_StageInfiniteGroup",
+              "mojjbfbkbnc": "30313031"
+            },
+            {
+              "jdkamoanicm": "_CreateBattleEvent",
+              "mojjbfbkbnc": "31001"
+            },
+            {
+              "jdkamoanicm": "_ChallengeStoryType",
+              "mojjbfbkbnc": "2"
+            }
+          ],
+          "monster_list": [
+            {
+              "monster0": 4032030,
+              "monster1": 1012010,
+              "monster2": 300205006,
+              "monster3": 4032030,
+              "monster4": 1012010
+            },
+            {
+              "monster0": 201302012
+            },
+            {
+              "monster0": 201302012
+            }
+          ],
+          "level_lose_condition": [],
+          "level_win_condition": [],
+          "release": true,
+          "forbid_exit_battle": true,
+          "monster_warning_ratio": 1.1,
+          "trial_avatar_list": []
+        }
+      ],
+      "event_id_list2": [
+        {
+          "stage_id": 30313032,
+          "stage_type": "Challenge",
+          "stage_name": 14552693742518040294,
+          "hard_level_group": 1,
+          "level": 75,
+          "level_graph_path": "Config/Level/StageCommonTemplate.json",
+          "stage_ability_config": [],
+          "battle_scoring_group": 203,
+          "sub_level_graphs": [],
+          "stage_config_data": [
+            {
+              "jdkamoanicm": "_Wave",
+              "mojjbfbkbnc": "3"
+            },
+            {
+              "jdkamoanicm": "_IsEliteBattle",
+              "mojjbfbkbnc": "1"
+            },
+            {
+              "jdkamoanicm": "_StageInfiniteGroup",
+              "mojjbfbkbnc": "30313032"
+            },
+            {
+              "jdkamoanicm": "_CreateBattleEvent",
+              "mojjbfbkbnc": "31001"
+            },
+            {
+              "jdkamoanicm": "_ChallengeStoryType",
+              "mojjbfbkbnc": "2"
+            }
+          ],
+          "monster_list": [
+            {
+              "monster0": 2032020,
+              "monster1": 4012030,
+              "monster2": 300205006,
+              "monster3": 2032020,
+              "monster4": 4012030
+            },
+            {
+              "monster0": 403301002
+            },
+            {
+              "monster0": 403301002
+            }
+          ],
+          "level_lose_condition": [],
+          "level_win_condition": [],
+          "release": true,
+          "forbid_exit_battle": true,
+          "monster_warning_ratio": 1.1,
+          "trial_avatar_list": []
+        }
+      ],
+      "infinite_list1": {
+        "303130311": {
+          "infinite_wave_id": 303130311,
+          "monster_group_id_list": [
+            8003060,
+            4032030,
+            1012010,
+            300205006,
+            4032030,
+            1012010,
+            4032030,
+            1012010,
+            4032030,
+            1012010,
+            4032030,
+            4032030,
+            1012010,
+            4032030,
+            1012010,
+            4032030,
+            1012010,
+            300205006,
+            4032030,
+            1012010,
+            4032030,
+            1012010,
+            4032030,
+            1012010,
+            4032030,
+            1012010
+          ],
+          "max_monster_count": 25,
+          "max_teammate_count": 5,
+          "ability": "FantasticStory_Wave_Ability_0001",
+          "param_list": [
+            0,
+            0.5
+          ],
+          "clear_previous_ability": true,
+          "elite_group": 57
+        },
+        "303130312": {
+          "infinite_wave_id": 303130312,
+          "monster_group_id_list": [
+            3002030,
+            8012010,
+            300304002,
+            3002030,
+            8012010,
+            3002030,
+            8012010,
+            3002030,
+            8012010,
+            3002030,
+            8012010,
+            3002030,
+            8012010,
+            3002030,
+            8012010,
+            3002030,
+            8012010,
+            3002030,
+            8012010,
+            3002030,
+            8012010,
+            3002030,
+            8012010,
+            3002030,
+            8012010,
+            3002030,
+            8012010,
+            3002030,
+            8012010,
+            3002030,
+            8012010,
+            3002030,
+            8012010,
+            3002030,
+            8012010,
+            3002030,
+            8012010,
+            3002030,
+            8012010,
+            3002030,
+            8012010
+          ],
+          "max_monster_count": 45,
+          "max_teammate_count": 5,
+          "ability": "FantasticStory_Wave_Ability_0001",
+          "param_list": [
+            0,
+            1.4
+          ],
+          "clear_previous_ability": true,
+          "elite_group": 57
+        },
+        "303130313": {
+          "infinite_wave_id": 303130313,
+          "monster_group_id_list": [
+            8002010,
+            2012010,
+            201302012,
+            8002010,
+            2012010,
+            8002010,
+            2012010,
+            8002010,
+            2012010,
+            8002010,
+            2012010,
+            8002010,
+            2012010,
+            8002010,
+            2012010,
+            8002010,
+            2012010,
+            8002010,
+            2012010,
+            8002010,
+            2012010,
+            8002010,
+            2012010,
+            8002010,
+            2012010,
+            8002010,
+            2012010,
+            8002010,
+            2012010,
+            8002010,
+            2012010,
+            8002010,
+            2012010,
+            8002010,
+            2012010,
+            8002010,
+            2012010,
+            8002010,
+            2012010,
+            8002010,
+            2012010
+          ],
+          "max_monster_count": 45,
+          "max_teammate_count": 5,
+          "ability": "FantasticStory_Wave_Ability_0001",
+          "param_list": [
+            0.1,
+            4.2
+          ],
+          "clear_previous_ability": true,
+          "elite_group": 57
+        }
+      },
+      "infinite_list2": {
+        "303130321": {
+          "infinite_wave_id": 303130321,
+          "monster_group_id_list": [
+            8003060,
+            2032020,
+            4012030,
+            300205006,
+            2032020,
+            4012030,
+            2032020,
+            4012030,
+            2032020,
+            4012030,
+            2032020,
+            2032020,
+            4012030,
+            2032020,
+            4012030,
+            2032020,
+            4012030,
+            300205006,
+            2032020,
+            4012030,
+            2032020,
+            4012030,
+            2032020,
+            4012030,
+            2032020,
+            4012030
+          ],
+          "max_monster_count": 25,
+          "max_teammate_count": 5,
+          "ability": "FantasticStory_Wave_Ability_0001",
+          "param_list": [
+            0,
+            0.5
+          ],
+          "clear_previous_ability": true,
+          "elite_group": 57
+        },
+        "303130322": {
+          "infinite_wave_id": 303130322,
+          "monster_group_id_list": [
+            1002040,
+            1022010,
+            800301020,
+            1002040,
+            1022010,
+            1002040,
+            1022010,
+            1002040,
+            1022010,
+            1002040,
+            1022010,
+            1002040,
+            1022010,
+            1002040,
+            1022010,
+            1002040,
+            1022010,
+            1002040,
+            1022010,
+            1002040,
+            1022010,
+            1002040,
+            1022010,
+            1002040,
+            1022010,
+            1002040,
+            1022010,
+            1002040,
+            1022010,
+            1002040,
+            1022010,
+            1002040,
+            1022010,
+            1002040,
+            1022010,
+            1002040,
+            1022010,
+            1002040,
+            1022010,
+            1002040,
+            1022010
+          ],
+          "max_monster_count": 45,
+          "max_teammate_count": 5,
+          "ability": "FantasticStory_Wave_Ability_0001",
+          "param_list": [
+            0,
+            1.4
+          ],
+          "clear_previous_ability": true,
+          "elite_group": 57
+        },
+        "303130323": {
+          "infinite_wave_id": 303130323,
+          "monster_group_id_list": [
+            4022010,
+            2022110,
+            403301002,
+            4022010,
+            2022110,
+            4022010,
+            2022110,
+            4022010,
+            2022110,
+            4022010,
+            2022110,
+            4022010,
+            2022110,
+            4022010,
+            2022110,
+            4022010,
+            2022110,
+            4022010,
+            2022110,
+            4022010,
+            2022110,
+            4022010,
+            2022110,
+            4022010,
+            2022110,
+            4022010,
+            2022110,
+            4022010,
+            2022110,
+            4022010,
+            2022110,
+            4022010,
+            2022110,
+            4022010,
+            2022110,
+            4022010,
+            2022110,
+            4022010,
+            2022110,
+            4022010,
+            2022110
+          ],
+          "max_monster_count": 45,
+          "max_teammate_count": 5,
+          "ability": "FantasticStory_Wave_Ability_0001",
+          "param_list": [
+            0.1,
+            4.2
+          ],
+          "clear_previous_ability": true,
+          "elite_group": 57
+        }
+      }
+    },
+    {
+      "id": 20154,
+      "name": "叙事分析其四",
+      "challenge": [
+        {
+          "name": "获得#1分",
+          "param": 40000
+        },
+        {
+          "name": "获得#1分",
+          "param": 50000
+        },
+        {
+          "name": "获得#1分",
+          "param": 60000
+        }
+      ],
+      "damage_type1": [
+        "Physical",
+        "Ice"
+      ],
+      "damage_type2": [
+        "Quantum",
+        "Imaginary"
+      ],
+      "maze_group_id1": 6,
+      "maze_group_id2": 7,
+      "npc_monster_id_list1": [
+        3024010
+      ],
+      "npc_monster_id_list2": [
+        8024011
+      ],
+      "event_id_list1": [
+        {
+          "stage_id": 30313041,
+          "stage_type": "Challenge",
+          "stage_name": 17984449442655792319,
+          "hard_level_group": 1,
+          "level": 85,
+          "level_graph_path": "Config/Level/StageCommonTemplate.json",
+          "stage_ability_config": [],
+          "battle_scoring_group": 203,
+          "sub_level_graphs": [],
+          "stage_config_data": [
+            {
+              "jdkamoanicm": "_Wave",
+              "mojjbfbkbnc": "3"
+            },
+            {
+              "jdkamoanicm": "_IsEliteBattle",
+              "mojjbfbkbnc": "1"
+            },
+            {
+              "jdkamoanicm": "_StageInfiniteGroup",
+              "mojjbfbkbnc": "30313041"
+            },
+            {
+              "jdkamoanicm": "_CreateBattleEvent",
+              "mojjbfbkbnc": "31001"
+            },
+            {
+              "jdkamoanicm": "_ChallengeStoryType",
+              "mojjbfbkbnc": "2"
+            }
+          ],
+          "monster_list": [
+            {
+              "monster0": 2002030,
+              "monster1": 4032050,
+              "monster2": 300205006,
+              "monster3": 2002030,
+              "monster4": 4032050
+            },
+            {
+              "monster0": 302401204
+            },
+            {
+              "monster0": 302401204
+            }
+          ],
+          "level_lose_condition": [],
+          "level_win_condition": [],
+          "release": true,
+          "forbid_exit_battle": true,
+          "monster_warning_ratio": 1.1,
+          "trial_avatar_list": []
+        }
+      ],
+      "event_id_list2": [
+        {
+          "stage_id": 30313042,
+          "stage_type": "Challenge",
+          "stage_name": 12687103214276587319,
+          "hard_level_group": 1,
+          "level": 85,
+          "level_graph_path": "Config/Level/StageCommonTemplate.json",
+          "stage_ability_config": [],
+          "battle_scoring_group": 203,
+          "sub_level_graphs": [],
+          "stage_config_data": [
+            {
+              "jdkamoanicm": "_Wave",
+              "mojjbfbkbnc": "3"
+            },
+            {
+              "jdkamoanicm": "_IsEliteBattle",
+              "mojjbfbkbnc": "1"
+            },
+            {
+              "jdkamoanicm": "_StageInfiniteGroup",
+              "mojjbfbkbnc": "30313042"
+            },
+            {
+              "jdkamoanicm": "_CreateBattleEvent",
+              "mojjbfbkbnc": "31001"
+            },
+            {
+              "jdkamoanicm": "_ChallengeStoryType",
+              "mojjbfbkbnc": "2"
+            }
+          ],
+          "monster_list": [
+            {
+              "monster0": 4032030,
+              "monster1": 4032010,
+              "monster2": 300205006,
+              "monster3": 4032030,
+              "monster4": 4032010
+            },
+            {
+              "monster0": 8024013
+            },
+            {
+              "monster0": 8024013
+            }
+          ],
+          "level_lose_condition": [],
+          "level_win_condition": [],
+          "release": true,
+          "forbid_exit_battle": true,
+          "monster_warning_ratio": 1.1,
+          "trial_avatar_list": []
+        }
+      ],
+      "infinite_list1": {
+        "303130411": {
+          "infinite_wave_id": 303130411,
+          "monster_group_id_list": [
+            8003060,
+            2002030,
+            4032050,
+            300205006,
+            2002030,
+            4032050,
+            2002030,
+            4032050,
+            2002030,
+            4032050,
+            2002030,
+            2002030,
+            4032050,
+            2002030,
+            4032050,
+            2002030,
+            4032050,
+            300205006,
+            2002030,
+            4032050,
+            2002030,
+            4032050,
+            2002030,
+            4032050,
+            2002030,
+            4032050
+          ],
+          "max_monster_count": 25,
+          "max_teammate_count": 5,
+          "ability": "FantasticStory_Wave_Ability_0001",
+          "param_list": [
+            0,
+            0.6
+          ],
+          "clear_previous_ability": true,
+          "elite_group": 57
+        },
+        "303130412": {
+          "infinite_wave_id": 303130412,
+          "monster_group_id_list": [
+            4032040,
+            2022060,
+            202303016,
+            4032040,
+            2022060,
+            4032040,
+            2022060,
+            4032040,
+            2022060,
+            4032040,
+            2022060,
+            4032040,
+            2022060,
+            4032040,
+            2022060,
+            4032040,
+            2022060,
+            4032040,
+            2022060,
+            4032040,
+            2022060,
+            4032040,
+            2022060,
+            4032040,
+            2022060,
+            4032040,
+            2022060,
+            4032040,
+            2022060,
+            4032040,
+            2022060,
+            4032040,
+            2022060,
+            4032040,
+            2022060,
+            4032040,
+            2022060,
+            4032040,
+            2022060,
+            4032040,
+            2022060
+          ],
+          "max_monster_count": 45,
+          "max_teammate_count": 5,
+          "ability": "FantasticStory_Wave_Ability_0001",
+          "param_list": [
+            0.05,
+            2.2
+          ],
+          "clear_previous_ability": true,
+          "elite_group": 57
+        },
+        "303130413": {
+          "infinite_wave_id": 303130413,
+          "monster_group_id_list": [
+            3021020,
+            3021030,
+            302401204,
+            3021020,
+            3021030,
+            3021020,
+            3021030,
+            3021020,
+            3021030,
+            3021020,
+            3021030,
+            3021020,
+            3021030,
+            3021020,
+            3021030,
+            3021020,
+            3021030,
+            3021020,
+            3021030,
+            3021020,
+            3021030,
+            3021020,
+            3021030,
+            3021020,
+            3021030,
+            3021020,
+            3021030,
+            3021020,
+            3021030,
+            3021020,
+            3021030,
+            3021020,
+            3021030,
+            3021020,
+            3021030,
+            3021020,
+            3021030,
+            3021020,
+            3021030,
+            3021020,
+            3021030
+          ],
+          "max_monster_count": 45,
+          "max_teammate_count": 5,
+          "ability": "FantasticStory_Wave_Ability_0001",
+          "param_list": [
+            0.12,
+            9
+          ],
+          "clear_previous_ability": true,
+          "elite_group": 57
+        }
+      },
+      "infinite_list2": {
+        "303130421": {
+          "infinite_wave_id": 303130421,
+          "monster_group_id_list": [
+            8003060,
+            4012020,
+            4032010,
+            300205006,
+            4012020,
+            4032010,
+            4012020,
+            4032010,
+            4012020,
+            4032010,
+            4012020,
+            4012020,
+            4032010,
+            4012020,
+            4032010,
+            4012020,
+            4032010,
+            300205006,
+            4012020,
+            4032010,
+            4012020,
+            4032010,
+            4012020,
+            4032010,
+            4012020,
+            4032010
+          ],
+          "max_monster_count": 25,
+          "max_teammate_count": 5,
+          "ability": "FantasticStory_Wave_Ability_0001",
+          "param_list": [
+            0,
+            0.6
+          ],
+          "clear_previous_ability": true,
+          "elite_group": 57
+        },
+        "303130422": {
+          "infinite_wave_id": 303130422,
+          "monster_group_id_list": [
+            4022010,
+            4032050,
+            402301002,
+            4022010,
+            4032050,
+            4022010,
+            4032050,
+            4022010,
+            4032050,
+            4022010,
+            4032050,
+            4022010,
+            4032050,
+            4022010,
+            4032050,
+            4022010,
+            4032050,
+            4022010,
+            4032050,
+            4022010,
+            4032050,
+            4022010,
+            4032050,
+            4022010,
+            4032050,
+            4022010,
+            4032050,
+            4022010,
+            4032050,
+            4022010,
+            4032050,
+            4022010,
+            4032050,
+            4022010,
+            4032050,
+            4022010,
+            4032050,
+            4022010,
+            4032050,
+            4022010,
+            4032050
+          ],
+          "max_monster_count": 45,
+          "max_teammate_count": 5,
+          "ability": "FantasticStory_Wave_Ability_0001",
+          "param_list": [
+            0.05,
+            2.2
+          ],
+          "clear_previous_ability": true,
+          "elite_group": 57
+        },
+        "303130423": {
+          "infinite_wave_id": 303130423,
+          "monster_group_id_list": [
+            4032010,
+            8022010,
+            8024013,
+            4032010,
+            8022010,
+            4032010,
+            8022010,
+            4032010,
+            8022010,
+            4032010,
+            8022010,
+            4032010,
+            8022010,
+            4032010,
+            8022010,
+            4032010,
+            8022010,
+            4032010,
+            8022010,
+            4032010,
+            8022010,
+            4032010,
+            8022010,
+            4032010,
+            8022010,
+            4032010,
+            8022010,
+            4032010,
+            8022010,
+            4032010,
+            8022010,
+            4032010,
+            8022010,
+            4032010,
+            8022010,
+            4032010,
+            8022010,
+            4032010,
+            8022010,
+            4032010,
+            8022010
+          ],
+          "max_monster_count": 45,
+          "max_teammate_count": 5,
+          "ability": "FantasticStory_Wave_Ability_0001",
+          "param_list": [
+            0.12,
+            9
+          ],
+          "clear_previous_ability": true,
+          "elite_group": 57
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,1619 @@
+[
+  {
+    "id": 3401,
+    "name": "弦外之声其一",
+    "group_name": "弦外之声(<unbreak>2.2</unbreak>)",
+    "desc": "每个波次或轮开始时，召唤1只扑满到场上，扑满的弱点被击破时会立刻被消灭。\\n扑满被消灭后，使攻击者行动提前<color=#f29e38ff><unbreak>#2[i]%</unbreak></color>，随后为我方全体施加【记忆印记】。每层【记忆印记】使目标的攻击力提高<color=#f29e38ff><unbreak>#5[i]%</unbreak></color>，击破特攻提高<color=#f29e38ff><unbreak>#3[i]%</unbreak></color>，最多叠加<color=#f29e38ff><unbreak>#4[i]</unbreak></color>层。",
+    "param": [
+      1,
+      1,
+      0.3,
+      5,
+      0.15
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Physical",
+      "Imaginary"
+    ],
+    "damage_type2": [
+      "Ice",
+      "Wind"
+    ],
+    "maze_group_id1": 5,
+    "maze_group_id2": 6,
+    "npc_monster_id_list1": [
+      8013010
+    ],
+    "npc_monster_id_list2": [
+      2023010
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30105011,
+        "stage_type": "Challenge",
+        "stage_name": 7287667153632341933,
+        "hard_level_group": 3,
+        "level": 68,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [
+          "ChallengeMaze_StageMark_Puman001"
+        ],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30128"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 8012010,
+            "monster1": 8013010,
+            "monster2": 8012030
+          },
+          {
+            "monster0": 8013010,
+            "monster1": 2013020
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30105012,
+        "stage_type": "Challenge",
+        "stage_name": 189339872378837144,
+        "hard_level_group": 3,
+        "level": 68,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [
+          "ChallengeMaze_StageMark_Puman002"
+        ],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30128"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 2022060,
+            "monster1": 2023010
+          },
+          {
+            "monster0": 2023010,
+            "monster1": 2023020
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 3402,
+    "name": "弦外之声其二",
+    "group_name": "弦外之声(<unbreak>2.2</unbreak>)",
+    "desc": "每个波次或轮开始时，召唤1只扑满到场上，扑满的弱点被击破时会立刻被消灭。\\n扑满被消灭后，使攻击者行动提前<color=#f29e38ff><unbreak>#2[i]%</unbreak></color>，随后为我方全体施加【记忆印记】。每层【记忆印记】使目标的攻击力提高<color=#f29e38ff><unbreak>#5[i]%</unbreak></color>，击破特攻提高<color=#f29e38ff><unbreak>#3[i]%</unbreak></color>，最多叠加<color=#f29e38ff><unbreak>#4[i]</unbreak></color>层。",
+    "param": [
+      1,
+      1,
+      0.3,
+      5,
+      0.15
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Physical",
+      "Quantum"
+    ],
+    "damage_type2": [
+      "Thunder",
+      "Imaginary"
+    ],
+    "maze_group_id1": 5,
+    "maze_group_id2": 6,
+    "npc_monster_id_list1": [
+      8003030
+    ],
+    "npc_monster_id_list2": [
+      3013010
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30105021,
+        "stage_type": "Challenge",
+        "stage_name": 3834759294727864782,
+        "hard_level_group": 3,
+        "level": 70,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [
+          "ChallengeMaze_StageMark_Puman003"
+        ],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30128"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 8002010,
+            "monster1": 8003030,
+            "monster2": 8002010
+          },
+          {
+            "monster0": 8003030,
+            "monster1": 1003010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30105022,
+        "stage_type": "Challenge",
+        "stage_name": 8310250911400761097,
+        "hard_level_group": 3,
+        "level": 70,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [
+          "ChallengeMaze_StageMark_Puman004"
+        ],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30128"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 3012010,
+            "monster1": 3013010,
+            "monster2": 3012010
+          },
+          {
+            "monster0": 3013010,
+            "monster1": 1013020
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 3403,
+    "name": "弦外之声其三",
+    "group_name": "弦外之声(<unbreak>2.2</unbreak>)",
+    "desc": "每个波次或轮开始时，召唤1只扑满到场上，扑满的弱点被击破时会立刻被消灭。\\n扑满被消灭后，使攻击者行动提前<color=#f29e38ff><unbreak>#2[i]%</unbreak></color>，随后为我方全体施加【记忆印记】。每层【记忆印记】使目标的攻击力提高<color=#f29e38ff><unbreak>#5[i]%</unbreak></color>，击破特攻提高<color=#f29e38ff><unbreak>#3[i]%</unbreak></color>，最多叠加<color=#f29e38ff><unbreak>#4[i]</unbreak></color>层。",
+    "param": [
+      1,
+      1,
+      0.3,
+      5,
+      0.15
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Physical",
+      "Fire"
+    ],
+    "damage_type2": [
+      "Thunder",
+      "Wind"
+    ],
+    "maze_group_id1": 5,
+    "maze_group_id2": 6,
+    "npc_monster_id_list1": [
+      3003020
+    ],
+    "npc_monster_id_list2": [
+      2004020
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30105031,
+        "stage_type": "Challenge",
+        "stage_name": 9524722474129506048,
+        "hard_level_group": 3,
+        "level": 73,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [
+          "ChallengeMaze_StageMark_Puman005"
+        ],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30128"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 3002010,
+            "monster1": 3003020
+          },
+          {
+            "monster0": 3003020,
+            "monster1": 3003040
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30105032,
+        "stage_type": "Challenge",
+        "stage_name": 13535529983749530797,
+        "hard_level_group": 3,
+        "level": 73,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [
+          "ChallengeMaze_StageMark_Puman006"
+        ],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30128"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 8003040,
+            "monster1": 8003040
+          },
+          {
+            "monster0": 200402006
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 3404,
+    "name": "弦外之声其四",
+    "group_name": "弦外之声(<unbreak>2.2</unbreak>)",
+    "desc": "每个波次或轮开始时，召唤1只扑满到场上，扑满的弱点被击破时会立刻被消灭。\\n扑满被消灭后，使攻击者行动提前<color=#f29e38ff><unbreak>#2[i]%</unbreak></color>，随后为我方全体施加【记忆印记】。每层【记忆印记】使目标的攻击力提高<color=#f29e38ff><unbreak>#5[i]%</unbreak></color>，击破特攻提高<color=#f29e38ff><unbreak>#3[i]%</unbreak></color>，最多叠加<color=#f29e38ff><unbreak>#4[i]</unbreak></color>层。",
+    "param": [
+      1,
+      1,
+      0.3,
+      5,
+      0.15
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Ice",
+      "Wind"
+    ],
+    "damage_type2": [
+      "Physical",
+      "Fire"
+    ],
+    "maze_group_id1": 5,
+    "maze_group_id2": 6,
+    "npc_monster_id_list1": [
+      2023020
+    ],
+    "npc_monster_id_list2": [
+      3003050
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30105041,
+        "stage_type": "Challenge",
+        "stage_name": 5650742420150656798,
+        "hard_level_group": 3,
+        "level": 75,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [
+          "ChallengeMaze_StageMark_Puman002"
+        ],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30128"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 2022040,
+            "monster1": 2023020,
+            "monster2": 2022050
+          },
+          {
+            "monster0": 2023020,
+            "monster1": 2023010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30105042,
+        "stage_type": "Challenge",
+        "stage_name": 11610931649679232944,
+        "hard_level_group": 3,
+        "level": 75,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [
+          "ChallengeMaze_StageMark_Puman005"
+        ],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30128"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 3011010,
+            "monster1": 3003050,
+            "monster2": 3002030,
+            "monster3": 3011010
+          },
+          {
+            "monster0": 3003050,
+            "monster1": 3003040,
+            "monster2": 3002010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 3405,
+    "name": "弦外之声其五",
+    "group_name": "弦外之声(<unbreak>2.2</unbreak>)",
+    "desc": "每个波次或轮开始时，召唤1只扑满到场上，扑满的弱点被击破时会立刻被消灭。\\n扑满被消灭后，使攻击者行动提前<color=#f29e38ff><unbreak>#2[i]%</unbreak></color>，随后为我方全体施加【记忆印记】。每层【记忆印记】使目标的攻击力提高<color=#f29e38ff><unbreak>#5[i]%</unbreak></color>，击破特攻提高<color=#f29e38ff><unbreak>#3[i]%</unbreak></color>，最多叠加<color=#f29e38ff><unbreak>#4[i]</unbreak></color>层。",
+    "param": [
+      1,
+      1,
+      0.3,
+      5,
+      0.15
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Fire",
+      "Ice"
+    ],
+    "damage_type2": [
+      "Thunder",
+      "Imaginary"
+    ],
+    "maze_group_id1": 5,
+    "maze_group_id2": 6,
+    "npc_monster_id_list1": [
+      8033010
+    ],
+    "npc_monster_id_list2": [
+      3024020
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30105051,
+        "stage_type": "Challenge",
+        "stage_name": 13208664396652254584,
+        "hard_level_group": 3,
+        "level": 78,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [
+          "ChallengeMaze_StageMark_Puman007"
+        ],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30128"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 8033010
+          },
+          {
+            "monster0": 8033010,
+            "monster1": 2023020
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30105052,
+        "stage_type": "Challenge",
+        "stage_name": 16451895588771372811,
+        "hard_level_group": 3,
+        "level": 78,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [
+          "ChallengeMaze_StageMark_Puman004"
+        ],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30128"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 1023010,
+            "monster1": 1013020
+          },
+          {
+            "monster0": 3002010,
+            "monster1": 3024020,
+            "monster2": 1023010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 3406,
+    "name": "弦外之声其六",
+    "group_name": "弦外之声(<unbreak>2.2</unbreak>)",
+    "desc": "每个波次或轮开始时，召唤1只扑满到场上，扑满的弱点被击破时会立刻被消灭。\\n扑满被消灭后，使攻击者行动提前<color=#f29e38ff><unbreak>#2[i]%</unbreak></color>，随后为我方全体施加【记忆印记】。每层【记忆印记】使目标的攻击力提高<color=#f29e38ff><unbreak>#5[i]%</unbreak></color>，击破特攻提高<color=#f29e38ff><unbreak>#3[i]%</unbreak></color>，最多叠加<color=#f29e38ff><unbreak>#4[i]</unbreak></color>层。",
+    "param": [
+      1,
+      1,
+      0.3,
+      5,
+      0.15
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Physical",
+      "Imaginary"
+    ],
+    "damage_type2": [
+      "Ice",
+      "Wind"
+    ],
+    "maze_group_id1": 5,
+    "maze_group_id2": 6,
+    "npc_monster_id_list1": [
+      8013010
+    ],
+    "npc_monster_id_list2": [
+      2023010
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30105061,
+        "stage_type": "Challenge",
+        "stage_name": 7287667153632341933,
+        "hard_level_group": 3,
+        "level": 80,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [
+          "ChallengeMaze_StageMark_Puman001"
+        ],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30128"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 8012010,
+            "monster1": 8013010,
+            "monster2": 8012030
+          },
+          {
+            "monster0": 8013010,
+            "monster1": 2013020
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30105062,
+        "stage_type": "Challenge",
+        "stage_name": 189339872378837144,
+        "hard_level_group": 3,
+        "level": 80,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [
+          "ChallengeMaze_StageMark_Puman002"
+        ],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30128"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 2022060,
+            "monster1": 2023010
+          },
+          {
+            "monster0": 2023010,
+            "monster1": 2023020
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 3407,
+    "name": "弦外之声其七",
+    "group_name": "弦外之声(<unbreak>2.2</unbreak>)",
+    "desc": "每个波次或轮开始时，召唤1只扑满到场上，扑满的弱点被击破时会立刻被消灭。\\n扑满被消灭后，使攻击者行动提前<color=#f29e38ff><unbreak>#2[i]%</unbreak></color>，随后为我方全体施加【记忆印记】。每层【记忆印记】使目标的攻击力提高<color=#f29e38ff><unbreak>#5[i]%</unbreak></color>，击破特攻提高<color=#f29e38ff><unbreak>#3[i]%</unbreak></color>，最多叠加<color=#f29e38ff><unbreak>#4[i]</unbreak></color>层。",
+    "param": [
+      1,
+      1,
+      0.3,
+      5,
+      0.15
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Physical",
+      "Quantum"
+    ],
+    "damage_type2": [
+      "Thunder",
+      "Imaginary"
+    ],
+    "maze_group_id1": 5,
+    "maze_group_id2": 6,
+    "npc_monster_id_list1": [
+      8003030
+    ],
+    "npc_monster_id_list2": [
+      3013010
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30105071,
+        "stage_type": "Challenge",
+        "stage_name": 3834759294727864782,
+        "hard_level_group": 3,
+        "level": 82,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [
+          "ChallengeMaze_StageMark_Puman003"
+        ],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30128"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 8002010,
+            "monster1": 8003030,
+            "monster2": 8002010
+          },
+          {
+            "monster0": 8003030,
+            "monster1": 1003010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30105072,
+        "stage_type": "Challenge",
+        "stage_name": 8310250911400761097,
+        "hard_level_group": 3,
+        "level": 82,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [
+          "ChallengeMaze_StageMark_Puman004"
+        ],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30128"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 3012010,
+            "monster1": 3013010,
+            "monster2": 3012010
+          },
+          {
+            "monster0": 3013010,
+            "monster1": 1013020
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 3408,
+    "name": "弦外之声其八",
+    "group_name": "弦外之声(<unbreak>2.2</unbreak>)",
+    "desc": "每个波次或轮开始时，召唤1只扑满到场上，扑满的弱点被击破时会立刻被消灭。\\n扑满被消灭后，使攻击者行动提前<color=#f29e38ff><unbreak>#2[i]%</unbreak></color>，随后为我方全体施加【记忆印记】。每层【记忆印记】使目标的攻击力提高<color=#f29e38ff><unbreak>#5[i]%</unbreak></color>，击破特攻提高<color=#f29e38ff><unbreak>#3[i]%</unbreak></color>，最多叠加<color=#f29e38ff><unbreak>#4[i]</unbreak></color>层。",
+    "param": [
+      1,
+      1,
+      0.3,
+      5,
+      0.15
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Physical",
+      "Fire"
+    ],
+    "damage_type2": [
+      "Thunder",
+      "Wind"
+    ],
+    "maze_group_id1": 5,
+    "maze_group_id2": 6,
+    "npc_monster_id_list1": [
+      3003020
+    ],
+    "npc_monster_id_list2": [
+      2004020
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30105081,
+        "stage_type": "Challenge",
+        "stage_name": 9524722474129506048,
+        "hard_level_group": 3,
+        "level": 85,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [
+          "ChallengeMaze_StageMark_Puman005"
+        ],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30128"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 3002010,
+            "monster1": 3003020
+          },
+          {
+            "monster0": 3003020,
+            "monster1": 3003040
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30105082,
+        "stage_type": "Challenge",
+        "stage_name": 13535529983749530797,
+        "hard_level_group": 3,
+        "level": 85,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [
+          "ChallengeMaze_StageMark_Puman006"
+        ],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30128"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 8003040,
+            "monster1": 8003040
+          },
+          {
+            "monster0": 200402006
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 3409,
+    "name": "弦外之声其九",
+    "group_name": "弦外之声(<unbreak>2.2</unbreak>)",
+    "desc": "每个波次或轮开始时，召唤1只扑满到场上，扑满的弱点被击破时会立刻被消灭。\\n扑满被消灭后，使攻击者行动提前<color=#f29e38ff><unbreak>#2[i]%</unbreak></color>，随后为我方全体施加【记忆印记】。每层【记忆印记】使目标的攻击力提高<color=#f29e38ff><unbreak>#5[i]%</unbreak></color>，击破特攻提高<color=#f29e38ff><unbreak>#3[i]%</unbreak></color>，最多叠加<color=#f29e38ff><unbreak>#4[i]</unbreak></color>层。",
+    "param": [
+      1,
+      1,
+      0.3,
+      5,
+      0.15
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Ice",
+      "Wind"
+    ],
+    "damage_type2": [
+      "Physical",
+      "Fire"
+    ],
+    "maze_group_id1": 5,
+    "maze_group_id2": 6,
+    "npc_monster_id_list1": [
+      2023020
+    ],
+    "npc_monster_id_list2": [
+      3003050
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30105091,
+        "stage_type": "Challenge",
+        "stage_name": 5650742420150656798,
+        "hard_level_group": 3,
+        "level": 88,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [
+          "ChallengeMaze_StageMark_Puman002"
+        ],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30128"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 2022040,
+            "monster1": 2023020,
+            "monster2": 2022050
+          },
+          {
+            "monster0": 2023020,
+            "monster1": 2023010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30105092,
+        "stage_type": "Challenge",
+        "stage_name": 11610931649679232944,
+        "hard_level_group": 3,
+        "level": 88,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [
+          "ChallengeMaze_StageMark_Puman005"
+        ],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30128"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 3011010,
+            "monster1": 3003050,
+            "monster2": 3002030,
+            "monster3": 3011010
+          },
+          {
+            "monster0": 3003050,
+            "monster1": 3003040,
+            "monster2": 3002010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 3410,
+    "name": "弦外之声其十",
+    "group_name": "弦外之声(<unbreak>2.2</unbreak>)",
+    "desc": "每个波次或轮开始时，召唤1只扑满到场上，扑满的弱点被击破时会立刻被消灭。\\n扑满被消灭后，使攻击者行动提前<color=#f29e38ff><unbreak>#2[i]%</unbreak></color>，随后为我方全体施加【记忆印记】。每层【记忆印记】使目标的攻击力提高<color=#f29e38ff><unbreak>#5[i]%</unbreak></color>，击破特攻提高<color=#f29e38ff><unbreak>#3[i]%</unbreak></color>，最多叠加<color=#f29e38ff><unbreak>#4[i]</unbreak></color>层。",
+    "param": [
+      1,
+      1,
+      0.3,
+      5,
+      0.15
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Fire",
+      "Ice"
+    ],
+    "damage_type2": [
+      "Thunder",
+      "Imaginary"
+    ],
+    "maze_group_id1": 5,
+    "maze_group_id2": 6,
+    "npc_monster_id_list1": [
+      8033010
+    ],
+    "npc_monster_id_list2": [
+      3024020
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30105101,
+        "stage_type": "Challenge",
+        "stage_name": 13208664396652254584,
+        "hard_level_group": 3,
+        "level": 90,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [
+          "ChallengeMaze_StageMark_Puman007"
+        ],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30128"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 8033010
+          },
+          {
+            "monster0": 8033010,
+            "monster1": 2023020
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30105102,
+        "stage_type": "Challenge",
+        "stage_name": 16451895588771372811,
+        "hard_level_group": 3,
+        "level": 90,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [
+          "ChallengeMaze_StageMark_Puman004"
+        ],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30128"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 1023010,
+            "monster1": 1013020
+          },
+          {
+            "monster0": 3002010,
+            "monster1": 3024020,
+            "monster2": 1023010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 3411,
+    "name": "弦外之声其十一",
+    "group_name": "弦外之声(<unbreak>2.2</unbreak>)",
+    "desc": "每个波次或轮开始时，召唤1只扑满到场上，扑满的弱点被击破时会立刻被消灭。\\n扑满被消灭后，使攻击者行动提前<color=#f29e38ff><unbreak>#2[i]%</unbreak></color>，随后为我方全体施加【记忆印记】。每层【记忆印记】使目标的攻击力提高<color=#f29e38ff><unbreak>#5[i]%</unbreak></color>，击破特攻提高<color=#f29e38ff><unbreak>#3[i]%</unbreak></color>，最多叠加<color=#f29e38ff><unbreak>#4[i]</unbreak></color>层。",
+    "param": [
+      1,
+      1,
+      0.3,
+      5,
+      0.15
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Fire",
+      "Wind"
+    ],
+    "damage_type2": [
+      "Physical",
+      "Imaginary"
+    ],
+    "maze_group_id1": 5,
+    "maze_group_id2": 6,
+    "npc_monster_id_list1": [
+      1014010
+    ],
+    "npc_monster_id_list2": [
+      1004020
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30105111,
+        "stage_type": "Challenge",
+        "stage_name": 7306112122138119445,
+        "hard_level_group": 3,
+        "level": 92,
+        "elite_group": 223,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [
+          "ChallengeMaze_StageMark_Puman010"
+        ],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30128"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 8003010,
+            "monster1": 3003010
+          },
+          {
+            "monster0": 101401012,
+            "monster1": 3003010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30105112,
+        "stage_type": "Challenge",
+        "stage_name": 3927571639738101840,
+        "hard_level_group": 3,
+        "level": 92,
+        "elite_group": 223,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [
+          "ChallengeMaze_StageMark_Puman001"
+        ],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30128"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 3012040,
+            "monster1": 2013020,
+            "monster2": 2023010,
+            "monster3": 3012040
+          },
+          {
+            "monster0": 2013020,
+            "monster1": 100402010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 3412,
+    "name": "弦外之声其十二",
+    "group_name": "弦外之声(<unbreak>2.2</unbreak>)",
+    "desc": "每个波次或轮开始时，召唤1只扑满到场上，扑满的弱点被击破时会立刻被消灭。\\n扑满被消灭后，使攻击者行动提前<color=#f29e38ff><unbreak>#2[i]%</unbreak></color>，随后为我方全体施加【记忆印记】。每层【记忆印记】使目标的攻击力提高<color=#f29e38ff><unbreak>#5[i]%</unbreak></color>，击破特攻提高<color=#f29e38ff><unbreak>#3[i]%</unbreak></color>，最多叠加<color=#f29e38ff><unbreak>#4[i]</unbreak></color>层。",
+    "param": [
+      1,
+      1,
+      0.3,
+      5,
+      0.15
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Physical",
+      "Thunder"
+    ],
+    "damage_type2": [
+      "Fire",
+      "Thunder"
+    ],
+    "maze_group_id1": 5,
+    "maze_group_id2": 6,
+    "npc_monster_id_list1": [
+      3024010
+    ],
+    "npc_monster_id_list2": [
+      3003041
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30105121,
+        "stage_type": "Challenge",
+        "stage_name": 14805961183082142131,
+        "hard_level_group": 3,
+        "level": 95,
+        "elite_group": 224,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [
+          "ChallengeMaze_StageMark_Puman009"
+        ],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30128"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 2012010,
+            "monster1": 2023030,
+            "monster2": 2013020
+          },
+          {
+            "monster0": 3024010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30105122,
+        "stage_type": "Challenge",
+        "stage_name": 14930047325621619225,
+        "hard_level_group": 3,
+        "level": 95,
+        "elite_group": 224,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [
+          "ChallengeMaze_StageMark_Puman008"
+        ],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30128"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 3012020,
+            "monster1": 3003040,
+            "monster2": 3003030
+          },
+          {
+            "monster0": 3004010,
+            "monster1": 3003051,
+            "monster2": 3003041,
+            "monster3": 3003031
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  }
+]

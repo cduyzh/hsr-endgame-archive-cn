@@ -1,0 +1,107 @@
+import type {
+  ArchiveFilters,
+  ArchiveRun,
+  ArchiveUnit,
+  MetaStats,
+  RunCategory,
+} from "@/types/archive"
+import { getRunGoldCounts } from "@/services/unitCost"
+
+export function matchesCategory(run: ArchiveRun, category: RunCategory): boolean {
+  return category === "all" || run.category === category
+}
+
+export function matchesCost(run: ArchiveRun, cost: ArchiveFilters["cost"]): boolean {
+  if (cost === "all") return true
+  const [min, max] = cost.split("-").map(Number)
+  return run.cost >= min && run.cost <= max
+}
+
+export function filterRuns(runs: ArchiveRun[], filters: ArchiveFilters, units: ArchiveUnit[] = []): ArchiveRun[] {
+  const selected = new Set(filters.selectedUnitIds)
+  const flags = new Set(filters.flags)
+
+  return runs
+    .filter((run) => run.seasonId === filters.seasonId)
+    .filter((run) => run.mode === filters.mode)
+    .filter((run) => run.bossId === filters.bossId)
+    .filter((run) => matchesCategory(run, filters.category))
+    .filter((run) => filters.teamSize === "all" || run.units.length === filters.teamSize)
+    .filter((run) => matchesCost(run, filters.cost))
+    .filter((run) => {
+      if (selected.size === 0) return true
+      const runUnitIds = new Set([...run.units, ...run.lightcones].map((unit) => unit.unitId))
+      return [...selected].every((id) => runUnitIds.has(id))
+    })
+    .filter((run) => {
+      if (flags.size === 0) return true
+      return [...flags].every((flag) => run.tags.includes(flag))
+    })
+    .sort((a, b) => {
+      if (filters.sort === "latest") {
+        return new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime()
+      }
+      if (filters.sort === "limited") {
+        const aLimited = units.length > 0 ? getRunGoldCounts(a, units).limited : a.limitedCount
+        const bLimited = units.length > 0 ? getRunGoldCounts(b, units).limited : b.limitedCount
+        return aLimited - bLimited || a.cycle - b.cycle || b.score - a.score
+      }
+      return a.cycle - b.cycle || b.score - a.score || a.cost - b.cost
+    })
+}
+
+export function buildMetaStats(runs: ArchiveRun[], units: ArchiveUnit[]): MetaStats {
+  const unitById = new Map(units.map((unit) => [unit.id, unit]))
+  const characterCounts = new Map<string, number>()
+  const lightconeCounts = new Map<string, number>()
+  const comboCounts = new Map<string, { count: number; bestCycle: number }>()
+  const buckets = new Map([
+    ["0-8", 0],
+    ["9-16", 0],
+    ["17-32", 0],
+    ["33-48", 0],
+  ])
+
+  for (const run of runs) {
+    for (const unit of run.units) {
+      characterCounts.set(unit.unitId, (characterCounts.get(unit.unitId) ?? 0) + 1)
+    }
+    for (const unit of run.lightcones) {
+      lightconeCounts.set(unit.unitId, (lightconeCounts.get(unit.unitId) ?? 0) + 1)
+    }
+
+    const comboName = run.units
+      .map((entry) => unitById.get(entry.unitId)?.name ?? entry.unitId)
+      .join(" / ")
+    const existing = comboCounts.get(comboName)
+    comboCounts.set(comboName, {
+      count: (existing?.count ?? 0) + 1,
+      bestCycle: Math.min(existing?.bestCycle ?? run.cycle, run.cycle),
+    })
+
+    if (run.cost <= 8) buckets.set("0-8", (buckets.get("0-8") ?? 0) + 1)
+    else if (run.cost <= 16) buckets.set("9-16", (buckets.get("9-16") ?? 0) + 1)
+    else if (run.cost <= 32) buckets.set("17-32", (buckets.get("17-32") ?? 0) + 1)
+    else buckets.set("33-48", (buckets.get("33-48") ?? 0) + 1)
+  }
+
+  const usage = (counts: Map<string, number>, kind: ArchiveUnit["kind"]) =>
+    [...counts.entries()]
+      .map(([id, count]) => ({ unit: unitById.get(id), count }))
+      .filter((entry): entry is { unit: ArchiveUnit; count: number } => Boolean(entry.unit))
+      .filter((entry) => entry.unit.kind === kind)
+      .map((entry) => ({
+        ...entry,
+        rate: runs.length === 0 ? 0 : Math.round((entry.count / runs.length) * 1000) / 10,
+      }))
+      .sort((a, b) => b.count - a.count)
+
+  return {
+    characterUsage: usage(characterCounts, "character"),
+    lightconeUsage: usage(lightconeCounts, "lightcone"),
+    teamCombos: [...comboCounts.entries()]
+      .map(([name, value]) => ({ name, ...value }))
+      .sort((a, b) => b.count - a.count || a.bestCycle - b.bestCycle),
+    costBuckets: [...buckets.entries()].map(([label, count]) => ({ label, count })),
+  }
+}

@@ -1,0 +1,182 @@
+{
+  "3001": {
+    "en": "Stormwind Knight",
+    "id": 3001,
+    "begin": "",
+    "end": "",
+    "ko": "한풍의 기사",
+    "zh": "冽风骑士",
+    "ja": "凛冽たる風の騎士"
+  },
+  "3002": {
+    "en": "Dominated Evils",
+    "id": 3002,
+    "begin": "",
+    "end": "",
+    "ko": "괴수 지배",
+    "zh": "支配恶兽",
+    "ja": "悪獣の支配"
+  },
+  "3003": {
+    "en": "Gamer's Instigation",
+    "id": 3003,
+    "begin": "",
+    "end": "",
+    "ko": "도박과 선동",
+    "zh": "煽动博弈",
+    "ja": "博打煽動"
+  },
+  "3004": {
+    "en": "Sovereign Control",
+    "id": 3004,
+    "begin": "",
+    "end": "",
+    "ko": "지휘 지배",
+    "zh": "支配指挥",
+    "ja": "指揮の支配"
+  },
+  "3005": {
+    "en": "Gusty Primate",
+    "id": 3005,
+    "begin": "",
+    "end": "",
+    "ko": "한풍의 원숭이",
+    "zh": "冽风猢狲",
+    "ja": "凛冽たる風のサル"
+  },
+  "3006": {
+    "en": "Locust's Instigation",
+    "id": 3006,
+    "begin": "",
+    "end": "",
+    "ko": "선동과 해충",
+    "zh": "煽动螟蝗",
+    "ja": "扇動螟蝗"
+  },
+  "3007": {
+    "en": "Gambling Primate",
+    "id": 3007,
+    "begin": "",
+    "end": "",
+    "ko": "도박과 원숭이",
+    "zh": "猢狲博弈",
+    "ja": "博打打ちのサル"
+  },
+  "3008": {
+    "en": "Warlord of the Locusts",
+    "id": 3008,
+    "begin": "",
+    "end": "",
+    "ko": "해충과 수장",
+    "zh": "螟蝗战首",
+    "ja": "螟蝗戦首"
+  },
+  "3009": {
+    "en": "Cutting Mistral",
+    "id": 3009,
+    "begin": "",
+    "end": "",
+    "ko": "한풍과 지배",
+    "zh": "冽风支配",
+    "ja": "凛冽たる風の支配"
+  },
+  "3010": {
+    "en": "Ichor Beast",
+    "id": 3010,
+    "begin": "",
+    "end": "",
+    "ko": "황금 피와 괴수",
+    "zh": "金血恶兽",
+    "ja": "黄金の血の悪獣"
+  },
+  "3011": {
+    "en": "Lupine Warhead",
+    "id": 3011,
+    "begin": "",
+    "end": "",
+    "ko": "천랑과 수장",
+    "zh": "天狼战首",
+    "ja": "天狼戦首"
+  },
+  "3012": {
+    "en": "Gale of Netherveil",
+    "id": 3012,
+    "begin": "",
+    "end": "",
+    "ko": "어둠과 한풍",
+    "zh": "冥茫冽风",
+    "ja": "苛烈なる寒風"
+  },
+  "3013": {
+    "en": "Instigation of the Locusts",
+    "id": 3013,
+    "begin": "",
+    "end": "",
+    "ko": "해충과 선동",
+    "zh": "螟蝗煽动",
+    "ja": "螟蝗の扇動"
+  },
+  "3014": {
+    "en": "Primate Knight",
+    "id": 3014,
+    "begin": "",
+    "end": "",
+    "ko": "원숭이와 기사",
+    "zh": "猢狲骑士",
+    "ja": "サルとナイト"
+  },
+  "3015": {
+    "en": "Dominance of Netherveil",
+    "id": 3015,
+    "begin": "",
+    "end": "",
+    "ko": "지배와 어둠",
+    "zh": "支配冥茫",
+    "ja": "幽暗の支配者"
+  },
+  "3016": {
+    "en": "Militant Lupine",
+    "id": 3016,
+    "begin": "",
+    "end": "",
+    "ko": "창날과 천랑",
+    "zh": "兵锋天狼",
+    "ja": "兵鋒天狼"
+  },
+  "3017": {
+    "en": "Idol of the Locusts",
+    "id": 3017,
+    "begin": "",
+    "end": "",
+    "ko": "아이돌과 해충",
+    "zh": "偶像螟蝗",
+    "ja": "アイドルと螟蝗"
+  },
+  "3018": {
+    "en": "Gale of Forgetting",
+    "id": 3018,
+    "begin": "",
+    "end": "",
+    "ko": "망각과 한풍",
+    "zh": "遗忘冽风",
+    "ja": "忘却する寒風"
+  },
+  "3019": {
+    "en": "Vanguard Knight",
+    "id": 3019,
+    "begin": "",
+    "end": "",
+    "ko": "창날과 기사",
+    "zh": "兵锋骑士",
+    "ja": "兵鋒騎士"
+  },
+  "3020": {
+    "en": "Vanguard Knight",
+    "id": 3020,
+    "begin": "",
+    "end": "",
+    "ko": "창날과 기사",
+    "zh": "兵锋骑士",
+    "ja": "兵鋒騎士"
+  }
+}

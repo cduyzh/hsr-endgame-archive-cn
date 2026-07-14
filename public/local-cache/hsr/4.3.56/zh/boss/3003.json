@@ -1,0 +1,1716 @@
+{
+  "id": 3003,
+  "name": "煽动博弈",
+  "buff": {
+    "name": "末法余烬",
+    "desc": "拥有<color=#f29e38ff>【坚防守备】</color>的敌方单位被<color=#f29e38ff>弱点击破</color>时，使我方全体行动提前并恢复战技点。\\n敌方全体受到的追加攻击伤害提高<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>，终结技伤害提高<color=#f29e38ff><unbreak>#2[i]%</unbreak></color>。",
+    "param": [
+      0.25,
+      0.15
+    ]
+  },
+  "buff_list1": [
+    {
+      "name": "时来运转",
+      "desc": "角色造成的追加攻击伤害无视敌方目标<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>的全属性抗性，同时对非弱点目标也能削减韧性，效果等同于原技能削韧值的<color=#f29e38ff><unbreak>#2[i]%</unbreak></color>。",
+      "param": [
+        0.15,
+        0.5
+      ]
+    },
+    {
+      "name": "千金一掷",
+      "desc": "角色造成的冰属性伤害提高<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>。",
+      "param": [
+        0.55
+      ]
+    },
+    {
+      "name": "追亡逐北",
+      "desc": "角色击破敌方目标弱点时，行动提前<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>，该效果每回合最多触发<color=#f29e38ff><unbreak>#2[i]</unbreak></color>次。",
+      "param": [
+        0.15,
+        1
+      ]
+    }
+  ],
+  "buff_list2": [
+    {
+      "name": "寸草不生",
+      "desc": "角色攻击处于弱点击破状态下的敌人后，其当前承受的所有持续伤害立即产生相当于原伤害<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>的伤害，该效果单个回合内每个角色各自最多触发<color=#f29e38ff><unbreak>#2[i]</unbreak></color>次。",
+      "param": [
+        0.8,
+        2
+      ]
+    },
+    {
+      "name": "牵丝攀藤",
+      "desc": "消灭敌方目标后，敌方全体受到的击破伤害提高<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>，最多叠加<color=#f29e38ff><unbreak>#2[i]</unbreak></color>层，该效果对所有新上场的敌人也生效。",
+      "param": [
+        0.05,
+        5
+      ]
+    },
+    {
+      "name": "势如破竹",
+      "desc": "造成的终结技伤害的暴击伤害提高<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>，对处于弱点击破状态下的敌方目标额外提高<color=#f29e38ff><unbreak>#2[i]%</unbreak></color>。",
+      "param": [
+        0.3,
+        0.3
+      ]
+    }
+  ],
+  "buff_list3": [],
+  "begin_time": "",
+  "end_time": "",
+  "level": [
+    {
+      "id": 30031,
+      "name": "煽动博弈·难度<unbreak>01</unbreak>",
+      "challenge": [
+        {
+          "name": "获得#1分",
+          "param": 4000
+        },
+        {
+          "name": "获得#1分",
+          "param": 5200
+        },
+        {
+          "name": "获得#1分",
+          "param": 6600
+        }
+      ],
+      "damage_type1": [
+        "Physical",
+        "Ice",
+        "Thunder",
+        "Wind"
+      ],
+      "damage_type2": [
+        "Fire",
+        "Thunder",
+        "Wind",
+        "Imaginary"
+      ],
+      "maze_group_id1": 9,
+      "maze_group_id2": 14,
+      "boss_monster_id1": 803401201,
+      "boss_monster_id2": 801502201,
+      "boss_monster_id1_skill_list": [
+        803401201,
+        803401202,
+        803401203,
+        803401204,
+        803401205,
+        803401206,
+        803401207,
+        803401208,
+        803401209,
+        803401210,
+        803401211,
+        803401212,
+        803401213,
+        803401214,
+        803401215,
+        803401216,
+        803401217,
+        803401218,
+        803401219,
+        803401220,
+        803401221,
+        803401222
+      ],
+      "boss_monster_id2_skill_list": [
+        801502201,
+        801502202,
+        801502203,
+        801502204,
+        801502205,
+        801502206,
+        801502207,
+        801502208,
+        801502209,
+        801502210,
+        801502211,
+        801502212,
+        801502213,
+        801502214,
+        801502215,
+        801502216,
+        801502217,
+        801502218,
+        801502219,
+        801502220,
+        801502221,
+        801502222,
+        801502223
+      ],
+      "boss_monster_config1": {
+        "difficulty": 1,
+        "difficulty_list": [
+          1,
+          1,
+          3,
+          4
+        ],
+        "tag_list": [
+          {
+            "name": "坚防守备",
+            "desc": "首领幻影受到的伤害降低<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>。<color=#f29e38ff>弱点击破</color>后，行动额外延后，受到的伤害提高<color=#f29e38ff><unbreak>#2[i]%</unbreak></color>。",
+            "param": [
+              0.5,
+              1,
+              1.5
+            ],
+            "skill_id": 200401410,
+            "param_fix": [
+              0.5,
+              1,
+              1.5,
+              0,
+              0,
+              0
+            ],
+            "child": []
+          },
+          {
+            "name": "点数竞赛",
+            "desc": "首领幻影的技能会赋予所有我方和敌方单位<color=#f29e38ff><u>点数</u></color>",
+            "param": [],
+            "skill_id": null,
+            "param_fix": [],
+            "child": [
+              {
+                "name": "点数",
+                "desc": "敌方目标点数大于我方时，受到的伤害大幅降低，并获得韧性保护。我方角色攻击【点数】比自身低的敌方目标时，我方【点数】越高，敌方目标受到的伤害越高。点数的上限为<unbreak>100</unbreak>。",
+                "param": []
+              }
+            ]
+          },
+          {
+            "name": "庄家优势",
+            "desc": "当我方单位点数小于召唤物点数时，召唤物受到的伤害大幅降低。",
+            "param": [],
+            "skill_id": null,
+            "param_fix": [],
+            "child": []
+          },
+          {
+            "name": "先发优势",
+            "desc": "召唤物的点数越大，其生命上限越高。",
+            "param": [],
+            "skill_id": null,
+            "param_fix": [],
+            "child": []
+          }
+        ],
+        "difficulty_guide_list": [
+          {
+            "desc": "首领幻影受到的伤害降低<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>。<color=#f29e38ff>弱点击破</color>后，行动额外延后，受到的伤害提高<color=#f29e38ff><unbreak>#2[i]%</unbreak></color>。",
+            "param": [
+              0.5,
+              1,
+              1.5
+            ],
+            "skill_id": 200401410,
+            "param_fix": [
+              0.5,
+              1,
+              1.5,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "desc": "敌方目标具有<color=#f29e38ff>【点数】</color>，骰子被消灭后，其【点数】会<color=#f29e38ff>累加</color>到我方。",
+            "param": [],
+            "skill_id": null,
+            "param_fix": []
+          },
+          {
+            "desc": "敌方目标【点数】<color=#f29e38ff>大于</color>我方时，受到的伤害大幅降低；敌方目标【点数】<color=#f29e38ff>小于等于</color>我方时，受到的伤害提高。",
+            "param": [],
+            "skill_id": null,
+            "param_fix": []
+          }
+        ],
+        "text_guide_list": [
+          "优先消灭【点数】<color=#f29e38ff>小于等于我方</color>的骰子，累积【点数】。在【翻倍骰子】离开前将其消灭，以获取更多【点数】。",
+          "当我方【点数】大于等于首领幻影时，尽快击破首领幻影。"
+        ],
+        "phase_list": [
+          {
+            "name": "阶段一：赌局开场",
+            "desc": "敌方目标具有【点数】，其【点数】大于我方时，受到的伤害大幅降低，且会获得韧性保护。",
+            "answer": "当我方【点数】小于等于首领幻影时，优先消灭【点数】小于等于我方的骰子，以累积点数。",
+            "difficulty": 1,
+            "skill_list": [
+              100511
+            ]
+          },
+          {
+            "name": "阶段二：双倍大奖",
+            "desc": "首领幻影的【收益抽成】会额外使我方【点数】降低，并且场上会出现【翻倍骰子】。",
+            "answer": "在【翻倍骰子】离开前将其消灭，可使我方【点数】翻倍。",
+            "difficulty": 1,
+            "skill_list": [
+              100521
+            ]
+          }
+        ]
+      },
+      "boss_monster_config2": {
+        "difficulty": 1,
+        "difficulty_list": [
+          1,
+          1,
+          3,
+          4
+        ],
+        "tag_list": [
+          {
+            "name": "坚防守备",
+            "desc": "首领幻影受到的伤害降低<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>。<color=#f29e38ff>弱点击破</color>后，行动额外延后，受到的伤害提高<color=#f29e38ff><unbreak>#2[i]%</unbreak></color>。",
+            "param": [
+              0.6,
+              1.25,
+              1
+            ],
+            "skill_id": 801502218,
+            "param_fix": [
+              0.5,
+              1,
+              1.5
+            ],
+            "child": []
+          },
+          {
+            "name": "移花接木",
+            "desc": "召唤新的【玄莲】时，首领幻影会进入<color=#f29e38ff><u>韧性保护</u></color>状态。消灭任意召唤物会使首领幻影的韧性保护解除，并且对首领幻影造成额外韧性削减。",
+            "param": [],
+            "skill_id": null,
+            "param_fix": [],
+            "child": [
+              {
+                "name": "韧性保护",
+                "desc": "韧性值无法受到削减。",
+                "param": []
+              }
+            ]
+          },
+          {
+            "name": "枯木逢春",
+            "desc": "在一阶段，首领幻影在切换形态时会回复召唤物<color=#f29e38ff><unbreak>#2[i]%</unbreak></color>生命值。",
+            "param": [
+              0.3
+            ],
+            "skill_id": 801502220,
+            "param_fix": [
+              0.2,
+              0.25
+            ],
+            "child": []
+          },
+          {
+            "name": "空花阳焰",
+            "desc": "在二阶段，召唤物的生命上限提高<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>。",
+            "param": [
+              0.35
+            ],
+            "skill_id": 801502220,
+            "param_fix": [
+              0.2,
+              0.25
+            ],
+            "child": []
+          }
+        ],
+        "difficulty_guide_list": [
+          {
+            "desc": "首领幻影受到的伤害降低<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>。<color=#f29e38ff>弱点击破</color>后，行动额外延后，受到的伤害提高<color=#f29e38ff><unbreak>#2[i]%</unbreak></color>。",
+            "param": [
+              0.6,
+              1.25,
+              1
+            ],
+            "skill_id": 801502218,
+            "param_fix": [
+              0.5,
+              1,
+              1.5
+            ]
+          },
+          {
+            "desc": "召唤新的【玄莲】时，首领幻影会进入<color=#f29e38ff>韧性保护</color>状态。",
+            "param": [],
+            "skill_id": null,
+            "param_fix": []
+          },
+          {
+            "desc": "每次消灭【丰饶玄莲】可提高我方全体<color=#f29e38ff>全属性伤害</color>，每次消灭【破灭玄莲】可提高我方全体<color=#f29e38ff>击破特攻</color>，以上两类增益在获得其中一类后无法获得另外一类。",
+            "param": [],
+            "skill_id": null,
+            "param_fix": []
+          }
+        ],
+        "text_guide_list": [
+          "<color=#f29e38ff>击破</color>首领幻影会大幅提高其受到的伤害，使我方全体恢复战技点并行动提前。",
+          "消灭<color=#f29e38ff>召唤物</color>，可解除首领幻影的韧性保护，并削弱首领幻影。",
+          "根据我方角色需要选择合适的【玄莲】消灭：消灭【丰饶玄莲】提高我方<color=#f29e38ff>全属性伤害</color>，或消灭【破灭玄莲】提高我方<color=#f29e38ff>击破特攻</color>。"
+        ],
+        "phase_list": [
+          {
+            "name": "阶段一：浮翠流丹",
+            "desc": "首领幻影会在【丰饶形态】和【毁灭形态】之间切换，切换时会召唤【玄莲】。",
+            "answer": "应对策略：尽可能消灭更多【丰饶玄莲】或【破灭玄莲】中的一类，以获得更多增益效果。",
+            "difficulty": 1,
+            "skill_list": [
+              100611,
+              100612,
+              100613
+            ]
+          },
+          {
+            "name": "阶段二：逆风执炬",
+            "desc": "首领幻影的召唤物会锁定我方目标并对其施放【万劫不复】，造成高额伤害。",
+            "answer": "应对策略：在召唤物施放【万劫不复】前尽可能消灭它们，获得增益并削弱【万劫不复】威力。",
+            "difficulty": 1,
+            "skill_list": [
+              100621
+            ]
+          }
+        ]
+      },
+      "event_id_list1": [
+        {
+          "stage_id": 420151,
+          "stage_type": "Challenge",
+          "stage_name": 16496002327442687592,
+          "hard_level_group": 1,
+          "level": 60,
+          "elite_group": 701,
+          "level_graph_path": "Config/Level/StageCommonTemplate.json",
+          "stage_ability_config": [],
+          "battle_scoring_group": 902,
+          "sub_level_graphs": [],
+          "stage_config_data": [
+            {
+              "jdkamoanicm": "_Wave",
+              "mojjbfbkbnc": "1"
+            },
+            {
+              "jdkamoanicm": "_IsEliteBattle",
+              "mojjbfbkbnc": "1"
+            },
+            {
+              "jdkamoanicm": "_BGM",
+              "mojjbfbkbnc": "State_Penocony_Combat_Aventurine_Common"
+            },
+            {
+              "jdkamoanicm": "_BindingMazeBuff",
+              "mojjbfbkbnc": "3110003"
+            }
+          ],
+          "monster_list": [
+            {
+              "monster0": 803401201
+            }
+          ],
+          "level_lose_condition": [
+            "[CDT_WaitCustomString:Level_SpecialLose]"
+          ],
+          "level_win_condition": [
+            "[CDT_WaitCustomString:Level_SpecialWin]"
+          ],
+          "forbid_exit_battle": true,
+          "monster_warning_ratio": 1,
+          "trial_avatar_list": []
+        }
+      ],
+      "event_id_list2": [
+        {
+          "stage_id": 420141,
+          "stage_type": "Challenge",
+          "stage_name": 13763997922829013598,
+          "hard_level_group": 1,
+          "level": 60,
+          "elite_group": 701,
+          "level_graph_path": "Config/Level/StageCommonTemplate.json",
+          "stage_ability_config": [],
+          "battle_scoring_group": 902,
+          "sub_level_graphs": [],
+          "stage_config_data": [
+            {
+              "jdkamoanicm": "_Wave",
+              "mojjbfbkbnc": "1"
+            },
+            {
+              "jdkamoanicm": "_IsEliteBattle",
+              "mojjbfbkbnc": "1"
+            },
+            {
+              "jdkamoanicm": "_BGM",
+              "mojjbfbkbnc": "State_Xianzhou_Combat_Phantylia_01"
+            },
+            {
+              "jdkamoanicm": "_BindingMazeBuff",
+              "mojjbfbkbnc": "3110003"
+            }
+          ],
+          "monster_list": [
+            {
+              "monster0": 801502201
+            }
+          ],
+          "level_lose_condition": [
+            "[CDT_WaitCustomString:Level_SpecialLose]"
+          ],
+          "level_win_condition": [
+            "[CDT_WaitCustomString:Level_SpecialWin]"
+          ],
+          "forbid_exit_battle": true,
+          "monster_warning_ratio": 1,
+          "trial_avatar_list": []
+        }
+      ]
+    },
+    {
+      "id": 30032,
+      "name": "煽动博弈·难度<unbreak>02</unbreak>",
+      "challenge": [
+        {
+          "name": "获得#1分",
+          "param": 4000
+        },
+        {
+          "name": "获得#1分",
+          "param": 5200
+        },
+        {
+          "name": "获得#1分",
+          "param": 6600
+        }
+      ],
+      "damage_type1": [
+        "Physical",
+        "Ice",
+        "Thunder",
+        "Wind"
+      ],
+      "damage_type2": [
+        "Fire",
+        "Thunder",
+        "Wind",
+        "Imaginary"
+      ],
+      "maze_group_id1": 9,
+      "maze_group_id2": 14,
+      "boss_monster_id1": 803401202,
+      "boss_monster_id2": 801502202,
+      "boss_monster_id1_skill_list": [
+        803401201,
+        803401202,
+        803401203,
+        803401204,
+        803401205,
+        803401206,
+        803401207,
+        803401208,
+        803401209,
+        803401210,
+        803401211,
+        803401212,
+        803401213,
+        803401214,
+        803401215,
+        803401216,
+        803401217,
+        803401218,
+        803401219,
+        803401220,
+        803401221,
+        803401222
+      ],
+      "boss_monster_id2_skill_list": [
+        801502201,
+        801502202,
+        801502203,
+        801502204,
+        801502205,
+        801502206,
+        801502207,
+        801502208,
+        801502209,
+        801502210,
+        801502211,
+        801502212,
+        801502213,
+        801502214,
+        801502215,
+        801502216,
+        801502217,
+        801502218,
+        801502219,
+        801502220,
+        801502221,
+        801502222,
+        801502223
+      ],
+      "boss_monster_config1": {
+        "difficulty": 2,
+        "difficulty_list": [
+          1,
+          1,
+          3,
+          4
+        ],
+        "tag_list": [
+          {
+            "name": "坚防守备",
+            "desc": "首领幻影受到的伤害降低<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>。<color=#f29e38ff>弱点击破</color>后，行动额外延后，受到的伤害提高<color=#f29e38ff><unbreak>#2[i]%</unbreak></color>。",
+            "param": [
+              0.5,
+              1,
+              1.5
+            ],
+            "skill_id": 200401410,
+            "param_fix": [
+              0.5,
+              1,
+              1.5,
+              0,
+              0,
+              0
+            ],
+            "child": []
+          },
+          {
+            "name": "点数竞赛",
+            "desc": "首领幻影的技能会赋予所有我方和敌方单位<color=#f29e38ff><u>点数</u></color>",
+            "param": [],
+            "skill_id": null,
+            "param_fix": [],
+            "child": [
+              {
+                "name": "点数",
+                "desc": "敌方目标点数大于我方时，受到的伤害大幅降低，并获得韧性保护。我方角色攻击【点数】比自身低的敌方目标时，我方【点数】越高，敌方目标受到的伤害越高。点数的上限为<unbreak>100</unbreak>。",
+                "param": []
+              }
+            ]
+          },
+          {
+            "name": "庄家优势",
+            "desc": "当我方单位点数小于召唤物点数时，召唤物受到的伤害大幅降低。",
+            "param": [],
+            "skill_id": null,
+            "param_fix": [],
+            "child": []
+          },
+          {
+            "name": "先发优势",
+            "desc": "召唤物的点数越大，其生命上限越高。",
+            "param": [],
+            "skill_id": null,
+            "param_fix": [],
+            "child": []
+          }
+        ],
+        "difficulty_guide_list": [
+          {
+            "desc": "首领幻影受到的伤害降低<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>。<color=#f29e38ff>弱点击破</color>后，行动额外延后，受到的伤害提高<color=#f29e38ff><unbreak>#2[i]%</unbreak></color>。",
+            "param": [
+              0.5,
+              1,
+              1.5
+            ],
+            "skill_id": 200401410,
+            "param_fix": [
+              0.5,
+              1,
+              1.5,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "desc": "敌方目标具有<color=#f29e38ff>【点数】</color>，骰子被消灭后，其【点数】会<color=#f29e38ff>累加</color>到我方。",
+            "param": [],
+            "skill_id": null,
+            "param_fix": []
+          },
+          {
+            "desc": "敌方目标【点数】<color=#f29e38ff>大于</color>我方时，受到的伤害大幅降低；敌方目标【点数】<color=#f29e38ff>小于等于</color>我方时，受到的伤害提高。",
+            "param": [],
+            "skill_id": null,
+            "param_fix": []
+          }
+        ],
+        "text_guide_list": [
+          "优先消灭【点数】<color=#f29e38ff>小于等于我方</color>的骰子，累积【点数】。在【翻倍骰子】离开前将其消灭，以获取更多【点数】。",
+          "当我方【点数】大于等于首领幻影时，尽快击破首领幻影。"
+        ],
+        "phase_list": [
+          {
+            "name": "阶段一：赌局开场",
+            "desc": "敌方目标具有【点数】，其【点数】大于我方时，受到的伤害大幅降低，且会获得韧性保护。",
+            "answer": "当我方【点数】小于等于首领幻影时，优先消灭【点数】小于等于我方的骰子，以累积点数。",
+            "difficulty": 1,
+            "skill_list": [
+              100511
+            ]
+          },
+          {
+            "name": "阶段二：双倍大奖",
+            "desc": "首领幻影的【收益抽成】会额外使我方【点数】降低，并且场上会出现【翻倍骰子】。",
+            "answer": "在【翻倍骰子】离开前将其消灭，可使我方【点数】翻倍。",
+            "difficulty": 1,
+            "skill_list": [
+              100521
+            ]
+          }
+        ]
+      },
+      "boss_monster_config2": {
+        "difficulty": 2,
+        "difficulty_list": [
+          1,
+          1,
+          3,
+          4
+        ],
+        "tag_list": [
+          {
+            "name": "坚防守备",
+            "desc": "首领幻影受到的伤害降低<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>。<color=#f29e38ff>弱点击破</color>后，行动额外延后，受到的伤害提高<color=#f29e38ff><unbreak>#2[i]%</unbreak></color>。",
+            "param": [
+              0.6,
+              1.25,
+              1
+            ],
+            "skill_id": 801502218,
+            "param_fix": [
+              0.5,
+              1,
+              1.5
+            ],
+            "child": []
+          },
+          {
+            "name": "移花接木",
+            "desc": "召唤新的【玄莲】时，首领幻影会进入<color=#f29e38ff><u>韧性保护</u></color>状态。消灭任意召唤物会使首领幻影的韧性保护解除，并且对首领幻影造成额外韧性削减。",
+            "param": [],
+            "skill_id": null,
+            "param_fix": [],
+            "child": [
+              {
+                "name": "韧性保护",
+                "desc": "韧性值无法受到削减。",
+                "param": []
+              }
+            ]
+          },
+          {
+            "name": "枯木逢春",
+            "desc": "在一阶段，首领幻影在切换形态时会回复召唤物<color=#f29e38ff><unbreak>#2[i]%</unbreak></color>生命值。",
+            "param": [
+              0.3
+            ],
+            "skill_id": 801502220,
+            "param_fix": [
+              0.2,
+              0.25
+            ],
+            "child": []
+          },
+          {
+            "name": "空花阳焰",
+            "desc": "在二阶段，召唤物的生命上限提高<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>。",
+            "param": [
+              0.35
+            ],
+            "skill_id": 801502220,
+            "param_fix": [
+              0.2,
+              0.25
+            ],
+            "child": []
+          }
+        ],
+        "difficulty_guide_list": [
+          {
+            "desc": "首领幻影受到的伤害降低<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>。<color=#f29e38ff>弱点击破</color>后，行动额外延后，受到的伤害提高<color=#f29e38ff><unbreak>#2[i]%</unbreak></color>。",
+            "param": [
+              0.6,
+              1.25,
+              1
+            ],
+            "skill_id": 801502218,
+            "param_fix": [
+              0.5,
+              1,
+              1.5
+            ]
+          },
+          {
+            "desc": "召唤新的【玄莲】时，首领幻影会进入<color=#f29e38ff>韧性保护</color>状态。",
+            "param": [],
+            "skill_id": null,
+            "param_fix": []
+          },
+          {
+            "desc": "每次消灭【丰饶玄莲】可提高我方全体<color=#f29e38ff>全属性伤害</color>，每次消灭【破灭玄莲】可提高我方全体<color=#f29e38ff>击破特攻</color>，以上两类增益在获得其中一类后无法获得另外一类。",
+            "param": [],
+            "skill_id": null,
+            "param_fix": []
+          }
+        ],
+        "text_guide_list": [
+          "<color=#f29e38ff>击破</color>首领幻影会大幅提高其受到的伤害，使我方全体恢复战技点并行动提前。",
+          "消灭<color=#f29e38ff>召唤物</color>，可解除首领幻影的韧性保护，并削弱首领幻影。",
+          "根据我方角色需要选择合适的【玄莲】消灭：消灭【丰饶玄莲】提高我方<color=#f29e38ff>全属性伤害</color>，或消灭【破灭玄莲】提高我方<color=#f29e38ff>击破特攻</color>。"
+        ],
+        "phase_list": [
+          {
+            "name": "阶段一：浮翠流丹",
+            "desc": "首领幻影会在【丰饶形态】和【毁灭形态】之间切换，切换时会召唤【玄莲】。",
+            "answer": "应对策略：尽可能消灭更多【丰饶玄莲】或【破灭玄莲】中的一类，以获得更多增益效果。",
+            "difficulty": 1,
+            "skill_list": [
+              100611,
+              100612,
+              100613
+            ]
+          },
+          {
+            "name": "阶段二：逆风执炬",
+            "desc": "首领幻影的召唤物会锁定我方目标并对其施放【万劫不复】，造成高额伤害。",
+            "answer": "应对策略：在召唤物施放【万劫不复】前尽可能消灭它们，获得增益并削弱【万劫不复】威力。",
+            "difficulty": 1,
+            "skill_list": [
+              100621
+            ]
+          }
+        ]
+      },
+      "event_id_list1": [
+        {
+          "stage_id": 420152,
+          "stage_type": "Challenge",
+          "stage_name": 16496002327442687592,
+          "hard_level_group": 1,
+          "level": 70,
+          "elite_group": 702,
+          "level_graph_path": "Config/Level/StageCommonTemplate.json",
+          "stage_ability_config": [],
+          "battle_scoring_group": 902,
+          "sub_level_graphs": [],
+          "stage_config_data": [
+            {
+              "jdkamoanicm": "_Wave",
+              "mojjbfbkbnc": "1"
+            },
+            {
+              "jdkamoanicm": "_IsEliteBattle",
+              "mojjbfbkbnc": "1"
+            },
+            {
+              "jdkamoanicm": "_BGM",
+              "mojjbfbkbnc": "State_Penocony_Combat_Aventurine_Common"
+            },
+            {
+              "jdkamoanicm": "_BindingMazeBuff",
+              "mojjbfbkbnc": "3110003"
+            }
+          ],
+          "monster_list": [
+            {
+              "monster0": 803401202
+            }
+          ],
+          "level_lose_condition": [
+            "[CDT_WaitCustomString:Level_SpecialLose]"
+          ],
+          "level_win_condition": [
+            "[CDT_WaitCustomString:Level_SpecialWin]"
+          ],
+          "forbid_exit_battle": true,
+          "monster_warning_ratio": 1,
+          "trial_avatar_list": []
+        }
+      ],
+      "event_id_list2": [
+        {
+          "stage_id": 420142,
+          "stage_type": "Challenge",
+          "stage_name": 13763997922829013598,
+          "hard_level_group": 1,
+          "level": 70,
+          "elite_group": 702,
+          "level_graph_path": "Config/Level/StageCommonTemplate.json",
+          "stage_ability_config": [],
+          "battle_scoring_group": 902,
+          "sub_level_graphs": [],
+          "stage_config_data": [
+            {
+              "jdkamoanicm": "_Wave",
+              "mojjbfbkbnc": "1"
+            },
+            {
+              "jdkamoanicm": "_IsEliteBattle",
+              "mojjbfbkbnc": "1"
+            },
+            {
+              "jdkamoanicm": "_BGM",
+              "mojjbfbkbnc": "State_Xianzhou_Combat_Phantylia_01"
+            },
+            {
+              "jdkamoanicm": "_BindingMazeBuff",
+              "mojjbfbkbnc": "3110003"
+            }
+          ],
+          "monster_list": [
+            {
+              "monster0": 801502202
+            }
+          ],
+          "level_lose_condition": [
+            "[CDT_WaitCustomString:Level_SpecialLose]"
+          ],
+          "level_win_condition": [
+            "[CDT_WaitCustomString:Level_SpecialWin]"
+          ],
+          "forbid_exit_battle": true,
+          "monster_warning_ratio": 1,
+          "trial_avatar_list": []
+        }
+      ]
+    },
+    {
+      "id": 30033,
+      "name": "煽动博弈·难度<unbreak>03</unbreak>",
+      "challenge": [
+        {
+          "name": "获得#1分",
+          "param": 4000
+        },
+        {
+          "name": "获得#1分",
+          "param": 5200
+        },
+        {
+          "name": "获得#1分",
+          "param": 6600
+        }
+      ],
+      "damage_type1": [
+        "Physical",
+        "Ice",
+        "Thunder",
+        "Wind"
+      ],
+      "damage_type2": [
+        "Fire",
+        "Thunder",
+        "Wind",
+        "Imaginary"
+      ],
+      "maze_group_id1": 9,
+      "maze_group_id2": 14,
+      "boss_monster_id1": 803401203,
+      "boss_monster_id2": 801502203,
+      "boss_monster_id1_skill_list": [
+        803401201,
+        803401202,
+        803401203,
+        803401204,
+        803401205,
+        803401206,
+        803401207,
+        803401208,
+        803401209,
+        803401210,
+        803401211,
+        803401212,
+        803401213,
+        803401214,
+        803401215,
+        803401216,
+        803401217,
+        803401218,
+        803401219,
+        803401220,
+        803401221,
+        803401222
+      ],
+      "boss_monster_id2_skill_list": [
+        801502201,
+        801502202,
+        801502203,
+        801502204,
+        801502205,
+        801502206,
+        801502207,
+        801502208,
+        801502209,
+        801502210,
+        801502211,
+        801502212,
+        801502213,
+        801502214,
+        801502215,
+        801502216,
+        801502217,
+        801502218,
+        801502219,
+        801502220,
+        801502221,
+        801502222,
+        801502223
+      ],
+      "boss_monster_config1": {
+        "difficulty": 3,
+        "difficulty_list": [
+          1,
+          1,
+          3,
+          4
+        ],
+        "tag_list": [
+          {
+            "name": "坚防守备",
+            "desc": "首领幻影受到的伤害降低<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>。<color=#f29e38ff>弱点击破</color>后，行动额外延后，受到的伤害提高<color=#f29e38ff><unbreak>#2[i]%</unbreak></color>。",
+            "param": [
+              0.5,
+              1,
+              1.5
+            ],
+            "skill_id": 200401410,
+            "param_fix": [
+              0.5,
+              1,
+              1.5,
+              0,
+              0,
+              0
+            ],
+            "child": []
+          },
+          {
+            "name": "点数竞赛",
+            "desc": "首领幻影的技能会赋予所有我方和敌方单位<color=#f29e38ff><u>点数</u></color>",
+            "param": [],
+            "skill_id": null,
+            "param_fix": [],
+            "child": [
+              {
+                "name": "点数",
+                "desc": "敌方目标点数大于我方时，受到的伤害大幅降低，并获得韧性保护。我方角色攻击【点数】比自身低的敌方目标时，我方【点数】越高，敌方目标受到的伤害越高。点数的上限为<unbreak>100</unbreak>。",
+                "param": []
+              }
+            ]
+          },
+          {
+            "name": "庄家优势",
+            "desc": "当我方单位点数小于召唤物点数时，召唤物受到的伤害大幅降低。",
+            "param": [],
+            "skill_id": null,
+            "param_fix": [],
+            "child": []
+          },
+          {
+            "name": "先发优势",
+            "desc": "召唤物的点数越大，其生命上限越高。",
+            "param": [],
+            "skill_id": null,
+            "param_fix": [],
+            "child": []
+          }
+        ],
+        "difficulty_guide_list": [
+          {
+            "desc": "首领幻影受到的伤害降低<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>。<color=#f29e38ff>弱点击破</color>后，行动额外延后，受到的伤害提高<color=#f29e38ff><unbreak>#2[i]%</unbreak></color>。",
+            "param": [
+              0.5,
+              1,
+              1.5
+            ],
+            "skill_id": 200401410,
+            "param_fix": [
+              0.5,
+              1,
+              1.5,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "desc": "敌方目标具有<color=#f29e38ff>【点数】</color>，骰子被消灭后，其【点数】会<color=#f29e38ff>累加</color>到我方。",
+            "param": [],
+            "skill_id": null,
+            "param_fix": []
+          },
+          {
+            "desc": "敌方目标【点数】<color=#f29e38ff>大于</color>我方时，受到的伤害大幅降低；敌方目标【点数】<color=#f29e38ff>小于等于</color>我方时，受到的伤害提高。",
+            "param": [],
+            "skill_id": null,
+            "param_fix": []
+          }
+        ],
+        "text_guide_list": [
+          "优先消灭【点数】<color=#f29e38ff>小于等于我方</color>的骰子，累积【点数】。在【翻倍骰子】离开前将其消灭，以获取更多【点数】。",
+          "当我方【点数】大于等于首领幻影时，尽快击破首领幻影。"
+        ],
+        "phase_list": [
+          {
+            "name": "阶段一：赌局开场",
+            "desc": "敌方目标具有【点数】，其【点数】大于我方时，受到的伤害大幅降低，且会获得韧性保护。",
+            "answer": "当我方【点数】小于等于首领幻影时，优先消灭【点数】小于等于我方的骰子，以累积点数。",
+            "difficulty": 1,
+            "skill_list": [
+              100511
+            ]
+          },
+          {
+            "name": "阶段二：双倍大奖",
+            "desc": "首领幻影的【收益抽成】会额外使我方【点数】降低，并且场上会出现【翻倍骰子】。",
+            "answer": "在【翻倍骰子】离开前将其消灭，可使我方【点数】翻倍。",
+            "difficulty": 1,
+            "skill_list": [
+              100521
+            ]
+          }
+        ]
+      },
+      "boss_monster_config2": {
+        "difficulty": 3,
+        "difficulty_list": [
+          1,
+          1,
+          3,
+          4
+        ],
+        "tag_list": [
+          {
+            "name": "坚防守备",
+            "desc": "首领幻影受到的伤害降低<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>。<color=#f29e38ff>弱点击破</color>后，行动额外延后，受到的伤害提高<color=#f29e38ff><unbreak>#2[i]%</unbreak></color>。",
+            "param": [
+              0.6,
+              1.25,
+              1
+            ],
+            "skill_id": 801502218,
+            "param_fix": [
+              0.5,
+              1,
+              1.5
+            ],
+            "child": []
+          },
+          {
+            "name": "移花接木",
+            "desc": "召唤新的【玄莲】时，首领幻影会进入<color=#f29e38ff><u>韧性保护</u></color>状态。消灭任意召唤物会使首领幻影的韧性保护解除，并且对首领幻影造成额外韧性削减。",
+            "param": [],
+            "skill_id": null,
+            "param_fix": [],
+            "child": [
+              {
+                "name": "韧性保护",
+                "desc": "韧性值无法受到削减。",
+                "param": []
+              }
+            ]
+          },
+          {
+            "name": "枯木逢春",
+            "desc": "在一阶段，首领幻影在切换形态时会回复召唤物<color=#f29e38ff><unbreak>#2[i]%</unbreak></color>生命值。",
+            "param": [
+              0.3
+            ],
+            "skill_id": 801502220,
+            "param_fix": [
+              0.2,
+              0.25
+            ],
+            "child": []
+          },
+          {
+            "name": "空花阳焰",
+            "desc": "在二阶段，召唤物的生命上限提高<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>。",
+            "param": [
+              0.35
+            ],
+            "skill_id": 801502220,
+            "param_fix": [
+              0.2,
+              0.25
+            ],
+            "child": []
+          }
+        ],
+        "difficulty_guide_list": [
+          {
+            "desc": "首领幻影受到的伤害降低<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>。<color=#f29e38ff>弱点击破</color>后，行动额外延后，受到的伤害提高<color=#f29e38ff><unbreak>#2[i]%</unbreak></color>。",
+            "param": [
+              0.6,
+              1.25,
+              1
+            ],
+            "skill_id": 801502218,
+            "param_fix": [
+              0.5,
+              1,
+              1.5
+            ]
+          },
+          {
+            "desc": "召唤新的【玄莲】时，首领幻影会进入<color=#f29e38ff>韧性保护</color>状态。",
+            "param": [],
+            "skill_id": null,
+            "param_fix": []
+          },
+          {
+            "desc": "每次消灭【丰饶玄莲】可提高我方全体<color=#f29e38ff>全属性伤害</color>，每次消灭【破灭玄莲】可提高我方全体<color=#f29e38ff>击破特攻</color>，以上两类增益在获得其中一类后无法获得另外一类。",
+            "param": [],
+            "skill_id": null,
+            "param_fix": []
+          }
+        ],
+        "text_guide_list": [
+          "<color=#f29e38ff>击破</color>首领幻影会大幅提高其受到的伤害，使我方全体恢复战技点并行动提前。",
+          "消灭<color=#f29e38ff>召唤物</color>，可解除首领幻影的韧性保护，并削弱首领幻影。",
+          "根据我方角色需要选择合适的【玄莲】消灭：消灭【丰饶玄莲】提高我方<color=#f29e38ff>全属性伤害</color>，或消灭【破灭玄莲】提高我方<color=#f29e38ff>击破特攻</color>。"
+        ],
+        "phase_list": [
+          {
+            "name": "阶段一：浮翠流丹",
+            "desc": "首领幻影会在【丰饶形态】和【毁灭形态】之间切换，切换时会召唤【玄莲】。",
+            "answer": "应对策略：尽可能消灭更多【丰饶玄莲】或【破灭玄莲】中的一类，以获得更多增益效果。",
+            "difficulty": 1,
+            "skill_list": [
+              100611,
+              100612,
+              100613
+            ]
+          },
+          {
+            "name": "阶段二：逆风执炬",
+            "desc": "首领幻影的召唤物会锁定我方目标并对其施放【万劫不复】，造成高额伤害。",
+            "answer": "应对策略：在召唤物施放【万劫不复】前尽可能消灭它们，获得增益并削弱【万劫不复】威力。",
+            "difficulty": 1,
+            "skill_list": [
+              100621
+            ]
+          }
+        ]
+      },
+      "event_id_list1": [
+        {
+          "stage_id": 420153,
+          "stage_type": "Challenge",
+          "stage_name": 16496002327442687592,
+          "hard_level_group": 1,
+          "level": 80,
+          "elite_group": 703,
+          "level_graph_path": "Config/Level/StageCommonTemplate.json",
+          "stage_ability_config": [],
+          "battle_scoring_group": 902,
+          "sub_level_graphs": [],
+          "stage_config_data": [
+            {
+              "jdkamoanicm": "_Wave",
+              "mojjbfbkbnc": "1"
+            },
+            {
+              "jdkamoanicm": "_IsEliteBattle",
+              "mojjbfbkbnc": "1"
+            },
+            {
+              "jdkamoanicm": "_BGM",
+              "mojjbfbkbnc": "State_Penocony_Combat_Aventurine_Common"
+            },
+            {
+              "jdkamoanicm": "_BindingMazeBuff",
+              "mojjbfbkbnc": "3110003"
+            }
+          ],
+          "monster_list": [
+            {
+              "monster0": 803401203
+            }
+          ],
+          "level_lose_condition": [
+            "[CDT_WaitCustomString:Level_SpecialLose]"
+          ],
+          "level_win_condition": [
+            "[CDT_WaitCustomString:Level_SpecialWin]"
+          ],
+          "forbid_exit_battle": true,
+          "monster_warning_ratio": 1,
+          "trial_avatar_list": []
+        }
+      ],
+      "event_id_list2": [
+        {
+          "stage_id": 420143,
+          "stage_type": "Challenge",
+          "stage_name": 13763997922829013598,
+          "hard_level_group": 1,
+          "level": 80,
+          "elite_group": 703,
+          "level_graph_path": "Config/Level/StageCommonTemplate.json",
+          "stage_ability_config": [],
+          "battle_scoring_group": 902,
+          "sub_level_graphs": [],
+          "stage_config_data": [
+            {
+              "jdkamoanicm": "_Wave",
+              "mojjbfbkbnc": "1"
+            },
+            {
+              "jdkamoanicm": "_IsEliteBattle",
+              "mojjbfbkbnc": "1"
+            },
+            {
+              "jdkamoanicm": "_BGM",
+              "mojjbfbkbnc": "State_Xianzhou_Combat_Phantylia_01"
+            },
+            {
+              "jdkamoanicm": "_BindingMazeBuff",
+              "mojjbfbkbnc": "3110003"
+            }
+          ],
+          "monster_list": [
+            {
+              "monster0": 801502203
+            }
+          ],
+          "level_lose_condition": [
+            "[CDT_WaitCustomString:Level_SpecialLose]"
+          ],
+          "level_win_condition": [
+            "[CDT_WaitCustomString:Level_SpecialWin]"
+          ],
+          "forbid_exit_battle": true,
+          "monster_warning_ratio": 1,
+          "trial_avatar_list": []
+        }
+      ]
+    },
+    {
+      "id": 30034,
+      "name": "煽动博弈·难度<unbreak>04</unbreak>",
+      "challenge": [
+        {
+          "name": "获得#1分",
+          "param": 4000
+        },
+        {
+          "name": "获得#1分",
+          "param": 5200
+        },
+        {
+          "name": "获得#1分",
+          "param": 6600
+        }
+      ],
+      "damage_type1": [
+        "Physical",
+        "Ice",
+        "Thunder",
+        "Wind"
+      ],
+      "damage_type2": [
+        "Fire",
+        "Thunder",
+        "Wind",
+        "Imaginary"
+      ],
+      "maze_group_id1": 9,
+      "maze_group_id2": 14,
+      "boss_monster_id1": 803401204,
+      "boss_monster_id2": 801502204,
+      "boss_monster_id1_skill_list": [
+        803401201,
+        803401202,
+        803401203,
+        803401204,
+        803401205,
+        803401206,
+        803401207,
+        803401208,
+        803401209,
+        803401210,
+        803401211,
+        803401212,
+        803401213,
+        803401214,
+        803401215,
+        803401216,
+        803401217,
+        803401218,
+        803401219,
+        803401220,
+        803401221,
+        803401222
+      ],
+      "boss_monster_id2_skill_list": [
+        801502201,
+        801502202,
+        801502203,
+        801502204,
+        801502205,
+        801502206,
+        801502207,
+        801502208,
+        801502209,
+        801502210,
+        801502211,
+        801502212,
+        801502213,
+        801502214,
+        801502215,
+        801502216,
+        801502217,
+        801502218,
+        801502219,
+        801502220,
+        801502221,
+        801502222,
+        801502223
+      ],
+      "boss_monster_config1": {
+        "difficulty": 4,
+        "difficulty_list": [
+          1,
+          1,
+          3,
+          4
+        ],
+        "tag_list": [
+          {
+            "name": "坚防守备",
+            "desc": "首领幻影受到的伤害降低<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>。<color=#f29e38ff>弱点击破</color>后，行动额外延后，受到的伤害提高<color=#f29e38ff><unbreak>#2[i]%</unbreak></color>。",
+            "param": [
+              0.5,
+              1,
+              1.5
+            ],
+            "skill_id": 200401410,
+            "param_fix": [
+              0.5,
+              1,
+              1.5,
+              0,
+              0,
+              0
+            ],
+            "child": []
+          },
+          {
+            "name": "点数竞赛",
+            "desc": "首领幻影的技能会赋予所有我方和敌方单位<color=#f29e38ff><u>点数</u></color>",
+            "param": [],
+            "skill_id": null,
+            "param_fix": [],
+            "child": [
+              {
+                "name": "点数",
+                "desc": "敌方目标点数大于我方时，受到的伤害大幅降低，并获得韧性保护。我方角色攻击【点数】比自身低的敌方目标时，我方【点数】越高，敌方目标受到的伤害越高。点数的上限为<unbreak>100</unbreak>。",
+                "param": []
+              }
+            ]
+          },
+          {
+            "name": "庄家优势",
+            "desc": "当我方单位点数小于召唤物点数时，召唤物受到的伤害大幅降低。",
+            "param": [],
+            "skill_id": null,
+            "param_fix": [],
+            "child": []
+          },
+          {
+            "name": "先发优势",
+            "desc": "召唤物的点数越大，其生命上限越高。",
+            "param": [],
+            "skill_id": null,
+            "param_fix": [],
+            "child": []
+          }
+        ],
+        "difficulty_guide_list": [
+          {
+            "desc": "首领幻影受到的伤害降低<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>。<color=#f29e38ff>弱点击破</color>后，行动额外延后，受到的伤害提高<color=#f29e38ff><unbreak>#2[i]%</unbreak></color>。",
+            "param": [
+              0.5,
+              1,
+              1.5
+            ],
+            "skill_id": 200401410,
+            "param_fix": [
+              0.5,
+              1,
+              1.5,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "desc": "敌方目标具有<color=#f29e38ff>【点数】</color>，骰子被消灭后，其【点数】会<color=#f29e38ff>累加</color>到我方。",
+            "param": [],
+            "skill_id": null,
+            "param_fix": []
+          },
+          {
+            "desc": "敌方目标【点数】<color=#f29e38ff>大于</color>我方时，受到的伤害大幅降低；敌方目标【点数】<color=#f29e38ff>小于等于</color>我方时，受到的伤害提高。",
+            "param": [],
+            "skill_id": null,
+            "param_fix": []
+          }
+        ],
+        "text_guide_list": [
+          "优先消灭【点数】<color=#f29e38ff>小于等于我方</color>的骰子，累积【点数】。在【翻倍骰子】离开前将其消灭，以获取更多【点数】。",
+          "当我方【点数】大于等于首领幻影时，尽快击破首领幻影。"
+        ],
+        "phase_list": [
+          {
+            "name": "阶段一：赌局开场",
+            "desc": "敌方目标具有【点数】，其【点数】大于我方时，受到的伤害大幅降低，且会获得韧性保护。",
+            "answer": "当我方【点数】小于等于首领幻影时，优先消灭【点数】小于等于我方的骰子，以累积点数。",
+            "difficulty": 1,
+            "skill_list": [
+              100511
+            ]
+          },
+          {
+            "name": "阶段二：双倍大奖",
+            "desc": "首领幻影的【收益抽成】会额外使我方【点数】降低，并且场上会出现【翻倍骰子】。",
+            "answer": "在【翻倍骰子】离开前将其消灭，可使我方【点数】翻倍。",
+            "difficulty": 1,
+            "skill_list": [
+              100521
+            ]
+          }
+        ]
+      },
+      "boss_monster_config2": {
+        "difficulty": 4,
+        "difficulty_list": [
+          1,
+          1,
+          3,
+          4
+        ],
+        "tag_list": [
+          {
+            "name": "坚防守备",
+            "desc": "首领幻影受到的伤害降低<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>。<color=#f29e38ff>弱点击破</color>后，行动额外延后，受到的伤害提高<color=#f29e38ff><unbreak>#2[i]%</unbreak></color>。",
+            "param": [
+              0.6,
+              1.25,
+              1
+            ],
+            "skill_id": 801502218,
+            "param_fix": [
+              0.5,
+              1,
+              1.5
+            ],
+            "child": []
+          },
+          {
+            "name": "移花接木",
+            "desc": "召唤新的【玄莲】时，首领幻影会进入<color=#f29e38ff><u>韧性保护</u></color>状态。消灭任意召唤物会使首领幻影的韧性保护解除，并且对首领幻影造成额外韧性削减。",
+            "param": [],
+            "skill_id": null,
+            "param_fix": [],
+            "child": [
+              {
+                "name": "韧性保护",
+                "desc": "韧性值无法受到削减。",
+                "param": []
+              }
+            ]
+          },
+          {
+            "name": "枯木逢春",
+            "desc": "在一阶段，首领幻影在切换形态时会回复召唤物<color=#f29e38ff><unbreak>#2[i]%</unbreak></color>生命值。",
+            "param": [
+              0.3
+            ],
+            "skill_id": 801502220,
+            "param_fix": [
+              0.2,
+              0.25
+            ],
+            "child": []
+          },
+          {
+            "name": "空花阳焰",
+            "desc": "在二阶段，召唤物的生命上限提高<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>。",
+            "param": [
+              0.35
+            ],
+            "skill_id": 801502220,
+            "param_fix": [
+              0.2,
+              0.25
+            ],
+            "child": []
+          }
+        ],
+        "difficulty_guide_list": [
+          {
+            "desc": "首领幻影受到的伤害降低<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>。<color=#f29e38ff>弱点击破</color>后，行动额外延后，受到的伤害提高<color=#f29e38ff><unbreak>#2[i]%</unbreak></color>。",
+            "param": [
+              0.6,
+              1.25,
+              1
+            ],
+            "skill_id": 801502218,
+            "param_fix": [
+              0.5,
+              1,
+              1.5
+            ]
+          },
+          {
+            "desc": "召唤新的【玄莲】时，首领幻影会进入<color=#f29e38ff>韧性保护</color>状态。",
+            "param": [],
+            "skill_id": null,
+            "param_fix": []
+          },
+          {
+            "desc": "每次消灭【丰饶玄莲】可提高我方全体<color=#f29e38ff>全属性伤害</color>，每次消灭【破灭玄莲】可提高我方全体<color=#f29e38ff>击破特攻</color>，以上两类增益在获得其中一类后无法获得另外一类。",
+            "param": [],
+            "skill_id": null,
+            "param_fix": []
+          }
+        ],
+        "text_guide_list": [
+          "<color=#f29e38ff>击破</color>首领幻影会大幅提高其受到的伤害，使我方全体恢复战技点并行动提前。",
+          "消灭<color=#f29e38ff>召唤物</color>，可解除首领幻影的韧性保护，并削弱首领幻影。",
+          "根据我方角色需要选择合适的【玄莲】消灭：消灭【丰饶玄莲】提高我方<color=#f29e38ff>全属性伤害</color>，或消灭【破灭玄莲】提高我方<color=#f29e38ff>击破特攻</color>。"
+        ],
+        "phase_list": [
+          {
+            "name": "阶段一：浮翠流丹",
+            "desc": "首领幻影会在【丰饶形态】和【毁灭形态】之间切换，切换时会召唤【玄莲】。",
+            "answer": "应对策略：尽可能消灭更多【丰饶玄莲】或【破灭玄莲】中的一类，以获得更多增益效果。",
+            "difficulty": 1,
+            "skill_list": [
+              100611,
+              100612,
+              100613
+            ]
+          },
+          {
+            "name": "阶段二：逆风执炬",
+            "desc": "首领幻影的召唤物会锁定我方目标并对其施放【万劫不复】，造成高额伤害。",
+            "answer": "应对策略：在召唤物施放【万劫不复】前尽可能消灭它们，获得增益并削弱【万劫不复】威力。",
+            "difficulty": 1,
+            "skill_list": [
+              100621
+            ]
+          }
+        ]
+      },
+      "event_id_list1": [
+        {
+          "stage_id": 420154,
+          "stage_type": "Challenge",
+          "stage_name": 16496002327442687592,
+          "hard_level_group": 1,
+          "level": 90,
+          "elite_group": 704,
+          "level_graph_path": "Config/Level/StageCommonTemplate.json",
+          "stage_ability_config": [],
+          "battle_scoring_group": 902,
+          "sub_level_graphs": [],
+          "stage_config_data": [
+            {
+              "jdkamoanicm": "_Wave",
+              "mojjbfbkbnc": "1"
+            },
+            {
+              "jdkamoanicm": "_IsEliteBattle",
+              "mojjbfbkbnc": "1"
+            },
+            {
+              "jdkamoanicm": "_BGM",
+              "mojjbfbkbnc": "State_Penocony_Combat_Aventurine_Common"
+            },
+            {
+              "jdkamoanicm": "_BindingMazeBuff",
+              "mojjbfbkbnc": "3110003"
+            }
+          ],
+          "monster_list": [
+            {
+              "monster0": 803401204
+            }
+          ],
+          "level_lose_condition": [
+            "[CDT_WaitCustomString:Level_SpecialLose]"
+          ],
+          "level_win_condition": [
+            "[CDT_WaitCustomString:Level_SpecialWin]"
+          ],
+          "forbid_exit_battle": true,
+          "monster_warning_ratio": 1,
+          "trial_avatar_list": []
+        }
+      ],
+      "event_id_list2": [
+        {
+          "stage_id": 420144,
+          "stage_type": "Challenge",
+          "stage_name": 13763997922829013598,
+          "hard_level_group": 1,
+          "level": 90,
+          "elite_group": 704,
+          "level_graph_path": "Config/Level/StageCommonTemplate.json",
+          "stage_ability_config": [],
+          "battle_scoring_group": 902,
+          "sub_level_graphs": [],
+          "stage_config_data": [
+            {
+              "jdkamoanicm": "_Wave",
+              "mojjbfbkbnc": "1"
+            },
+            {
+              "jdkamoanicm": "_IsEliteBattle",
+              "mojjbfbkbnc": "1"
+            },
+            {
+              "jdkamoanicm": "_BGM",
+              "mojjbfbkbnc": "State_Xianzhou_Combat_Phantylia_01"
+            },
+            {
+              "jdkamoanicm": "_BindingMazeBuff",
+              "mojjbfbkbnc": "3110003"
+            }
+          ],
+          "monster_list": [
+            {
+              "monster0": 801502204
+            }
+          ],
+          "level_lose_condition": [
+            "[CDT_WaitCustomString:Level_SpecialLose]"
+          ],
+          "level_win_condition": [
+            "[CDT_WaitCustomString:Level_SpecialWin]"
+          ],
+          "forbid_exit_battle": true,
+          "monster_warning_ratio": 1,
+          "trial_avatar_list": []
+        }
+      ]
+    }
+  ]
+}

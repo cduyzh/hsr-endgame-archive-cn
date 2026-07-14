@@ -1,0 +1,1301 @@
+[
+  {
+    "id": 2701,
+    "name": "饮月之乱其一",
+    "group_name": "饮月之乱",
+    "desc": "我方目标施放终结技时，获得【记忆印记】，该效果最多叠加<color=#f29e38ff><unbreak>#2[i]</unbreak></color>层。\\n每个轮开始时，为我方全体恢复基于【记忆印记】层数的能量（每层恢复<color=#f29e38ff><unbreak>#3[i]</unbreak></color>点能量），该效果恢复的能量可以超出目标的能量上限。",
+    "param": [
+      1,
+      10,
+      10
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Physical",
+      "Ice"
+    ],
+    "damage_type2": [
+      "Fire",
+      "Quantum"
+    ],
+    "maze_group_id1": 4,
+    "maze_group_id2": 5,
+    "npc_monster_id_list1": [
+      2023030
+    ],
+    "npc_monster_id_list2": [
+      1023020
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30017161,
+        "stage_type": "Challenge",
+        "stage_name": 7086853316639384589,
+        "hard_level_group": 3,
+        "level": 68,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30118"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 2022060,
+            "monster1": 2023030,
+            "monster2": 2022060,
+            "monster3": 2022110
+          },
+          {
+            "monster0": 2023030,
+            "monster1": 1003010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30017162,
+        "stage_type": "Challenge",
+        "stage_name": 6366857954791301483,
+        "hard_level_group": 3,
+        "level": 68,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30118"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 1022010,
+            "monster1": 8002010,
+            "monster2": 1023020,
+            "monster3": 8002010
+          },
+          {
+            "monster0": 1023020,
+            "monster1": 8003010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 2702,
+    "name": "饮月之乱其二",
+    "group_name": "饮月之乱",
+    "desc": "我方目标施放终结技时，获得【记忆印记】，该效果最多叠加<color=#f29e38ff><unbreak>#2[i]</unbreak></color>层。\\n每个轮开始时，为我方全体恢复基于【记忆印记】层数的能量（每层恢复<color=#f29e38ff><unbreak>#3[i]</unbreak></color>点能量），该效果恢复的能量可以超出目标的能量上限。",
+    "param": [
+      1,
+      10,
+      10
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Fire",
+      "Ice"
+    ],
+    "damage_type2": [
+      "Physical",
+      "Imaginary"
+    ],
+    "maze_group_id1": 4,
+    "maze_group_id2": 5,
+    "npc_monster_id_list1": [
+      2023020
+    ],
+    "npc_monster_id_list2": [
+      1004030
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30017171,
+        "stage_type": "Challenge",
+        "stage_name": 5650742420150656798,
+        "hard_level_group": 3,
+        "level": 70,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30118"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 2022040,
+            "monster1": 2023020,
+            "monster2": 2022050
+          },
+          {
+            "monster0": 2023020,
+            "monster1": 8003050
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30017172,
+        "stage_type": "Challenge",
+        "stage_name": 10421477324829753462,
+        "hard_level_group": 3,
+        "level": 70,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30118"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 2002030,
+            "monster1": 2013020,
+            "monster2": 2002030
+          },
+          {
+            "monster0": 1004030,
+            "monster1": 2013020
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 2703,
+    "name": "饮月之乱其三",
+    "group_name": "饮月之乱",
+    "desc": "我方目标施放终结技时，获得【记忆印记】，该效果最多叠加<color=#f29e38ff><unbreak>#2[i]</unbreak></color>层。\\n每个轮开始时，为我方全体恢复基于【记忆印记】层数的能量（每层恢复<color=#f29e38ff><unbreak>#3[i]</unbreak></color>点能量），该效果恢复的能量可以超出目标的能量上限。",
+    "param": [
+      1,
+      10,
+      10
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Wind",
+      "Imaginary"
+    ],
+    "damage_type2": [
+      "Fire",
+      "Thunder",
+      "Wind"
+    ],
+    "maze_group_id1": 4,
+    "maze_group_id2": 5,
+    "npc_monster_id_list1": [
+      2023010
+    ],
+    "npc_monster_id_list2": [
+      1014010
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30017181,
+        "stage_type": "Challenge",
+        "stage_name": 189339872378837144,
+        "hard_level_group": 3,
+        "level": 73,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30118"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 2022110,
+            "monster1": 2023010,
+            "monster2": 2022110
+          },
+          {
+            "monster0": 2023010,
+            "monster1": 8013010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30017182,
+        "stage_type": "Challenge",
+        "stage_name": 7306112122138119445,
+        "hard_level_group": 3,
+        "level": 73,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30118"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 8002010,
+            "monster1": 8003040,
+            "monster2": 1012030,
+            "monster3": 1012030
+          },
+          {
+            "monster0": 1014010,
+            "monster1": 8003040
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 2704,
+    "name": "饮月之乱其四",
+    "group_name": "饮月之乱",
+    "desc": "我方目标施放终结技时，获得【记忆印记】，该效果最多叠加<color=#f29e38ff><unbreak>#2[i]</unbreak></color>层。\\n每个轮开始时，为我方全体恢复基于【记忆印记】层数的能量（每层恢复<color=#f29e38ff><unbreak>#3[i]</unbreak></color>点能量），该效果恢复的能量可以超出目标的能量上限。",
+    "param": [
+      1,
+      10,
+      10
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Physical",
+      "Thunder"
+    ],
+    "damage_type2": [
+      "Ice",
+      "Imaginary"
+    ],
+    "maze_group_id1": 4,
+    "maze_group_id2": 5,
+    "npc_monster_id_list1": [
+      2013020
+    ],
+    "npc_monster_id_list2": [
+      8033010
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30017191,
+        "stage_type": "Challenge",
+        "stage_name": 17363227603743607405,
+        "hard_level_group": 3,
+        "level": 75,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30118"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 2011010,
+            "monster1": 2012010,
+            "monster2": 2013020,
+            "monster3": 2012010
+          },
+          {
+            "monster0": 2013020,
+            "monster1": 2023030
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30017192,
+        "stage_type": "Challenge",
+        "stage_name": 13208664396652254584,
+        "hard_level_group": 3,
+        "level": 75,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30118"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 8033010,
+            "monster1": 8032020
+          },
+          {
+            "monster0": 8033010,
+            "monster1": 1013020
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 2705,
+    "name": "饮月之乱其五",
+    "group_name": "饮月之乱",
+    "desc": "我方目标施放终结技时，获得【记忆印记】，该效果最多叠加<color=#f29e38ff><unbreak>#2[i]</unbreak></color>层。\\n每个轮开始时，为我方全体恢复基于【记忆印记】层数的能量（每层恢复<color=#f29e38ff><unbreak>#3[i]</unbreak></color>点能量），该效果恢复的能量可以超出目标的能量上限。",
+    "param": [
+      1,
+      10,
+      10
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Wind",
+      "Quantum"
+    ],
+    "damage_type2": [
+      "Physical",
+      "Fire",
+      "Ice"
+    ],
+    "maze_group_id1": 4,
+    "maze_group_id2": 5,
+    "npc_monster_id_list1": [
+      2013010
+    ],
+    "npc_monster_id_list2": [
+      3024010
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30017201,
+        "stage_type": "Challenge",
+        "stage_name": 6099984704558274809,
+        "hard_level_group": 3,
+        "level": 78,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30118"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 2022110,
+            "monster1": 2013010,
+            "monster2": 2022110
+          },
+          {
+            "monster0": 2013010,
+            "monster1": 8003030
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30017202,
+        "stage_type": "Challenge",
+        "stage_name": 14805961183082142131,
+        "hard_level_group": 3,
+        "level": 78,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30118"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 1022010,
+            "monster1": 8003020,
+            "monster2": 8003020,
+            "monster3": 1022020
+          },
+          {
+            "monster0": 3024010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 2706,
+    "name": "饮月之乱其六",
+    "group_name": "饮月之乱",
+    "desc": "我方目标施放终结技时，获得【记忆印记】，该效果最多叠加<color=#f29e38ff><unbreak>#2[i]</unbreak></color>层。\\n每个轮开始时，为我方全体恢复基于【记忆印记】层数的能量（每层恢复<color=#f29e38ff><unbreak>#3[i]</unbreak></color>点能量），该效果恢复的能量可以超出目标的能量上限。",
+    "param": [
+      1,
+      10,
+      10
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Physical",
+      "Ice"
+    ],
+    "damage_type2": [
+      "Fire",
+      "Quantum"
+    ],
+    "maze_group_id1": 4,
+    "maze_group_id2": 5,
+    "npc_monster_id_list1": [
+      2023030
+    ],
+    "npc_monster_id_list2": [
+      1023020
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30017211,
+        "stage_type": "Challenge",
+        "stage_name": 7086853316639384589,
+        "hard_level_group": 3,
+        "level": 80,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30118"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 2022060,
+            "monster1": 2023030,
+            "monster2": 2022060,
+            "monster3": 2022110
+          },
+          {
+            "monster0": 2023030,
+            "monster1": 1003010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30017212,
+        "stage_type": "Challenge",
+        "stage_name": 6366857954791301483,
+        "hard_level_group": 3,
+        "level": 80,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30118"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 1022010,
+            "monster1": 8002010,
+            "monster2": 1023020,
+            "monster3": 8002010
+          },
+          {
+            "monster0": 1023020,
+            "monster1": 8003010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 2707,
+    "name": "饮月之乱其七",
+    "group_name": "饮月之乱",
+    "desc": "我方目标施放终结技时，获得【记忆印记】，该效果最多叠加<color=#f29e38ff><unbreak>#2[i]</unbreak></color>层。\\n每个轮开始时，为我方全体恢复基于【记忆印记】层数的能量（每层恢复<color=#f29e38ff><unbreak>#3[i]</unbreak></color>点能量），该效果恢复的能量可以超出目标的能量上限。",
+    "param": [
+      1,
+      10,
+      10
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Fire",
+      "Ice"
+    ],
+    "damage_type2": [
+      "Physical",
+      "Imaginary"
+    ],
+    "maze_group_id1": 4,
+    "maze_group_id2": 5,
+    "npc_monster_id_list1": [
+      2023020
+    ],
+    "npc_monster_id_list2": [
+      1004030
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30017221,
+        "stage_type": "Challenge",
+        "stage_name": 5650742420150656798,
+        "hard_level_group": 3,
+        "level": 83,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30118"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 2022040,
+            "monster1": 2023020,
+            "monster2": 2022050
+          },
+          {
+            "monster0": 2023020,
+            "monster1": 8003050
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30017222,
+        "stage_type": "Challenge",
+        "stage_name": 10421477324829753462,
+        "hard_level_group": 3,
+        "level": 83,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30118"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 2002030,
+            "monster1": 2013020,
+            "monster2": 2002030
+          },
+          {
+            "monster0": 1004030,
+            "monster1": 2013020
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 2708,
+    "name": "饮月之乱其八",
+    "group_name": "饮月之乱",
+    "desc": "我方目标施放终结技时，获得【记忆印记】，该效果最多叠加<color=#f29e38ff><unbreak>#2[i]</unbreak></color>层。\\n每个轮开始时，为我方全体恢复基于【记忆印记】层数的能量（每层恢复<color=#f29e38ff><unbreak>#3[i]</unbreak></color>点能量），该效果恢复的能量可以超出目标的能量上限。",
+    "param": [
+      1,
+      10,
+      10
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Wind",
+      "Imaginary"
+    ],
+    "damage_type2": [
+      "Fire",
+      "Thunder",
+      "Wind"
+    ],
+    "maze_group_id1": 4,
+    "maze_group_id2": 5,
+    "npc_monster_id_list1": [
+      2023010
+    ],
+    "npc_monster_id_list2": [
+      1014010
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30017231,
+        "stage_type": "Challenge",
+        "stage_name": 189339872378837144,
+        "hard_level_group": 3,
+        "level": 85,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30118"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 2022110,
+            "monster1": 2023010,
+            "monster2": 2022110
+          },
+          {
+            "monster0": 2023010,
+            "monster1": 8013010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30017232,
+        "stage_type": "Challenge",
+        "stage_name": 7306112122138119445,
+        "hard_level_group": 3,
+        "level": 85,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30118"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 8002010,
+            "monster1": 8003040,
+            "monster2": 1012030,
+            "monster3": 1012030
+          },
+          {
+            "monster0": 1014010,
+            "monster1": 8003040
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 2709,
+    "name": "饮月之乱其九",
+    "group_name": "饮月之乱",
+    "desc": "我方目标施放终结技时，获得【记忆印记】，该效果最多叠加<color=#f29e38ff><unbreak>#2[i]</unbreak></color>层。\\n每个轮开始时，为我方全体恢复基于【记忆印记】层数的能量（每层恢复<color=#f29e38ff><unbreak>#3[i]</unbreak></color>点能量），该效果恢复的能量可以超出目标的能量上限。",
+    "param": [
+      1,
+      10,
+      10
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Physical",
+      "Thunder"
+    ],
+    "damage_type2": [
+      "Ice",
+      "Imaginary"
+    ],
+    "maze_group_id1": 4,
+    "maze_group_id2": 5,
+    "npc_monster_id_list1": [
+      2013020
+    ],
+    "npc_monster_id_list2": [
+      8033010
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30017241,
+        "stage_type": "Challenge",
+        "stage_name": 17363227603743607405,
+        "hard_level_group": 3,
+        "level": 88,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30118"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 2011010,
+            "monster1": 2012010,
+            "monster2": 2013020,
+            "monster3": 2012010
+          },
+          {
+            "monster0": 2013020,
+            "monster1": 2023030
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30017242,
+        "stage_type": "Challenge",
+        "stage_name": 13208664396652254584,
+        "hard_level_group": 3,
+        "level": 88,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30118"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 8033010,
+            "monster1": 8032020
+          },
+          {
+            "monster0": 8033010,
+            "monster1": 1013020
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 2710,
+    "name": "饮月之乱其十",
+    "group_name": "饮月之乱",
+    "desc": "我方目标施放终结技时，获得【记忆印记】，该效果最多叠加<color=#f29e38ff><unbreak>#2[i]</unbreak></color>层。\\n每个轮开始时，为我方全体恢复基于【记忆印记】层数的能量（每层恢复<color=#f29e38ff><unbreak>#3[i]</unbreak></color>点能量），该效果恢复的能量可以超出目标的能量上限。",
+    "param": [
+      1,
+      10,
+      10
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Wind",
+      "Quantum"
+    ],
+    "damage_type2": [
+      "Physical",
+      "Ice"
+    ],
+    "maze_group_id1": 4,
+    "maze_group_id2": 5,
+    "npc_monster_id_list1": [
+      2013010
+    ],
+    "npc_monster_id_list2": [
+      3024010
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30017251,
+        "stage_type": "Challenge",
+        "stage_name": 6099984704558274809,
+        "hard_level_group": 3,
+        "level": 90,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30118"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 2022110,
+            "monster1": 2013010,
+            "monster2": 2022110
+          },
+          {
+            "monster0": 2013010,
+            "monster1": 8003030
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30017252,
+        "stage_type": "Challenge",
+        "stage_name": 14805961183082142131,
+        "hard_level_group": 3,
+        "level": 90,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30118"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 1022010,
+            "monster1": 8003020,
+            "monster2": 8003020,
+            "monster3": 1022020
+          },
+          {
+            "monster0": 3024010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  }
+]

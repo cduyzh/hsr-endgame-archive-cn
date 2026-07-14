@@ -1,0 +1,1588 @@
+[
+  {
+    "id": 4801,
+    "name": "堤溃蚁穴其一",
+    "group_name": "堤溃蚁穴",
+    "desc": "每个波次开始时，为我方恢复<color=#f29e38ff><unbreak>#1[i]</unbreak></color>个战技点，我方目标施放战技或消耗战技点时，为【记忆紊流】增加<color=#f29e38ff><unbreak>#2[i]</unbreak></color>段攻击段数，最多叠加<color=#f29e38ff><unbreak>#3[i]</unbreak></color>段。\\n每个轮开始时，【记忆紊流】的每段攻击对随机敌方目标造成1次真实伤害。",
+    "param": [
+      4,
+      1,
+      15,
+      0.15,
+      0.025,
+      0.015
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Quantum"
+    ],
+    "damage_type2": [
+      "Physical",
+      "Imaginary"
+    ],
+    "maze_group_id1": 4,
+    "maze_group_id2": 5,
+    "npc_monster_id_list1": [
+      1023020
+    ],
+    "npc_monster_id_list2": [
+      2013020
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30119011,
+        "stage_type": "Challenge",
+        "stage_name": 6366857954791301483,
+        "hard_level_group": 3,
+        "level": 68,
+        "elite_group": 273,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30142"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 8002010,
+            "monster1": 1023020
+          },
+          {
+            "monster0": 1023020,
+            "monster1": 8003030
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30119012,
+        "stage_type": "Challenge",
+        "stage_name": 17363227603743607405,
+        "hard_level_group": 3,
+        "level": 68,
+        "elite_group": 273,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30142"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 2002030,
+            "monster1": 2013020,
+            "monster2": 2002030
+          },
+          {
+            "monster0": 2013020,
+            "monster1": 8013010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 4802,
+    "name": "堤溃蚁穴其二",
+    "group_name": "堤溃蚁穴",
+    "desc": "每个波次开始时，为我方恢复<color=#f29e38ff><unbreak>#1[i]</unbreak></color>个战技点，我方目标施放战技或消耗战技点时，为【记忆紊流】增加<color=#f29e38ff><unbreak>#2[i]</unbreak></color>段攻击段数，最多叠加<color=#f29e38ff><unbreak>#3[i]</unbreak></color>段。\\n每个轮开始时，【记忆紊流】的每段攻击对随机敌方目标造成1次真实伤害。",
+    "param": [
+      4,
+      1,
+      15,
+      0.15,
+      0.025,
+      0.015
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Ice",
+      "Thunder"
+    ],
+    "damage_type2": [
+      "Fire",
+      "Thunder"
+    ],
+    "maze_group_id1": 4,
+    "maze_group_id2": 5,
+    "npc_monster_id_list1": [
+      1013010
+    ],
+    "npc_monster_id_list2": [
+      8003040
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30119021,
+        "stage_type": "Challenge",
+        "stage_name": 13087150147011258837,
+        "hard_level_group": 3,
+        "level": 70,
+        "elite_group": 274,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30142"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 1012010,
+            "monster1": 1013010,
+            "monster2": 1012010
+          },
+          {
+            "monster0": 1013010,
+            "monster1": 1013020
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30119022,
+        "stage_type": "Challenge",
+        "stage_name": 15864002628047023122,
+        "hard_level_group": 3,
+        "level": 70,
+        "elite_group": 274,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30142"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 3002010,
+            "monster1": 8003040,
+            "monster2": 3002010
+          },
+          {
+            "monster0": 8003040,
+            "monster1": 3003040
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 4803,
+    "name": "堤溃蚁穴其三",
+    "group_name": "堤溃蚁穴",
+    "desc": "每个波次开始时，为我方恢复<color=#f29e38ff><unbreak>#1[i]</unbreak></color>个战技点，我方目标施放战技或消耗战技点时，为【记忆紊流】增加<color=#f29e38ff><unbreak>#2[i]</unbreak></color>段攻击段数，最多叠加<color=#f29e38ff><unbreak>#3[i]</unbreak></color>段。\\n每个轮开始时，【记忆紊流】的每段攻击对随机敌方目标造成1次真实伤害。",
+    "param": [
+      4,
+      1,
+      15,
+      0.15,
+      0.025,
+      0.015
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Fire",
+      "Thunder"
+    ],
+    "damage_type2": [
+      "Physical"
+    ],
+    "maze_group_id1": 4,
+    "maze_group_id2": 5,
+    "npc_monster_id_list1": [
+      4053010
+    ],
+    "npc_monster_id_list2": [
+      4063010
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30119031,
+        "stage_type": "Challenge",
+        "stage_name": 6737091100483890017,
+        "hard_level_group": 3,
+        "level": 73,
+        "elite_group": 275,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30142"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 4053020
+          },
+          {
+            "monster0": 4053020,
+            "monster1": 4053010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30119032,
+        "stage_type": "Challenge",
+        "stage_name": 10875975535548862417,
+        "hard_level_group": 3,
+        "level": 73,
+        "elite_group": 275,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30142"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 4062010,
+            "monster1": 4063010,
+            "monster2": 4062010
+          },
+          {
+            "monster0": 4063010,
+            "monster1": 2013020
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 4804,
+    "name": "堤溃蚁穴其四",
+    "group_name": "堤溃蚁穴",
+    "desc": "每个波次开始时，为我方恢复<color=#f29e38ff><unbreak>#1[i]</unbreak></color>个战技点，我方目标施放战技或消耗战技点时，为【记忆紊流】增加<color=#f29e38ff><unbreak>#2[i]</unbreak></color>段攻击段数，最多叠加<color=#f29e38ff><unbreak>#3[i]</unbreak></color>段。\\n每个轮开始时，【记忆紊流】的每段攻击对随机敌方目标造成1次真实伤害。",
+    "param": [
+      4,
+      1,
+      15,
+      0.15,
+      0.025,
+      0.015
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Fire",
+      "Ice"
+    ],
+    "damage_type2": [
+      "Fire"
+    ],
+    "maze_group_id1": 4,
+    "maze_group_id2": 5,
+    "npc_monster_id_list1": [
+      1013010
+    ],
+    "npc_monster_id_list2": [
+      3003010
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30119041,
+        "stage_type": "Challenge",
+        "stage_name": 13087150147011258837,
+        "hard_level_group": 3,
+        "level": 75,
+        "elite_group": 276,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30142"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 1012030,
+            "monster1": 1013010
+          },
+          {
+            "monster0": 1013010,
+            "monster1": 8003050
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30119042,
+        "stage_type": "Challenge",
+        "stage_name": 9344842774432863716,
+        "hard_level_group": 3,
+        "level": 75,
+        "elite_group": 276,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30142"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 3012020,
+            "monster1": 3003010,
+            "monster2": 3012020
+          },
+          {
+            "monster0": 3003050,
+            "monster1": 3003010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 4805,
+    "name": "堤溃蚁穴其五",
+    "group_name": "堤溃蚁穴",
+    "desc": "每个波次开始时，为我方恢复<color=#f29e38ff><unbreak>#1[i]</unbreak></color>个战技点，我方目标施放战技或消耗战技点时，为【记忆紊流】增加<color=#f29e38ff><unbreak>#2[i]</unbreak></color>段攻击段数，最多叠加<color=#f29e38ff><unbreak>#3[i]</unbreak></color>段。\\n每个轮开始时，【记忆紊流】的每段攻击对随机敌方目标造成1次真实伤害。",
+    "param": [
+      4,
+      1,
+      15,
+      0.15,
+      0.025,
+      0.015
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Wind"
+    ],
+    "damage_type2": [
+      "Thunder",
+      "Imaginary"
+    ],
+    "maze_group_id1": 4,
+    "maze_group_id2": 5,
+    "npc_monster_id_list1": [
+      2033010
+    ],
+    "npc_monster_id_list2": [
+      1004020
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30119051,
+        "stage_type": "Challenge",
+        "stage_name": 16830651616508961311,
+        "hard_level_group": 3,
+        "level": 78,
+        "elite_group": 277,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30142"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 2032010,
+            "monster1": 2033010
+          },
+          {
+            "monster0": 2033010,
+            "monster1": 8003010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30119052,
+        "stage_type": "Challenge",
+        "stage_name": 3927571639738101840,
+        "hard_level_group": 3,
+        "level": 78,
+        "elite_group": 277,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30142"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 1012030,
+            "monster1": 1013020,
+            "monster2": 1012030
+          },
+          {
+            "monster0": 100402010,
+            "monster1": 1013020
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 4806,
+    "name": "堤溃蚁穴其六",
+    "group_name": "堤溃蚁穴",
+    "desc": "每个波次开始时，为我方恢复<color=#f29e38ff><unbreak>#1[i]</unbreak></color>个战技点，我方目标施放战技或消耗战技点时，为【记忆紊流】增加<color=#f29e38ff><unbreak>#2[i]</unbreak></color>段攻击段数，最多叠加<color=#f29e38ff><unbreak>#3[i]</unbreak></color>段。\\n每个轮开始时，【记忆紊流】的每段攻击对随机敌方目标造成1次真实伤害。",
+    "param": [
+      4,
+      1,
+      15,
+      0.15,
+      0.025,
+      0.015
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Quantum"
+    ],
+    "damage_type2": [
+      "Physical",
+      "Imaginary"
+    ],
+    "maze_group_id1": 4,
+    "maze_group_id2": 5,
+    "npc_monster_id_list1": [
+      1023020
+    ],
+    "npc_monster_id_list2": [
+      2013020
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30119061,
+        "stage_type": "Challenge",
+        "stage_name": 6366857954791301483,
+        "hard_level_group": 3,
+        "level": 80,
+        "elite_group": 278,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30142"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 8002010,
+            "monster1": 1023020
+          },
+          {
+            "monster0": 1023020,
+            "monster1": 8003030
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30119062,
+        "stage_type": "Challenge",
+        "stage_name": 17363227603743607405,
+        "hard_level_group": 3,
+        "level": 80,
+        "elite_group": 278,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30142"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 2002030,
+            "monster1": 2013020,
+            "monster2": 2002030
+          },
+          {
+            "monster0": 2013020,
+            "monster1": 8013010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 4807,
+    "name": "堤溃蚁穴其七",
+    "group_name": "堤溃蚁穴",
+    "desc": "每个波次开始时，为我方恢复<color=#f29e38ff><unbreak>#1[i]</unbreak></color>个战技点，我方目标施放战技或消耗战技点时，为【记忆紊流】增加<color=#f29e38ff><unbreak>#2[i]</unbreak></color>段攻击段数，最多叠加<color=#f29e38ff><unbreak>#3[i]</unbreak></color>段。\\n每个轮开始时，【记忆紊流】的每段攻击对随机敌方目标造成1次真实伤害。",
+    "param": [
+      4,
+      1,
+      15,
+      0.15,
+      0.025,
+      0.015
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Ice",
+      "Thunder"
+    ],
+    "damage_type2": [
+      "Fire",
+      "Thunder"
+    ],
+    "maze_group_id1": 4,
+    "maze_group_id2": 5,
+    "npc_monster_id_list1": [
+      1013010
+    ],
+    "npc_monster_id_list2": [
+      8003040
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30119071,
+        "stage_type": "Challenge",
+        "stage_name": 13087150147011258837,
+        "hard_level_group": 3,
+        "level": 82,
+        "elite_group": 279,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30142"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 1012010,
+            "monster1": 1013010,
+            "monster2": 1012010
+          },
+          {
+            "monster0": 1013010,
+            "monster1": 1013020
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30119072,
+        "stage_type": "Challenge",
+        "stage_name": 15864002628047023122,
+        "hard_level_group": 3,
+        "level": 82,
+        "elite_group": 279,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30142"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 3002010,
+            "monster1": 8003040,
+            "monster2": 3002010
+          },
+          {
+            "monster0": 8003040,
+            "monster1": 3003040
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 4808,
+    "name": "堤溃蚁穴其八",
+    "group_name": "堤溃蚁穴",
+    "desc": "每个波次开始时，为我方恢复<color=#f29e38ff><unbreak>#1[i]</unbreak></color>个战技点，我方目标施放战技或消耗战技点时，为【记忆紊流】增加<color=#f29e38ff><unbreak>#2[i]</unbreak></color>段攻击段数，最多叠加<color=#f29e38ff><unbreak>#3[i]</unbreak></color>段。\\n每个轮开始时，【记忆紊流】的每段攻击对随机敌方目标造成1次真实伤害。",
+    "param": [
+      4,
+      1,
+      15,
+      0.15,
+      0.025,
+      0.015
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Fire",
+      "Ice"
+    ],
+    "damage_type2": [
+      "Fire"
+    ],
+    "maze_group_id1": 4,
+    "maze_group_id2": 5,
+    "npc_monster_id_list1": [
+      1013010
+    ],
+    "npc_monster_id_list2": [
+      3003010
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30119081,
+        "stage_type": "Challenge",
+        "stage_name": 13087150147011258837,
+        "hard_level_group": 3,
+        "level": 85,
+        "elite_group": 280,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30142"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 1012030,
+            "monster1": 1013010
+          },
+          {
+            "monster0": 1013010,
+            "monster1": 8003050
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30119082,
+        "stage_type": "Challenge",
+        "stage_name": 9344842774432863716,
+        "hard_level_group": 3,
+        "level": 85,
+        "elite_group": 280,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30142"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 3012020,
+            "monster1": 3003010,
+            "monster2": 3012020
+          },
+          {
+            "monster0": 3003050,
+            "monster1": 3003010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 4809,
+    "name": "堤溃蚁穴其九",
+    "group_name": "堤溃蚁穴",
+    "desc": "每个波次开始时，为我方恢复<color=#f29e38ff><unbreak>#1[i]</unbreak></color>个战技点，我方目标施放战技或消耗战技点时，为【记忆紊流】增加<color=#f29e38ff><unbreak>#2[i]</unbreak></color>段攻击段数，最多叠加<color=#f29e38ff><unbreak>#3[i]</unbreak></color>段。\\n每个轮开始时，【记忆紊流】的每段攻击对随机敌方目标造成1次真实伤害。",
+    "param": [
+      4,
+      1,
+      15,
+      0.15,
+      0.025,
+      0.015
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Wind"
+    ],
+    "damage_type2": [
+      "Thunder",
+      "Imaginary"
+    ],
+    "maze_group_id1": 4,
+    "maze_group_id2": 5,
+    "npc_monster_id_list1": [
+      2033010
+    ],
+    "npc_monster_id_list2": [
+      1004020
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30119091,
+        "stage_type": "Challenge",
+        "stage_name": 16830651616508961311,
+        "hard_level_group": 3,
+        "level": 88,
+        "elite_group": 281,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30142"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 2032010,
+            "monster1": 2033010
+          },
+          {
+            "monster0": 8003010,
+            "monster1": 2033010,
+            "monster2": 8003010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30119092,
+        "stage_type": "Challenge",
+        "stage_name": 3927571639738101840,
+        "hard_level_group": 3,
+        "level": 88,
+        "elite_group": 281,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30142"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 1012030,
+            "monster1": 1013020,
+            "monster2": 1012030
+          },
+          {
+            "monster0": 1013020,
+            "monster1": 100402010,
+            "monster2": 1013020
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 4810,
+    "name": "堤溃蚁穴其十",
+    "group_name": "堤溃蚁穴",
+    "desc": "每个波次开始时，为我方恢复<color=#f29e38ff><unbreak>#1[i]</unbreak></color>个战技点，我方目标施放战技或消耗战技点时，为【记忆紊流】增加<color=#f29e38ff><unbreak>#2[i]</unbreak></color>段攻击段数，最多叠加<color=#f29e38ff><unbreak>#3[i]</unbreak></color>段。\\n每个轮开始时，【记忆紊流】的每段攻击对随机敌方目标造成1次真实伤害。",
+    "param": [
+      4,
+      1,
+      15,
+      0.15,
+      0.025,
+      0.015
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Ice",
+      "Thunder"
+    ],
+    "damage_type2": [
+      "Physical",
+      "Thunder"
+    ],
+    "maze_group_id1": 4,
+    "maze_group_id2": 5,
+    "npc_monster_id_list1": [
+      4034010
+    ],
+    "npc_monster_id_list2": [
+      8034010
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30119101,
+        "stage_type": "Challenge",
+        "stage_name": 394586006630307543,
+        "hard_level_group": 3,
+        "level": 90,
+        "elite_group": 282,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30142"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 4013010,
+            "monster1": 2023030
+          },
+          {
+            "monster0": 4034010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30119102,
+        "stage_type": "Challenge",
+        "stage_name": 3756729761605363657,
+        "hard_level_group": 3,
+        "level": 90,
+        "elite_group": 282,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30142"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 4053010,
+            "monster1": 2013020
+          },
+          {
+            "monster0": 803401004
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 4811,
+    "name": "堤溃蚁穴其十一",
+    "group_name": "堤溃蚁穴",
+    "desc": "每个波次开始时，为我方恢复<color=#f29e38ff><unbreak>#1[i]</unbreak></color>个战技点，我方目标施放战技或消耗战技点时，为【记忆紊流】增加<color=#f29e38ff><unbreak>#2[i]</unbreak></color>段攻击段数，最多叠加<color=#f29e38ff><unbreak>#3[i]</unbreak></color>段。\\n每个轮开始时，【记忆紊流】的每段攻击对随机敌方目标造成1次真实伤害。",
+    "param": [
+      4,
+      1,
+      15,
+      0.15,
+      0.025,
+      0.015
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Fire",
+      "Thunder"
+    ],
+    "damage_type2": [
+      "Physical",
+      "Imaginary"
+    ],
+    "maze_group_id1": 4,
+    "maze_group_id2": 5,
+    "npc_monster_id_list1": [
+      3003041
+    ],
+    "npc_monster_id_list2": [
+      4064010
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30119111,
+        "stage_type": "Challenge",
+        "stage_name": 15692447060244044232,
+        "hard_level_group": 3,
+        "level": 92,
+        "elite_group": 266,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30142"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 3003030,
+            "monster1": 4053020
+          },
+          {
+            "monster0": 3004012
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30119112,
+        "stage_type": "Challenge",
+        "stage_name": 2590962765852260361,
+        "hard_level_group": 3,
+        "level": 92,
+        "elite_group": 266,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30142"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 3003020,
+            "monster1": 2013020
+          },
+          {
+            "monster0": 4064010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 4812,
+    "name": "堤溃蚁穴其十二",
+    "group_name": "堤溃蚁穴",
+    "desc": "每个波次开始时，为我方恢复<color=#f29e38ff><unbreak>#1[i]</unbreak></color>个战技点，我方目标施放战技或消耗战技点时，为【记忆紊流】增加<color=#f29e38ff><unbreak>#2[i]</unbreak></color>段攻击段数，最多叠加<color=#f29e38ff><unbreak>#3[i]</unbreak></color>段。\\n每个轮开始时，【记忆紊流】的每段攻击对随机敌方目标造成1次真实伤害。",
+    "param": [
+      4,
+      1,
+      15,
+      0.15,
+      0.025,
+      0.015
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Fire",
+      "Quantum"
+    ],
+    "damage_type2": [
+      "Physical",
+      "Fire"
+    ],
+    "maze_group_id1": 4,
+    "maze_group_id2": 5,
+    "npc_monster_id_list1": [
+      1004010
+    ],
+    "npc_monster_id_list2": [
+      3024030
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30119121,
+        "stage_type": "Challenge",
+        "stage_name": 14813692740671814223,
+        "hard_level_group": 3,
+        "level": 95,
+        "elite_group": 291,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [
+          "BattleEventAbility_Challenge_Month_42_Level"
+        ],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30142"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 4033030,
+            "monster1": 8003010
+          },
+          {
+            "monster0": 100401014,
+            "monster1": 100403002
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30119122,
+        "stage_type": "Challenge",
+        "stage_name": 18134484362013513791,
+        "hard_level_group": 3,
+        "level": 95,
+        "elite_group": 291,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30142"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 4053010,
+            "monster1": 4063010
+          },
+          {
+            "monster0": 3024030
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  }
+]

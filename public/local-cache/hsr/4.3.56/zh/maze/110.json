@@ -1,0 +1,1691 @@
+[
+  {
+    "id": 1001,
+    "name": "寒铁砥砺其一",
+    "group_name": "寒铁砥砺",
+    "desc": "每个轮开始时，对敌方全体施加【记忆印记】，敌方目标每有1个其他负面效果，则额外叠加1层【记忆印记】，每层使目标造成的伤害降低<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>，最多叠加<color=#f29e38ff><unbreak>#2[i]</unbreak></color>层，该效果持续到下个轮开始。",
+    "param": [
+      0.04,
+      5
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 28
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 40,
+    "damage_type1": [
+      "Physical",
+      "Quantum"
+    ],
+    "damage_type2": [
+      "Wind",
+      "Imaginary"
+    ],
+    "maze_group_id1": 10,
+    "maze_group_id2": 11,
+    "npc_monster_id_list1": [
+      1003010,
+      8003030
+    ],
+    "npc_monster_id_list2": [
+      8013010,
+      2023010
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30004161,
+        "stage_type": "Challenge",
+        "stage_name": 9874079526424322448,
+        "hard_level_group": 1,
+        "level": 68,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30107"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 1002030,
+            "monster1": 1003010,
+            "monster2": 1002040
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      },
+      {
+        "stage_id": 30004162,
+        "stage_type": "Challenge",
+        "stage_name": 3834759294727864782,
+        "hard_level_group": 1,
+        "level": 68,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30107"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 1022020,
+            "monster1": 8003030,
+            "monster2": 1022010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30004163,
+        "stage_type": "Challenge",
+        "stage_name": 7287667153632341933,
+        "hard_level_group": 1,
+        "level": 68,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30107"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 8012030,
+            "monster1": 8012030,
+            "monster2": 8013010,
+            "monster3": 8012010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      },
+      {
+        "stage_id": 30004164,
+        "stage_type": "Challenge",
+        "stage_name": 189339872378837144,
+        "hard_level_group": 1,
+        "level": 68,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30107"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 8001040,
+            "monster1": 2023010,
+            "monster2": 8001040
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 1002,
+    "name": "寒铁砥砺其二",
+    "group_name": "寒铁砥砺",
+    "desc": "每个轮开始时，对敌方全体施加【记忆印记】，敌方目标每有1个其他负面效果，则额外叠加1层【记忆印记】，每层使目标造成的伤害降低<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>，最多叠加<color=#f29e38ff><unbreak>#2[i]</unbreak></color>层，该效果持续到下个轮开始。",
+    "param": [
+      0.04,
+      5
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 28
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 40,
+    "damage_type1": [
+      "Fire",
+      "Thunder"
+    ],
+    "damage_type2": [
+      "Thunder",
+      "Imaginary"
+    ],
+    "maze_group_id1": 10,
+    "maze_group_id2": 11,
+    "npc_monster_id_list1": [
+      8003040,
+      1013010
+    ],
+    "npc_monster_id_list2": [
+      1013020,
+      1004020
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30004171,
+        "stage_type": "Challenge",
+        "stage_name": 15864002628047023122,
+        "hard_level_group": 1,
+        "level": 70,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30107"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 8002010,
+            "monster1": 8003040,
+            "monster2": 1022010,
+            "monster3": 8001030
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      },
+      {
+        "stage_id": 30004172,
+        "stage_type": "Challenge",
+        "stage_name": 13087150147011258837,
+        "hard_level_group": 1,
+        "level": 70,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30107"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 1012030,
+            "monster1": 1013010,
+            "monster2": 1012010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30004173,
+        "stage_type": "Challenge",
+        "stage_name": 16229653902150898118,
+        "hard_level_group": 1,
+        "level": 70,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30107"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 1012030,
+            "monster1": 1013020,
+            "monster2": 1012030,
+            "monster3": 1012010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      },
+      {
+        "stage_id": 30004174,
+        "stage_type": "Challenge",
+        "stage_name": 3927571639738101840,
+        "hard_level_group": 1,
+        "level": 70,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30107"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 1002030,
+            "monster1": 1004020,
+            "monster2": 1002030
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 1003,
+    "name": "寒铁砥砺其三",
+    "group_name": "寒铁砥砺",
+    "desc": "每个轮开始时，对敌方全体施加【记忆印记】，敌方目标每有1个其他负面效果，则额外叠加1层【记忆印记】，每层使目标造成的伤害降低<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>，最多叠加<color=#f29e38ff><unbreak>#2[i]</unbreak></color>层，该效果持续到下个轮开始。",
+    "param": [
+      0.04,
+      5
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 28
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 40,
+    "damage_type1": [
+      "Fire",
+      "Quantum"
+    ],
+    "damage_type2": [
+      "Ice",
+      "Imaginary"
+    ],
+    "maze_group_id1": 10,
+    "maze_group_id2": 11,
+    "npc_monster_id_list1": [
+      8003010,
+      1023020
+    ],
+    "npc_monster_id_list2": [
+      8003050,
+      2023010
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30004181,
+        "stage_type": "Challenge",
+        "stage_name": 18403122387849567860,
+        "hard_level_group": 1,
+        "level": 73,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30107"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 1022010,
+            "monster1": 8003010,
+            "monster2": 1022010,
+            "monster3": 8001020
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      },
+      {
+        "stage_id": 30004182,
+        "stage_type": "Challenge",
+        "stage_name": 6366857954791301483,
+        "hard_level_group": 1,
+        "level": 73,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30107"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 8001020,
+            "monster1": 1023020,
+            "monster2": 8001020
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30004183,
+        "stage_type": "Challenge",
+        "stage_name": 4944919553093870061,
+        "hard_level_group": 1,
+        "level": 73,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30107"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 1022010,
+            "monster1": 8003050,
+            "monster2": 8001030,
+            "monster3": 8001020
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      },
+      {
+        "stage_id": 30004184,
+        "stage_type": "Challenge",
+        "stage_name": 189339872378837144,
+        "hard_level_group": 1,
+        "level": 73,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30107"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 8001040,
+            "monster1": 2023010,
+            "monster2": 8001040
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 1004,
+    "name": "寒铁砥砺其四",
+    "group_name": "寒铁砥砺",
+    "desc": "每个轮开始时，对敌方全体施加【记忆印记】，敌方目标每有1个其他负面效果，则额外叠加1层【记忆印记】，每层使目标造成的伤害降低<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>，最多叠加<color=#f29e38ff><unbreak>#2[i]</unbreak></color>层，该效果持续到下个轮开始。",
+    "param": [
+      0.04,
+      5
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 28
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 40,
+    "damage_type1": [
+      "Quantum"
+    ],
+    "damage_type2": [
+      "Physical",
+      "Wind",
+      "Imaginary"
+    ],
+    "maze_group_id1": 10,
+    "maze_group_id2": 11,
+    "npc_monster_id_list1": [
+      8003020,
+      2013010
+    ],
+    "npc_monster_id_list2": [
+      8013010,
+      2004010
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30004191,
+        "stage_type": "Challenge",
+        "stage_name": 11380886388086495789,
+        "hard_level_group": 1,
+        "level": 75,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30107"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 8001020,
+            "monster1": 8001010,
+            "monster2": 8003020,
+            "monster3": 8001010,
+            "monster4": 8001020
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      },
+      {
+        "stage_id": 30004192,
+        "stage_type": "Challenge",
+        "stage_name": 6099984704558274809,
+        "hard_level_group": 1,
+        "level": 75,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30107"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 2011010,
+            "monster1": 2013010,
+            "monster2": 2011020
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30004193,
+        "stage_type": "Challenge",
+        "stage_name": 7287667153632341933,
+        "hard_level_group": 1,
+        "level": 75,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30107"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 8011020,
+            "monster1": 8013010,
+            "monster2": 8012010,
+            "monster3": 8012010,
+            "monster4": 8011010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      },
+      {
+        "stage_id": 30004194,
+        "stage_type": "Challenge",
+        "stage_name": 17021160864080099751,
+        "hard_level_group": 1,
+        "level": 75,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30107"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 2002010,
+            "monster1": 2004010,
+            "monster2": 2002010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 1005,
+    "name": "寒铁砥砺其五",
+    "group_name": "寒铁砥砺",
+    "desc": "每个轮开始时，对敌方全体施加【记忆印记】，敌方目标每有1个其他负面效果，则额外叠加1层【记忆印记】，每层使目标造成的伤害降低<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>，最多叠加<color=#f29e38ff><unbreak>#2[i]</unbreak></color>层，该效果持续到下个轮开始。",
+    "param": [
+      0.04,
+      5
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 28
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 40,
+    "damage_type1": [
+      "Physical",
+      "Ice",
+      "Quantum"
+    ],
+    "damage_type2": [
+      "Ice",
+      "Imaginary"
+    ],
+    "maze_group_id1": 10,
+    "maze_group_id2": 11,
+    "npc_monster_id_list1": [
+      8003020,
+      1003010
+    ],
+    "npc_monster_id_list2": [
+      1023010,
+      2023010
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30004201,
+        "stage_type": "Challenge",
+        "stage_name": 11380886388086495789,
+        "hard_level_group": 1,
+        "level": 78,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30107"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 8002010,
+            "monster1": 8003020,
+            "monster2": 8002010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      },
+      {
+        "stage_id": 30004202,
+        "stage_type": "Challenge",
+        "stage_name": 9874079526424322448,
+        "hard_level_group": 1,
+        "level": 78,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30107"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 1002030,
+            "monster1": 1003010,
+            "monster2": 1002040
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30004203,
+        "stage_type": "Challenge",
+        "stage_name": 3319612321481484338,
+        "hard_level_group": 1,
+        "level": 78,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30107"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 1022020,
+            "monster1": 1023010,
+            "monster2": 1022020
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      },
+      {
+        "stage_id": 30004204,
+        "stage_type": "Challenge",
+        "stage_name": 189339872378837144,
+        "hard_level_group": 1,
+        "level": 78,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30107"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 2022010,
+            "monster1": 2023010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 1006,
+    "name": "寒铁砥砺其六",
+    "group_name": "寒铁砥砺",
+    "desc": "每个轮开始时，对敌方全体施加【记忆印记】，敌方目标每有1个其他负面效果，则额外叠加1层【记忆印记】，每层使目标造成的伤害降低<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>，最多叠加<color=#f29e38ff><unbreak>#2[i]</unbreak></color>层，该效果持续到下个轮开始。",
+    "param": [
+      0.04,
+      5
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 16
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 24
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 40,
+    "damage_type1": [
+      "Ice",
+      "Thunder",
+      "Imaginary"
+    ],
+    "damage_type2": [
+      "Quantum"
+    ],
+    "maze_group_id1": 8,
+    "maze_group_id2": 20,
+    "npc_monster_id_list1": [
+      1023010
+    ],
+    "npc_monster_id_list2": [
+      2024010
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30004211,
+        "stage_type": "Challenge",
+        "stage_name": 3319612321481484338,
+        "hard_level_group": 1,
+        "level": 80,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "3"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30107"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 1002020,
+            "monster1": 1012030,
+            "monster2": 1002020
+          },
+          {
+            "monster0": 1012030,
+            "monster1": 1013020,
+            "monster2": 1012030
+          },
+          {
+            "monster0": 1023010,
+            "monster1": 1023010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30004212,
+        "stage_type": "Challenge",
+        "stage_name": 15606630685968003963,
+        "hard_level_group": 1,
+        "level": 80,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "3"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30107"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 2022070,
+            "monster1": 2022090,
+            "monster2": 2022070
+          },
+          {
+            "monster0": 2012010,
+            "monster1": 2013010
+          },
+          {
+            "monster0": 2024010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 1007,
+    "name": "寒铁砥砺其七",
+    "group_name": "寒铁砥砺",
+    "desc": "每个轮开始时，对敌方全体施加【记忆印记】，敌方目标每有1个其他负面效果，则额外叠加1层【记忆印记】，每层使目标造成的伤害降低<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>，最多叠加<color=#f29e38ff><unbreak>#2[i]</unbreak></color>层，该效果持续到下个轮开始。",
+    "param": [
+      0.04,
+      5
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 16
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 24
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 40,
+    "damage_type1": [
+      "Physical",
+      "Quantum"
+    ],
+    "damage_type2": [
+      "Ice",
+      "Thunder"
+    ],
+    "maze_group_id1": 8,
+    "maze_group_id2": 9,
+    "npc_monster_id_list1": [
+      8003020
+    ],
+    "npc_monster_id_list2": [
+      1013020
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30004221,
+        "stage_type": "Challenge",
+        "stage_name": 11380886388086495789,
+        "hard_level_group": 1,
+        "level": 83,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "3"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30107"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 8001010,
+            "monster1": 1022010,
+            "monster2": 8001010,
+            "monster3": 1022010
+          },
+          {
+            "monster0": 1022010,
+            "monster1": 8003020,
+            "monster2": 1022010
+          },
+          {
+            "monster0": 8003030,
+            "monster1": 8003020
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30004222,
+        "stage_type": "Challenge",
+        "stage_name": 16229653902150898118,
+        "hard_level_group": 1,
+        "level": 83,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "3"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30107"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 1002020,
+            "monster1": 1012021,
+            "monster2": 1002020,
+            "monster3": 1012020
+          },
+          {
+            "monster0": 1012010,
+            "monster1": 1013020,
+            "monster2": 1012021
+          },
+          {
+            "monster0": 1013020,
+            "monster1": 1013010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 1008,
+    "name": "寒铁砥砺其八",
+    "group_name": "寒铁砥砺",
+    "desc": "每个轮开始时，对敌方全体施加【记忆印记】，敌方目标每有1个其他负面效果，则额外叠加1层【记忆印记】，每层使目标造成的伤害降低<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>，最多叠加<color=#f29e38ff><unbreak>#2[i]</unbreak></color>层，该效果持续到下个轮开始。",
+    "param": [
+      0.04,
+      5
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 16
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 24
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 40,
+    "damage_type1": [
+      "Wind",
+      "Imaginary"
+    ],
+    "damage_type2": [
+      "Fire",
+      "Wind"
+    ],
+    "maze_group_id1": 8,
+    "maze_group_id2": 9,
+    "npc_monster_id_list1": [
+      8013010
+    ],
+    "npc_monster_id_list2": [
+      8003040
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30004231,
+        "stage_type": "Challenge",
+        "stage_name": 7287667153632341933,
+        "hard_level_group": 1,
+        "level": 85,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "3"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30107"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 8011010,
+            "monster1": 8012020,
+            "monster2": 8012010,
+            "monster3": 8012020
+          },
+          {
+            "monster0": 8001040,
+            "monster1": 2023010,
+            "monster2": 8001040
+          },
+          {
+            "monster0": 8013010,
+            "monster1": 8013010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30004232,
+        "stage_type": "Challenge",
+        "stage_name": 15864002628047023122,
+        "hard_level_group": 1,
+        "level": 85,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "3"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30107"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 8001020,
+            "monster1": 8001010,
+            "monster2": 1022010,
+            "monster3": 8001010,
+            "monster4": 8001020
+          },
+          {
+            "monster0": 1022010,
+            "monster1": 8003040,
+            "monster2": 1022010
+          },
+          {
+            "monster0": 8003010,
+            "monster1": 8003040
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 1009,
+    "name": "寒铁砥砺其九",
+    "group_name": "寒铁砥砺",
+    "desc": "每个轮开始时，对敌方全体施加【记忆印记】，敌方目标每有1个其他负面效果，则额外叠加1层【记忆印记】，每层使目标造成的伤害降低<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>，最多叠加<color=#f29e38ff><unbreak>#2[i]</unbreak></color>层，该效果持续到下个轮开始。",
+    "param": [
+      0.04,
+      5
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 40,
+    "damage_type1": [
+      "Ice",
+      "Imaginary"
+    ],
+    "damage_type2": [
+      "Fire",
+      "Quantum"
+    ],
+    "maze_group_id1": 8,
+    "maze_group_id2": 9,
+    "npc_monster_id_list1": [
+      2023010
+    ],
+    "npc_monster_id_list2": [
+      1004010
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30004241,
+        "stage_type": "Challenge",
+        "stage_name": 189339872378837144,
+        "hard_level_group": 1,
+        "level": 88,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "3"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30107"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 2022010,
+            "monster1": 8001040,
+            "monster2": 2022010,
+            "monster3": 8001040
+          },
+          {
+            "monster0": 2022010,
+            "monster1": 2023010
+          },
+          {
+            "monster0": 2023010,
+            "monster1": 8003050
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30004242,
+        "stage_type": "Challenge",
+        "stage_name": 14813692740671814223,
+        "hard_level_group": 1,
+        "level": 88,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "3"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30107"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 1022010,
+            "monster1": 8002010,
+            "monster2": 1022010,
+            "monster3": 8001030
+          },
+          {
+            "monster0": 1022010,
+            "monster1": 8003010,
+            "monster2": 1022010,
+            "monster3": 8001030
+          },
+          {
+            "monster0": 1004010,
+            "monster1": 8003010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 1010,
+    "name": "寒铁砥砺其十",
+    "group_name": "寒铁砥砺",
+    "desc": "每个轮开始时，对敌方全体施加【记忆印记】，敌方目标每有1个其他负面效果，则额外叠加1层【记忆印记】，每层使目标造成的伤害降低<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>，最多叠加<color=#f29e38ff><unbreak>#2[i]</unbreak></color>层，该效果持续到下个轮开始。",
+    "param": [
+      0.04,
+      5
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 40,
+    "damage_type1": [
+      "Wind",
+      "Quantum"
+    ],
+    "damage_type2": [
+      "Wind",
+      "Imaginary"
+    ],
+    "maze_group_id1": 8,
+    "maze_group_id2": 9,
+    "npc_monster_id_list1": [
+      2013010
+    ],
+    "npc_monster_id_list2": [
+      2004010
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30004251,
+        "stage_type": "Challenge",
+        "stage_name": 6099984704558274809,
+        "hard_level_group": 1,
+        "level": 90,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "3"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30107"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 2011020,
+            "monster1": 2012010,
+            "monster2": 2011020,
+            "monster3": 2012010,
+            "monster4": 2012010
+          },
+          {
+            "monster0": 2011010,
+            "monster1": 2013010,
+            "monster2": 2011010
+          },
+          {
+            "monster0": 8003030,
+            "monster1": 2013010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30004252,
+        "stage_type": "Challenge",
+        "stage_name": 17021160864080099751,
+        "hard_level_group": 1,
+        "level": 90,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "3"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30107"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 2002010,
+            "monster1": 2002010,
+            "monster2": 2002010
+          },
+          {
+            "monster0": 8001040,
+            "monster1": 2023010,
+            "monster2": 8001050
+          },
+          {
+            "monster0": 8001040,
+            "monster1": 2002010,
+            "monster2": 2004010,
+            "monster3": 2002010,
+            "monster4": 8001040
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  }
+]

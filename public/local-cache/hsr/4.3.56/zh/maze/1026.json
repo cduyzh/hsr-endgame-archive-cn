@@ -1,0 +1,1567 @@
+[
+  {
+    "id": 4501,
+    "name": "创世之柱其一",
+    "group_name": "创世之柱",
+    "desc": "我方角色施放战技进行攻击或忆灵进行攻击后，为【记忆紊流】增加<color=#f29e38ff><unbreak>#1[i]</unbreak></color>段攻击段数，最多增加<color=#f29e38ff><unbreak>#2[i]</unbreak></color>段。\\n每个轮开始时，【记忆紊流】的每段攻击对随机敌方目标造成1次真实伤害。",
+    "param": [
+      1,
+      10,
+      0.15,
+      0.025,
+      0.015
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Quantum"
+    ],
+    "damage_type2": [
+      "Physical",
+      "Imaginary"
+    ],
+    "maze_group_id1": 4,
+    "maze_group_id2": 5,
+    "npc_monster_id_list1": [
+      1023020
+    ],
+    "npc_monster_id_list2": [
+      2013020
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30116011,
+        "stage_type": "Challenge",
+        "stage_name": 6366857954791301483,
+        "hard_level_group": 3,
+        "level": 68,
+        "elite_group": 273,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30139"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 8002010,
+            "monster1": 1023020
+          },
+          {
+            "monster0": 1023020,
+            "monster1": 8003030
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30116012,
+        "stage_type": "Challenge",
+        "stage_name": 17363227603743607405,
+        "hard_level_group": 3,
+        "level": 68,
+        "elite_group": 273,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30139"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 2013020,
+            "monster1": 8013010
+          },
+          {
+            "monster0": 2013020,
+            "monster1": 8013010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 4502,
+    "name": "创世之柱其二",
+    "group_name": "创世之柱",
+    "desc": "我方角色施放战技进行攻击或忆灵进行攻击后，为【记忆紊流】增加<color=#f29e38ff><unbreak>#1[i]</unbreak></color>段攻击段数，最多增加<color=#f29e38ff><unbreak>#2[i]</unbreak></color>段。\\n每个轮开始时，【记忆紊流】的每段攻击对随机敌方目标造成1次真实伤害。",
+    "param": [
+      1,
+      10,
+      0.15,
+      0.025,
+      0.015
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Physical",
+      "Fire"
+    ],
+    "damage_type2": [
+      "Ice",
+      "Wind"
+    ],
+    "maze_group_id1": 4,
+    "maze_group_id2": 5,
+    "npc_monster_id_list1": [
+      3003020
+    ],
+    "npc_monster_id_list2": [
+      2023010
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30116021,
+        "stage_type": "Challenge",
+        "stage_name": 9524722474129506048,
+        "hard_level_group": 3,
+        "level": 70,
+        "elite_group": 274,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30139"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 3003020
+          },
+          {
+            "monster0": 3003020,
+            "monster1": 3003040
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30116022,
+        "stage_type": "Challenge",
+        "stage_name": 189339872378837144,
+        "hard_level_group": 3,
+        "level": 70,
+        "elite_group": 274,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30139"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 2023010
+          },
+          {
+            "monster0": 2023010,
+            "monster1": 2023020
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 4503,
+    "name": "创世之柱其三",
+    "group_name": "创世之柱",
+    "desc": "我方角色施放战技进行攻击或忆灵进行攻击后，为【记忆紊流】增加<color=#f29e38ff><unbreak>#1[i]</unbreak></color>段攻击段数，最多增加<color=#f29e38ff><unbreak>#2[i]</unbreak></color>段。\\n每个轮开始时，【记忆紊流】的每段攻击对随机敌方目标造成1次真实伤害。",
+    "param": [
+      1,
+      10,
+      0.15,
+      0.025,
+      0.015
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Fire",
+      "Ice"
+    ],
+    "damage_type2": [
+      "Fire"
+    ],
+    "maze_group_id1": 4,
+    "maze_group_id2": 5,
+    "npc_monster_id_list1": [
+      1013010
+    ],
+    "npc_monster_id_list2": [
+      3003010
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30116031,
+        "stage_type": "Challenge",
+        "stage_name": 13087150147011258837,
+        "hard_level_group": 3,
+        "level": 73,
+        "elite_group": 275,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30139"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 1012030,
+            "monster1": 1013010
+          },
+          {
+            "monster0": 1013010,
+            "monster1": 8003050
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30116032,
+        "stage_type": "Challenge",
+        "stage_name": 9344842774432863716,
+        "hard_level_group": 3,
+        "level": 73,
+        "elite_group": 275,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30139"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 3012020,
+            "monster1": 3003010,
+            "monster2": 3012020
+          },
+          {
+            "monster0": 3003050,
+            "monster1": 3003010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 4504,
+    "name": "创世之柱其四",
+    "group_name": "创世之柱",
+    "desc": "我方角色施放战技进行攻击或忆灵进行攻击后，为【记忆紊流】增加<color=#f29e38ff><unbreak>#1[i]</unbreak></color>段攻击段数，最多增加<color=#f29e38ff><unbreak>#2[i]</unbreak></color>段。\\n每个轮开始时，【记忆紊流】的每段攻击对随机敌方目标造成1次真实伤害。",
+    "param": [
+      1,
+      10,
+      0.15,
+      0.025,
+      0.015
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Wind"
+    ],
+    "damage_type2": [
+      "Thunder",
+      "Imaginary"
+    ],
+    "maze_group_id1": 4,
+    "maze_group_id2": 5,
+    "npc_monster_id_list1": [
+      2033010
+    ],
+    "npc_monster_id_list2": [
+      1004020
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30116041,
+        "stage_type": "Challenge",
+        "stage_name": 16830651616508961311,
+        "hard_level_group": 3,
+        "level": 75,
+        "elite_group": 276,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30139"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 2032010,
+            "monster1": 2033010
+          },
+          {
+            "monster0": 2033010,
+            "monster1": 8003010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30116042,
+        "stage_type": "Challenge",
+        "stage_name": 3927571639738101840,
+        "hard_level_group": 3,
+        "level": 75,
+        "elite_group": 276,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30139"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 1012030,
+            "monster1": 1013020,
+            "monster2": 1012030
+          },
+          {
+            "monster0": 100402010,
+            "monster1": 1013020
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 4505,
+    "name": "创世之柱其五",
+    "group_name": "创世之柱",
+    "desc": "我方角色施放战技进行攻击或忆灵进行攻击后，为【记忆紊流】增加<color=#f29e38ff><unbreak>#1[i]</unbreak></color>段攻击段数，最多增加<color=#f29e38ff><unbreak>#2[i]</unbreak></color>段。\\n每个轮开始时，【记忆紊流】的每段攻击对随机敌方目标造成1次真实伤害。",
+    "param": [
+      1,
+      10,
+      0.15,
+      0.025,
+      0.015
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Thunder",
+      "Wind"
+    ],
+    "damage_type2": [
+      "Physical",
+      "Ice"
+    ],
+    "maze_group_id1": 4,
+    "maze_group_id2": 5,
+    "npc_monster_id_list1": [
+      4033020
+    ],
+    "npc_monster_id_list2": [
+      3024010
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30116051,
+        "stage_type": "Challenge",
+        "stage_name": 4122473837421904295,
+        "hard_level_group": 3,
+        "level": 78,
+        "elite_group": 277,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30139"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 4032030,
+            "monster1": 4033020,
+            "monster2": 4032010
+          },
+          {
+            "monster0": 4033020,
+            "monster1": 8003040
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30116052,
+        "stage_type": "Challenge",
+        "stage_name": 14805961183082142131,
+        "hard_level_group": 3,
+        "level": 78,
+        "elite_group": 277,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30139"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 8003020,
+            "monster1": 1003010
+          },
+          {
+            "monster0": 302401012
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 4506,
+    "name": "创世之柱其六",
+    "group_name": "创世之柱",
+    "desc": "我方角色施放战技进行攻击或忆灵进行攻击后，为【记忆紊流】增加<color=#f29e38ff><unbreak>#1[i]</unbreak></color>段攻击段数，最多增加<color=#f29e38ff><unbreak>#2[i]</unbreak></color>段。\\n每个轮开始时，【记忆紊流】的每段攻击对随机敌方目标造成1次真实伤害。",
+    "param": [
+      1,
+      10,
+      0.15,
+      0.025,
+      0.015
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Quantum"
+    ],
+    "damage_type2": [
+      "Physical",
+      "Imaginary"
+    ],
+    "maze_group_id1": 4,
+    "maze_group_id2": 5,
+    "npc_monster_id_list1": [
+      1023020
+    ],
+    "npc_monster_id_list2": [
+      2013020
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30116061,
+        "stage_type": "Challenge",
+        "stage_name": 6366857954791301483,
+        "hard_level_group": 3,
+        "level": 80,
+        "elite_group": 278,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30139"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 8002010,
+            "monster1": 1023020
+          },
+          {
+            "monster0": 1023020,
+            "monster1": 8003030
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30116062,
+        "stage_type": "Challenge",
+        "stage_name": 17363227603743607405,
+        "hard_level_group": 3,
+        "level": 80,
+        "elite_group": 278,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30139"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 2013020,
+            "monster1": 8013010
+          },
+          {
+            "monster0": 2013020,
+            "monster1": 8013010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 4507,
+    "name": "创世之柱其七",
+    "group_name": "创世之柱",
+    "desc": "我方角色施放战技进行攻击或忆灵进行攻击后，为【记忆紊流】增加<color=#f29e38ff><unbreak>#1[i]</unbreak></color>段攻击段数，最多增加<color=#f29e38ff><unbreak>#2[i]</unbreak></color>段。\\n每个轮开始时，【记忆紊流】的每段攻击对随机敌方目标造成1次真实伤害。",
+    "param": [
+      1,
+      10,
+      0.15,
+      0.025,
+      0.015
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Physical",
+      "Fire"
+    ],
+    "damage_type2": [
+      "Ice",
+      "Wind"
+    ],
+    "maze_group_id1": 4,
+    "maze_group_id2": 5,
+    "npc_monster_id_list1": [
+      3003020
+    ],
+    "npc_monster_id_list2": [
+      2023010
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30116071,
+        "stage_type": "Challenge",
+        "stage_name": 9524722474129506048,
+        "hard_level_group": 3,
+        "level": 82,
+        "elite_group": 279,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30139"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 3003020
+          },
+          {
+            "monster0": 3003020,
+            "monster1": 3003040
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30116072,
+        "stage_type": "Challenge",
+        "stage_name": 189339872378837144,
+        "hard_level_group": 3,
+        "level": 82,
+        "elite_group": 279,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30139"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 2023010
+          },
+          {
+            "monster0": 2023010,
+            "monster1": 2023020
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 4508,
+    "name": "创世之柱其八",
+    "group_name": "创世之柱",
+    "desc": "我方角色施放战技进行攻击或忆灵进行攻击后，为【记忆紊流】增加<color=#f29e38ff><unbreak>#1[i]</unbreak></color>段攻击段数，最多增加<color=#f29e38ff><unbreak>#2[i]</unbreak></color>段。\\n每个轮开始时，【记忆紊流】的每段攻击对随机敌方目标造成1次真实伤害。",
+    "param": [
+      1,
+      10,
+      0.15,
+      0.025,
+      0.015
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Fire",
+      "Ice"
+    ],
+    "damage_type2": [
+      "Fire"
+    ],
+    "maze_group_id1": 4,
+    "maze_group_id2": 5,
+    "npc_monster_id_list1": [
+      1013010
+    ],
+    "npc_monster_id_list2": [
+      3003010
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30116081,
+        "stage_type": "Challenge",
+        "stage_name": 13087150147011258837,
+        "hard_level_group": 3,
+        "level": 85,
+        "elite_group": 280,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30139"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 1012030,
+            "monster1": 1013010
+          },
+          {
+            "monster0": 1013010,
+            "monster1": 8003050
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30116082,
+        "stage_type": "Challenge",
+        "stage_name": 9344842774432863716,
+        "hard_level_group": 3,
+        "level": 85,
+        "elite_group": 280,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30139"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 3012020,
+            "monster1": 3003010,
+            "monster2": 3012020
+          },
+          {
+            "monster0": 3003050,
+            "monster1": 3003010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 4509,
+    "name": "创世之柱其九",
+    "group_name": "创世之柱",
+    "desc": "我方角色施放战技进行攻击或忆灵进行攻击后，为【记忆紊流】增加<color=#f29e38ff><unbreak>#1[i]</unbreak></color>段攻击段数，最多增加<color=#f29e38ff><unbreak>#2[i]</unbreak></color>段。\\n每个轮开始时，【记忆紊流】的每段攻击对随机敌方目标造成1次真实伤害。",
+    "param": [
+      1,
+      10,
+      0.15,
+      0.025,
+      0.015
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Wind"
+    ],
+    "damage_type2": [
+      "Thunder",
+      "Imaginary"
+    ],
+    "maze_group_id1": 4,
+    "maze_group_id2": 5,
+    "npc_monster_id_list1": [
+      2033010
+    ],
+    "npc_monster_id_list2": [
+      1004020
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30116091,
+        "stage_type": "Challenge",
+        "stage_name": 16830651616508961311,
+        "hard_level_group": 3,
+        "level": 88,
+        "elite_group": 281,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30139"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 2032010,
+            "monster1": 2033010
+          },
+          {
+            "monster0": 2033010,
+            "monster1": 8003010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30116092,
+        "stage_type": "Challenge",
+        "stage_name": 3927571639738101840,
+        "hard_level_group": 3,
+        "level": 88,
+        "elite_group": 281,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30139"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 1012030,
+            "monster1": 1013020,
+            "monster2": 1012030
+          },
+          {
+            "monster0": 100402010,
+            "monster1": 1013020
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 4510,
+    "name": "创世之柱其十",
+    "group_name": "创世之柱",
+    "desc": "我方角色施放战技进行攻击或忆灵进行攻击后，为【记忆紊流】增加<color=#f29e38ff><unbreak>#1[i]</unbreak></color>段攻击段数，最多增加<color=#f29e38ff><unbreak>#2[i]</unbreak></color>段。\\n每个轮开始时，【记忆紊流】的每段攻击对随机敌方目标造成1次真实伤害。",
+    "param": [
+      1,
+      10,
+      0.15,
+      0.025,
+      0.015
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Physical",
+      "Ice"
+    ],
+    "damage_type2": [
+      "Fire"
+    ],
+    "maze_group_id1": 4,
+    "maze_group_id2": 5,
+    "npc_monster_id_list1": [
+      3024010
+    ],
+    "npc_monster_id_list2": [
+      3003041
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30116101,
+        "stage_type": "Challenge",
+        "stage_name": 14805961183082142131,
+        "hard_level_group": 3,
+        "level": 90,
+        "elite_group": 282,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30139"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 8003020,
+            "monster1": 1003010
+          },
+          {
+            "monster0": 302401012
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30116102,
+        "stage_type": "Challenge",
+        "stage_name": 4192397861333580700,
+        "hard_level_group": 3,
+        "level": 90,
+        "elite_group": 282,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30139"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 3003050,
+            "monster1": 3003040,
+            "monster2": 3003030
+          },
+          {
+            "monster0": 3004010,
+            "monster1": 3003051,
+            "monster2": 3003041,
+            "monster3": 3003031
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 4511,
+    "name": "创世之柱其十一",
+    "group_name": "创世之柱",
+    "desc": "我方角色施放战技进行攻击或忆灵进行攻击后，为【记忆紊流】增加<color=#f29e38ff><unbreak>#1[i]</unbreak></color>段攻击段数，最多增加<color=#f29e38ff><unbreak>#2[i]</unbreak></color>段。\\n每个轮开始时，【记忆紊流】的每段攻击对随机敌方目标造成1次真实伤害。",
+    "param": [
+      1,
+      10,
+      0.15,
+      0.025,
+      0.015
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Physical",
+      "Fire"
+    ],
+    "damage_type2": [
+      "Ice",
+      "Quantum"
+    ],
+    "maze_group_id1": 4,
+    "maze_group_id2": 5,
+    "npc_monster_id_list1": [
+      2034010
+    ],
+    "npc_monster_id_list2": [
+      4014020
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30116111,
+        "stage_type": "Challenge",
+        "stage_name": 4307424808395091276,
+        "hard_level_group": 3,
+        "level": 92,
+        "elite_group": 285,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30139"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 4033030,
+            "monster1": 3003050
+          },
+          {
+            "monster0": 2034010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30116112,
+        "stage_type": "Challenge",
+        "stage_name": 4393863772468710381,
+        "hard_level_group": 3,
+        "level": 92,
+        "elite_group": 285,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30139"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 8003020,
+            "monster1": 4013010,
+            "monster2": 4012050
+          },
+          {
+            "monster0": 4014020
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 4512,
+    "name": "创世之柱其十二",
+    "group_name": "创世之柱",
+    "desc": "我方角色施放战技进行攻击或忆灵进行攻击后，为【记忆紊流】增加<color=#f29e38ff><unbreak>#1[i]</unbreak></color>段攻击段数，最多增加<color=#f29e38ff><unbreak>#2[i]</unbreak></color>段。\\n每个轮开始时，【记忆紊流】的每段攻击对随机敌方目标造成1次真实伤害。",
+    "param": [
+      1,
+      10,
+      0.15,
+      0.025,
+      0.015
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Physical",
+      "Thunder"
+    ],
+    "damage_type2": [
+      "Ice",
+      "Wind"
+    ],
+    "maze_group_id1": 4,
+    "maze_group_id2": 5,
+    "npc_monster_id_list1": [
+      1004020
+    ],
+    "npc_monster_id_list2": [
+      4044010
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30116121,
+        "stage_type": "Challenge",
+        "stage_name": 3927571639738101840,
+        "hard_level_group": 3,
+        "level": 95,
+        "elite_group": 290,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30139"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 4053010,
+            "monster1": 4033020
+          },
+          {
+            "monster0": 4053010,
+            "monster1": 100402016
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30116122,
+        "stage_type": "Challenge",
+        "stage_name": 7318916243052570451,
+        "hard_level_group": 3,
+        "level": 95,
+        "elite_group": 290,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30139"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 2023010,
+            "monster1": 2023020
+          },
+          {
+            "monster0": 4044010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  }
+]

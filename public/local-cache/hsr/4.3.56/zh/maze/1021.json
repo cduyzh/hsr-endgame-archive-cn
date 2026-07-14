@@ -1,0 +1,1544 @@
+[
+  {
+    "id": 4001,
+    "name": "创世纷争其一",
+    "group_name": "创世纷争",
+    "desc": "每个轮开始时，为我方全体角色恢复<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>能量，该效果恢复的能量可以超出目标的能量上限，并使场上所有忆灵下一次行动后可立即再次行动。",
+    "param": [
+      0.2
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Ice",
+      "Thunder"
+    ],
+    "damage_type2": [
+      "Fire",
+      "Thunder"
+    ],
+    "maze_group_id1": 20,
+    "maze_group_id2": 21,
+    "npc_monster_id_list1": [
+      1013010
+    ],
+    "npc_monster_id_list2": [
+      8003040
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30111011,
+        "stage_type": "Challenge",
+        "stage_name": 13087150147011258837,
+        "hard_level_group": 3,
+        "level": 68,
+        "elite_group": 255,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30134"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 1012030,
+            "monster1": 1013010,
+            "monster2": 1012030
+          },
+          {
+            "monster0": 1013010,
+            "monster1": 1013020
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30111012,
+        "stage_type": "Challenge",
+        "stage_name": 15864002628047023122,
+        "hard_level_group": 3,
+        "level": 68,
+        "elite_group": 255,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30134"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 8002010,
+            "monster1": 8003040,
+            "monster2": 8002010,
+            "monster3": 1012010
+          },
+          {
+            "monster0": 8002010,
+            "monster1": 8003040,
+            "monster2": 3003040
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 4002,
+    "name": "创世纷争其二",
+    "group_name": "创世纷争",
+    "desc": "每个轮开始时，为我方全体角色恢复<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>能量，该效果恢复的能量可以超出目标的能量上限，并使场上所有忆灵下一次行动后可立即再次行动。",
+    "param": [
+      0.2
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Fire",
+      "Imaginary"
+    ],
+    "damage_type2": [
+      "Wind",
+      "Quantum"
+    ],
+    "maze_group_id1": 20,
+    "maze_group_id2": 21,
+    "npc_monster_id_list1": [
+      3003030
+    ],
+    "npc_monster_id_list2": [
+      2013010
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30111021,
+        "stage_type": "Challenge",
+        "stage_name": 18110657579897695596,
+        "hard_level_group": 3,
+        "level": 70,
+        "elite_group": 256,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30134"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 3002010,
+            "monster1": 3003030,
+            "monster2": 3001010,
+            "monster3": 3001010
+          },
+          {
+            "monster0": 3003030,
+            "monster1": 3003050,
+            "monster2": 3002010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30111022,
+        "stage_type": "Challenge",
+        "stage_name": 6099984704558274809,
+        "hard_level_group": 3,
+        "level": 70,
+        "elite_group": 256,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30134"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 2022010,
+            "monster1": 2013010,
+            "monster2": 2022010
+          },
+          {
+            "monster0": 2013010,
+            "monster1": 8003010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 4003,
+    "name": "创世纷争其三",
+    "group_name": "创世纷争",
+    "desc": "每个轮开始时，为我方全体角色恢复<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>能量，该效果恢复的能量可以超出目标的能量上限，并使场上所有忆灵下一次行动后可立即再次行动。",
+    "param": [
+      0.2
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Wind"
+    ],
+    "damage_type2": [
+      "Physical",
+      "Ice"
+    ],
+    "maze_group_id1": 20,
+    "maze_group_id2": 21,
+    "npc_monster_id_list1": [
+      2033010
+    ],
+    "npc_monster_id_list2": [
+      3024010
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30111031,
+        "stage_type": "Challenge",
+        "stage_name": 16830651616508961311,
+        "hard_level_group": 3,
+        "level": 73,
+        "elite_group": 257,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30134"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 2032010,
+            "monster1": 2033010,
+            "monster2": 2032020
+          },
+          {
+            "monster0": 2033010,
+            "monster1": 2023020
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30111032,
+        "stage_type": "Challenge",
+        "stage_name": 14805961183082142131,
+        "hard_level_group": 3,
+        "level": 73,
+        "elite_group": 257,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30134"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 1003010,
+            "monster1": 1003010
+          },
+          {
+            "monster0": 3024010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 4004,
+    "name": "创世纷争其四",
+    "group_name": "创世纷争",
+    "desc": "每个轮开始时，为我方全体角色恢复<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>能量，该效果恢复的能量可以超出目标的能量上限，并使场上所有忆灵下一次行动后可立即再次行动。",
+    "param": [
+      0.2
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Thunder",
+      "Quantum"
+    ],
+    "damage_type2": [
+      "Physical",
+      "Imaginary"
+    ],
+    "maze_group_id1": 20,
+    "maze_group_id2": 21,
+    "npc_monster_id_list1": [
+      4013010
+    ],
+    "npc_monster_id_list2": [
+      3003020
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30111041,
+        "stage_type": "Challenge",
+        "stage_name": 14859544075813414881,
+        "hard_level_group": 3,
+        "level": 75,
+        "elite_group": 258,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30134"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 4012010,
+            "monster1": 4013010,
+            "monster2": 4012020
+          },
+          {
+            "monster0": 4012010,
+            "monster1": 4013010,
+            "monster2": 3013010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30111042,
+        "stage_type": "Challenge",
+        "stage_name": 9524722474129506048,
+        "hard_level_group": 3,
+        "level": 75,
+        "elite_group": 258,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30134"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 3002010,
+            "monster1": 3003020,
+            "monster2": 3002040
+          },
+          {
+            "monster0": 3003020,
+            "monster1": 2013020
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 4005,
+    "name": "创世纷争其五",
+    "group_name": "创世纷争",
+    "desc": "每个轮开始时，为我方全体角色恢复<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>能量，该效果恢复的能量可以超出目标的能量上限，并使场上所有忆灵下一次行动后可立即再次行动。",
+    "param": [
+      0.2
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Fire",
+      "Imaginary"
+    ],
+    "damage_type2": [
+      "Wind"
+    ],
+    "maze_group_id1": 20,
+    "maze_group_id2": 21,
+    "npc_monster_id_list1": [
+      8033010
+    ],
+    "npc_monster_id_list2": [
+      2034010
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30111051,
+        "stage_type": "Challenge",
+        "stage_name": 13208664396652254584,
+        "hard_level_group": 3,
+        "level": 78,
+        "elite_group": 259,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30134"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 8032010,
+            "monster1": 8033010,
+            "monster2": 8032020
+          },
+          {
+            "monster0": 8033010,
+            "monster1": 3003050
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30111052,
+        "stage_type": "Challenge",
+        "stage_name": 4307424808395091276,
+        "hard_level_group": 3,
+        "level": 78,
+        "elite_group": 259,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30134"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 2033010,
+            "monster1": 8003030
+          },
+          {
+            "monster0": 2034010,
+            "monster1": 2033010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 4006,
+    "name": "创世纷争其六",
+    "group_name": "创世纷争",
+    "desc": "每个轮开始时，为我方全体角色恢复<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>能量，该效果恢复的能量可以超出目标的能量上限，并使场上所有忆灵下一次行动后可立即再次行动。",
+    "param": [
+      0.2
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Ice",
+      "Thunder"
+    ],
+    "damage_type2": [
+      "Fire",
+      "Thunder"
+    ],
+    "maze_group_id1": 20,
+    "maze_group_id2": 21,
+    "npc_monster_id_list1": [
+      1013010
+    ],
+    "npc_monster_id_list2": [
+      8003040
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30111061,
+        "stage_type": "Challenge",
+        "stage_name": 13087150147011258837,
+        "hard_level_group": 3,
+        "level": 80,
+        "elite_group": 260,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30134"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 1012030,
+            "monster1": 1013010,
+            "monster2": 1012030
+          },
+          {
+            "monster0": 1013010,
+            "monster1": 1013020
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30111062,
+        "stage_type": "Challenge",
+        "stage_name": 15864002628047023122,
+        "hard_level_group": 3,
+        "level": 80,
+        "elite_group": 260,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30134"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 8002010,
+            "monster1": 8003040,
+            "monster2": 8002010,
+            "monster3": 1012010
+          },
+          {
+            "monster0": 8002010,
+            "monster1": 8003040,
+            "monster2": 3003040
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 4007,
+    "name": "创世纷争其七",
+    "group_name": "创世纷争",
+    "desc": "每个轮开始时，为我方全体角色恢复<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>能量，该效果恢复的能量可以超出目标的能量上限，并使场上所有忆灵下一次行动后可立即再次行动。",
+    "param": [
+      0.2
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Fire",
+      "Imaginary"
+    ],
+    "damage_type2": [
+      "Wind",
+      "Quantum"
+    ],
+    "maze_group_id1": 20,
+    "maze_group_id2": 21,
+    "npc_monster_id_list1": [
+      3003030
+    ],
+    "npc_monster_id_list2": [
+      2013010
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30111071,
+        "stage_type": "Challenge",
+        "stage_name": 18110657579897695596,
+        "hard_level_group": 3,
+        "level": 82,
+        "elite_group": 261,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30134"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 3002010,
+            "monster1": 3003030,
+            "monster2": 3001010,
+            "monster3": 3001010
+          },
+          {
+            "monster0": 3003030,
+            "monster1": 3003050,
+            "monster2": 3002010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30111072,
+        "stage_type": "Challenge",
+        "stage_name": 6099984704558274809,
+        "hard_level_group": 3,
+        "level": 82,
+        "elite_group": 261,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30134"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 2022010,
+            "monster1": 2013010,
+            "monster2": 2022010
+          },
+          {
+            "monster0": 2013010,
+            "monster1": 8003010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 4008,
+    "name": "创世纷争其八",
+    "group_name": "创世纷争",
+    "desc": "每个轮开始时，为我方全体角色恢复<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>能量，该效果恢复的能量可以超出目标的能量上限，并使场上所有忆灵下一次行动后可立即再次行动。",
+    "param": [
+      0.2
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Wind"
+    ],
+    "damage_type2": [
+      "Physical",
+      "Ice"
+    ],
+    "maze_group_id1": 20,
+    "maze_group_id2": 21,
+    "npc_monster_id_list1": [
+      2033010
+    ],
+    "npc_monster_id_list2": [
+      3024010
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30111081,
+        "stage_type": "Challenge",
+        "stage_name": 16830651616508961311,
+        "hard_level_group": 3,
+        "level": 85,
+        "elite_group": 262,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30134"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 2032010,
+            "monster1": 2033010,
+            "monster2": 2032020
+          },
+          {
+            "monster0": 2033010,
+            "monster1": 2023020
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30111082,
+        "stage_type": "Challenge",
+        "stage_name": 14805961183082142131,
+        "hard_level_group": 3,
+        "level": 85,
+        "elite_group": 262,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30134"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 1003010,
+            "monster1": 1003010
+          },
+          {
+            "monster0": 3024010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 4009,
+    "name": "创世纷争其九",
+    "group_name": "创世纷争",
+    "desc": "每个轮开始时，为我方全体角色恢复<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>能量，该效果恢复的能量可以超出目标的能量上限，并使场上所有忆灵下一次行动后可立即再次行动。",
+    "param": [
+      0.2
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Thunder",
+      "Quantum"
+    ],
+    "damage_type2": [
+      "Physical",
+      "Imaginary"
+    ],
+    "maze_group_id1": 20,
+    "maze_group_id2": 21,
+    "npc_monster_id_list1": [
+      4013010
+    ],
+    "npc_monster_id_list2": [
+      3003020
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30111091,
+        "stage_type": "Challenge",
+        "stage_name": 14859544075813414881,
+        "hard_level_group": 3,
+        "level": 88,
+        "elite_group": 263,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30134"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 4012010,
+            "monster1": 4013010,
+            "monster2": 4012020
+          },
+          {
+            "monster0": 4012010,
+            "monster1": 4013010,
+            "monster2": 3013010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30111092,
+        "stage_type": "Challenge",
+        "stage_name": 9524722474129506048,
+        "hard_level_group": 3,
+        "level": 88,
+        "elite_group": 263,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30134"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 3002010,
+            "monster1": 3003020,
+            "monster2": 3002040
+          },
+          {
+            "monster0": 3003020,
+            "monster1": 2013020
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 4010,
+    "name": "创世纷争其十",
+    "group_name": "创世纷争",
+    "desc": "每个轮开始时，为我方全体角色恢复<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>能量，该效果恢复的能量可以超出目标的能量上限，并使场上所有忆灵下一次行动后可立即再次行动。",
+    "param": [
+      0.2
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Ice",
+      "Thunder"
+    ],
+    "damage_type2": [
+      "Wind"
+    ],
+    "maze_group_id1": 20,
+    "maze_group_id2": 21,
+    "npc_monster_id_list1": [
+      4014010
+    ],
+    "npc_monster_id_list2": [
+      2034010
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30111101,
+        "stage_type": "Challenge",
+        "stage_name": 17286256845471197178,
+        "hard_level_group": 3,
+        "level": 90,
+        "elite_group": 264,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30134"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 2023030,
+            "monster1": 1013010
+          },
+          {
+            "monster0": 4014010,
+            "monster1": 1013010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30111102,
+        "stage_type": "Challenge",
+        "stage_name": 4307424808395091276,
+        "hard_level_group": 3,
+        "level": 90,
+        "elite_group": 264,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30134"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 2033010,
+            "monster1": 8003030
+          },
+          {
+            "monster0": 2034010,
+            "monster1": 2033010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 4011,
+    "name": "创世纷争其十一",
+    "group_name": "创世纷争",
+    "desc": "每个轮开始时，为我方全体角色恢复<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>能量，该效果恢复的能量可以超出目标的能量上限，并使场上所有忆灵下一次行动后可立即再次行动。",
+    "param": [
+      0.2
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Thunder"
+    ],
+    "damage_type2": [
+      "Ice",
+      "Imaginary"
+    ],
+    "maze_group_id1": 20,
+    "maze_group_id2": 21,
+    "npc_monster_id_list1": [
+      8034010
+    ],
+    "npc_monster_id_list2": [
+      3003014
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30111111,
+        "stage_type": "Challenge",
+        "stage_name": 3756729761605363657,
+        "hard_level_group": 3,
+        "level": 92,
+        "elite_group": 265,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30134"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 4013010,
+            "monster1": 2033010
+          },
+          {
+            "monster0": 8034010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30111112,
+        "stage_type": "Challenge",
+        "stage_name": 12223446868998010287,
+        "hard_level_group": 3,
+        "level": 92,
+        "elite_group": 265,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30134"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 1013020,
+            "monster1": 2023010,
+            "monster2": 1013020
+          },
+          {
+            "monster0": 3004020
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 4012,
+    "name": "创世纷争其十二",
+    "group_name": "创世纷争",
+    "desc": "每个轮开始时，为我方全体角色恢复<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>能量，该效果恢复的能量可以超出目标的能量上限，并使场上所有忆灵下一次行动后可立即再次行动。",
+    "param": [
+      0.2
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Ice",
+      "Imaginary"
+    ],
+    "damage_type2": [
+      "Ice",
+      "Thunder",
+      "Quantum"
+    ],
+    "maze_group_id1": 20,
+    "maze_group_id2": 21,
+    "npc_monster_id_list1": [
+      8024011
+    ],
+    "npc_monster_id_list2": [
+      4014020
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30111121,
+        "stage_type": "Challenge",
+        "stage_name": 12687103214276587319,
+        "hard_level_group": 3,
+        "level": 95,
+        "elite_group": 266,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30134"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 803301014,
+            "monster1": 1023010
+          },
+          {
+            "monster0": 802401107,
+            "monster1": 1023010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30111122,
+        "stage_type": "Challenge",
+        "stage_name": 17286256845471197178,
+        "hard_level_group": 3,
+        "level": 95,
+        "elite_group": 272,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30134"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 3002040,
+            "monster1": 4013010,
+            "monster2": 2013010
+          },
+          {
+            "monster0": 4014020
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  }
+]

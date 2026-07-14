@@ -1,0 +1,1587 @@
+[
+  {
+    "id": 3501,
+    "name": "曲尽梦散其一",
+    "group_name": "曲尽梦散(<unbreak>2.3</unbreak>)",
+    "desc": "我方目标施放追加攻击或战技进行攻击后，为【记忆紊流】增加<color=#f29e38ff><unbreak>#3[i]</unbreak></color>段攻击段数，最多叠加<color=#f29e38ff><unbreak>#1[i]</unbreak></color>段。\\n每个轮开始时，每段攻击对随机敌方目标造成1次基于目标生命上限的伤害。",
+    "param": [
+      10,
+      0.06,
+      1,
+      1,
+      0.35
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Ice",
+      "Imaginary"
+    ],
+    "damage_type2": [
+      "Fire",
+      "Thunder"
+    ],
+    "maze_group_id1": 6,
+    "maze_group_id2": 7,
+    "npc_monster_id_list1": [
+      8003050
+    ],
+    "npc_monster_id_list2": [
+      3003030
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30106011,
+        "stage_type": "Challenge",
+        "stage_name": 4944919553093870061,
+        "hard_level_group": 3,
+        "level": 68,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30129"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 1002020,
+            "monster1": 8003050,
+            "monster2": 1002020,
+            "monster3": 1012030
+          },
+          {
+            "monster0": 1012030,
+            "monster1": 8003050,
+            "monster2": 1013020,
+            "monster3": 1012030
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30106012,
+        "stage_type": "Challenge",
+        "stage_name": 18110657579897695596,
+        "hard_level_group": 3,
+        "level": 68,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30129"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 3002010,
+            "monster1": 3003030,
+            "monster2": 3002040
+          },
+          {
+            "monster0": 3003040,
+            "monster1": 3003030
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 3502,
+    "name": "曲尽梦散其二",
+    "group_name": "曲尽梦散(<unbreak>2.3</unbreak>)",
+    "desc": "我方目标施放追加攻击或战技进行攻击后，为【记忆紊流】增加<color=#f29e38ff><unbreak>#3[i]</unbreak></color>段攻击段数，最多叠加<color=#f29e38ff><unbreak>#1[i]</unbreak></color>段。\\n每个轮开始时，每段攻击对随机敌方目标造成1次基于目标生命上限的伤害。",
+    "param": [
+      10,
+      0.06,
+      1,
+      1,
+      0.35
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Physical"
+    ],
+    "damage_type2": [
+      "Fire",
+      "Wind"
+    ],
+    "maze_group_id1": 6,
+    "maze_group_id2": 7,
+    "npc_monster_id_list1": [
+      1003010
+    ],
+    "npc_monster_id_list2": [
+      2023020
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30106021,
+        "stage_type": "Challenge",
+        "stage_name": 9874079526424322448,
+        "hard_level_group": 3,
+        "level": 70,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30129"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 1002030,
+            "monster1": 1003010,
+            "monster2": 1002030
+          },
+          {
+            "monster0": 1003010,
+            "monster1": 3003050
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30106022,
+        "stage_type": "Challenge",
+        "stage_name": 5650742420150656798,
+        "hard_level_group": 3,
+        "level": 70,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30129"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 2022040,
+            "monster1": 2023020,
+            "monster2": 2022040,
+            "monster3": 2022050
+          },
+          {
+            "monster0": 8003010,
+            "monster1": 2023020,
+            "monster2": 2022040
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 3503,
+    "name": "曲尽梦散其三",
+    "group_name": "曲尽梦散(<unbreak>2.3</unbreak>)",
+    "desc": "我方目标施放追加攻击或战技进行攻击后，为【记忆紊流】增加<color=#f29e38ff><unbreak>#3[i]</unbreak></color>段攻击段数，最多叠加<color=#f29e38ff><unbreak>#1[i]</unbreak></color>段。\\n每个轮开始时，每段攻击对随机敌方目标造成1次基于目标生命上限的伤害。",
+    "param": [
+      10,
+      0.06,
+      1,
+      1,
+      0.35
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Thunder",
+      "Imaginary"
+    ],
+    "damage_type2": [
+      "Physical",
+      "Thunder"
+    ],
+    "maze_group_id1": 6,
+    "maze_group_id2": 7,
+    "npc_monster_id_list1": [
+      3013010
+    ],
+    "npc_monster_id_list2": [
+      8034010
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30106031,
+        "stage_type": "Challenge",
+        "stage_name": 8310250911400761097,
+        "hard_level_group": 3,
+        "level": 73,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30129"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 3012010,
+            "monster1": 3013010,
+            "monster2": 3012010,
+            "monster3": 3012010
+          },
+          {
+            "monster0": 3012010,
+            "monster1": 3013010,
+            "monster2": 1023010,
+            "monster3": 3012010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30106032,
+        "stage_type": "Challenge",
+        "stage_name": 3756729761605363657,
+        "hard_level_group": 3,
+        "level": 73,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30129"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 2012010,
+            "monster1": 2013020,
+            "monster2": 2012010,
+            "monster3": 2002030
+          },
+          {
+            "monster0": 8034010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 3504,
+    "name": "曲尽梦散其四",
+    "group_name": "曲尽梦散(<unbreak>2.3</unbreak>)",
+    "desc": "我方目标施放追加攻击或战技进行攻击后，为【记忆紊流】增加<color=#f29e38ff><unbreak>#3[i]</unbreak></color>段攻击段数，最多叠加<color=#f29e38ff><unbreak>#1[i]</unbreak></color>段。\\n每个轮开始时，每段攻击对随机敌方目标造成1次基于目标生命上限的伤害。",
+    "param": [
+      10,
+      0.06,
+      1,
+      1,
+      0.35
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Wind",
+      "Imaginary"
+    ],
+    "damage_type2": [
+      "Fire"
+    ],
+    "maze_group_id1": 6,
+    "maze_group_id2": 7,
+    "npc_monster_id_list1": [
+      2023010
+    ],
+    "npc_monster_id_list2": [
+      8033010
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30106041,
+        "stage_type": "Challenge",
+        "stage_name": 189339872378837144,
+        "hard_level_group": 3,
+        "level": 75,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30129"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 2022060,
+            "monster1": 2023010,
+            "monster2": 2022060
+          },
+          {
+            "monster0": 2023010,
+            "monster1": 8013010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30106042,
+        "stage_type": "Challenge",
+        "stage_name": 13208664396652254584,
+        "hard_level_group": 3,
+        "level": 75,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30129"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 8032010,
+            "monster1": 8033010
+          },
+          {
+            "monster0": 8003040,
+            "monster1": 8033010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 3505,
+    "name": "曲尽梦散其五",
+    "group_name": "曲尽梦散(<unbreak>2.3</unbreak>)",
+    "desc": "我方目标施放追加攻击或战技进行攻击后，为【记忆紊流】增加<color=#f29e38ff><unbreak>#3[i]</unbreak></color>段攻击段数，最多叠加<color=#f29e38ff><unbreak>#1[i]</unbreak></color>段。\\n每个轮开始时，每段攻击对随机敌方目标造成1次基于目标生命上限的伤害。",
+    "param": [
+      10,
+      0.06,
+      1,
+      1,
+      0.35
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Fire",
+      "Thunder"
+    ],
+    "damage_type2": [
+      "Ice",
+      "Quantum"
+    ],
+    "maze_group_id1": 6,
+    "maze_group_id2": 7,
+    "npc_monster_id_list1": [
+      3003010
+    ],
+    "npc_monster_id_list2": [
+      2024010
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30106051,
+        "stage_type": "Challenge",
+        "stage_name": 9344842774432863716,
+        "hard_level_group": 3,
+        "level": 78,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30129"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 3002030,
+            "monster1": 3003010,
+            "monster2": 3002040,
+            "monster3": 3002030
+          },
+          {
+            "monster0": 1013010,
+            "monster1": 3003010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30106052,
+        "stage_type": "Challenge",
+        "stage_name": 15606630685968003963,
+        "hard_level_group": 3,
+        "level": 78,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30129"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 8003020,
+            "monster1": 1003010
+          },
+          {
+            "monster0": 2024010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 3506,
+    "name": "曲尽梦散其六",
+    "group_name": "曲尽梦散(<unbreak>2.3</unbreak>)",
+    "desc": "我方目标施放追加攻击或战技进行攻击后，为【记忆紊流】增加<color=#f29e38ff><unbreak>#3[i]</unbreak></color>段攻击段数，最多叠加<color=#f29e38ff><unbreak>#1[i]</unbreak></color>段。\\n每个轮开始时，每段攻击对随机敌方目标造成1次基于目标生命上限的伤害。",
+    "param": [
+      10,
+      0.06,
+      1,
+      1,
+      0.35
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Ice",
+      "Imaginary"
+    ],
+    "damage_type2": [
+      "Fire",
+      "Thunder"
+    ],
+    "maze_group_id1": 6,
+    "maze_group_id2": 7,
+    "npc_monster_id_list1": [
+      8003050
+    ],
+    "npc_monster_id_list2": [
+      3003030
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30106061,
+        "stage_type": "Challenge",
+        "stage_name": 4944919553093870061,
+        "hard_level_group": 3,
+        "level": 80,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30129"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 1002020,
+            "monster1": 8003050,
+            "monster2": 1002020,
+            "monster3": 1012030
+          },
+          {
+            "monster0": 1012030,
+            "monster1": 8003050,
+            "monster2": 1013020,
+            "monster3": 1012030
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30106062,
+        "stage_type": "Challenge",
+        "stage_name": 18110657579897695596,
+        "hard_level_group": 3,
+        "level": 80,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30129"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 3002010,
+            "monster1": 3003030,
+            "monster2": 3002040
+          },
+          {
+            "monster0": 3003040,
+            "monster1": 3003030
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 3507,
+    "name": "曲尽梦散其七",
+    "group_name": "曲尽梦散(<unbreak>2.3</unbreak>)",
+    "desc": "我方目标施放追加攻击或战技进行攻击后，为【记忆紊流】增加<color=#f29e38ff><unbreak>#3[i]</unbreak></color>段攻击段数，最多叠加<color=#f29e38ff><unbreak>#1[i]</unbreak></color>段。\\n每个轮开始时，每段攻击对随机敌方目标造成1次基于目标生命上限的伤害。",
+    "param": [
+      10,
+      0.06,
+      1,
+      1,
+      0.35
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Physical"
+    ],
+    "damage_type2": [
+      "Fire",
+      "Wind"
+    ],
+    "maze_group_id1": 6,
+    "maze_group_id2": 7,
+    "npc_monster_id_list1": [
+      1003010
+    ],
+    "npc_monster_id_list2": [
+      2023020
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30106071,
+        "stage_type": "Challenge",
+        "stage_name": 9874079526424322448,
+        "hard_level_group": 3,
+        "level": 82,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30129"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 1002030,
+            "monster1": 1003010,
+            "monster2": 1002030
+          },
+          {
+            "monster0": 1003010,
+            "monster1": 3003050
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30106072,
+        "stage_type": "Challenge",
+        "stage_name": 5650742420150656798,
+        "hard_level_group": 3,
+        "level": 82,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30129"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 2022040,
+            "monster1": 2023020,
+            "monster2": 2022040,
+            "monster3": 2022050
+          },
+          {
+            "monster0": 8003010,
+            "monster1": 2023020,
+            "monster2": 2022040
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 3508,
+    "name": "曲尽梦散其八",
+    "group_name": "曲尽梦散(<unbreak>2.3</unbreak>)",
+    "desc": "我方目标施放追加攻击或战技进行攻击后，为【记忆紊流】增加<color=#f29e38ff><unbreak>#3[i]</unbreak></color>段攻击段数，最多叠加<color=#f29e38ff><unbreak>#1[i]</unbreak></color>段。\\n每个轮开始时，每段攻击对随机敌方目标造成1次基于目标生命上限的伤害。",
+    "param": [
+      10,
+      0.06,
+      1,
+      1,
+      0.35
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Thunder",
+      "Imaginary"
+    ],
+    "damage_type2": [
+      "Physical",
+      "Thunder"
+    ],
+    "maze_group_id1": 6,
+    "maze_group_id2": 7,
+    "npc_monster_id_list1": [
+      3013010
+    ],
+    "npc_monster_id_list2": [
+      8034010
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30106081,
+        "stage_type": "Challenge",
+        "stage_name": 8310250911400761097,
+        "hard_level_group": 3,
+        "level": 85,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30129"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 3012010,
+            "monster1": 3013010,
+            "monster2": 3012010,
+            "monster3": 3012010
+          },
+          {
+            "monster0": 3012010,
+            "monster1": 3013010,
+            "monster2": 1023010,
+            "monster3": 3012010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30106082,
+        "stage_type": "Challenge",
+        "stage_name": 3756729761605363657,
+        "hard_level_group": 3,
+        "level": 85,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30129"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 2012010,
+            "monster1": 2013020,
+            "monster2": 2012010,
+            "monster3": 2002030
+          },
+          {
+            "monster0": 8034010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 3509,
+    "name": "曲尽梦散其九",
+    "group_name": "曲尽梦散(<unbreak>2.3</unbreak>)",
+    "desc": "我方目标施放追加攻击或战技进行攻击后，为【记忆紊流】增加<color=#f29e38ff><unbreak>#3[i]</unbreak></color>段攻击段数，最多叠加<color=#f29e38ff><unbreak>#1[i]</unbreak></color>段。\\n每个轮开始时，每段攻击对随机敌方目标造成1次基于目标生命上限的伤害。",
+    "param": [
+      10,
+      0.06,
+      1,
+      1,
+      0.35
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Wind",
+      "Imaginary"
+    ],
+    "damage_type2": [
+      "Fire"
+    ],
+    "maze_group_id1": 6,
+    "maze_group_id2": 7,
+    "npc_monster_id_list1": [
+      2023010
+    ],
+    "npc_monster_id_list2": [
+      8033010
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30106091,
+        "stage_type": "Challenge",
+        "stage_name": 189339872378837144,
+        "hard_level_group": 3,
+        "level": 88,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30129"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 2022060,
+            "monster1": 2023010,
+            "monster2": 2022060
+          },
+          {
+            "monster0": 2023010,
+            "monster1": 8013010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30106092,
+        "stage_type": "Challenge",
+        "stage_name": 13208664396652254584,
+        "hard_level_group": 3,
+        "level": 88,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30129"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 8032010,
+            "monster1": 8033010
+          },
+          {
+            "monster0": 8003040,
+            "monster1": 8033010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 3510,
+    "name": "曲尽梦散其十",
+    "group_name": "曲尽梦散(<unbreak>2.3</unbreak>)",
+    "desc": "我方目标施放追加攻击或战技进行攻击后，为【记忆紊流】增加<color=#f29e38ff><unbreak>#3[i]</unbreak></color>段攻击段数，最多叠加<color=#f29e38ff><unbreak>#1[i]</unbreak></color>段。\\n每个轮开始时，每段攻击对随机敌方目标造成1次基于目标生命上限的伤害。",
+    "param": [
+      10,
+      0.06,
+      1,
+      1,
+      0.35
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Fire",
+      "Thunder"
+    ],
+    "damage_type2": [
+      "Ice",
+      "Quantum"
+    ],
+    "maze_group_id1": 6,
+    "maze_group_id2": 7,
+    "npc_monster_id_list1": [
+      3003010
+    ],
+    "npc_monster_id_list2": [
+      2024010
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30106101,
+        "stage_type": "Challenge",
+        "stage_name": 9344842774432863716,
+        "hard_level_group": 3,
+        "level": 90,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30129"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 3002030,
+            "monster1": 3003010,
+            "monster2": 3002040,
+            "monster3": 3002030
+          },
+          {
+            "monster0": 1013010,
+            "monster1": 3003010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30106102,
+        "stage_type": "Challenge",
+        "stage_name": 15606630685968003963,
+        "hard_level_group": 3,
+        "level": 90,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30129"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 8003020,
+            "monster1": 1003010
+          },
+          {
+            "monster0": 2024010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 3511,
+    "name": "曲尽梦散其十一",
+    "group_name": "曲尽梦散(<unbreak>2.3</unbreak>)",
+    "desc": "我方目标施放追加攻击或战技进行攻击后，为【记忆紊流】增加<color=#f29e38ff><unbreak>#3[i]</unbreak></color>段攻击段数，最多叠加<color=#f29e38ff><unbreak>#1[i]</unbreak></color>段。\\n每个轮开始时，每段攻击对随机敌方目标造成1次基于目标生命上限的伤害。",
+    "param": [
+      10,
+      0.06,
+      1,
+      1,
+      0.35
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Fire",
+      "Quantum"
+    ],
+    "damage_type2": [
+      "Physical",
+      "Imaginary"
+    ],
+    "maze_group_id1": 6,
+    "maze_group_id2": 7,
+    "npc_monster_id_list1": [
+      1004010
+    ],
+    "npc_monster_id_list2": [
+      2004010
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30106111,
+        "stage_type": "Challenge",
+        "stage_name": 14813692740671814223,
+        "hard_level_group": 3,
+        "level": 92,
+        "elite_group": 223,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30129"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 1023020,
+            "monster1": 8003010
+          },
+          {
+            "monster0": 100401010,
+            "monster1": 1023020
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30106112,
+        "stage_type": "Challenge",
+        "stage_name": 17021160864080099751,
+        "hard_level_group": 3,
+        "level": 92,
+        "elite_group": 223,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30129"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 2002010,
+            "monster1": 2013020,
+            "monster2": 8013010
+          },
+          {
+            "monster0": 2002010,
+            "monster1": 200401007,
+            "monster2": 2013020,
+            "monster3": 2002010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 3512,
+    "name": "曲尽梦散其十二",
+    "group_name": "曲尽梦散(<unbreak>2.3</unbreak>)",
+    "desc": "我方目标施放追加攻击或战技进行攻击后，为【记忆紊流】增加<color=#f29e38ff><unbreak>#3[i]</unbreak></color>段攻击段数，最多叠加<color=#f29e38ff><unbreak>#1[i]</unbreak></color>段。\\n每个轮开始时，每段攻击对随机敌方目标造成1次基于目标生命上限的伤害。",
+    "param": [
+      10,
+      0.06,
+      1,
+      1,
+      0.35
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Fire",
+      "Thunder"
+    ],
+    "damage_type2": [
+      "Physical"
+    ],
+    "maze_group_id1": 6,
+    "maze_group_id2": 7,
+    "npc_monster_id_list1": [
+      3003041
+    ],
+    "npc_monster_id_list2": [
+      3024010
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30106121,
+        "stage_type": "Challenge",
+        "stage_name": 6213149876937981716,
+        "hard_level_group": 3,
+        "level": 95,
+        "elite_group": 224,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30129"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 3012020,
+            "monster1": 3003040,
+            "monster2": 3003030,
+            "monster3": 3012020
+          },
+          {
+            "monster0": 3004010,
+            "monster1": 3003051,
+            "monster2": 3003041,
+            "monster3": 3003031
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30106122,
+        "stage_type": "Challenge",
+        "stage_name": 14805961183082142131,
+        "hard_level_group": 3,
+        "level": 95,
+        "elite_group": 224,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30129"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 8003030,
+            "monster1": 3003050
+          },
+          {
+            "monster0": 3024010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  }
+]

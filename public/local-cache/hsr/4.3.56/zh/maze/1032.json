@@ -1,0 +1,1596 @@
+[
+  {
+    "id": 5101,
+    "name": "值日行动其一",
+    "group_name": "值日行动",
+    "desc": "我方目标施放终结技时造成的暴击伤害提高<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>，施放终结技后为【记忆紊流】增加<color=#f29e38ff><unbreak>#2[i]</unbreak></color>段攻击段数，最多叠加<color=#f29e38ff><unbreak>#6[i]</unbreak></color>段。\\n每个轮开始时，【记忆紊流】的每段攻击对随机敌方目标造成1次真实伤害。",
+    "param": [
+      0.5,
+      2,
+      0.12,
+      0.02,
+      0.012,
+      20
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Physical",
+      "Fire"
+    ],
+    "damage_type2": [
+      "Ice",
+      "Wind"
+    ],
+    "maze_group_id1": 5,
+    "maze_group_id2": 6,
+    "npc_monster_id_list1": [
+      3003020
+    ],
+    "npc_monster_id_list2": [
+      2023010
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30122011,
+        "stage_type": "Challenge",
+        "stage_name": 9524722474129506048,
+        "hard_level_group": 3,
+        "level": 68,
+        "elite_group": 273,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30145"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 3003020
+          },
+          {
+            "monster0": 3003020,
+            "monster1": 3003040
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30122012,
+        "stage_type": "Challenge",
+        "stage_name": 189339872378837144,
+        "hard_level_group": 3,
+        "level": 68,
+        "elite_group": 273,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30145"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 2023010
+          },
+          {
+            "monster0": 2023010,
+            "monster1": 2023020
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 5102,
+    "name": "值日行动其二",
+    "group_name": "值日行动",
+    "desc": "我方目标施放终结技时造成的暴击伤害提高<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>，施放终结技后为【记忆紊流】增加<color=#f29e38ff><unbreak>#2[i]</unbreak></color>段攻击段数，最多叠加<color=#f29e38ff><unbreak>#6[i]</unbreak></color>段。\\n每个轮开始时，【记忆紊流】的每段攻击对随机敌方目标造成1次真实伤害。",
+    "param": [
+      0.5,
+      2,
+      0.12,
+      0.02,
+      0.012,
+      20
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Ice",
+      "Quantum"
+    ],
+    "damage_type2": [
+      "Physical",
+      "Imaginary"
+    ],
+    "maze_group_id1": 5,
+    "maze_group_id2": 6,
+    "npc_monster_id_list1": [
+      4013010
+    ],
+    "npc_monster_id_list2": [
+      3003020
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30122021,
+        "stage_type": "Challenge",
+        "stage_name": 14859544075813414881,
+        "hard_level_group": 3,
+        "level": 70,
+        "elite_group": 274,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30145"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 4012030,
+            "monster1": 4013010,
+            "monster2": 4012030
+          },
+          {
+            "monster0": 4013010,
+            "monster1": 8003020
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30122022,
+        "stage_type": "Challenge",
+        "stage_name": 9524722474129506048,
+        "hard_level_group": 3,
+        "level": 70,
+        "elite_group": 274,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30145"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 4012050,
+            "monster1": 3003020
+          },
+          {
+            "monster0": 3003020,
+            "monster1": 8013010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 5103,
+    "name": "值日行动其三",
+    "group_name": "值日行动",
+    "desc": "我方目标施放终结技时造成的暴击伤害提高<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>，施放终结技后为【记忆紊流】增加<color=#f29e38ff><unbreak>#2[i]</unbreak></color>段攻击段数，最多叠加<color=#f29e38ff><unbreak>#6[i]</unbreak></color>段。\\n每个轮开始时，【记忆紊流】的每段攻击对随机敌方目标造成1次真实伤害。",
+    "param": [
+      0.5,
+      2,
+      0.12,
+      0.02,
+      0.012,
+      20
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Ice",
+      "Thunder"
+    ],
+    "damage_type2": [
+      "Fire",
+      "Thunder"
+    ],
+    "maze_group_id1": 5,
+    "maze_group_id2": 6,
+    "npc_monster_id_list1": [
+      1013010
+    ],
+    "npc_monster_id_list2": [
+      8003040
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30122031,
+        "stage_type": "Challenge",
+        "stage_name": 13087150147011258837,
+        "hard_level_group": 3,
+        "level": 73,
+        "elite_group": 275,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30145"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 1012030,
+            "monster1": 1013010,
+            "monster2": 1012030
+          },
+          {
+            "monster0": 1013010,
+            "monster1": 1013020
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30122032,
+        "stage_type": "Challenge",
+        "stage_name": 15864002628047023122,
+        "hard_level_group": 3,
+        "level": 73,
+        "elite_group": 275,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30145"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 8002010,
+            "monster1": 8003040,
+            "monster2": 8002010,
+            "monster3": 1012010
+          },
+          {
+            "monster0": 8002010,
+            "monster1": 8003040,
+            "monster2": 3003040
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 5104,
+    "name": "值日行动其四",
+    "group_name": "值日行动",
+    "desc": "我方目标施放终结技时造成的暴击伤害提高<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>，施放终结技后为【记忆紊流】增加<color=#f29e38ff><unbreak>#2[i]</unbreak></color>段攻击段数，最多叠加<color=#f29e38ff><unbreak>#6[i]</unbreak></color>段。\\n每个轮开始时，【记忆紊流】的每段攻击对随机敌方目标造成1次真实伤害。",
+    "param": [
+      0.5,
+      2,
+      0.12,
+      0.02,
+      0.012,
+      20
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Quantum"
+    ],
+    "damage_type2": [
+      "Physical",
+      "Imaginary"
+    ],
+    "maze_group_id1": 5,
+    "maze_group_id2": 6,
+    "npc_monster_id_list1": [
+      1023020
+    ],
+    "npc_monster_id_list2": [
+      2013020
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30122041,
+        "stage_type": "Challenge",
+        "stage_name": 6366857954791301483,
+        "hard_level_group": 3,
+        "level": 75,
+        "elite_group": 276,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30145"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 8002010,
+            "monster1": 1023020
+          },
+          {
+            "monster0": 1023020,
+            "monster1": 8003030
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30122042,
+        "stage_type": "Challenge",
+        "stage_name": 17363227603743607405,
+        "hard_level_group": 3,
+        "level": 75,
+        "elite_group": 276,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30145"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 2002030,
+            "monster1": 2013020,
+            "monster2": 2012010,
+            "monster3": 2002030
+          },
+          {
+            "monster0": 2013020,
+            "monster1": 8013010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 5105,
+    "name": "值日行动其五",
+    "group_name": "值日行动",
+    "desc": "我方目标施放终结技时造成的暴击伤害提高<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>，施放终结技后为【记忆紊流】增加<color=#f29e38ff><unbreak>#2[i]</unbreak></color>段攻击段数，最多叠加<color=#f29e38ff><unbreak>#6[i]</unbreak></color>段。\\n每个轮开始时，【记忆紊流】的每段攻击对随机敌方目标造成1次真实伤害。",
+    "param": [
+      0.5,
+      2,
+      0.12,
+      0.02,
+      0.012,
+      20
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Thunder",
+      "Wind"
+    ],
+    "damage_type2": [
+      "Physical",
+      "Wind"
+    ],
+    "maze_group_id1": 5,
+    "maze_group_id2": 6,
+    "npc_monster_id_list1": [
+      2004020
+    ],
+    "npc_monster_id_list2": [
+      2004010
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30122051,
+        "stage_type": "Challenge",
+        "stage_name": 13535529983749530797,
+        "hard_level_group": 3,
+        "level": 78,
+        "elite_group": 277,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30145"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 5012040,
+            "monster1": 5013030,
+            "monster2": 8003010,
+            "monster3": 5012040
+          },
+          {
+            "monster0": 200402009
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30122052,
+        "stage_type": "Challenge",
+        "stage_name": 17021160864080099751,
+        "hard_level_group": 3,
+        "level": 78,
+        "elite_group": 277,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30145"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 5012020,
+            "monster1": 4033020,
+            "monster2": 5012020
+          },
+          {
+            "monster0": 5012020,
+            "monster1": 4033020,
+            "monster2": 200401007,
+            "monster3": 5012020
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 5106,
+    "name": "值日行动其六",
+    "group_name": "值日行动",
+    "desc": "我方目标施放终结技时造成的暴击伤害提高<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>，施放终结技后为【记忆紊流】增加<color=#f29e38ff><unbreak>#2[i]</unbreak></color>段攻击段数，最多叠加<color=#f29e38ff><unbreak>#6[i]</unbreak></color>段。\\n每个轮开始时，【记忆紊流】的每段攻击对随机敌方目标造成1次真实伤害。",
+    "param": [
+      0.5,
+      2,
+      0.12,
+      0.02,
+      0.012,
+      20
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Physical",
+      "Fire"
+    ],
+    "damage_type2": [
+      "Ice",
+      "Wind"
+    ],
+    "maze_group_id1": 5,
+    "maze_group_id2": 6,
+    "npc_monster_id_list1": [
+      3003020
+    ],
+    "npc_monster_id_list2": [
+      2023010
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30122061,
+        "stage_type": "Challenge",
+        "stage_name": 9524722474129506048,
+        "hard_level_group": 3,
+        "level": 80,
+        "elite_group": 278,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30145"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 3003020
+          },
+          {
+            "monster0": 3003020,
+            "monster1": 3003040
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30122062,
+        "stage_type": "Challenge",
+        "stage_name": 189339872378837144,
+        "hard_level_group": 3,
+        "level": 80,
+        "elite_group": 278,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30145"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 2023010
+          },
+          {
+            "monster0": 2023010,
+            "monster1": 2023020
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 5107,
+    "name": "值日行动其七",
+    "group_name": "值日行动",
+    "desc": "我方目标施放终结技时造成的暴击伤害提高<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>，施放终结技后为【记忆紊流】增加<color=#f29e38ff><unbreak>#2[i]</unbreak></color>段攻击段数，最多叠加<color=#f29e38ff><unbreak>#6[i]</unbreak></color>段。\\n每个轮开始时，【记忆紊流】的每段攻击对随机敌方目标造成1次真实伤害。",
+    "param": [
+      0.5,
+      2,
+      0.12,
+      0.02,
+      0.012,
+      20
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Ice",
+      "Quantum"
+    ],
+    "damage_type2": [
+      "Physical",
+      "Imaginary"
+    ],
+    "maze_group_id1": 5,
+    "maze_group_id2": 6,
+    "npc_monster_id_list1": [
+      4013010
+    ],
+    "npc_monster_id_list2": [
+      3003020
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30122071,
+        "stage_type": "Challenge",
+        "stage_name": 14859544075813414881,
+        "hard_level_group": 3,
+        "level": 82,
+        "elite_group": 279,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30145"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 4012030,
+            "monster1": 4013010,
+            "monster2": 4012030
+          },
+          {
+            "monster0": 4013010,
+            "monster1": 8003020
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30122072,
+        "stage_type": "Challenge",
+        "stage_name": 9524722474129506048,
+        "hard_level_group": 3,
+        "level": 82,
+        "elite_group": 279,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30145"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 4012050,
+            "monster1": 3003020
+          },
+          {
+            "monster0": 3003020,
+            "monster1": 8013010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 5108,
+    "name": "值日行动其八",
+    "group_name": "值日行动",
+    "desc": "我方目标施放终结技时造成的暴击伤害提高<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>，施放终结技后为【记忆紊流】增加<color=#f29e38ff><unbreak>#2[i]</unbreak></color>段攻击段数，最多叠加<color=#f29e38ff><unbreak>#6[i]</unbreak></color>段。\\n每个轮开始时，【记忆紊流】的每段攻击对随机敌方目标造成1次真实伤害。",
+    "param": [
+      0.5,
+      2,
+      0.12,
+      0.02,
+      0.012,
+      20
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Ice",
+      "Thunder"
+    ],
+    "damage_type2": [
+      "Fire",
+      "Thunder"
+    ],
+    "maze_group_id1": 5,
+    "maze_group_id2": 6,
+    "npc_monster_id_list1": [
+      1013010
+    ],
+    "npc_monster_id_list2": [
+      8003040
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30122081,
+        "stage_type": "Challenge",
+        "stage_name": 13087150147011258837,
+        "hard_level_group": 3,
+        "level": 85,
+        "elite_group": 280,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30145"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 1012030,
+            "monster1": 1013010,
+            "monster2": 1012030
+          },
+          {
+            "monster0": 1013010,
+            "monster1": 1013020
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30122082,
+        "stage_type": "Challenge",
+        "stage_name": 15864002628047023122,
+        "hard_level_group": 3,
+        "level": 85,
+        "elite_group": 280,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30145"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 8002010,
+            "monster1": 8003040,
+            "monster2": 8002010,
+            "monster3": 1012010
+          },
+          {
+            "monster0": 8002010,
+            "monster1": 8003040,
+            "monster2": 3003040
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 5109,
+    "name": "值日行动其九",
+    "group_name": "值日行动",
+    "desc": "我方目标施放终结技时造成的暴击伤害提高<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>，施放终结技后为【记忆紊流】增加<color=#f29e38ff><unbreak>#2[i]</unbreak></color>段攻击段数，最多叠加<color=#f29e38ff><unbreak>#6[i]</unbreak></color>段。\\n每个轮开始时，【记忆紊流】的每段攻击对随机敌方目标造成1次真实伤害。",
+    "param": [
+      0.5,
+      2,
+      0.12,
+      0.02,
+      0.012,
+      20
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Ice",
+      "Quantum"
+    ],
+    "damage_type2": [
+      "Ice",
+      "Thunder",
+      "Imaginary"
+    ],
+    "maze_group_id1": 5,
+    "maze_group_id2": 6,
+    "npc_monster_id_list1": [
+      4013010
+    ],
+    "npc_monster_id_list2": [
+      1013020
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30122091,
+        "stage_type": "Challenge",
+        "stage_name": 14859544075813414881,
+        "hard_level_group": 3,
+        "level": 88,
+        "elite_group": 281,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30145"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 401203005,
+            "monster1": 4013010,
+            "monster2": 401203005
+          },
+          {
+            "monster0": 8003020,
+            "monster1": 4013010,
+            "monster2": 8003020
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30122092,
+        "stage_type": "Challenge",
+        "stage_name": 16229653902150898118,
+        "hard_level_group": 3,
+        "level": 88,
+        "elite_group": 281,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30145"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 100202022,
+            "monster1": 1013020,
+            "monster2": 100202022
+          },
+          {
+            "monster0": 1013020,
+            "monster1": 1013020,
+            "monster2": 1013020
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 5110,
+    "name": "值日行动其十",
+    "group_name": "值日行动",
+    "desc": "我方目标施放终结技时造成的暴击伤害提高<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>，施放终结技后为【记忆紊流】增加<color=#f29e38ff><unbreak>#2[i]</unbreak></color>段攻击段数，最多叠加<color=#f29e38ff><unbreak>#6[i]</unbreak></color>段。\\n每个轮开始时，【记忆紊流】的每段攻击对随机敌方目标造成1次真实伤害。",
+    "param": [
+      0.5,
+      2,
+      0.12,
+      0.02,
+      0.012,
+      20
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Fire",
+      "Quantum"
+    ],
+    "damage_type2": [
+      "Physical",
+      "Wind"
+    ],
+    "maze_group_id1": 5,
+    "maze_group_id2": 6,
+    "npc_monster_id_list1": [
+      1004010
+    ],
+    "npc_monster_id_list2": [
+      4044010
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30122101,
+        "stage_type": "Challenge",
+        "stage_name": 14813692740671814223,
+        "hard_level_group": 3,
+        "level": 90,
+        "elite_group": 282,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30145"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 4033030,
+            "monster1": 402302001
+          },
+          {
+            "monster0": 100401010,
+            "monster1": 402302001
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30122102,
+        "stage_type": "Challenge",
+        "stage_name": 7318916243052570451,
+        "hard_level_group": 3,
+        "level": 90,
+        "elite_group": 282,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30145"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 4033010,
+            "monster1": 4033020
+          },
+          {
+            "monster0": 4044010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 5111,
+    "name": "值日行动其十一",
+    "group_name": "值日行动",
+    "desc": "我方目标施放终结技时造成的暴击伤害提高<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>，施放终结技后为【记忆紊流】增加<color=#f29e38ff><unbreak>#2[i]</unbreak></color>段攻击段数，最多叠加<color=#f29e38ff><unbreak>#6[i]</unbreak></color>段。\\n每个轮开始时，【记忆紊流】的每段攻击对随机敌方目标造成1次真实伤害。",
+    "param": [
+      0.5,
+      2,
+      0.12,
+      0.02,
+      0.012,
+      20
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Ice",
+      "Thunder"
+    ],
+    "damage_type2": [
+      "Physical",
+      "Imaginary"
+    ],
+    "maze_group_id1": 5,
+    "maze_group_id2": 6,
+    "npc_monster_id_list1": [
+      4034010
+    ],
+    "npc_monster_id_list2": [
+      4064010
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30122111,
+        "stage_type": "Challenge",
+        "stage_name": 394586006630307543,
+        "hard_level_group": 3,
+        "level": 92,
+        "elite_group": 266,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30145"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 4013010,
+            "monster1": 2023030
+          },
+          {
+            "monster0": 4034010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30122112,
+        "stage_type": "Challenge",
+        "stage_name": 2590962765852260361,
+        "hard_level_group": 3,
+        "level": 92,
+        "elite_group": 266,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30145"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 3003020,
+            "monster1": 2013020
+          },
+          {
+            "monster0": 4064010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 5112,
+    "name": "值日行动其十二",
+    "group_name": "值日行动",
+    "desc": "我方目标施放终结技时造成的暴击伤害提高<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>，施放终结技后为【记忆紊流】增加<color=#f29e38ff><unbreak>#2[i]</unbreak></color>段攻击段数，最多叠加<color=#f29e38ff><unbreak>#6[i]</unbreak></color>段。\\n每个轮开始时，【记忆紊流】的每段攻击对随机敌方目标造成1次真实伤害。",
+    "param": [
+      0.5,
+      2,
+      0.12,
+      0.02,
+      0.012,
+      20
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Physical"
+    ],
+    "damage_type2": [
+      "Fire",
+      "Imaginary"
+    ],
+    "maze_group_id1": 5,
+    "maze_group_id2": 6,
+    "npc_monster_id_list1": [
+      3024030
+    ],
+    "npc_monster_id_list2": [
+      5014020
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30122121,
+        "stage_type": "Challenge",
+        "stage_name": 18134484362013513791,
+        "hard_level_group": 3,
+        "level": 95,
+        "elite_group": 293,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30145"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 4053010,
+            "monster1": 4033020
+          },
+          {
+            "monster0": 3024030
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30122122,
+        "stage_type": "Challenge",
+        "stage_name": 3416332227273864389,
+        "hard_level_group": 3,
+        "level": 95,
+        "elite_group": 293,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30145"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 402302001,
+            "monster1": 5023010
+          },
+          {
+            "monster0": 5014020
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  }
+]

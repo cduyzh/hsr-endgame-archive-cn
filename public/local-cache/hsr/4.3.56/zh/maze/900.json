@@ -1,0 +1,820 @@
+[
+  {
+    "id": 21,
+    "name": "仙舟回忆其一",
+    "group_name": "天艟求仙迷航录",
+    "desc": "敌方目标所受伤害由<color=#f29e38ff>敌方全体分摊</color>。我方目标施放<color=#f29e38ff>群攻或扩散技能</color>时，造成的伤害提高<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>。",
+    "param": [
+      0.5
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 6
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 12
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 20,
+    "damage_type1": [
+      "Physical",
+      "Thunder"
+    ],
+    "damage_type2": [
+      "Fire",
+      "Wind",
+      "Imaginary"
+    ],
+    "maze_group_id1": 8,
+    "maze_group_id2": 9,
+    "npc_monster_id_list1": [
+      8002010
+    ],
+    "npc_monster_id_list2": [
+      2002010
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30002011,
+        "stage_type": "Challenge",
+        "stage_name": 13239057092691713465,
+        "hard_level_group": 1,
+        "level": 50,
+        "elite_group": 93,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "3"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30036"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 8001010,
+            "monster1": 8001050,
+            "monster2": 8001010,
+            "monster3": 8001050,
+            "monster4": 8001050
+          },
+          {
+            "monster0": 2012010,
+            "monster1": 2012010,
+            "monster2": 2012010,
+            "monster3": 2012010
+          },
+          {
+            "monster0": 8002010,
+            "monster1": 8002010,
+            "monster2": 8002010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30002012,
+        "stage_type": "Challenge",
+        "stage_name": 7544704172865367384,
+        "hard_level_group": 1,
+        "level": 50,
+        "elite_group": 93,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "3"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30036"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 8001020,
+            "monster1": 8001020,
+            "monster2": 8001040,
+            "monster3": 8001020,
+            "monster4": 8001040
+          },
+          {
+            "monster0": 2022050,
+            "monster1": 2022050
+          },
+          {
+            "monster0": 2002010,
+            "monster1": 2002010,
+            "monster2": 2002010,
+            "monster3": 2002010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 22,
+    "name": "仙舟回忆其二",
+    "group_name": "天艟求仙迷航录",
+    "desc": "敌方全体受到的<color=#f29e38ff>持续伤害</color>提高<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>。\\n每个轮开始时，大概率对敌方全体施加<color=#f29e38ff>裂伤</color>、<color=#f29e38ff>触电</color>、<color=#f29e38ff>灼烧</color>、<color=#f29e38ff>风化</color>状态，持续<color=#f29e38ff><unbreak>#3[i]</unbreak></color>回合。",
+    "param": [
+      0.5,
+      1,
+      2,
+      0.2
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 6
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 12
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 20,
+    "damage_type1": [
+      "Thunder",
+      "Wind",
+      "Quantum"
+    ],
+    "damage_type2": [
+      "Thunder",
+      "Wind",
+      "Imaginary"
+    ],
+    "maze_group_id1": 8,
+    "maze_group_id2": 9,
+    "npc_monster_id_list1": [
+      2013010
+    ],
+    "npc_monster_id_list2": [
+      2004020
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30002021,
+        "stage_type": "Challenge",
+        "stage_name": 6099984704558274809,
+        "hard_level_group": 1,
+        "level": 60,
+        "elite_group": 85,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30032"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 2012010,
+            "monster1": 2022060,
+            "monster2": 2012010,
+            "monster3": 2022060
+          },
+          {
+            "monster0": 2013010,
+            "monster1": 2013010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30002022,
+        "stage_type": "Challenge",
+        "stage_name": 13535529983749530797,
+        "hard_level_group": 1,
+        "level": 60,
+        "elite_group": 85,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30032"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 2002010,
+            "monster1": 2002010,
+            "monster2": 2002010
+          },
+          {
+            "monster0": 2004020
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 23,
+    "name": "仙舟回忆其三",
+    "group_name": "天艟求仙迷航录",
+    "desc": "我方目标施放<color=#f29e38ff>普攻</color>后，使自身及相邻的我方目标造成的伤害提高<color=#f29e38ff><unbreak>#3[i]%</unbreak></color>，受到伤害降低<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>，持续<color=#f29e38ff><unbreak>#2[i]</unbreak></color>回合。",
+    "param": [
+      0.5,
+      1,
+      0.5
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 6
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 12
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 20,
+    "damage_type1": [
+      "Physical",
+      "Thunder",
+      "Quantum"
+    ],
+    "damage_type2": [
+      "Wind"
+    ],
+    "maze_group_id1": 8,
+    "maze_group_id2": 9,
+    "npc_monster_id_list1": [
+      2013010
+    ],
+    "npc_monster_id_list2": [
+      8013010
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30002031,
+        "stage_type": "Challenge",
+        "stage_name": 6099984704558274809,
+        "hard_level_group": 1,
+        "level": 70,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30033"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 202202003,
+            "monster1": 202202003,
+            "monster2": 202202003
+          },
+          {
+            "monster0": 201301002
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30002032,
+        "stage_type": "Challenge",
+        "stage_name": 7287667153632341933,
+        "hard_level_group": 1,
+        "level": 70,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30033"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 8012030,
+            "monster1": 8012020,
+            "monster2": 8012030,
+            "monster3": 8012010
+          },
+          {
+            "monster0": 8013010,
+            "monster1": 202302001
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 24,
+    "name": "仙舟回忆其四",
+    "group_name": "天艟求仙迷航录",
+    "desc": "我方目标施放<color=#f29e38ff>终结技</color>或发动<color=#f29e38ff>追加攻击</color>后，额外对受到攻击的敌方目标造成<color=#f29e38ff>固定数值的伤害</color>。",
+    "param": [
+      1.2
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 6
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 12
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 20,
+    "damage_type1": [
+      "Quantum"
+    ],
+    "damage_type2": [
+      "Fire",
+      "Ice",
+      "Quantum"
+    ],
+    "maze_group_id1": 8,
+    "maze_group_id2": 9,
+    "npc_monster_id_list1": [
+      8003010
+    ],
+    "npc_monster_id_list2": [
+      2024010
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30002041,
+        "stage_type": "Challenge",
+        "stage_name": 18403122387849567860,
+        "hard_level_group": 1,
+        "level": 80,
+        "elite_group": 83,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "3"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30034"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 800101006,
+            "monster1": 800105001,
+            "monster2": 800105001,
+            "monster3": 800101006,
+            "monster4": 800105001
+          },
+          {
+            "monster0": 800104001,
+            "monster1": 800102008,
+            "monster2": 800102008,
+            "monster3": 800104001,
+            "monster4": 800104001
+          },
+          {
+            "monster0": 8003010,
+            "monster1": 8003020
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30002042,
+        "stage_type": "Challenge",
+        "stage_name": 15606630685968003963,
+        "hard_level_group": 1,
+        "level": 80,
+        "elite_group": 81,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30034"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 2022070,
+            "monster1": 2022090,
+            "monster2": 2022090,
+            "monster3": 2022070
+          },
+          {
+            "monster0": 2024010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 25,
+    "name": "仙舟回忆其五",
+    "group_name": "天艟求仙迷航录",
+    "desc": "每个轮开始时，召唤2名<color=#f29e38ff>魔阴身士卒</color>或<color=#f29e38ff>丰饶灵兽•娄金</color>。\\n敌方目标被消灭后，对敌方全体造成<color=#f29e38ff>固定数值的伤害</color>。",
+    "param": [
+      0.5,
+      0.6
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 6
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 12
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 20,
+    "damage_type1": [
+      "Ice",
+      "Wind",
+      "Imaginary"
+    ],
+    "damage_type2": [
+      "Fire",
+      "Ice",
+      "Wind"
+    ],
+    "maze_group_id1": 8,
+    "maze_group_id2": 9,
+    "npc_monster_id_list1": [
+      2023010
+    ],
+    "npc_monster_id_list2": [
+      2023020
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30002051,
+        "stage_type": "Challenge",
+        "stage_name": 189339872378837144,
+        "hard_level_group": 1,
+        "level": 85,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30031"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 2022010,
+            "monster1": 2022010,
+            "monster2": 2022010
+          },
+          {
+            "monster0": 202301008
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30002052,
+        "stage_type": "Challenge",
+        "stage_name": 5650742420150656798,
+        "hard_level_group": 1,
+        "level": 85,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30031"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 2022050,
+            "monster1": 2022040,
+            "monster2": 2022050
+          },
+          {
+            "monster0": 2022040,
+            "monster1": 2023020,
+            "monster2": 2022040
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 26,
+    "name": "仙舟回忆其六",
+    "group_name": "天艟求仙迷航录",
+    "desc": "我方目标对我方任意目标<color=#f29e38ff>施放战技</color>后，解除被施放战技目标的1个<color=#f29e38ff>负面效果</color>。每解除1个我方目标的<color=#f29e38ff>负面效果</color>，使我方全体造成的伤害提高<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>，该效果最多叠加<color=#f29e38ff><unbreak>#2[i]</unbreak></color>层。\\n在最终波次中消灭<color=#f29e38ff>精英级别及以上的敌方目标</color>，将直接获得胜利。",
+    "param": [
+      0.2,
+      10
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 6
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 12
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 20,
+    "damage_type1": [
+      "Physical",
+      "Ice",
+      "Thunder"
+    ],
+    "damage_type2": [
+      "Physical",
+      "Wind",
+      "Imaginary"
+    ],
+    "maze_group_id1": 8,
+    "maze_group_id2": 9,
+    "npc_monster_id_list1": [
+      2023030
+    ],
+    "npc_monster_id_list2": [
+      2004010
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30002061,
+        "stage_type": "Challenge",
+        "stage_name": 7086853316639384589,
+        "hard_level_group": 1,
+        "level": 90,
+        "elite_group": 82,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30035"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 2012010,
+            "monster1": 2022010,
+            "monster2": 2012010,
+            "monster3": 2022010
+          },
+          {
+            "monster0": 201201003,
+            "monster1": 202303001,
+            "monster2": 201201003
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [
+          "[CDT_MonsterDie:202303001]"
+        ],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30002062,
+        "stage_type": "Challenge",
+        "stage_name": 17021160864080099751,
+        "hard_level_group": 1,
+        "level": 90,
+        "elite_group": 82,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30035"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 2002010,
+            "monster1": 2012010,
+            "monster2": 2002010,
+            "monster3": 2012010
+          },
+          {
+            "monster0": 201102001,
+            "monster1": 200401003,
+            "monster2": 201101001
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [
+          "[CDT_MonsterDie:200401003]"
+        ],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  }
+]

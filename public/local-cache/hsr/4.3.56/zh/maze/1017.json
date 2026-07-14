@@ -1,0 +1,1575 @@
+[
+  {
+    "id": 3601,
+    "name": "长眠不醒其一",
+    "group_name": "长眠不醒",
+    "desc": "我方每次攻击后为我方全体附上1层【记忆印记】，处于【记忆印记】状态中的我方目标造成的伤害提高<color=#f29e38ff><unbreak>#2[i]%</unbreak></color>，该效果最多叠加<color=#f29e38ff><unbreak>#1[i]</unbreak></color>层。当【记忆印记】叠加至上限时，立即对敌方全体造成1次基于各自生命上限一定百分比的伤害。\\n每个波次或轮开始时，清除我方全体的【记忆印记】。",
+    "param": [
+      6,
+      0.08,
+      0.6,
+      0.12
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Fire",
+      "Imaginary"
+    ],
+    "damage_type2": [
+      "Ice",
+      "Wind"
+    ],
+    "maze_group_id1": 6,
+    "maze_group_id2": 7,
+    "npc_monster_id_list1": [
+      8033010
+    ],
+    "npc_monster_id_list2": [
+      2023010
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30107011,
+        "stage_type": "Challenge",
+        "stage_name": 13208664396652254584,
+        "hard_level_group": 3,
+        "level": 68,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30130"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 8033010
+          },
+          {
+            "monster0": 8033010,
+            "monster1": 3003030
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30107012,
+        "stage_type": "Challenge",
+        "stage_name": 189339872378837144,
+        "hard_level_group": 3,
+        "level": 68,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30130"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 2022040,
+            "monster1": 2023020,
+            "monster2": 2022050
+          },
+          {
+            "monster0": 2023010,
+            "monster1": 2023020
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 3602,
+    "name": "长眠不醒其二",
+    "group_name": "长眠不醒",
+    "desc": "我方每次攻击后为我方全体附上1层【记忆印记】，处于【记忆印记】状态中的我方目标造成的伤害提高<color=#f29e38ff><unbreak>#2[i]%</unbreak></color>，该效果最多叠加<color=#f29e38ff><unbreak>#1[i]</unbreak></color>层。当【记忆印记】叠加至上限时，立即对敌方全体造成1次基于各自生命上限一定百分比的伤害。\\n每个波次或轮开始时，清除我方全体的【记忆印记】。",
+    "param": [
+      6,
+      0.08,
+      0.6,
+      0.12
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Physical",
+      "Fire"
+    ],
+    "damage_type2": [
+      "Wind"
+    ],
+    "maze_group_id1": 6,
+    "maze_group_id2": 7,
+    "npc_monster_id_list1": [
+      3003040
+    ],
+    "npc_monster_id_list2": [
+      2033010
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30107021,
+        "stage_type": "Challenge",
+        "stage_name": 12112745649497654411,
+        "hard_level_group": 3,
+        "level": 70,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30130"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 3002030,
+            "monster1": 3003040,
+            "monster2": 3003050,
+            "monster3": 3002030
+          },
+          {
+            "monster0": 3003040,
+            "monster1": 3003050
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30107022,
+        "stage_type": "Challenge",
+        "stage_name": 16830651616508961311,
+        "hard_level_group": 3,
+        "level": 70,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30130"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 2032010,
+            "monster1": 2033010,
+            "monster2": 2032010
+          },
+          {
+            "monster0": 2033010,
+            "monster1": 2023020
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 3603,
+    "name": "长眠不醒其三",
+    "group_name": "长眠不醒",
+    "desc": "我方每次攻击后为我方全体附上1层【记忆印记】，处于【记忆印记】状态中的我方目标造成的伤害提高<color=#f29e38ff><unbreak>#2[i]%</unbreak></color>，该效果最多叠加<color=#f29e38ff><unbreak>#1[i]</unbreak></color>层。当【记忆印记】叠加至上限时，立即对敌方全体造成1次基于各自生命上限一定百分比的伤害。\\n每个波次或轮开始时，清除我方全体的【记忆印记】。",
+    "param": [
+      6,
+      0.08,
+      0.6,
+      0.12
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Quantum"
+    ],
+    "damage_type2": [
+      "Ice",
+      "Imaginary"
+    ],
+    "maze_group_id1": 6,
+    "maze_group_id2": 7,
+    "npc_monster_id_list1": [
+      3013010
+    ],
+    "npc_monster_id_list2": [
+      8024011
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30107031,
+        "stage_type": "Challenge",
+        "stage_name": 8310250911400761097,
+        "hard_level_group": 3,
+        "level": 73,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30130"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 3002010,
+            "monster1": 3002040,
+            "monster2": 3013010,
+            "monster3": 3002010
+          },
+          {
+            "monster0": 3013010,
+            "monster1": 8003030
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30107032,
+        "stage_type": "Challenge",
+        "stage_name": 12687103214276587319,
+        "hard_level_group": 3,
+        "level": 73,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30130"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 1022020,
+            "monster1": 8003050,
+            "monster2": 1022020,
+            "monster3": 1002020
+          },
+          {
+            "monster0": 8024011
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 3604,
+    "name": "长眠不醒其四",
+    "group_name": "长眠不醒",
+    "desc": "我方每次攻击后为我方全体附上1层【记忆印记】，处于【记忆印记】状态中的我方目标造成的伤害提高<color=#f29e38ff><unbreak>#2[i]%</unbreak></color>，该效果最多叠加<color=#f29e38ff><unbreak>#1[i]</unbreak></color>层。当【记忆印记】叠加至上限时，立即对敌方全体造成1次基于各自生命上限一定百分比的伤害。\\n每个波次或轮开始时，清除我方全体的【记忆印记】。",
+    "param": [
+      6,
+      0.08,
+      0.6,
+      0.12
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Wind",
+      "Imaginary"
+    ],
+    "damage_type2": [
+      "Physical",
+      "Thunder"
+    ],
+    "maze_group_id1": 6,
+    "maze_group_id2": 7,
+    "npc_monster_id_list1": [
+      2023010
+    ],
+    "npc_monster_id_list2": [
+      2023030
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30107041,
+        "stage_type": "Challenge",
+        "stage_name": 189339872378837144,
+        "hard_level_group": 3,
+        "level": 75,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30130"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 2022020,
+            "monster1": 2023010,
+            "monster2": 2022020
+          },
+          {
+            "monster0": 2023010,
+            "monster1": 8013010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30107042,
+        "stage_type": "Challenge",
+        "stage_name": 7086853316639384589,
+        "hard_level_group": 3,
+        "level": 75,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30130"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 2022060,
+            "monster1": 2023030,
+            "monster2": 2022060
+          },
+          {
+            "monster0": 2023030,
+            "monster1": 2013020
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 3605,
+    "name": "长眠不醒其五",
+    "group_name": "长眠不醒",
+    "desc": "我方每次攻击后为我方全体附上1层【记忆印记】，处于【记忆印记】状态中的我方目标造成的伤害提高<color=#f29e38ff><unbreak>#2[i]%</unbreak></color>，该效果最多叠加<color=#f29e38ff><unbreak>#1[i]</unbreak></color>层。当【记忆印记】叠加至上限时，立即对敌方全体造成1次基于各自生命上限一定百分比的伤害。\\n每个波次或轮开始时，清除我方全体的【记忆印记】。",
+    "param": [
+      6,
+      0.08,
+      0.6,
+      0.12
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Thunder",
+      "Wind"
+    ],
+    "damage_type2": [
+      "Physical",
+      "Fire"
+    ],
+    "maze_group_id1": 6,
+    "maze_group_id2": 7,
+    "npc_monster_id_list1": [
+      2033010
+    ],
+    "npc_monster_id_list2": [
+      3003051
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30107051,
+        "stage_type": "Challenge",
+        "stage_name": 16830651616508961311,
+        "hard_level_group": 3,
+        "level": 78,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30130"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 2032020,
+            "monster1": 2033010,
+            "monster2": 2032020,
+            "monster3": 2032010
+          },
+          {
+            "monster0": 2032010,
+            "monster1": 2033010,
+            "monster2": 8003040,
+            "monster3": 2032010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30107052,
+        "stage_type": "Challenge",
+        "stage_name": 6213149876937981716,
+        "hard_level_group": 3,
+        "level": 78,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30130"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 3002010,
+            "monster1": 3003040,
+            "monster2": 3003050
+          },
+          {
+            "monster0": 3004010,
+            "monster1": 3003051,
+            "monster2": 3003041,
+            "monster3": 3003031
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 3606,
+    "name": "长眠不醒其六",
+    "group_name": "长眠不醒",
+    "desc": "我方每次攻击后为我方全体附上1层【记忆印记】，处于【记忆印记】状态中的我方目标造成的伤害提高<color=#f29e38ff><unbreak>#2[i]%</unbreak></color>，该效果最多叠加<color=#f29e38ff><unbreak>#1[i]</unbreak></color>层。当【记忆印记】叠加至上限时，立即对敌方全体造成1次基于各自生命上限一定百分比的伤害。\\n每个波次或轮开始时，清除我方全体的【记忆印记】。",
+    "param": [
+      6,
+      0.08,
+      0.6,
+      0.12
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Fire",
+      "Ice",
+      "Imaginary"
+    ],
+    "damage_type2": [
+      "Ice",
+      "Wind"
+    ],
+    "maze_group_id1": 6,
+    "maze_group_id2": 7,
+    "npc_monster_id_list1": [
+      8033010
+    ],
+    "npc_monster_id_list2": [
+      2023020
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30107061,
+        "stage_type": "Challenge",
+        "stage_name": 13208664396652254584,
+        "hard_level_group": 3,
+        "level": 80,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30130"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 8032010,
+            "monster1": 8033010
+          },
+          {
+            "monster0": 8033010,
+            "monster1": 8003050
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30107062,
+        "stage_type": "Challenge",
+        "stage_name": 5650742420150656798,
+        "hard_level_group": 3,
+        "level": 80,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30130"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 2022040,
+            "monster1": 2023020,
+            "monster2": 2022050
+          },
+          {
+            "monster0": 2023010,
+            "monster1": 2023020
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 3607,
+    "name": "长眠不醒其七",
+    "group_name": "长眠不醒",
+    "desc": "我方每次攻击后为我方全体附上1层【记忆印记】，处于【记忆印记】状态中的我方目标造成的伤害提高<color=#f29e38ff><unbreak>#2[i]%</unbreak></color>，该效果最多叠加<color=#f29e38ff><unbreak>#1[i]</unbreak></color>层。当【记忆印记】叠加至上限时，立即对敌方全体造成1次基于各自生命上限一定百分比的伤害。\\n每个波次或轮开始时，清除我方全体的【记忆印记】。",
+    "param": [
+      6,
+      0.08,
+      0.6,
+      0.12
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Physical",
+      "Fire"
+    ],
+    "damage_type2": [
+      "Wind"
+    ],
+    "maze_group_id1": 6,
+    "maze_group_id2": 7,
+    "npc_monster_id_list1": [
+      3003040
+    ],
+    "npc_monster_id_list2": [
+      2033010
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30107071,
+        "stage_type": "Challenge",
+        "stage_name": 12112745649497654411,
+        "hard_level_group": 3,
+        "level": 82,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30130"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 3002030,
+            "monster1": 3003040,
+            "monster2": 3003050,
+            "monster3": 3002030
+          },
+          {
+            "monster0": 3003040,
+            "monster1": 3003050
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30107072,
+        "stage_type": "Challenge",
+        "stage_name": 16830651616508961311,
+        "hard_level_group": 3,
+        "level": 82,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30130"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 2032010,
+            "monster1": 2033010,
+            "monster2": 2032010
+          },
+          {
+            "monster0": 2033010,
+            "monster1": 2023020
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 3608,
+    "name": "长眠不醒其八",
+    "group_name": "长眠不醒",
+    "desc": "我方每次攻击后为我方全体附上1层【记忆印记】，处于【记忆印记】状态中的我方目标造成的伤害提高<color=#f29e38ff><unbreak>#2[i]%</unbreak></color>，该效果最多叠加<color=#f29e38ff><unbreak>#1[i]</unbreak></color>层。当【记忆印记】叠加至上限时，立即对敌方全体造成1次基于各自生命上限一定百分比的伤害。\\n每个波次或轮开始时，清除我方全体的【记忆印记】。",
+    "param": [
+      6,
+      0.08,
+      0.6,
+      0.12
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Quantum"
+    ],
+    "damage_type2": [
+      "Ice",
+      "Imaginary"
+    ],
+    "maze_group_id1": 6,
+    "maze_group_id2": 7,
+    "npc_monster_id_list1": [
+      3013010
+    ],
+    "npc_monster_id_list2": [
+      8024011
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30107081,
+        "stage_type": "Challenge",
+        "stage_name": 8310250911400761097,
+        "hard_level_group": 3,
+        "level": 85,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30130"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 3002010,
+            "monster1": 3002040,
+            "monster2": 3013010,
+            "monster3": 3002010
+          },
+          {
+            "monster0": 3013010,
+            "monster1": 8003030
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30107082,
+        "stage_type": "Challenge",
+        "stage_name": 12687103214276587319,
+        "hard_level_group": 3,
+        "level": 85,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30130"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 1022020,
+            "monster1": 8003050,
+            "monster2": 1022020,
+            "monster3": 1002020
+          },
+          {
+            "monster0": 8024011
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 3609,
+    "name": "长眠不醒其九",
+    "group_name": "长眠不醒",
+    "desc": "我方每次攻击后为我方全体附上1层【记忆印记】，处于【记忆印记】状态中的我方目标造成的伤害提高<color=#f29e38ff><unbreak>#2[i]%</unbreak></color>，该效果最多叠加<color=#f29e38ff><unbreak>#1[i]</unbreak></color>层。当【记忆印记】叠加至上限时，立即对敌方全体造成1次基于各自生命上限一定百分比的伤害。\\n每个波次或轮开始时，清除我方全体的【记忆印记】。",
+    "param": [
+      6,
+      0.08,
+      0.6,
+      0.12
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Wind",
+      "Imaginary"
+    ],
+    "damage_type2": [
+      "Physical",
+      "Thunder"
+    ],
+    "maze_group_id1": 6,
+    "maze_group_id2": 7,
+    "npc_monster_id_list1": [
+      2023010
+    ],
+    "npc_monster_id_list2": [
+      2023030
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30107091,
+        "stage_type": "Challenge",
+        "stage_name": 189339872378837144,
+        "hard_level_group": 3,
+        "level": 88,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30130"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 2022020,
+            "monster1": 2023010,
+            "monster2": 2022020
+          },
+          {
+            "monster0": 2023010,
+            "monster1": 8013010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30107092,
+        "stage_type": "Challenge",
+        "stage_name": 7086853316639384589,
+        "hard_level_group": 3,
+        "level": 88,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30130"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 2022060,
+            "monster1": 2023030,
+            "monster2": 2022060
+          },
+          {
+            "monster0": 2023030,
+            "monster1": 2013020
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 3610,
+    "name": "长眠不醒其十",
+    "group_name": "长眠不醒",
+    "desc": "我方每次攻击后为我方全体附上1层【记忆印记】，处于【记忆印记】状态中的我方目标造成的伤害提高<color=#f29e38ff><unbreak>#2[i]%</unbreak></color>，该效果最多叠加<color=#f29e38ff><unbreak>#1[i]</unbreak></color>层。当【记忆印记】叠加至上限时，立即对敌方全体造成1次基于各自生命上限一定百分比的伤害。\\n每个波次或轮开始时，清除我方全体的【记忆印记】。",
+    "param": [
+      6,
+      0.08,
+      0.6,
+      0.12
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Thunder",
+      "Wind"
+    ],
+    "damage_type2": [
+      "Fire"
+    ],
+    "maze_group_id1": 6,
+    "maze_group_id2": 7,
+    "npc_monster_id_list1": [
+      2033010
+    ],
+    "npc_monster_id_list2": [
+      3003051
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30107101,
+        "stage_type": "Challenge",
+        "stage_name": 16830651616508961311,
+        "hard_level_group": 3,
+        "level": 90,
+        "elite_group": 225,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30130"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 2032020,
+            "monster1": 2033010,
+            "monster2": 2032020,
+            "monster3": 2032010
+          },
+          {
+            "monster0": 2032010,
+            "monster1": 2033010,
+            "monster2": 8003040,
+            "monster3": 2032010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30107102,
+        "stage_type": "Challenge",
+        "stage_name": 6213149876937981716,
+        "hard_level_group": 3,
+        "level": 90,
+        "elite_group": 225,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30130"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 3002010,
+            "monster1": 3003040,
+            "monster2": 3003050
+          },
+          {
+            "monster0": 3004010,
+            "monster1": 3003051,
+            "monster2": 3003041,
+            "monster3": 3003031
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 3611,
+    "name": "长眠不醒其十一",
+    "group_name": "长眠不醒",
+    "desc": "我方每次攻击后为我方全体附上1层【记忆印记】，处于【记忆印记】状态中的我方目标造成的伤害提高<color=#f29e38ff><unbreak>#2[i]%</unbreak></color>，该效果最多叠加<color=#f29e38ff><unbreak>#1[i]</unbreak></color>层。当【记忆印记】叠加至上限时，立即对敌方全体造成1次基于各自生命上限一定百分比的伤害。\\n每个波次或轮开始时，清除我方全体的【记忆印记】。",
+    "param": [
+      6,
+      0.08,
+      0.6,
+      0.12
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Physical",
+      "Imaginary"
+    ],
+    "damage_type2": [
+      "Fire",
+      "Wind"
+    ],
+    "maze_group_id1": 6,
+    "maze_group_id2": 7,
+    "npc_monster_id_list1": [
+      1004020
+    ],
+    "npc_monster_id_list2": [
+      1014010
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30107111,
+        "stage_type": "Challenge",
+        "stage_name": 3927571639738101840,
+        "hard_level_group": 3,
+        "level": 92,
+        "elite_group": 226,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30130"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 2012010,
+            "monster1": 3003020,
+            "monster2": 2013020
+          },
+          {
+            "monster0": 2012010,
+            "monster1": 100402010,
+            "monster2": 2013020
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30107112,
+        "stage_type": "Challenge",
+        "stage_name": 7306112122138119445,
+        "hard_level_group": 3,
+        "level": 92,
+        "elite_group": 226,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30130"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 8003010,
+            "monster1": 2023020
+          },
+          {
+            "monster0": 101401012,
+            "monster1": 8003010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  },
+  {
+    "id": 3612,
+    "name": "长眠不醒其十二",
+    "group_name": "长眠不醒",
+    "desc": "我方每次攻击后为我方全体附上1层【记忆印记】，处于【记忆印记】状态中的我方目标造成的伤害提高<color=#f29e38ff><unbreak>#2[i]%</unbreak></color>，该效果最多叠加<color=#f29e38ff><unbreak>#1[i]</unbreak></color>层。当【记忆印记】叠加至上限时，立即对敌方全体造成1次基于各自生命上限一定百分比的伤害。\\n每个波次或轮开始时，清除我方全体的【记忆印记】。",
+    "param": [
+      6,
+      0.08,
+      0.6,
+      0.12
+    ],
+    "challenge": [
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 10
+      },
+      {
+        "name": "取得胜利时，剩余<unbreak>#1[i]</unbreak>轮以上",
+        "param": 20
+      },
+      {
+        "name": "没有角色无法战斗"
+      }
+    ],
+    "countdown": 30,
+    "damage_type1": [
+      "Wind",
+      "Imaginary"
+    ],
+    "damage_type2": [
+      "Physical",
+      "Ice"
+    ],
+    "maze_group_id1": 6,
+    "maze_group_id2": 7,
+    "npc_monster_id_list1": [
+      2004010
+    ],
+    "npc_monster_id_list2": [
+      8034010
+    ],
+    "event_id_list1": [
+      {
+        "stage_id": 30107121,
+        "stage_type": "Challenge",
+        "stage_name": 17021160864080099751,
+        "hard_level_group": 3,
+        "level": 95,
+        "elite_group": 227,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30130"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 2032020,
+            "monster1": 2033010,
+            "monster2": 8013010
+          },
+          {
+            "monster0": 2033010,
+            "monster1": 200401007
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "event_id_list2": [
+      {
+        "stage_id": 30107122,
+        "stage_type": "Challenge",
+        "stage_name": 3756729761605363657,
+        "hard_level_group": 3,
+        "level": 95,
+        "elite_group": 227,
+        "level_graph_path": "Config/Level/StageCommonTemplate.json",
+        "stage_ability_config": [],
+        "sub_level_graphs": [],
+        "stage_config_data": [
+          {
+            "jdkamoanicm": "_Wave",
+            "mojjbfbkbnc": "2"
+          },
+          {
+            "jdkamoanicm": "_IsEliteBattle",
+            "mojjbfbkbnc": "1"
+          },
+          {
+            "jdkamoanicm": "_CreateBattleEvent",
+            "mojjbfbkbnc": "30130"
+          }
+        ],
+        "monster_list": [
+          {
+            "monster0": 1002030,
+            "monster1": 8003020,
+            "monster2": 1003010,
+            "monster3": 1002030
+          },
+          {
+            "monster0": 8034010
+          }
+        ],
+        "level_lose_condition": [],
+        "level_win_condition": [],
+        "release": true,
+        "forbid_exit_battle": true,
+        "monster_warning_ratio": 1.1,
+        "trial_avatar_list": []
+      }
+    ],
+    "begin_time": "",
+    "end_time": ""
+  }
+]
