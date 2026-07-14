@@ -44,8 +44,13 @@ export function requireAdmin(event: { headers: Record<string, string | undefined
   if (!adminPassword) return null
 
   const authorization = event.headers.authorization ?? event.headers.Authorization
-  if (authorization === `Bearer ${adminPassword}` && !process.env.ADMIN_REVIEW_USERNAME) return null
-  if (!authorization?.startsWith("Basic ")) return jsonResponse({ message: "未授权" }, 401)
+  if (!authorization) return jsonResponse({ message: "未授权" }, 401)
+
+  // 1) Bearer token 认证：使用管理员密码作为 token，命中即视为通过。
+  if (authorization === `Bearer ${adminPassword}`) return null
+
+  // 2) Basic auth 认证：要求 Authorization 以 "Basic " 开头。
+  if (!authorization.startsWith("Basic ")) return jsonResponse({ message: "未授权" }, 401)
 
   try {
     const credentials = Buffer.from(authorization.slice(6), "base64").toString("utf8")

@@ -14,12 +14,14 @@ export const handler: Handler = async () => {
       sql`select id, title, excerpt, category, published_at as "publishedAt", read_minutes as "readMinutes" from articles order by published_at desc`,
     ])
 
+    // 数据库空表时回退到 seedConfig，避免前端下拉全空。
+    const units = [...characters, ...lightcones]
     return jsonResponse({
       ...seedConfig,
-      seasons,
-      bosses,
-      units: [...characters, ...lightcones],
-      articles,
+      seasons: seasons.length > 0 ? seasons : seedConfig.seasons,
+      bosses: bosses.length > 0 ? bosses : seedConfig.bosses,
+      units: units.length > 0 ? units : seedConfig.units,
+      articles: articles.length > 0 ? articles : seedConfig.articles,
     })
   } catch {
     return jsonResponse(seedConfig)

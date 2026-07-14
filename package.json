@@ -14,7 +14,9 @@
     "netlify:login": "mkdir -p .netlify-config && XDG_CONFIG_HOME=\"$PWD/.netlify-config\" pnpm --package=netlify-cli dlx netlify login",
     "deploy:netlify": "sh ./scripts/deploy-netlify.sh",
     "sync:units": "node scripts/sync-hsr-units.mjs",
-    "sync:monsters": "node scripts/sync-hsr-monsters.mjs"
+    "sync:monsters": "node scripts/sync-hsr-monsters.mjs",
+    "seed:archive": "node scripts/seed-archive-tables.mjs",
+    "seed:archive:dry": "node scripts/seed-archive-tables.mjs -- --dry-run"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.0.2",

@@ -1,20 +1,28 @@
-import type { Handler } from "@netlify/functions"
-import { getSql, jsonResponse, requireAdmin, seedConfig, updateFallbackSubmissionReview } from "./_shared"
-import { submissionReviewToArchiveRun } from "../../src/services/submissionUtils"
-import type { SubmissionReview, SubmissionReviewStatus } from "../../src/types/archive"
+import type {Handler} from "@netlify/functions"
+import {getSql, jsonResponse, requireAdmin, seedConfig, updateFallbackSubmissionReview} from "./_shared"
+import {submissionReviewToArchiveRun} from "../../src/services/submissionUtils"
+import type {SubmissionReview, SubmissionReviewStatus} from "../../src/types/archive"
 
 export const handler: Handler = async (event) => {
-  if (event.httpMethod !== "PATCH") return jsonResponse({ message: "Method Not Allowed" }, 405)
+  if (event.httpMethod !== "PATCH") return jsonResponse({message: "Method Not Allowed"}, 405)
 
   const unauthorized = requireAdmin(event)
   if (unauthorized) return unauthorized
 
-  const id = event.queryStringParameters?.id
-  if (!id) return jsonResponse({ message: "缺少提交 ID" }, 400)
+  // 优先从 path 段取 id（netlify.toml 走 path-based 重写 ?id=:id 在生产不稳定），
+  // 保留 query 兜底兼容旧部署。
+  const idFromPath = event.path.split("/").filter(Boolean).pop()
+  const id = event.queryStringParameters?.id ?? idFromPath
+  if (!id) return jsonResponse({message: "缺少提交 ID"}, 400)
 
-  const body = JSON.parse(event.body ?? "{}") as { status?: SubmissionReviewStatus; note?: string }
+  let body: {status?: SubmissionReviewStatus; note?: string}
+  try {
+    body = JSON.parse(event.body ?? "{}") as {status?: SubmissionReviewStatus; note?: string}
+  } catch {
+    return jsonResponse({message: "请求体不是有效的 JSON"}, 400)
+  }
   if (body.status !== "pending" && body.status !== "approved" && body.status !== "rejected") {
-    return jsonResponse({ message: "不支持的审核状态" }, 400)
+    return jsonResponse({message: "不支持的审核状态"}, 400)
   }
 
   const sql = getSql()
@@ -32,7 +40,7 @@ export const handler: Handler = async (event) => {
       limit 1
     `
     const review = rows[0] as SubmissionReview | undefined
-    if (!review) return jsonResponse({ message: "未找到提交记录" }, 404)
+    if (!review) return jsonResponse({message: "未找到提交记录"}, 404)
 
     if (body.status === "approved") {
       const run = submissionReviewToArchiveRun(review, seedConfig.units)
@@ -95,8 +103,8 @@ export const handler: Handler = async (event) => {
     }
   } else {
     const review = await updateFallbackSubmissionReview(id, body.status, body.note?.trim())
-    if (!review) return jsonResponse({ message: "未找到提交记录" }, 404)
+    if (!review) return jsonResponse({message: "未找到提交记录"}, 404)
   }
 
-  return jsonResponse({ id, status: body.status })
+  return jsonResponse({id, status: body.status})
 }

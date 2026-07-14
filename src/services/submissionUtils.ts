@@ -1,5 +1,6 @@
-import { getRunGoldCounts } from "@/services/unitCost"
-import type { ArchiveRun, ArchiveUnit, SubmissionReview } from "@/types/archive"
+import {getRunGoldCounts} from "./unitCost"
+// 上面使用相对路径而非 @/ 别名，以保证 netlify/functions 下的 esbuild 打包能解析。
+import type {ArchiveRun, ArchiveUnit, SubmissionReview} from "@/types/archive"
 
 export function buildPreferredLightconeByCharacter(runs: ArchiveRun[], units: ArchiveUnit[]) {
   const unitById = new Map(units.map((unit) => [unit.id, unit]))
@@ -52,5 +53,5 @@ export function submissionReviewToArchiveRun(review: SubmissionReview, units: Ar
     lightcones: review.payload.lightcones,
   }
   const goldCounts = getRunGoldCounts(run, units)
-  return { ...run, limitedCount: goldCounts.limited, standardCount: goldCounts.standard }
+  return {...run, limitedCount: goldCounts.limited, standardCount: goldCounts.standard}
 }

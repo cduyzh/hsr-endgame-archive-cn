@@ -39,4 +39,20 @@ describe("admin auth", () => {
 
     expect(requireAdmin({ headers: { authorization: "Bearer legacy-token" } })).toBeNull()
   })
+
+  it("配置了 ADMIN_REVIEW_USERNAME 时，正确的 Bearer token 也能通过", () => {
+    process.env.ADMIN_REVIEW_USERNAME = "reviewer"
+    process.env.ADMIN_REVIEW_PASSWORD = "secret"
+    delete process.env.ADMIN_REVIEW_TOKEN
+
+    expect(requireAdmin({ headers: { authorization: "Bearer secret" } })).toBeNull()
+  })
+
+  it("Bearer token 错误时返回 401，不回退到 Basic 校验", () => {
+    process.env.ADMIN_REVIEW_USERNAME = "reviewer"
+    process.env.ADMIN_REVIEW_PASSWORD = "secret"
+    delete process.env.ADMIN_REVIEW_TOKEN
+
+    expect(requireAdmin({ headers: { authorization: "Bearer wrong" } })?.statusCode).toBe(401)
+  })
 })
