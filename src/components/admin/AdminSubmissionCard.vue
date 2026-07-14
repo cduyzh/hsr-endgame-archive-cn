@@ -49,7 +49,9 @@ function formatDate(value?: string | null) {
   <article class="review-card">
     <div class="review-main">
       <div>
-        <p class="eyebrow">{{ review.id }} / {{ formatDate(review.createdAt) }}</p>
+        <p class="eyebrow">
+          {{ review.id }} / {{ formatDate(review.createdAt) }}
+        </p>
         <h3>{{ review.payload.teamName }}</h3>
         <p>
           {{ review.payload.author }} · {{ modeNameById.get(review.payload.mode) ?? review.payload.mode }} ·
@@ -65,17 +67,32 @@ function formatDate(value?: string | null) {
       <div><dt>成本</dt><dd>{{ review.payload.cost }}</dd></div>
     </dl>
 
-    <div class="review-team-grid" aria-label="投稿队伍配置">
-      <article v-for="(slot, index) in slots" :key="`${review.id}-${index}`" class="review-team-slot">
+    <div
+      class="review-team-grid"
+      aria-label="投稿队伍配置"
+    >
+      <article
+        v-for="(slot, index) in slots"
+        :key="`${review.id}-${index}`"
+        class="review-team-slot"
+      >
         <div class="review-unit-line">
-          <img v-if="slot.characterUnit" :src="getUnitImageSrc(slot.characterUnit) ?? undefined" :alt="slot.characterUnit.name" />
+          <img
+            v-if="slot.characterUnit"
+            :src="getUnitImageSrc(slot.characterUnit) ?? undefined"
+            :alt="slot.characterUnit.name"
+          >
           <span>
             <strong>{{ slot.characterUnit?.name ?? unitNameById.get(slot.character.unitId) ?? slot.character.unitId }}</strong>
             <small>E{{ slot.character.eidolon ?? 0 }}</small>
           </span>
         </div>
         <div class="review-unit-line lightcone">
-          <img v-if="slot.lightconeUnit" :src="getUnitImageSrc(slot.lightconeUnit) ?? undefined" :alt="slot.lightconeUnit.name" />
+          <img
+            v-if="slot.lightconeUnit"
+            :src="getUnitImageSrc(slot.lightconeUnit) ?? undefined"
+            :alt="slot.lightconeUnit.name"
+          >
           <span>
             <strong>{{ slot.lightconeUnit?.name ?? slot.lightcone?.unitId ?? "未填写" }}</strong>
             <small>S{{ slot.lightcone?.superimposition ?? 1 }}</small>
@@ -85,35 +102,79 @@ function formatDate(value?: string | null) {
     </div>
 
     <div class="review-loadout">
-      <p v-if="review.payload.notes"><strong>投稿备注</strong>{{ review.payload.notes }}</p>
-      <a :href="review.payload.videoUrl" target="_blank" rel="noreferrer">
-        <ExternalLink :size="14" aria-hidden="true" />
+      <p v-if="review.payload.notes">
+        <strong>投稿备注</strong>{{ review.payload.notes }}
+      </p>
+      <a
+        :href="review.payload.videoUrl"
+        target="_blank"
+        rel="noreferrer"
+      >
+        <ExternalLink
+          :size="14"
+          aria-hidden="true"
+        />
         打开视频链接
       </a>
     </div>
 
     <label class="field">
       <span>审核备注</span>
-      <textarea :value="note" rows="2" placeholder="可填写驳回原因或管理备注" @input="emit('update:note', ($event.target as HTMLTextAreaElement).value)" />
+      <textarea
+        :value="note"
+        rows="2"
+        placeholder="可填写驳回原因或管理备注"
+        @input="emit('update:note', ($event.target as HTMLTextAreaElement).value)"
+      />
     </label>
 
     <div class="form-actions">
       <div class="review-actions">
-        <button v-if="review.status !== 'approved'" class="icon-button primary-action" type="button" :disabled="acting" @click="emit('review', 'approved')">
-          <Check :size="17" aria-hidden="true" />
+        <button
+          v-if="review.status !== 'approved'"
+          class="icon-button primary-action"
+          type="button"
+          :disabled="acting"
+          @click="emit('review', 'approved')"
+        >
+          <Check
+            :size="17"
+            aria-hidden="true"
+          />
           {{ acting ? "处理中" : review.status === "rejected" ? "重新通过" : "通过并发布" }}
         </button>
-        <button v-if="review.status !== 'rejected'" class="icon-button danger-action" type="button" :disabled="acting" @click="emit('review', 'rejected')">
-          <X :size="17" aria-hidden="true" />
+        <button
+          v-if="review.status !== 'rejected'"
+          class="icon-button danger-action"
+          type="button"
+          :disabled="acting"
+          @click="emit('review', 'rejected')"
+        >
+          <X
+            :size="17"
+            aria-hidden="true"
+          />
           {{ review.status === "approved" ? "撤下并驳回" : "驳回" }}
         </button>
-        <button v-if="review.status !== 'pending'" class="icon-button" type="button" :disabled="acting" @click="emit('review', 'pending')">
-          <ArchiveRestore :size="17" aria-hidden="true" />
+        <button
+          v-if="review.status !== 'pending'"
+          class="icon-button"
+          type="button"
+          :disabled="acting"
+          @click="emit('review', 'pending')"
+        >
+          <ArchiveRestore
+            :size="17"
+            aria-hidden="true"
+          />
           退回待审
         </button>
       </div>
       <span class="review-reviewed-at">
-        <ShieldCheck :size="15" aria-hidden="true" />
+        <ShieldCheck
+          :size="15"
+          aria-hidden="true"
+        />
         {{ review.reviewedAt ? `审核于 ${formatDate(review.reviewedAt)}` : "尚未审核" }}
       </span>
     </div>

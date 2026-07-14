@@ -1,0 +1,42 @@
+[build]
+  command = "pnpm build"
+  publish = "dist"
+  functions = "netlify/functions"
+
+[build.environment]
+  NODE_VERSION = "24"
+
+[[redirects]]
+  from = "/api/archive/config"
+  to = "/.netlify/functions/archive-config"
+  status = 200
+
+[[redirects]]
+  from = "/api/archive/runs"
+  to = "/.netlify/functions/archive-runs"
+  status = 200
+
+[[redirects]]
+  from = "/api/archive/stats"
+  to = "/.netlify/functions/archive-stats"
+  status = 200
+
+[[redirects]]
+  from = "/api/submissions"
+  to = "/.netlify/functions/submissions"
+  status = 200
+
+[[redirects]]
+  from = "/api/admin/submissions"
+  to = "/.netlify/functions/admin-submissions"
+  status = 200
+
+[[redirects]]
+  from = "/api/admin/submissions/:id"
+  to = "/.netlify/functions/admin-submissions-id?id=:id"
+  status = 200
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

@@ -83,7 +83,14 @@ Netlify 构建环境固定使用 Node 24；业务 API redirects、Functions 目�
 2. **HSR 终局静态镜像数据**  
    `public/local-cache/` 是从 `/Users/hobby/gitlab-source/hsr-endgame-膨胀变化` 同步来的 HSR 终局静态 JSON 快照。档案工作台会在读取 `/api/archive/config` 或 seed fallback 后，用 `manifest.json`、`cache-plan.json` 和当前期详情补全当前赛季与敌方阶段标签；静态镜像读取失败时仍保留原业务配置。其他页面也可以通过 `/local-cache/*` 读取这批数据。
 
-数据库表结构见 `netlify/schema.sql`。投稿审核接口可使用 `ADMIN_REVIEW_TOKEN` 保护管理端审核操作。
+数据库表结构见 `netlify/schema.sql`。访问 `/admin/submissions` 会先显示管理员登录弹框，生产环境建议配置：
+
+```bash
+ADMIN_REVIEW_USERNAME=admin
+ADMIN_REVIEW_PASSWORD=请替换为强密码
+```
+
+为兼容旧部署，未配置 `ADMIN_REVIEW_PASSWORD` 时仍会把 `ADMIN_REVIEW_TOKEN` 当作管理员密码；未配置 `ADMIN_REVIEW_USERNAME` 时账号默认为 `admin`。审核台支持待审核、已通过、已驳回和全部记录筛选。投稿通过后会写入公开档案，之后改为驳回或退回待审会从公开档案隐藏。
 
 ## API 路由
 
@@ -95,6 +102,7 @@ Netlify 构建环境固定使用 Node 24；业务 API redirects、Functions 目�
 | `/api/archive/runs`          | `archive-runs`         | 已审核竞速记录，支持筛选                   |
 | `/api/archive/stats`         | `archive-stats`        | 使用率、组合、成本区间统计                 |
 | `/api/submissions`           | `submissions`          | 投稿入口                                   |
+| `/api/admin/submissions`     | `admin-submissions`    | 管理员读取投稿审核列表                     |
 | `/api/admin/submissions/:id` | `admin-submissions-id` | 审核入口                                   |
 
 ## `public/local-cache` 如何使用

@@ -4,7 +4,7 @@ import tseslint from "typescript-eslint"
 
 export default [
   {
-    ignores: ["dist", "node_modules", "coverage", ".netlify"],
+    ignores: ["dist", "node_modules", "coverage", ".netlify", "vite.config.ts.timestamp-*.mjs"],
   },
   js.configs.recommended,
   ...tseslint.configs.recommended,

@@ -23,6 +23,6 @@ Thumbs.db
 .env.*
 !.env.example
 
-.netlify*
-netlify*
-dist*
+.netlify/
+.netlify-config/
+.env

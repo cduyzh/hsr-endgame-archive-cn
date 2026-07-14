@@ -42,7 +42,10 @@ export function useAdminSubmissions() {
     } catch (err) {
       const nextError = err instanceof Error ? err.message : "审核列表读取失败。"
       error.value = nextError
-      if (nextError.includes("账号或密码") || nextError.includes("登录已失效")) logout()
+      if (nextError.includes("账号或密码") || nextError.includes("登录已失效")) {
+        loginError.value = "登录已失效，请重新登录。"
+        logout()
+      }
     } finally {
       loading.value = false
     }

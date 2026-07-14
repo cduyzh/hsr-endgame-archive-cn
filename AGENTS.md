@@ -92,7 +92,7 @@ POSTGRES_URL
 
 没有数据库 URL 时，Functions 和前端请求 fallback 都应保持可用。
 
-投稿审核接口可通过 `ADMIN_REVIEW_TOKEN` 做 Bearer token 保护。
+投稿审核页位于 `/admin/submissions`。生产环境优先通过 `ADMIN_REVIEW_USERNAME` 和 `ADMIN_REVIEW_PASSWORD` 配置管理员账号；为兼容旧部署，`ADMIN_REVIEW_TOKEN` 仍可作为密码 fallback。审核通过会把投稿同步为公开 `runs` 记录，改为驳回或退回待审会从公开列表隐藏。
 
 ## `public/local-cache` 使用说明
 
