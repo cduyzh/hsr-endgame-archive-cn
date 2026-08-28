@@ -6,6 +6,9 @@
 [build.environment]
   NODE_VERSION = "24"
 
+# 数据与图片均由前端直连数据源（static.nanoka.cc），本站不再代理或落盘，
+# 以降低 Netlify 带宽与存储占用。
+
 [[redirects]]
   from = "/api/archive/config"
   to = "/.netlify/functions/archive-config"

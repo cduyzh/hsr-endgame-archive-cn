@@ -67,10 +67,10 @@ pnpm build
 1. 竞速档案业务数据  
    由 `src/services/archiveService.ts` 请求 `/api/archive/*` 和 `/api/submissions`。Netlify Functions 有数据库 URL 时读取 Postgres；没有数据库 URL 时读取 `src/data/seed`。
 
-2. HSR 终局静态镜像数据  
-   位于 `public/local-cache/`。这批文件来自 `/Users/hobby/gitlab-source/hsr-endgame-膨胀变化/public/local-cache`，档案工作台会在业务配置加载后用它们补全当前赛季和敌方阶段标签；静态读取失败时必须保留 seed/API 配置 fallback。它们也可作为静态 JSON 对外暴露。
+2. HSR 终局静态数据（远程直连）  
+   所有 JSON 数据和图片资源均直连 `https://static.nanoka.cc`（已开放 CORS），不随构建发布。配置集中在 `src/services/dataSource.ts`。前端在运行时通过 `dataSourceUrl()` 读取远程数据，静态读取失败时 seed/API 配置仍作为 fallback。
 
-修改竞速记录、角色、光锥或历史业务筛选 id 时，优先改 `src/data/seed` 或数据库迁移/导入逻辑；不要误改 `public/local-cache` 以为会新增记录。当前赛季和敌方阶段展示标签可从 `public/local-cache` 派生，但 `seasonId`、`bossId` 仍应保持业务数据中的稳定 id。
+修改竞速记录、角色、光锥或历史业务筛选 id 时，优先改 `src/data/seed` 或数据库迁移/导入逻辑。当前赛季和敌方阶段展示标签从远程数据源实时推导，`seasonId`、`bossId` 仍应保持业务数据中的稳定 id。
 
 ## API 与数据库
 
@@ -94,34 +94,38 @@ POSTGRES_URL
 
 投稿审核页位于 `/admin/submissions`。生产环境优先通过 `ADMIN_REVIEW_USERNAME` 和 `ADMIN_REVIEW_PASSWORD` 配置管理员账号；为兼容旧部署，`ADMIN_REVIEW_TOKEN` 仍可作为密码 fallback。审核通过会把投稿同步为公开 `runs` 记录，改为驳回或退回待审会从公开列表隐藏。
 
-## `public/local-cache` 使用说明
+## 静态数据维护约束
 
-`public/local-cache/` 会被 Vite 原样复制到构建产物，部署后可通过 `/local-cache/...` 访问。
+- 数据源详情 JSON 应保持上游原始结构，不要写入本项目聚合后的 UI 数据。
+- 不要随意重命名索引文件或详情目录。
+- HP 相关逻辑必须考虑 `monstervalue.json` 的 `PhaseList.phase_max_hp_ratio`，不能只用单段 `HPBase`。
+- 怪物图片统一通过 `src/services/dataSource.ts` 的 `monsterImageUrl()` 生成，9 位实例怪物 id 自动回退到基础 id。
+- 新增或调整数据源消费逻辑时，需要同时补测试或最小验证说明，并确认静态读取失败时 seed/API fallback 仍可用。
+- 不要把数据源 JSON 重新下载到 `public/` 发布；这会抵消直连改造带来的带宽收益。
 
-当前快照与参考项目一致：
+## 远程数据源使用说明
 
-- 来源目录：`/Users/hobby/gitlab-source/hsr-endgame-膨胀变化/public/local-cache`
-- 当前版本：`4.3.56`
-- 当前文件数：110
-- 生成时间可看 `public/local-cache/hsr/4.3.56/cache-plan.json`
+统一数据源：`https://static.nanoka.cc`（已开放跨域）。所有数据与图片直连读取，仓库不再保留本地副本，也不随构建发布。
 
-目录协议：
+### 路径协议
+
+前端访问的都是数据源绝对地址（无 `/local-cache` 前缀）。
 
 ```text
-public/local-cache/
+https://static.nanoka.cc/
 ├── manifest.json
+├── assets/hsr/
+│   ├── avatarshopicon/{sourceId}.webp          # 角色头像
+│   ├── lightconemediumicon/{sourceId}.webp     # 光锥图片
+│   ├── monstermiddleicon/Monster_{id}.webp     # 怪物中图
+│   └── pathicon/{id}.webp                      # 命途图标
 └── hsr/<ver>/
     ├── monster.json
     ├── monstervalue.json
     ├── HardLevelGroup.json
     ├── EliteGroup.json
     ├── InfiniteEliteGroup.json
-    ├── maze.json
-    ├── maze_extra.json
-    ├── maze_boss.json
-    ├── maze_peak.json
-    ├── cache-plan.json
-    ├── moc-phase-hp-audit.json
+    ├── maze.json / maze_extra.json / maze_boss.json / maze_peak.json
     └── <locale>/
         ├── maze/<id>.json
         ├── story/<id>.json
@@ -131,67 +135,33 @@ public/local-cache/
 
 模式映射：
 
-- `moc`：忘却之庭，索引 `maze.json`，详情 `<locale>/maze/<id>.json`
-- `fiction`：虚构叙事，索引 `maze_extra.json`，详情 `<locale>/story/<id>.json`
-- `doom`：末日幻影，索引 `maze_boss.json`，详情 `<locale>/boss/<id>.json`
-- `peak`：异相仲裁，索引 `maze_peak.json`，详情 `<locale>/peak/<id>.json`
+- `moc`：索引 `maze.json`，详情 `<locale>/maze/<id>.json`
+- `fiction`：索引 `maze_extra.json`，详情 `<locale>/story/<id>.json`
+- `doom`：索引 `maze_boss.json`，详情 `<locale>/boss/<id>.json`
+- `peak`：索引 `maze_peak.json`，详情 `<locale>/peak/<id>.json`
 
-读取最新赛季时，优先读 `cache-plan.json` 的 `currentSeasonIds`。遍历本地已有详情时，优先读 `cachedSeasonIds`。
+当前赛季由各模式索引文件中的最大 seasonId 实时推导（不依赖 `cache-plan.json`）。
 
-## `public/local-cache` 更新流程
+## 数据更新流程
 
-当前竞速仓库没有内置 `sync:data` 脚本。更新静态镜像时，先在参考项目生成，再同步到本项目。
+同步脚本仅更新 seed 数据，不下载图片：
 
 ```bash
-cd /Users/hobby/gitlab-source/hsr-endgame-膨胀变化
-pnpm sync:data
+# 同步怪物元数据（名称、弱点、图片 id 等）
+pnpm sync:monsters
+
+# 同步角色/光锥元数据
+pnpm sync:units
+
+# 填充 archive 表
+pnpm seed:archive
 ```
 
-可指定版本与赛季：
+更新后检查：
 
 ```bash
-pnpm sync:data -- --ver 4.3.56 --moc 1033,1032 --peak 8
-```
-
-可单独重跑忘却之庭多阶段 HP 审计：
-
-```bash
-pnpm audit:moc-phase-hp -- --ver 4.3.56
-```
-
-同步到本项目：
-
-```bash
-rsync -a --delete \
-  /Users/hobby/gitlab-source/hsr-endgame-膨胀变化/public/local-cache/ \
-  /Users/hobby/Documents/hsr-endgame-竞速/public/local-cache/
-```
-
-更新后至少检查：
-
-```bash
-diff -qr \
-  /Users/hobby/Documents/hsr-endgame-竞速/public/local-cache \
-  /Users/hobby/gitlab-source/hsr-endgame-膨胀变化/public/local-cache
-
 pnpm build
 ```
-
-如果后续希望本项目独立更新 `public/local-cache`，应从参考项目迁移并适配：
-
-- `scripts/sync-local-cache.js`
-- `scripts/audit-moc-phase-hp.js`
-- `package.json` 中的 `sync:data` 和 `audit:moc-phase-hp`
-
-不要只迁移一个脚本；`sync-local-cache.js` 会调用审计脚本生成 `moc-phase-hp-audit.json`。
-
-## 静态数据维护约束
-
-- `public/local-cache` 的详情 JSON 应保持上游原始结构，不要写入本项目聚合后的 UI 数据。
-- 不要随意重命名索引文件、详情目录或 `cache-plan.json` 字段。
-- HP 相关逻辑必须考虑 `monstervalue.json` 的 `PhaseList.phase_max_hp_ratio`，不能只用单段 `HPBase`。
-- 怪物图片若后续接入，可按 `https://static.nanoka.cc/hsr/<ver>/monstermiddleicon/Monster_<id>.webp` 读取；9 位实例怪物 id 通常需要回退到基础怪物 id。
-- 新增或调整 `public/local-cache` 消费逻辑时，需要同时补测试或最小验证说明，并确认静态读取失败时 seed/API fallback 仍可用。
 
 ## 前端实现约定
 

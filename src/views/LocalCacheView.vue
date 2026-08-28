@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Check, Clipboard, ExternalLink, HardDrive, Link2, Server } from "lucide-vue-next"
 import { computed, onMounted, shallowRef } from "vue"
+import { DATA_SITE, dataSourceUrl } from "@/services/dataSource"
 
 type ModeKey = "moc" | "fiction" | "doom" | "peak"
 
@@ -10,16 +11,7 @@ interface ManifestGame {
   live: string
 }
 
-interface CachePlan {
-  version: string
-  locale: string
-  generatedAt: string
-  currentSeasonIds: Record<ModeKey, number>
-  cachedSeasonIds: Record<ModeKey, number[]>
-  listFiles: Record<ModeKey, string>
-}
-
-interface ModeConfig {
+type ModeConfig = {
   key: ModeKey
   label: string
   alias: string
@@ -35,117 +27,116 @@ const modes: ModeConfig[] = [
 ]
 
 const manifest = shallowRef<ManifestGame | null>(null)
-const cachePlan = shallowRef<CachePlan | null>(null)
+const currentSeasonIds = shallowRef<Partial<Record<ModeKey, number>>>({})
 const loading = shallowRef(true)
 const errorMessage = shallowRef("")
 const copiedPath = shallowRef("")
 
-const publicBase = `${import.meta.env.BASE_URL}local-cache`
-const originBase = computed(() => {
-  if (typeof window === "undefined") return publicBase
-  return `${window.location.origin}${publicBase.startsWith("/") ? publicBase : `/${publicBase}`}`
-})
-
-const version = computed(() => cachePlan.value?.version ?? manifest.value?.latest ?? "")
-const locale = computed(() => cachePlan.value?.locale ?? "zh")
-const generatedAt = computed(() => {
-  if (!cachePlan.value?.generatedAt) return "未读取"
-  return new Intl.DateTimeFormat("zh-CN", {
-    dateStyle: "medium",
-    timeStyle: "short",
-  }).format(new Date(cachePlan.value.generatedAt))
-})
+const version = computed(() => manifest.value?.latest ?? "")
+const locale = "zh"
 
 const modeRows = computed(() =>
   modes.map((mode) => {
-    const currentSeasonId = cachePlan.value?.currentSeasonIds[mode.key]
-    const cachedSeasonIds = cachePlan.value?.cachedSeasonIds[mode.key] ?? []
-    const listFile = cachePlan.value?.listFiles[mode.key] ?? mode.listFile
+    const currentSeasonId = currentSeasonIds.value[mode.key]
     const detailPath = currentSeasonId
-      ? `/local-cache/hsr/${version.value}/${locale.value}/${mode.detailDir}/${currentSeasonId}.json`
+      ? `/hsr/${version.value}/${locale}/${mode.detailDir}/${currentSeasonId}.json`
       : ""
 
     return {
       ...mode,
       currentSeasonId,
-      cachedCount: cachedSeasonIds.length,
-      latestCachedId: cachedSeasonIds.at(-1),
-      listPath: `/local-cache/hsr/${version.value}/${listFile}`,
+      listPath: `/hsr/${version.value}/${mode.listFile}`,
       detailPath,
     }
   }),
 )
 
 const pathExamples = computed(() => {
-  const mocSeasonId = cachePlan.value?.currentSeasonIds.moc
-  const peakSeasonId = cachePlan.value?.currentSeasonIds.peak
+  const mocSeasonId = currentSeasonIds.value.moc
+  const peakSeasonId = currentSeasonIds.value.peak
 
   return [
     {
       title: "读取可用版本",
-      path: "/local-cache/manifest.json",
+      path: "/manifest.json",
       note: "先取 hsr.latest，再进入对应版本目录。",
     },
     {
-      title: "读取赛季计划",
-      path: `/local-cache/hsr/${version.value}/cache-plan.json`,
-      note: "包含 currentSeasonIds、cachedSeasonIds 和模式索引文件名。",
-    },
-    {
       title: "读取忘却之庭索引",
-      path: `/local-cache/hsr/${version.value}/maze.json`,
+      path: `/hsr/${version.value}/maze.json`,
       note: "索引按赛季 id 汇总名称、参数和起止时间。",
     },
     {
       title: "读取当前忘却之庭详情",
       path: mocSeasonId
-        ? `/local-cache/hsr/${version.value}/${locale.value}/maze/${mocSeasonId}.json`
-        : `/local-cache/hsr/${version.value}/${locale.value}/maze/<seasonId>.json`,
+        ? `/hsr/${version.value}/${locale}/maze/${mocSeasonId}.json`
+        : `/hsr/${version.value}/${locale}/maze/<seasonId>.json`,
       note: "详情包含关卡、怪物、弱点和挑战配置。",
     },
     {
       title: "读取当前异相仲裁详情",
       path: peakSeasonId
-        ? `/local-cache/hsr/${version.value}/${locale.value}/peak/${peakSeasonId}.json`
-        : `/local-cache/hsr/${version.value}/${locale.value}/peak/<seasonId>.json`,
+        ? `/hsr/${version.value}/${locale}/peak/${peakSeasonId}.json`
+        : `/hsr/${version.value}/${locale}/peak/<seasonId>.json`,
       note: "peak 使用独立详情目录，不要复用 maze 路径。",
     },
   ]
 })
 
-const fetchSnippet = computed(() => `const base = "${originBase.value}"
+const fetchSnippet = `const base = "${DATA_SITE}"
 const manifest = await fetch(\`\${base}/manifest.json\`).then((res) => res.json())
 const version = manifest.hsr.latest
-const plan = await fetch(\`\${base}/hsr/\${version}/cache-plan.json\`).then((res) => res.json())
-const seasonId = plan.currentSeasonIds.moc
-const moc = await fetch(\`\${base}/hsr/\${version}/zh/maze/\${seasonId}.json\`).then((res) => res.json())`)
+const maze = await fetch(\`\${base}/hsr/\${version}/maze.json\`).then((res) => res.json())
+const seasonId = Math.max(...Object.values(maze).map((s) => s.id || s.Id || 0))
+const moc = await fetch(\`\${base}/hsr/\${version}/zh/maze/\${seasonId}.json\`).then((res) => res.json())`
 
-async function loadLocalCacheMeta() {
+function toNum(value: unknown): number {
+  const n = Number(value)
+  return Number.isFinite(n) ? n : 0
+}
+
+async function deriveCurrentSeasonIds(ver: string): Promise<Partial<Record<ModeKey, number>>> {
+  const entries = await Promise.all(
+    modes.map(async (mode) => {
+      try {
+        const response = await fetch(dataSourceUrl(`hsr/${ver}/${mode.listFile}`))
+        if (!response.ok) return [mode.key, null] as const
+        const listJson = (await response.json()) as Record<string, { id?: number; Id?: number; ID?: number }>
+        const maxId = Object.values(listJson)
+          .map((entry) => toNum(entry?.id ?? entry?.Id ?? entry?.ID))
+          .filter((id) => id > 0)
+          .reduce((max, id) => (id > max ? id : max), 0)
+        return [mode.key, maxId || null] as const
+      } catch {
+        return [mode.key, null] as const
+      }
+    }),
+  )
+  return Object.fromEntries(entries.filter(([, id]) => id !== null)) as Partial<Record<ModeKey, number>>
+}
+
+async function loadDataSourceMeta() {
   loading.value = true
   errorMessage.value = ""
 
   try {
-    const manifestResponse = await fetch(`${publicBase}/manifest.json`)
+    const manifestResponse = await fetch(dataSourceUrl("manifest.json"))
     if (!manifestResponse.ok) throw new Error("manifest.json 读取失败")
 
     const manifestData = (await manifestResponse.json()) as { hsr?: ManifestGame }
     if (!manifestData.hsr?.latest) throw new Error("manifest.json 缺少 hsr.latest")
 
     manifest.value = manifestData.hsr
-
-    const planResponse = await fetch(`${publicBase}/hsr/${manifestData.hsr.latest}/cache-plan.json`)
-    if (!planResponse.ok) throw new Error("cache-plan.json 读取失败")
-
-    cachePlan.value = (await planResponse.json()) as CachePlan
+    currentSeasonIds.value = await deriveCurrentSeasonIds(manifestData.hsr.latest)
   } catch (error) {
-    errorMessage.value = error instanceof Error ? error.message : "静态数据读取失败"
+    errorMessage.value = error instanceof Error ? error.message : "数据源读取失败"
   } finally {
     loading.value = false
   }
 }
 
 async function copyPath(path: string) {
-  const value = path.startsWith("http") ? path : `${originBase.value}${path.replace("/local-cache", "")}`
+  const value = path.startsWith("http") ? path : dataSourceUrl(path)
 
   try {
     await navigator.clipboard.writeText(value)
@@ -159,7 +150,7 @@ async function copyPath(path: string) {
 }
 
 onMounted(() => {
-  void loadLocalCacheMeta()
+  void loadDataSourceMeta()
 })
 </script>
 
@@ -167,12 +158,12 @@ onMounted(() => {
   <main class="page-narrow local-cache-page">
     <div class="page-heading">
       <p class="eyebrow">
-        静态镜像数据源
+        远程数据源
       </p>
-      <h1>local-cache 数据源</h1>
+      <h1>static.nanoka.cc 数据源</h1>
       <p>
-        这里直接读取站点发布产物里的 <code>public/local-cache</code>，整理版本、当前赛季、模式路径和可复制 URL。
-        其他项目可以把本站当作只读静态 JSON 源使用。
+        本站所有 JSON 数据与图片均直连 <code>{{ DATA_SITE }}</code> 读取，已开放跨域。
+        当前赛季由各模式索引文件实时推导，不依赖本地缓存。
       </p>
     </div>
 
@@ -180,7 +171,7 @@ onMounted(() => {
       v-if="loading"
       class="system-message"
     >
-      正在读取 local-cache 元数据...
+      正在读取数据源元数据...
     </div>
     <div
       v-else-if="errorMessage"
@@ -200,7 +191,7 @@ onMounted(() => {
             aria-hidden="true"
           />
           <span>Base URL</span>
-          <strong>{{ originBase }}</strong>
+          <strong>{{ DATA_SITE }}</strong>
         </article>
         <article class="article-card summary-card">
           <HardDrive
@@ -215,8 +206,8 @@ onMounted(() => {
             :size="20"
             aria-hidden="true"
           />
-          <span>语言 / 更新时间</span>
-          <strong>{{ locale }} / {{ generatedAt }}</strong>
+          <span>语言</span>
+          <strong>{{ locale }}</strong>
         </article>
       </section>
 
@@ -237,7 +228,7 @@ onMounted(() => {
             <div>
               <span class="mini-badge">{{ mode.alias }}</span>
               <h3>{{ mode.label }}</h3>
-              <p>当前赛季 {{ mode.currentSeasonId }} / 已缓存 {{ mode.cachedCount }} 个赛季</p>
+              <p>当前赛季 {{ mode.currentSeasonId }}</p>
             </div>
             <div class="path-stack">
               <button
@@ -320,7 +311,7 @@ onMounted(() => {
           <pre class="code-sample"><code>{{ fetchSnippet }}</code></pre>
           <a
             class="icon-button datasource-link"
-            :href="`${originBase}/manifest.json`"
+            :href="`${DATA_SITE}/manifest.json`"
             target="_blank"
             rel="noreferrer"
           >

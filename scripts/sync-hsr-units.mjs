@@ -1,5 +1,5 @@
 /* global process */
-import { mkdir, readFile, writeFile } from "node:fs/promises"
+import { readFile, writeFile } from "node:fs/promises"
 import { execFile } from "node:child_process"
 import { fileURLToPath } from "node:url"
 import path from "node:path"
@@ -11,14 +11,14 @@ const DATA_VERSION = process.env.HSR_DATA_VERSION ?? "4.3.56"
 const ROOT = new URL("../", import.meta.url)
 const CONFIG_PATH = new URL("../src/data/seed/config.json", import.meta.url)
 const UNITS_PATH = new URL("../src/data/seed/hsr-units.json", import.meta.url)
-const CHARACTER_DIR = new URL("../public/assets/hsr/units/characters/", import.meta.url)
-const LIGHTCONE_DIR = new URL("../public/assets/hsr/units/lightcones/", import.meta.url)
 
 const SOURCE = {
   characterPage: "https://hsr.nanoka.cc/character",
   lightconePage: "https://hsr.nanoka.cc/lightcone",
   characterData: `https://static.nanoka.cc/hsr/${DATA_VERSION}/character.json`,
   lightconeData: `https://static.nanoka.cc/hsr/${DATA_VERSION}/lightcone.json`,
+  characterImageBase: "https://static.nanoka.cc/assets/hsr/avatarshopicon",
+  lightconeImageBase: "https://static.nanoka.cc/assets/hsr/lightconemediumicon",
 }
 
 const PATH_LABELS = {
@@ -124,9 +124,6 @@ async function main() {
     lightcones,
   }
 
-  await Promise.all([mkdir(CHARACTER_DIR, { recursive: true }), mkdir(LIGHTCONE_DIR, { recursive: true })])
-  await runLimited([...characters, ...lightcones], 8, downloadUnitImage)
-
   config.units = archiveUnits
   await writeJson(CONFIG_PATH, config)
   await writeJson(UNITS_PATH, sourceUnits)
@@ -162,8 +159,8 @@ function normalizeCharacter(sourceId, source, usedIds) {
   const image = {
     folder: "characters",
     sourceFolder: "avatarshopicon",
-    sourceUrl: `https://static.nanoka.cc/assets/hsr/avatarshopicon/${sourceId}.webp`,
-    src: `/assets/hsr/units/characters/${id}.webp`,
+    sourceUrl: `${SOURCE.characterImageBase}/${sourceId}.webp`,
+    src: `${SOURCE.characterImageBase}/${sourceId}.webp`,
   }
 
   return {
@@ -191,8 +188,8 @@ function normalizeLightcone(sourceId, source, usedIds) {
   const image = {
     folder: "lightcones",
     sourceFolder: "lightconemediumicon",
-    sourceUrl: `https://static.nanoka.cc/assets/hsr/lightconemediumicon/${sourceId}.webp`,
-    src: `/assets/hsr/units/lightcones/${id}.webp`,
+    sourceUrl: `${SOURCE.lightconeImageBase}/${sourceId}.webp`,
+    src: `${SOURCE.lightconeImageBase}/${sourceId}.webp`,
   }
 
   return {
@@ -252,36 +249,6 @@ function isLimitedCharacter(sourceId, rarity) {
   if (rarity !== 5) return false
   if (sourceId.startsWith("8")) return false
   return !STANDARD_FIVE_STAR_CHARACTER_SOURCE_IDS.has(sourceId)
-}
-
-async function downloadUnitImage(unit) {
-  const targetDir = unit.kind === "character" ? CHARACTER_DIR : LIGHTCONE_DIR
-  const target = new URL(`${unit.id}.webp`, targetDir)
-  await curl([
-    "-fL",
-    "--retry",
-    "3",
-    "--retry-delay",
-    "1",
-    "-H",
-    "accept: image/webp,image/*",
-    "-A",
-    "hsr-endgame-archive-cn unit sync",
-    unit.image.sourceUrl,
-    "-o",
-    fileURLPath(target),
-  ])
-}
-
-async function runLimited(items, limit, worker) {
-  const queue = [...items]
-  const workers = Array.from({ length: Math.min(limit, queue.length) }, async () => {
-    while (queue.length > 0) {
-      const item = queue.shift()
-      if (item) await worker(item)
-    }
-  })
-  await Promise.all(workers)
 }
 
 async function curl(args, options) {

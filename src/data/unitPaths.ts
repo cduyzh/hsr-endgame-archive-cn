@@ -1,3 +1,4 @@
+import { IMAGE_BASES } from "@/services/dataSource"
 import type { UnitPath } from "@/types/archive"
 
 export interface UnitPathOption {
@@ -20,10 +21,13 @@ export const UNIT_PATH_OPTIONS: UnitPathOption[] = [
 ]
 
 function pathOption(id: string, label: UnitPath): UnitPathOption {
+  const remoteUrl = `${IMAGE_BASES.path}/${id}.webp`
   return {
     id,
     label,
-    iconSrc: `/assets/hsr/paths/${id}.webp`,
-    sourceUrl: `https://static.nanoka.cc/assets/hsr/pathicon/${id}.webp`,
+    iconSrc: remoteUrl,
+    get sourceUrl() {
+      return this.iconSrc
+    },
   }
 }

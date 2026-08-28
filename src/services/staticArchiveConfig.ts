@@ -1,4 +1,4 @@
-import monsterSeed from "@/data/seed/hsr-monsters.json"
+import { dataSourceUrl, monsterImageUrl } from "./dataSource"
 import type { ArchiveConfig, BossMonsterInfo, BossStage, ElementType, EndgameMode, Season } from "@/types/archive"
 
 type StaticMode = "moc" | "fiction" | "doom" | "peak"
@@ -11,10 +11,13 @@ interface LocalCacheManifest {
   }
 }
 
-interface CachePlan {
-  version?: string
-  locale?: string
-  currentSeasonIds?: Partial<Record<StaticMode, number>>
+interface SeasonIndexEntry {
+  id?: number
+  Id?: number
+  ID?: number
+  name?: string
+  zh?: string
+  en?: string
 }
 
 interface StaticBuff {
@@ -77,7 +80,6 @@ interface StaticPhase {
 interface MonsterLookup {
   monsters: Map<number, StaticMonster>
   imageIds: Map<number, number>
-  localImages: Map<number, string>
 }
 
 export interface StaticArchiveSnapshot {
@@ -142,7 +144,6 @@ function getMonsterImageId(monster: StaticMonster, fallbackId: number): number {
 function buildMonsterLookup(monsters: Record<string, StaticMonster>): MonsterLookup {
   const monsterMap = new Map<number, StaticMonster>()
   const imageIds = new Map<number, number>()
-  const localImages = new Map<number, string>()
 
   for (const [id, monster] of Object.entries(monsters)) {
     const numericId = Number(id)
@@ -158,19 +159,9 @@ function buildMonsterLookup(monsters: Record<string, StaticMonster>): MonsterLoo
     }
   }
 
-  for (const monster of monsterSeed.monsters) {
-    const imageSrc = monster.image?.src
-    if (!imageSrc) continue
-    const ids = [Number(monster.id), ...(monster.child ?? []).map(Number)]
-    for (const id of ids) {
-      if (Number.isFinite(id)) localImages.set(id, imageSrc)
-    }
-  }
-
   return {
     monsters: monsterMap,
     imageIds,
-    localImages,
   }
 }
 
@@ -197,14 +188,8 @@ function getMonsterWeakness(lookup: MonsterLookup, ids: Array<number | undefined
 function getMonsterImageUrl(lookup: MonsterLookup, ids: Array<number | undefined>): string | undefined {
   for (const id of ids) {
     if (!id) continue
-    const localImage = lookup.localImages.get(id)
-    if (localImage) return localImage
-
     const imageId = lookup.imageIds.get(id)
-    if (imageId) {
-      const imageByBaseId = lookup.localImages.get(imageId)
-      if (imageByBaseId) return imageByBaseId
-    }
+    if (imageId) return monsterImageUrl(imageId)
   }
 
   return undefined
@@ -437,29 +422,63 @@ export function mergeStaticArchiveConfig(config: ArchiveConfig, snapshot: Static
   }
 }
 
-async function fetchJson<T>(path: string): Promise<T> {
-  const response = await fetch(path)
+async function fetchJson<T>(url: string): Promise<T> {
+  const response = await fetch(url)
   if (!response.ok) throw new Error(`HTTP ${response.status}`)
   return (await response.json()) as T
 }
 
-function publicPath(path: string): string {
-  const base = import.meta.env.BASE_URL ?? "/"
-  return `${base.replace(/\/$/, "")}/local-cache/${path.replace(/^\//, "")}`
+/** 各模式对应的索引文件名 */
+const listFileByMode: Record<StaticMode, string> = {
+  moc: "maze.json",
+  fiction: "maze_extra.json",
+  doom: "maze_boss.json",
+  peak: "maze_peak.json",
+}
+
+function toNum(value: unknown): number {
+  const n = Number(value)
+  return Number.isFinite(n) ? n : 0
+}
+
+/**
+ * 从模式索引 JSON 中提取去重后的最大赛季 id 作为当前赛季。
+ * 远程数据源不提供 cache-plan.json，因此必须实时推导。
+ */
+async function getCurrentSeasonIds(
+  ver: string,
+): Promise<Partial<Record<StaticMode, number>>> {
+  const entries = await Promise.all(
+    (Object.keys(listFileByMode) as StaticMode[]).map(async (mode) => {
+      try {
+        const listJson = await fetchJson<Record<string, SeasonIndexEntry>>(
+          dataSourceUrl(`hsr/${ver}/${listFileByMode[mode]}`),
+        )
+        const maxId = Object.values(listJson)
+          .map((entry) => toNum(entry?.id ?? entry?.Id ?? entry?.ID))
+          .filter((id) => id > 0)
+          .reduce((max, id) => (id > max ? id : max), 0)
+        return [mode, maxId || null] as const
+      } catch {
+        return [mode, null] as const
+      }
+    }),
+  )
+  return Object.fromEntries(entries.filter(([, id]) => id !== null)) as Partial<Record<StaticMode, number>>
 }
 
 export async function fetchStaticArchiveSnapshot(): Promise<StaticArchiveSnapshot | null> {
   try {
-    const manifest = await fetchJson<LocalCacheManifest>(publicPath("manifest.json"))
+    const manifest = await fetchJson<LocalCacheManifest>(dataSourceUrl("manifest.json"))
     const latest = manifest.hsr?.latest
     if (!latest) return null
 
-    const plan = await fetchJson<CachePlan>(publicPath(`hsr/${latest}/cache-plan.json`))
-    const version = plan.version ?? latest
-    const locale = plan.locale ?? "zh"
+    const version = latest
+    const locale = "zh"
     const monsterLookup = buildMonsterLookup(
-      await fetchJson<Record<string, StaticMonster>>(publicPath(`hsr/${version}/monster.json`)),
+      await fetchJson<Record<string, StaticMonster>>(dataSourceUrl(`hsr/${version}/monster.json`)),
     )
+    const currentSeasonIds = await getCurrentSeasonIds(version)
     const snapshot: StaticArchiveSnapshot = {
       liveVersion: manifest.hsr?.live ?? version.split(".").slice(0, 2).join("."),
       cacheVersion: version,
@@ -467,9 +486,10 @@ export async function fetchStaticArchiveSnapshot(): Promise<StaticArchiveSnapsho
       phases: {},
     }
 
-    for (const [mode, seasonId] of Object.entries(plan.currentSeasonIds ?? {}) as Array<[StaticMode, number]>) {
+    for (const [mode, seasonId] of Object.entries(currentSeasonIds) as Array<[StaticMode, number]>) {
+      if (!seasonId) continue
       const detail = await fetchJson<StaticDetail | StaticDetail[]>(
-        publicPath(`hsr/${version}/${locale}/${detailDirByMode[mode]}/${seasonId}.json`),
+        dataSourceUrl(`hsr/${version}/${locale}/${detailDirByMode[mode]}/${seasonId}.json`),
       )
       snapshot.seasons[mode] = getSeasonName(mode, seasonId, detail)
 
