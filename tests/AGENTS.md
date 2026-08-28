@@ -1,0 +1,31 @@
+# AGENTS.md — `tests/`（单元测试）
+
+框架为 **Vitest + Vue Test Utils + jsdom**，配置内联在根 `vite.config.ts`（`environment: "jsdom"`、`globals: true`）。命令：`pnpm test:unit`（`vitest run`），可用 `--` 过滤，如 `pnpm test:unit -- tests/runUtils.test.ts`。
+
+## 现有覆盖
+
+| 文件 | 目标 |
+| --- | --- |
+| `runUtils.test.ts` | `src/services/runUtils.ts` 筛选/排序/统计纯函数 |
+| `staticArchiveConfig.test.ts` | 远程静态快照推导与配置合并（`staticArchiveConfig.ts`） |
+| `submissionUtils.test.ts` | 投稿 → 档案记录转换、光锥偏好统计 |
+| `adminAuth.test.ts` | `netlify/functions/_shared.ts` 的 `requireAdmin`（Bearer/Basic/未配置） |
+| `RunGroupList.test.ts` / `SubmitRunForm.test.ts` / `UnitPickerDrawer.test.ts` | 关键档案组件的挂载与交互 |
+| `fixtures/runs.ts` | 共享 `ArchiveRun` 夹具（`fixtureRuns`），新用例优先复用 |
+
+## 约定
+
+- **纯函数优先直接断言**（`services/`、`_shared.ts`），不需要挂载组件。
+- 组件测试用 `@vue/test-utils` 的 `mount`，传真实 `seedConfig.units` 与 `fixtureRuns`，断言渲染文本/元素而非实现细节。
+- 涉及环境变量的用例（如 `adminAuth.test.ts`）要在 `afterEach` 里**还原/删除** `process.env`，避免污染其他用例。
+- 远程依赖用 `vi.mock`/stub 隔离，测试不应真实请求 `static.nanoka.cc`。
+- 路径别名：测试里用 `@/` 引用 `src/`（Vite 已配置），但引用 `netlify/functions/*` 时用相对路径。
+
+## 何时必须补测试
+
+改动以下内容时，需新增或更新用例（根 [../AGENTS.md](../AGENTS.md) 的“验证口径”也要求如此）：
+
+- 筛选、排序、统计、成本分桶口径（`runUtils` / `_shared.buildStats` 两处同步）。
+- 投稿表单校验、投稿→档案转换、审核流转。
+- 远程静态数据解析/合并（赛季推导、敌方阶段、怪物图片回退）。
+- 任何改变 API 返回 shape 的 Functions 改动。

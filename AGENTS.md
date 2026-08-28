@@ -196,3 +196,13 @@ pnpm build
 ```
 
 涉及本地页面效果时，优先用 `http://localhost:32200/` 验证。若启动 dev server，使用 `pnpm dev`。
+
+## 分层文档
+
+各关键目录另有模块级 `AGENTS.md`，进入对应目录工作时优先参考：
+
+- [`src/AGENTS.md`](src/AGENTS.md)：前端应用结构、类型/状态流、组件约定。
+- [`src/services/AGENTS.md`](src/services/AGENTS.md)：数据访问与纯函数层、两条数据线、回退约定。
+- [`netlify/AGENTS.md`](netlify/AGENTS.md)：Functions、`_shared`、鉴权、无库 fallback、schema。
+- [`scripts/AGENTS.md`](scripts/AGENTS.md)：同步/灌库/部署脚本与已知注意点。
+- [`tests/AGENTS.md`](tests/AGENTS.md)：Vitest 约定、覆盖范围、何时补测试。

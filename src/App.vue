@@ -1,13 +1,19 @@
 <script setup lang="ts">
-import { BookOpen, CircleHelp, ClipboardCheck, Database, HardDrive, Send } from "lucide-vue-next"
+  import {
+    BookOpen,
+    CircleHelp,
+    ClipboardCheck,
+    Database,
+    Send,
+  } from "lucide-vue-next";
+  import PromoSlot from "@/components/PromoSlot.vue";
 
-const navItems = [
-  { to: "/", label: "档案", icon: Database },
-  { to: "/articles", label: "文章", icon: BookOpen },
-  { to: "/local-cache", label: "数据源", icon: HardDrive },
-  { to: "/faq", label: "规则", icon: CircleHelp },
-  { to: "/admin/submissions", label: "审核", icon: ClipboardCheck },
-] as const
+  const navItems = [
+    { to: "/", label: "档案", icon: Database },
+    { to: "/articles", label: "文章", icon: BookOpen },
+    { to: "/faq", label: "规则", icon: CircleHelp },
+    { to: "/admin/submissions", label: "审核", icon: ClipboardCheck },
+  ] as const;
 </script>
 
 <template>
@@ -60,6 +66,8 @@ const navItems = [
         </RouterLink>
       </div>
     </header>
+
+    <PromoSlot />
 
     <RouterView />
   </div>

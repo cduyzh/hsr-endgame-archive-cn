@@ -1,18 +1,13 @@
 {
   "seasons": [
     {
-      "id": "4.3",
-      "label": "4.3 当前期",
+      "id": "4.5",
+      "label": "4.5 当前期",
       "isCurrent": true
     },
     {
-      "id": "4.2",
-      "label": "4.2 归档",
-      "isCurrent": false
-    },
-    {
-      "id": "4.1",
-      "label": "4.1 归档",
+      "id": "4.4",
+      "label": "4.4 归档",
       "isCurrent": false
     }
   ],
@@ -39,117 +34,7 @@
       "shortLabel": "仲裁"
     }
   ],
-  "bosses": [
-    {
-      "id": "flame-reaver",
-      "seasonId": "4.3",
-      "mode": "moc",
-      "name": "焚焰掠影",
-      "subtitle": "终局档案 / 上半",
-      "hp": "5,900,767 x2",
-      "speed": "174.2",
-      "toughness": "240",
-      "weakness": [
-        "物理",
-        "火",
-        "风",
-        "虚数"
-      ],
-      "resist": {
-        "火": "20%",
-        "冰": "20%",
-        "雷": "20%",
-        "量子": "20%"
-      },
-      "clears": 110,
-      "memoryBuff": "我方目标施放终结技或追加攻击后，记忆湍流获得层数；每个轮次开始时造成真实伤害。",
-      "bannerTone": "red"
-    },
-    {
-      "id": "murata-graphia",
-      "seasonId": "4.3",
-      "mode": "moc",
-      "name": "缪拉塔・创绘者",
-      "subtitle": "终局档案 / 下半",
-      "hp": "4,820,400 x2",
-      "speed": "158.4",
-      "toughness": "210",
-      "weakness": [
-        "冰",
-        "雷",
-        "量子"
-      ],
-      "resist": {
-        "物理": "20%",
-        "虚数": "20%"
-      },
-      "clears": 84,
-      "memoryBuff": "击破敌方弱点后提升全队伤害，持续至本轮结束。",
-      "bannerTone": "cyan"
-    },
-    {
-      "id": "zandar",
-      "seasonId": "4.3",
-      "mode": "pf",
-      "name": "赞达尔",
-      "subtitle": "虚构叙事 / 星级档案",
-      "hp": "60,929,632",
-      "speed": "---",
-      "toughness": "---",
-      "weakness": [
-        "火",
-        "冰",
-        "雷"
-      ],
-      "resist": {},
-      "clears": 73,
-      "memoryBuff": "敌方受到持续伤害后叠加档案计数，计数满时追加结算。",
-      "bannerTone": "amber"
-    },
-    {
-      "id": "starward-kafka",
-      "seasonId": "4.3",
-      "mode": "as",
-      "name": "星临卡芙卡",
-      "subtitle": "末日幻影 / 星临模式",
-      "hp": "8,420,000",
-      "speed": "190.0",
-      "toughness": "300",
-      "weakness": [
-        "物理",
-        "风",
-        "虚数"
-      ],
-      "resist": {
-        "雷": "40%"
-      },
-      "clears": 56,
-      "memoryBuff": "敌方行动后，我方获得额外击破效率；击破后重置行动条。",
-      "bannerTone": "green"
-    },
-    {
-      "id": "arbiter-omega",
-      "seasonId": "4.3",
-      "mode": "aa",
-      "name": "仲裁终端 Ω",
-      "subtitle": "异常仲裁 / 实验档案",
-      "hp": "12,000,000",
-      "speed": "166.0",
-      "toughness": "360",
-      "weakness": [
-        "火",
-        "量子",
-        "虚数"
-      ],
-      "resist": {
-        "冰": "30%",
-        "风": "30%"
-      },
-      "clears": 32,
-      "memoryBuff": "限定回合内击破核心可解除减益，并获得一次追加行动。",
-      "bannerTone": "cyan"
-    }
-  ],
+  "bosses": [],
   "units": [
     {
       "id": "march-7th",
@@ -1144,7 +1029,7 @@
       "element": "量子",
       "rarity": 5,
       "limited": true,
-      "release": null,
+      "release": 1784883600,
       "icon": "tohsakarin"
     },
     {
@@ -1156,7 +1041,7 @@
       "element": "雷",
       "rarity": 5,
       "limited": true,
-      "release": null,
+      "release": 1784883600,
       "icon": "gilgamesh"
     },
     {
@@ -1168,8 +1053,32 @@
       "element": "火",
       "rarity": 5,
       "limited": true,
-      "release": null,
+      "release": 1784106000,
       "icon": "himekonova"
+    },
+    {
+      "id": "robin-summeretto",
+      "sourceId": "1512",
+      "kind": "character",
+      "name": "知更鸟•晴歌",
+      "path": "记忆",
+      "element": "风",
+      "rarity": 5,
+      "limited": true,
+      "release": 1787734800,
+      "icon": "robinsummeretto"
+    },
+    {
+      "id": "aventurine-waveflair",
+      "sourceId": "1513",
+      "kind": "character",
+      "name": "砂金•戏浪",
+      "path": "欢愉",
+      "element": "量子",
+      "rarity": 5,
+      "limited": true,
+      "release": 1789203600,
+      "icon": "aventurinewaveflair"
     },
     {
       "id": "trailblazer-destruction-male",
@@ -2172,6 +2081,16 @@
       "atk": 529
     },
     {
+      "id": "a-little-getaway",
+      "sourceId": "21066",
+      "kind": "lightcone",
+      "name": "放个短假",
+      "path": "欢愉",
+      "rarity": 4,
+      "limited": false,
+      "atk": 423
+    },
+    {
       "id": "before-the-tutorial-mission-starts",
       "sourceId": "22000",
       "kind": "lightcone",
@@ -2247,6 +2166,16 @@
       "kind": "lightcone",
       "name": "未来，有我们一起",
       "path": "欢愉",
+      "rarity": 4,
+      "limited": false,
+      "atk": 476
+    },
+    {
+      "id": "race-to-the-horizon",
+      "sourceId": "22008",
+      "kind": "lightcone",
+      "name": "向着地平线的终点",
+      "path": "巡猎",
       "rarity": 4,
       "limited": false,
       "atk": 476
@@ -2870,6 +2799,26 @@
       "rarity": 5,
       "limited": true,
       "atk": 635
+    },
+    {
+      "id": "rise-and-sing",
+      "sourceId": "23063",
+      "kind": "lightcone",
+      "name": "你将起身歌唱",
+      "path": "记忆",
+      "rarity": 5,
+      "limited": true,
+      "atk": 582
+    },
+    {
+      "id": "summer-rides-the-surf",
+      "sourceId": "23064",
+      "kind": "lightcone",
+      "name": "向浪花掷下盛夏",
+      "path": "欢愉",
+      "rarity": 5,
+      "limited": true,
+      "atk": 582
     },
     {
       "id": "fall-of-aeon",

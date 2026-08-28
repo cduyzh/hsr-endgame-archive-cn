@@ -25,11 +25,6 @@ const router = createRouter({
       component: () => import("@/views/ArticlesView.vue"),
     },
     {
-      path: "/local-cache",
-      name: "local-cache",
-      component: () => import("@/views/LocalCacheView.vue"),
-    },
-    {
       path: "/faq",
       name: "faq",
       component: () => import("@/views/FaqView.vue"),

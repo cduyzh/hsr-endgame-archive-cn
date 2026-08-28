@@ -7,7 +7,7 @@ import { promisify } from "node:util"
 
 const execFileAsync = promisify(execFile)
 
-const DATA_VERSION = process.env.HSR_DATA_VERSION ?? "4.3.56"
+const DATA_VERSION = process.env.HSR_DATA_VERSION ?? "4.5"
 const ROOT = new URL("../", import.meta.url)
 const CONFIG_PATH = new URL("../src/data/seed/config.json", import.meta.url)
 const UNITS_PATH = new URL("../src/data/seed/hsr-units.json", import.meta.url)

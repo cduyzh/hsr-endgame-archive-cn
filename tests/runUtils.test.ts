@@ -1,13 +1,14 @@
 import { describe, expect, it } from "vitest"
-import { seedConfig, seedRuns } from "@/data/seed"
+import { seedConfig } from "@/data/seed"
 import { buildMetaStats, filterRuns } from "@/services/runUtils"
 import { getRunGoldCounts } from "@/services/unitCost"
 import type { ArchiveFilters, ArchiveRun, ArchiveUnit } from "@/types/archive"
+import { fixtureRuns } from "./fixtures/runs"
 
 const baseFilters: ArchiveFilters = {
-  seasonId: "4.3",
+  seasonId: "4.5",
   mode: "moc",
-  bossId: "flame-reaver",
+  bossId: "test-boss-moc",
   category: "all",
   teamSize: "all",
   cost: "all",
@@ -21,7 +22,7 @@ const baseFilters: ArchiveFilters = {
 
 describe("runUtils", () => {
   it("按模式、boss、分类和成本过滤记录", () => {
-    const runs = filterRuns(seedRuns, {
+    const runs = filterRuns(fixtureRuns, {
       ...baseFilters,
       category: "fullStars",
       cost: "17-32",
@@ -32,7 +33,7 @@ describe("runUtils", () => {
   })
 
   it("限定角色时只返回包含该角色的队伍", () => {
-    const runs = filterRuns(seedRuns, {
+    const runs = filterRuns(fixtureRuns, {
       ...baseFilters,
       selectedUnitIds: ["the-herta"],
     })
@@ -41,12 +42,12 @@ describe("runUtils", () => {
   })
 
   it("生成角色、光锥、组合和成本统计", () => {
-    const runs = filterRuns(seedRuns, baseFilters)
+    const runs = filterRuns(fixtureRuns, baseFilters)
     const stats = buildMetaStats(runs, seedConfig.units)
 
-    expect(stats.characterUsage[0]?.unit.name).toBe("开拓者・记忆")
+    expect(stats.characterUsage[0]?.unit.name).toBe("阮•梅")
     expect(stats.lightconeUsage.length).toBeGreaterThan(0)
-    expect(stats.teamCombos.length).toBe(2)
+    expect(stats.teamCombos.length).toBe(3)
     expect(stats.costBuckets.reduce((sum, bucket) => sum + bucket.count, 0)).toBe(runs.length)
   })
 
@@ -59,7 +60,7 @@ describe("runUtils", () => {
       { id: "gallagher", kind: "character", name: "加拉赫", path: "丰饶", element: "火", rarity: 4, limited: false },
     ]
     const run = {
-      ...seedRuns[0],
+      ...fixtureRuns[0],
       units: units.map((unit) => ({ unitId: unit.id, eidolon: 0 })),
     } as ArchiveRun
 

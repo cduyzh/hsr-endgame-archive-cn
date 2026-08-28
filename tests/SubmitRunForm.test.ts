@@ -1,10 +1,11 @@
 import { mount } from "@vue/test-utils"
 import { describe, expect, it } from "vitest"
 import SubmitRunForm from "@/components/archive/SubmitRunForm.vue"
-import { seedConfig, seedRuns } from "@/data/seed"
+import { seedConfig } from "@/data/seed"
 import { buildPreferredLightconeByCharacter } from "@/services/submissionUtils"
+import { fixtureRuns } from "./fixtures/runs"
 
-const preferredLightconeByCharacter = buildPreferredLightconeByCharacter(seedRuns, seedConfig.units)
+const preferredLightconeByCharacter = buildPreferredLightconeByCharacter(fixtureRuns, seedConfig.units)
 
 describe("SubmitRunForm", () => {
   it("缺少必要字段时给出本地校验提示", async () => {

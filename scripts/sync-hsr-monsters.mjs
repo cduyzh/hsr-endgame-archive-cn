@@ -3,7 +3,7 @@ import { readFile, writeFile } from "node:fs/promises"
 import { fileURLToPath } from "node:url"
 import path from "node:path"
 
-const DATA_VERSION = process.env.HSR_DATA_VERSION ?? "4.3.56"
+const DATA_VERSION = process.env.HSR_DATA_VERSION ?? "4.5"
 const ROOT = new URL("../", import.meta.url)
 const MONSTER_SOURCE_PATH = new URL(`../public/local-cache/hsr/${DATA_VERSION}/monster.json`, import.meta.url)
 const MONSTERS_PATH = new URL("../src/data/seed/hsr-monsters.json", import.meta.url)

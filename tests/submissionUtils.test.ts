@@ -1,18 +1,19 @@
 import { describe, expect, it } from "vitest"
-import { seedConfig, seedRuns } from "@/data/seed"
+import { seedConfig } from "@/data/seed"
 import { buildPreferredLightconeByCharacter, submissionReviewToArchiveRun } from "@/services/submissionUtils"
 import type { SubmissionReview } from "@/types/archive"
+import { fixtureRuns } from "./fixtures/runs"
 
 describe("submissionUtils", () => {
   it("根据已收录记录的同槽位搭配生成角色常用光锥映射", () => {
-    const preferred = buildPreferredLightconeByCharacter(seedRuns, seedConfig.units)
+    const preferred = buildPreferredLightconeByCharacter(fixtureRuns, seedConfig.units)
 
     expect(preferred.acheron).toBe("whereabouts")
     expect(preferred["the-herta"]).toBe("before-dawn")
   })
 
   it("把已通过投稿转换为可公开展示的档案记录", () => {
-    const source = seedRuns[0]
+    const source = fixtureRuns[0]
     const review: SubmissionReview = {
       id: "sub_test",
       status: "approved",

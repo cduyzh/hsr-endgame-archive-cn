@@ -1,17 +1,50 @@
 import { describe, expect, it } from "vitest"
 import { seedConfig } from "@/data/seed"
 import { mergeStaticArchiveConfig, type StaticArchiveSnapshot } from "@/services/staticArchiveConfig"
-import type { ArchiveConfig } from "@/types/archive"
+import type { ArchiveConfig, BossStage } from "@/types/archive"
 
 function cloneSeedConfig(): ArchiveConfig {
-  return structuredClone(seedConfig) as ArchiveConfig
+  const config = structuredClone(seedConfig) as ArchiveConfig
+  config.bosses = [
+    {
+      id: "flame-reaver",
+      seasonId: "4.5",
+      mode: "moc",
+      name: "焚焰掠影",
+      subtitle: "终局档案 / 上半",
+      hp: "5,900,767 x2",
+      speed: "174.2",
+      toughness: "240",
+      weakness: ["物理", "火", "风", "虚数"],
+      resist: { 火: "20%", 冰: "20%", 雷: "20%", 量子: "20%" },
+      clears: 0,
+      memoryBuff: "",
+      bannerTone: "red",
+    },
+    {
+      id: "murata-graphia",
+      seasonId: "4.5",
+      mode: "moc",
+      name: "缪拉塔・创绘者",
+      subtitle: "终局档案 / 下半",
+      hp: "4,820,400 x2",
+      speed: "158.4",
+      toughness: "210",
+      weakness: ["冰", "雷", "量子"],
+      resist: { 物理: "20%", 虚数: "20%" },
+      clears: 0,
+      memoryBuff: "",
+      bannerTone: "cyan",
+    },
+  ] as BossStage[]
+  return config
 }
 
 describe("staticArchiveConfig", () => {
   it("用静态镜像快照覆盖当前赛季和当前敌方阶段标签", () => {
     const snapshot: StaticArchiveSnapshot = {
-      liveVersion: "4.3",
-      cacheVersion: "4.3.56",
+      liveVersion: "4.5",
+      cacheVersion: "4.5.51",
       seasons: {
         moc: "扫除风暴",
       },
@@ -50,7 +83,7 @@ describe("staticArchiveConfig", () => {
 
     const config = mergeStaticArchiveConfig(cloneSeedConfig(), snapshot)
 
-    expect(config.seasons.find((season) => season.isCurrent)?.label).toBe("4.3 当前期")
+    expect(config.seasons.find((season) => season.isCurrent)?.label).toBe("4.5 当前期")
     expect(config.bosses.find((boss) => boss.id === "flame-reaver")).toMatchObject({
       name: "蛮神，疯王，纷争的化身",
       subtitle: "混沌回忆 / 扫除风暴其十二 / 上半",
