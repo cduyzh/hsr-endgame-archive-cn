@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from "vue"
+import { computed, shallowRef } from "vue"
 import { Filter, Search, SlidersHorizontal } from "lucide-vue-next"
 import type {
   ArchiveFilters,
@@ -48,6 +48,40 @@ const flagOptions = ["无复活", "低成本", "手操", "稳定", "击破", "�
 const selectedLabel = computed(() =>
   props.selectedUnits.length === 0 ? "未限定角色或光锥" : props.selectedUnits.map((unit) => unit.name).join("、"),
 )
+
+const failedThumbs = shallowRef(new Set<string>())
+
+function showStageThumb(boss: BossStage): boolean {
+  return Boolean(boss.imageUrl) && !failedThumbs.value.has(boss.imageUrl ?? "")
+}
+
+function markStageThumbFailed(boss: BossStage) {
+  if (!boss.imageUrl) return
+  failedThumbs.value = new Set(failedThumbs.value).add(boss.imageUrl)
+}
+
+const stageBadgeLabels: Record<string, string> = {
+  top: "上半",
+  bottom: "下半",
+  starward: "星临",
+  k1: "K1",
+  k2: "K2",
+  k3: "K3",
+  checkmate: "将杀",
+  plight: "绝境",
+}
+
+function stageBadge(boss: BossStage): string | undefined {
+  const key = boss.id.split("-").pop() ?? ""
+  const label = stageBadgeLabels[key]
+  // 上游未定名时阶段名会退回标签本身，避免徽标与标题重复
+  return label && label !== boss.name ? label : undefined
+}
+
+function stageHint(boss: BossStage): string {
+  // 虚构叙事的每季额外缩放系数未公开，没有 hp 时退回速度
+  return boss.hp || (boss.speed ? `速度 ${boss.speed}` : "")
+}
 </script>
 
 <template>
@@ -110,12 +144,36 @@ const selectedLabel = computed(() =>
       <button
         v-for="boss in bosses"
         :key="boss.id"
-        class="wide-option"
+        class="wide-option stage-option"
         :class="{ active: filters.bossId === boss.id }"
         type="button"
+        :title="boss.subtitle"
         @click="emit('patchFilter', { bossId: boss.id })"
       >
-        {{ boss.name }}
+        <img
+          v-if="showStageThumb(boss)"
+          class="stage-thumb"
+          :src="boss.imageUrl"
+          :alt="boss.imageAlt ?? `${boss.name} 敌方图片`"
+          loading="lazy"
+          decoding="async"
+          @error="markStageThumbFailed(boss)"
+        >
+        <span
+          v-else
+          class="stage-sigil"
+          aria-hidden="true"
+        >{{ boss.name.slice(0, 1) }}</span>
+        <span class="stage-copy">
+          <span class="stage-title">
+            <em
+              v-if="stageBadge(boss)"
+              class="stage-badge"
+            >{{ stageBadge(boss) }}</em>
+            {{ boss.name }}
+          </span>
+          <small v-if="stageHint(boss)">{{ stageHint(boss) }}</small>
+        </span>
       </button>
     </div>
 

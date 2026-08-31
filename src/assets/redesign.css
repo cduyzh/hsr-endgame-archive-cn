@@ -439,6 +439,79 @@ body {
   min-height: 40px;
 }
 
+.stage-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 7px 10px;
+  text-align: left;
+}
+
+.stage-thumb,
+.stage-sigil {
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
+  border-radius: 9px;
+}
+
+.stage-thumb {
+  object-fit: cover;
+  border: 1px solid rgba(160, 177, 220, 0.16);
+  background: rgba(4, 6, 12, 0.55);
+}
+
+.stage-sigil {
+  display: grid;
+  place-items: center;
+  background: rgba(120, 167, 255, 0.12);
+  color: #c9d8ff;
+  font-size: 15px;
+}
+
+.stage-copy {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.stage-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow: hidden;
+  color: #edf2ff;
+  font-size: 12px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.stage-badge {
+  flex: 0 0 auto;
+  padding: 1px 5px;
+  border: 1px solid rgba(120, 167, 255, 0.35);
+  border-radius: 6px;
+  background: rgba(120, 167, 255, 0.12);
+  color: #9ec2ff;
+  font-style: normal;
+  font-size: 9px;
+  letter-spacing: 0.04em;
+}
+
+.stage-copy small {
+  overflow: hidden;
+  color: var(--faint);
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 10px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.stage-option.active .stage-copy small {
+  color: #b8cdfa;
+}
+
 .search-trigger {
   width: 100%;
   border-color: rgba(120, 167, 255, 0.24);
@@ -729,9 +802,7 @@ body {
 .article-card,
 .faq-list article,
 .submit-form,
-.review-list,
-.datasource-card,
-.summary-card {
+.review-list {
   border-color: rgba(151, 174, 226, 0.16);
   background:
     linear-gradient(180deg, rgba(120, 167, 255, 0.035), transparent 120px),

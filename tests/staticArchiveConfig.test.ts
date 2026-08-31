@@ -1,112 +1,279 @@
-import { describe, expect, it } from "vitest"
+import { afterEach, describe, expect, it, vi } from "vitest"
 import { seedConfig } from "@/data/seed"
-import { mergeStaticArchiveConfig, type StaticArchiveSnapshot } from "@/services/staticArchiveConfig"
+import { fetchStaticArchiveSnapshot, mergeStaticArchiveConfig, type StaticArchiveSnapshot } from "@/services/staticArchiveConfig"
 import type { ArchiveConfig, BossStage } from "@/types/archive"
 
 function cloneSeedConfig(): ArchiveConfig {
-  const config = structuredClone(seedConfig) as ArchiveConfig
-  config.bosses = [
-    {
-      id: "flame-reaver",
-      seasonId: "4.5",
-      mode: "moc",
-      name: "焚焰掠影",
-      subtitle: "终局档案 / 上半",
-      hp: "5,900,767 x2",
-      speed: "174.2",
-      toughness: "240",
-      weakness: ["物理", "火", "风", "虚数"],
-      resist: { 火: "20%", 冰: "20%", 雷: "20%", 量子: "20%" },
-      clears: 0,
-      memoryBuff: "",
-      bannerTone: "red",
-    },
-    {
-      id: "murata-graphia",
-      seasonId: "4.5",
-      mode: "moc",
-      name: "缪拉塔・创绘者",
-      subtitle: "终局档案 / 下半",
-      hp: "4,820,400 x2",
-      speed: "158.4",
-      toughness: "210",
-      weakness: ["冰", "雷", "量子"],
-      resist: { 物理: "20%", 虚数: "20%" },
-      clears: 0,
-      memoryBuff: "",
-      bannerTone: "cyan",
-    },
-  ] as BossStage[]
-  return config
+  return structuredClone(seedConfig) as ArchiveConfig
 }
 
-describe("staticArchiveConfig", () => {
-  it("用静态镜像快照覆盖当前赛季和当前敌方阶段标签", () => {
+const DATA_SITE = "https://static.nanoka.cc"
+
+const fixtureMonster = {
+  rank: "LittleBoss",
+  icon: "SpriteOutput/MonsterFigure/Monster_2034010.png",
+  child: [2034010],
+  weak: ["Physical", "Fire", "Wind"],
+  zh: "步离战首·呼雷",
+  en: "Borisin Warhead: Hoolay",
+}
+
+const fixtureFiles: Record<string, unknown> = {
+  [`${DATA_SITE}/manifest.json`]: {
+    hsr: { live: "4.5", latest: "4.5.51", available: ["4.4", "4.4.55", "4.5", "4.5.51"] },
+  },
+  [`${DATA_SITE}/hsr/4.5.51/monster.json`]: {
+    "2034010": fixtureMonster,
+    "1004010": {
+      rank: "Elite",
+      icon: "SpriteOutput/MonsterFigure/Monster_1004010.png",
+      child: [1004010],
+      weak: ["Ice", "Thunder"],
+      zh: "示例骑士",
+    },
+    "4035010": {
+      rank: "LittleBoss",
+      icon: "SpriteOutput/MonsterFigure/Monster_4035010.png",
+      child: [4035010],
+      weak: ["量子"],
+      zh: "示例王棋",
+    },
+  },
+  [`${DATA_SITE}/hsr/4.5.51/monstervalue.json`]: {
+    "2034010": {
+      HPBase: 1000,
+      SpeedBase: 200,
+      StanceBase: 720,
+      MaxMonsterPhase: 2,
+      child: [{ Id: 2034010, HPModifyRatio: 1, SpeedModifyRatio: 1, StanceModifyRatio: 1 }],
+    },
+    "1004010": {
+      HPBase: 1000,
+      SpeedBase: 100,
+      StanceBase: 360,
+      MaxMonsterPhase: 2,
+      child: [{ Id: 1004010, HPModifyRatio: 1, SpeedModifyRatio: 1, StanceModifyRatio: 1 }],
+    },
+    "4035010": {
+      HPBase: 1000,
+      SpeedBase: 120,
+      StanceBase: 720,
+      MaxMonsterPhase: 3,
+      child: [{ Id: 4035010, HPModifyRatio: 1, SpeedModifyRatio: 1, StanceModifyRatio: 1 }],
+    },
+  },
+  [`${DATA_SITE}/hsr/4.5.51/HardLevelGroup.json`]: {
+    "0": { HardLevelGroup: 3, Level: 95, HPRatio: 400, SpeedRatio: 1.32, StanceRatio: 1 },
+  },
+  [`${DATA_SITE}/hsr/4.5.51/EliteGroup.json`]: {
+    "0": { EliteGroup: 164, HPRatio: 2, SpeedRatio: 1, StanceRatio: 1 },
+  },
+  [`${DATA_SITE}/hsr/4.5.51/InfiniteEliteGroup.json`]: {
+    "0": { EliteGroup: 370, HPRatio: 3, SpeedRatio: 1, StanceRatio: 1 },
+  },
+  [`${DATA_SITE}/hsr/4.5.51/zh/peak/9.json`]: {
+    name: "军团再临",
+    pre_level: [
+      {
+        id: 901,
+        name: "骑士（一）",
+        event_id_list: [{ hard_level_group: 3, level: 95, monster_list: [{ monster0: 1004010 }] }],
+        infinite_list: { "9011": { elite_group: 370, monster_group_id_list: [1004010] } },
+      },
+    ],
+    boss_level: {
+      id: 904,
+      name: "将杀王棋",
+      damage_type: ["Ice"],
+      event_id_list: [
+        { hard_level_group: 3, level: 95, monster_list: [{ monster0: 1004010 }, { monster0: 1004010, monster1: 4035010 }] },
+      ],
+      infinite_list: { "9041": { elite_group: 1, monster_group_id_list: [4035010] } },
+    },
+    boss_config: {
+      hard_name: "将杀王棋•绝境",
+      event_id_list: [
+        { hard_level_group: 3, level: 95, monster_list: [{ monster0: 1004010, monster1: 4035010 }] },
+      ],
+      infinite_list: { "9051": { elite_group: 370, monster_group_id_list: [4035010] } },
+    },
+  },
+  [`${DATA_SITE}/hsr/4.5.51/zh/maze/1035.json`]: [
+    {
+      id: 5501,
+      name: "物竞天择其一",
+      group_name: "物竞天择",
+      npc_monster_id_list1: [2034010],
+      npc_monster_id_list2: [2034010],
+      damage_type1: ["Physical"],
+      damage_type2: ["Fire"],
+      event_id_list1: [
+        {
+          hard_level_group: 3,
+          level: 95,
+          elite_group: 164,
+          monster_list: [{ monster0: 1001010 }, { monster0: 2034010 }],
+        },
+      ],
+      event_id_list2: [
+        {
+          hard_level_group: 3,
+          level: 95,
+          elite_group: 164,
+          monster_list: [{ monster0: 2034010 }],
+        },
+      ],
+    },
+    {
+      id: 5513,
+      pre_id: 5501,
+      npc_monster_id_list: [2034010],
+      event_id_list: [
+        {
+          hard_level_group: 3,
+          level: 95,
+          monster_list: [{ monster0: 2034010 }],
+        },
+      ],
+    },
+  ],
+}
+
+function stubFetch() {
+  const fetchMock = vi.fn(async (input: RequestInfo | URL) => {
+    const url = String(input)
+    if (url in fixtureFiles) {
+      return { ok: true, json: async () => fixtureFiles[url] } as unknown as Response
+    }
+    return { ok: false, status: 404, json: async () => ({}) } as unknown as Response
+  })
+  vi.stubGlobal("fetch", fetchMock)
+  return fetchMock
+}
+
+afterEach(() => {
+  vi.unstubAllGlobals()
+})
+
+describe("fetchStaticArchiveSnapshot", () => {
+  it("按 manifest 选取 4.4/4.5 数据目录并生成敌方阶段", async () => {
+    stubFetch()
+
+    const snapshot = await fetchStaticArchiveSnapshot()
+
+    expect(snapshot?.liveVersion).toBe("4.5")
+    expect(snapshot?.bosses.map((boss) => boss.id)).toEqual([
+      "4.5-moc-top",
+      "4.5-moc-bottom",
+      "4.5-moc-starward",
+      "4.5-aa-k1",
+      "4.5-aa-checkmate",
+      "4.5-aa-plight",
+    ])
+
+    const top = snapshot?.bosses.find((boss) => boss.id === "4.5-moc-top")
+    expect(top).toMatchObject({
+      seasonId: "4.5",
+      mode: "moc",
+      name: "步离战首·呼雷",
+      subtitle: "混沌回忆 / 物竞天择 / 上半",
+      hp: "800,000 x2",
+      speed: "264",
+      toughness: "720",
+      weakness: ["物理"],
+      imageUrl: `${DATA_SITE}/assets/hsr/monstermiddleicon/Monster_2034010.webp`,
+    })
+    expect(top?.monsters?.[0]).toMatchObject({ id: "2034010", name: "步离战首·呼雷" })
+
+    const starward = snapshot?.bosses.find((boss) => boss.id === "4.5-moc-starward")
+    expect(starward?.hp).toBe("400,000 x2")
+    expect(starward?.weakness).toEqual(["物理", "火", "风"])
+
+    const knight = snapshot?.bosses.find((boss) => boss.id === "4.5-aa-k1")
+    expect(knight).toMatchObject({ name: "示例骑士", hp: "1,200,000 x2", weakness: ["冰", "雷"] })
+
+    const checkmate = snapshot?.bosses.find((boss) => boss.id === "4.5-aa-checkmate")
+    expect(checkmate).toMatchObject({ name: "示例王棋", hp: "400,000 x3", weakness: ["冰"] })
+
+    const plight = snapshot?.bosses.find((boss) => boss.id === "4.5-aa-plight")
+    expect(plight).toMatchObject({ name: "示例王棋（绝境）", hp: "1,200,000 x3" })
+  })
+
+  it("远程数据源不可用时返回 null", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => ({ ok: false, status: 500, json: async () => ({}) }) as unknown as Response),
+    )
+
+    expect(await fetchStaticArchiveSnapshot()).toBeNull()
+  })
+})
+
+function makeGeneratedBoss(id: string, seasonId = "4.5"): BossStage {
+  return {
+    id,
+    seasonId,
+    mode: "moc",
+    name: "步离战首·呼雷",
+    subtitle: "混沌回忆 / 物竞天择 / 上半",
+    hp: "800,000 x2",
+    speed: "264",
+    toughness: "720",
+    weakness: ["物理"],
+    resist: {},
+    clears: 0,
+    memoryBuff: "",
+    bannerTone: "red",
+  }
+}
+
+describe("mergeStaticArchiveConfig", () => {
+  it("为缺失的 id 补充生成的敌方阶段", () => {
+    const config = cloneSeedConfig()
     const snapshot: StaticArchiveSnapshot = {
       liveVersion: "4.5",
-      cacheVersion: "4.5.51",
-      seasons: {
-        moc: "扫除风暴",
-      },
-      phases: {
-        moc: [
-          {
-            name: "蛮神，疯王，纷争的化身",
-            subtitle: "混沌回忆 / 扫除风暴其十二 / 上半",
-            weakness: ["雷", "量子"],
-            memoryBuff: "每个轮开始时，随机使1名我方目标立即行动。",
-            imageUrl: "/assets/hsr/monsters/Monster_4014010.webp",
-            imageAlt: "蛮神，疯王，纷争的化身 敌方图片",
-            monsters: [
-              {
-                id: "4014010",
-                name: "蛮神，疯王，纷争的化身",
-                rank: "LittleBoss",
-                imageUrl: "/assets/hsr/monsters/Monster_4014010.webp",
-                imageAlt: "蛮神，疯王，纷争的化身 敌方图片",
-                weakness: ["冰", "雷", "量子"],
-                description: "泰坦",
-              },
-            ],
-          },
-          {
-            name: "至上巨擘",
-            subtitle: "混沌回忆 / 扫除风暴其十二 / 下半",
-            weakness: ["火", "虚数"],
-            memoryBuff: "每个轮开始时，随机使1名我方目标立即行动。",
-            imageUrl: "/assets/hsr/monsters/Monster_3003030.webp",
-            imageAlt: "至上巨擘 敌方图片",
-          },
-        ],
-      },
+      bosses: [makeGeneratedBoss("4.5-moc-top"), makeGeneratedBoss("4.5-moc-bottom")],
     }
 
-    const config = mergeStaticArchiveConfig(cloneSeedConfig(), snapshot)
+    const merged = mergeStaticArchiveConfig(config, snapshot)
 
-    expect(config.seasons.find((season) => season.isCurrent)?.label).toBe("4.5 当前期")
-    expect(config.bosses.find((boss) => boss.id === "flame-reaver")).toMatchObject({
-      name: "蛮神，疯王，纷争的化身",
-      subtitle: "混沌回忆 / 扫除风暴其十二 / 上半",
-      weakness: ["雷", "量子"],
-      imageUrl: "/assets/hsr/monsters/Monster_4014010.webp",
-      monsters: expect.arrayContaining([
-        expect.objectContaining({
-          id: "4014010",
-          name: "蛮神，疯王，纷争的化身",
-          imageUrl: "/assets/hsr/monsters/Monster_4014010.webp",
-        }),
-      ]),
-    })
-    expect(config.bosses.find((boss) => boss.id === "murata-graphia")).toMatchObject({
-      name: "至上巨擘",
-      subtitle: "混沌回忆 / 扫除风暴其十二 / 下半",
-      weakness: ["火", "虚数"],
-    })
+    expect(merged.bosses.map((boss) => boss.id)).toEqual(["4.5-moc-top", "4.5-moc-bottom"])
+    expect(merged.seasons).toEqual(config.seasons)
+  })
+
+  it("保留业务数据库中已存在的同 id 阶段，不重复生成", () => {
+    const config = cloneSeedConfig()
+    const existing = makeGeneratedBoss("4.5-moc-top")
+    existing.name = "数据库中的名称"
+    config.bosses = [existing]
+
+    const snapshot: StaticArchiveSnapshot = {
+      liveVersion: "4.5",
+      bosses: [makeGeneratedBoss("4.5-moc-top"), makeGeneratedBoss("4.5-moc-bottom")],
+    }
+
+    const merged = mergeStaticArchiveConfig(config, snapshot)
+
+    expect(merged.bosses).toHaveLength(2)
+    expect(merged.bosses.find((boss) => boss.id === "4.5-moc-top")?.name).toBe("数据库中的名称")
+  })
+
+  it("为快照中新出现的赛季补充赛季条目", () => {
+    const config = cloneSeedConfig()
+    const snapshot: StaticArchiveSnapshot = {
+      liveVersion: "4.5",
+      bosses: [makeGeneratedBoss("4.3-moc-top", "4.3")],
+    }
+
+    const merged = mergeStaticArchiveConfig(config, snapshot)
+
+    expect(merged.seasons).toContainEqual({ id: "4.3", label: "4.3 归档", isCurrent: false })
   })
 
   it("静态镜像不可用时保留 seed 配置", () => {
     const config = cloneSeedConfig()
 
     expect(mergeStaticArchiveConfig(config, null)).toEqual(config)
+    expect(mergeStaticArchiveConfig(config, { liveVersion: "4.5", bosses: [] })).toEqual(config)
   })
 })
