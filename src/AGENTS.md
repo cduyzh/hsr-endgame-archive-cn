@@ -26,8 +26,6 @@
 
 `router/index.ts` 当前注册 5 条路由：`/`(archive)、`/submit`、`/admin/submissions`、`/articles`、`/faq`。首页 `ArchiveView` 同步引入，其余懒加载。
 
-- `src/views/LocalCacheView.vue` **未在路由中注册**，是远程直连改造前的遗留页面。不要为它添加路由，除非用户明确要求恢复；需要清理时先与用户确认。
-
 ## 类型与数据流约定
 
 - 所有领域类型集中在 `types/archive.ts`（`ArchiveConfig`、`ArchiveRun`、`BossStage`、`ArchiveFilters`、`MetaStats`、`SubmissionPayload` 等）。新增字段先改类型，再顺着 `services → composables → views` 传递，不要在组件里散落重复结构。

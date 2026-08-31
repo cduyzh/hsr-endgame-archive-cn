@@ -1,11 +1,10 @@
 /* global process */
-import { readFile, writeFile } from "node:fs/promises"
+import { writeFile } from "node:fs/promises"
 import { fileURLToPath } from "node:url"
 import path from "node:path"
 
 const DATA_VERSION = process.env.HSR_DATA_VERSION ?? "4.5"
 const ROOT = new URL("../", import.meta.url)
-const MONSTER_SOURCE_PATH = new URL(`../public/local-cache/hsr/${DATA_VERSION}/monster.json`, import.meta.url)
 const MONSTERS_PATH = new URL("../src/data/seed/hsr-monsters.json", import.meta.url)
 
 const SOURCE = {
@@ -25,7 +24,7 @@ const ELEMENT_LABELS = {
 }
 
 async function main() {
-  const monsters = await readJson(MONSTER_SOURCE_PATH)
+  const monsters = await fetchJson(SOURCE.monsterData)
   const normalized = Object.entries(monsters).map(([sourceId, source]) => normalizeMonster(sourceId, source))
   const imageIds = [...new Set(normalized.map((monster) => monster.imageId))].sort((a, b) => Number(a) - Number(b))
 
@@ -45,8 +44,10 @@ async function main() {
   console.log(`updated ${path.relative(fileURLPath(ROOT), fileURLPath(MONSTERS_PATH))}`)
 }
 
-async function readJson(url) {
-  return JSON.parse(await readFile(url, "utf8"))
+async function fetchJson(url) {
+  const response = await fetch(url)
+  if (!response.ok) throw new Error(`抓取 ${url} 失败：HTTP ${response.status}`)
+  return response.json()
 }
 
 async function writeJson(url, data) {

@@ -78,10 +78,10 @@ Netlify 构建环境固定使用 Node 24；业务 API redirects、Functions 目�
 项目目前有两条数据线，需要分开理解：
 
 1. **竞速档案业务数据**  
-   前端通过 `src/services/archiveService.ts` 请求 `/api/archive/config`、`/api/archive/runs`、`/api/archive/stats` 和 `/api/submissions`。Netlify Functions 若配置了 `NETLIFY_DATABASE_URL`、`DATABASE_URL` 或 `POSTGRES_URL`，会读取 Postgres；否则使用 `src/data/seed/` 中的种子数据。
+   前端通过 `src/services/archiveService.ts` 请求 `/api/archive/config`、`/api/archive/runs`、`/api/archive/stats` 和 `/api/submissions`。Netlify Functions 若配置了 `NETLIFY_DATABASE_URL`、`DATABASE_URL` 或 `POSTGRES_URL`，会读取 Postgres；否则使用 `src/data/seed/` 中的种子数据。请求失败时前端静默回退 seed，保证无数据库环境不白屏。
 
-2. **HSR 终局静态镜像数据**  
-   `public/local-cache/` 是从 `/Users/hobby/gitlab-source/hsr-endgame-膨胀变化` 同步来的 HSR 终局静态 JSON 快照。档案工作台会在读取 `/api/archive/config` 或 seed fallback 后，用 `manifest.json`、`cache-plan.json` 和当前期详情补全当前赛季与敌方阶段标签；静态镜像读取失败时仍保留原业务配置。其他页面也可以通过 `/local-cache/*` 读取这批数据。
+2. **HSR 终局静态数据（远程直连）**  
+   所有游戏 JSON 与图片均直连 `https://static.nanoka.cc`（已开放 CORS），仓库不落盘、不随构建发布。地址与图片路径集中在 `src/services/dataSource.ts`；`src/services/staticArchiveConfig.ts` 在运行时读取 `manifest.json`、`monster.json` 及各模式索引/详情，推导当前赛季与敌方阶段，并合并进 `/api/archive/config` 的结果。静态读取失败时保留业务配置，不会白屏。
 
 数据库表结构见 `netlify/schema.sql`。访问 `/admin/submissions` 会先显示管理员登录弹框，生产环境建议配置：
 
@@ -91,6 +91,8 @@ ADMIN_REVIEW_PASSWORD=请替换为强密码
 ```
 
 为兼容旧部署，未配置 `ADMIN_REVIEW_PASSWORD` 时仍会把 `ADMIN_REVIEW_TOKEN` 当作管理员密码；未配置 `ADMIN_REVIEW_USERNAME` 时账号默认为 `admin`。审核台支持待审核、已通过、已驳回和全部记录筛选。投稿通过后会写入公开档案，之后改为驳回或退回待审会从公开档案隐藏。
+
+> ⚠️ 未配置任何管理员密码环境变量时，服务端 `requireAdmin` 不会拦截。生产务必设置 `ADMIN_REVIEW_PASSWORD`。
 
 ## API 路由
 
@@ -105,27 +107,21 @@ ADMIN_REVIEW_PASSWORD=请替换为强密码
 | `/api/admin/submissions`     | `admin-submissions`    | 管理员读取投稿审核列表                     |
 | `/api/admin/submissions/:id` | `admin-submissions-id` | 审核入口                                   |
 
-## `public/local-cache` 如何使用
+## 静态数据源（远程直连）
 
-`public/` 下的文件会被 Vite 原样复制到构建产物根目录。源码中的 `public/local-cache/...` 部署后可通过 `/local-cache/...` 访问。
-
-当前快照版本为 `4.3.56`，共 110 个 JSON 文件，与参考项目 `/Users/hobby/gitlab-source/hsr-endgame-膨胀变化/public/local-cache` 一致。
+统一数据源 `https://static.nanoka.cc`（已开放跨域）。所有数据与图片直连读取，仓库不保留本地副本，也不随构建发布。前端访问的都是数据源绝对地址（无 `/local-cache` 前缀）。
 
 ```text
-public/local-cache/
+https://static.nanoka.cc/
 ├── manifest.json
+├── assets/hsr/
+│   ├── avatarshopicon/{sourceId}.webp          # 角色头像
+│   ├── lightconemediumicon/{sourceId}.webp     # 光锥图片
+│   ├── monstermiddleicon/Monster_{id}.webp     # 怪物中图
+│   └── pathicon/{id}.webp                      # 命途图标
 └── hsr/<ver>/
     ├── monster.json
-    ├── monstervalue.json
-    ├── HardLevelGroup.json
-    ├── EliteGroup.json
-    ├── InfiniteEliteGroup.json
-    ├── maze.json
-    ├── maze_extra.json
-    ├── maze_boss.json
-    ├── maze_peak.json
-    ├── cache-plan.json
-    ├── moc-phase-hp-audit.json
+    ├── maze.json / maze_extra.json / maze_boss.json / maze_peak.json
     └── <locale>/
         ├── maze/<id>.json
         ├── story/<id>.json
@@ -133,90 +129,43 @@ public/local-cache/
         └── peak/<id>.json
 ```
 
-核心入口：
+业务终局模式 `EndgameMode` 为 `moc / pf / as / aa`（混沌回忆 / 虚构叙事 / 末日幻影 / 异常仲裁），与静态数据源的模式映射如下：
 
-- `manifest.json`：上游版本索引；HSR 默认版本读取 `manifest.hsr.latest`。
-- `cache-plan.json`：本次落盘计划，记录 `version`、`locale`、`currentSeasonIds`、`cachedSeasonIds` 和 `listFiles`。
-- `maze.json`：忘却之庭期数索引。
-- `maze_extra.json`：虚构叙事期数索引。
-- `maze_boss.json`：末日幻影期数索引。
-- `maze_peak.json`：异相仲裁期数索引。
-- `monster.json`、`monstervalue.json`、`HardLevelGroup.json`、`EliteGroup.json`、`InfiniteEliteGroup.json`：复算怪物 HP 所需的基础表。
-- `moc-phase-hp-audit.json`：忘却之庭多阶段 HP 命中审计。
+| 业务模式 | 静态模式  | 期数索引          | 单期详情目录               |
+| -------- | --------- | ----------------- | -------------------------- |
+| `moc`    | `moc`     | `maze.json`       | `<locale>/maze/<id>.json`  |
+| `pf`     | `fiction` | `maze_extra.json` | `<locale>/story/<id>.json` |
+| `as`     | `doom`    | `maze_boss.json`  | `<locale>/boss/<id>.json`  |
+| `aa`     | `peak`    | `maze_peak.json`  | `<locale>/peak/<id>.json`  |
 
-模式与文件映射：
+当前赛季由各模式索引文件中的最大 `seasonId` 实时推导（远程不提供 `cache-plan.json`，不依赖本地缓存）。静态数据只覆盖当前赛季的展示字段（名称、弱点、记忆祝福、敌方图等）；记录筛选用的 `seasonId`、`bossId` 仍保持业务配置中的稳定 id，避免已有 seed 或数据库记录失配。
 
-| 模式      | 期数索引          | 单期详情目录               | 中文名   |
-| --------- | ----------------- | -------------------------- | -------- |
-| `moc`     | `maze.json`       | `<locale>/maze/<id>.json`  | 忘却之庭 |
-| `fiction` | `maze_extra.json` | `<locale>/story/<id>.json` | 虚构叙事 |
-| `doom`    | `maze_boss.json`  | `<locale>/boss/<id>.json`  | 末日幻影 |
-| `peak`    | `maze_peak.json`  | `<locale>/peak/<id>.json`  | 异相仲裁 |
+怪物图片统一经 `dataSource.ts` 的 `monsterImageUrl()` 生成，9 位实例怪物 id 自动回退到基础 id。HP 相关逻辑需考虑 `monstervalue.json` 的 `PhaseList.phase_max_hp_ratio`，不能只用单段 `HPBase`。
 
-示例读取：
+## 数据更新流程
 
-```ts
-const root = "/local-cache";
-const manifest = await fetch(`${root}/manifest.json`).then((res) => res.json());
-const version = manifest.hsr.latest;
-const locale = "zh";
-
-const plan = await fetch(`${root}/hsr/${version}/cache-plan.json`).then((res) =>
-  res.json(),
-);
-const mocList = await fetch(`${root}/hsr/${version}/maze.json`).then((res) =>
-  res.json(),
-);
-const latestMocId = plan.currentSeasonIds.moc;
-const latestMocDetail = await fetch(
-  `${root}/hsr/${version}/${locale}/maze/${latestMocId}.json`,
-).then((res) => res.json());
-```
-
-档案工作台接入点：
-
-- `src/services/archiveService.ts` 仍先读取 `/api/archive/config`，失败时回退 `src/data/seed/config.json`。
-- `src/services/staticArchiveConfig.ts` 再读取 `/local-cache/manifest.json`、`/local-cache/hsr/<ver>/cache-plan.json`、`monster.json` 和 `currentSeasonIds` 指向的详情文件。
-- 静态数据只覆盖当前赛季 label、当前敌方阶段 name/subtitle/weakness/memoryBuff；记录筛选使用的 `seasonId`、`bossId` 仍保持业务配置中的稳定 id，避免已有 seed 或数据库记录失配。
-
-最小验证：
+同步脚本仅更新 `src/data/seed/` 下的种子数据，直连远程抓取，不下载图片：
 
 ```bash
-pnpm test:unit -- tests/staticArchiveConfig.test.ts
-pnpm typecheck
+# 同步怪物元数据（名称、弱点、图片 id 等）
+pnpm sync:monsters
+
+# 同步角色/光锥元数据
+pnpm sync:units
 ```
 
-页面验证可启动 `pnpm dev` 后打开 `http://localhost:32200/`，确认赛季下拉显示当前版本，敌方阶段按钮来自 `cache-plan.json` 当前期详情；临时移走或阻断 `public/local-cache` 时，工作台应继续显示 seed 配置而不是白屏。
-
-## `public/local-cache` 如何更新
-
-当前竞速项目没有内置 `sync:data` 脚本。更新这批文件时，优先以参考项目为数据生成源：
+数据版本由环境变量 `HSR_DATA_VERSION` 控制（默认 `4.5`）。把 `config.json` 灌入/同步到数据库：
 
 ```bash
-cd /Users/hobby/gitlab-source/hsr-endgame-膨胀变化
-pnpm sync:data
-
-# 可指定版本、语言和赛季 id
-pnpm sync:data -- --ver 4.3.56 --moc 1033,1032 --peak 8
-
-# 可单独重跑忘却之庭多阶段 HP 审计
-pnpm audit:moc-phase-hp -- --ver 4.3.56
+pnpm seed:archive            # 实际写入
+pnpm seed:archive -- --dry-run
 ```
 
-生成后，将参考项目的 `public/local-cache/` 同步到本项目同名目录，并确认目录结构和 `cache-plan.json` 一起更新。
+更新后检查：
 
 ```bash
-rsync -a --delete \
-  /Users/hobby/gitlab-source/hsr-endgame-膨胀变化/public/local-cache/ \
-  /Users/hobby/Documents/hsr-endgame-竞速/public/local-cache/
+pnpm build
 ```
-
-更新约束：
-
-- 不要手写或局部拼接上游详情 JSON；详情文件应保持 `static.nanoka.cc` 原始结构。
-- 不要随意重命名索引文件和详情目录，路径可被下游按 `/local-cache/hsr/<ver>/...` 直接读取。
-- 如果后续让竞速项目独立生成数据，应把参考项目的 `scripts/sync-local-cache.js` 与 `scripts/audit-moc-phase-hp.js` 成对迁移，并在 `package.json` 中补 `sync:data` / `audit:moc-phase-hp`。
-- 多阶段敌人的真实 HP 需要考虑 `monstervalue.json` 中 `PhaseList.phase_max_hp_ratio` 的总和，不能只看单段 `HPBase`。
 
 ## 项目结构
 
@@ -226,27 +175,49 @@ src/
 ├── main.ts
 ├── router/
 ├── assets/
-├── components/archive/
-│   ├── ArchiveWorkbench.vue
-│   ├── BossPanel.vue
-│   ├── MetaReportPanel.vue
-│   ├── ModeSeasonFilter.vue
-│   ├── RunGroupList.vue
-│   ├── SubmitRunForm.vue
-│   └── UnitPickerDrawer.vue
+├── components/
+│   ├── admin/
+│   │   ├── AdminLoginDialog.vue
+│   │   └── AdminSubmissionCard.vue
+│   └── archive/
+│       ├── ArchiveDispatchPanel.vue
+│       ├── ArchiveWorkbench.vue
+│       ├── BossPanel.vue
+│       ├── MetaReportPanel.vue
+│       ├── ModeSeasonFilter.vue
+│       ├── RunGroupList.vue
+│       ├── SubmissionTeamSlot.vue
+│       ├── SubmitRunForm.vue
+│       ├── UnitPickerDrawer.vue
+│       └── UnitSearchSelect.vue
 ├── composables/
+│   ├── useAdminSubmissions.ts
 │   ├── useArchiveFilters.ts
 │   ├── useMetaStats.ts
 │   └── useRunsQuery.ts
-├── data/seed/
+├── data/
+│   ├── seed/
+│   ├── unitAssets.ts
+│   └── unitPaths.ts
 ├── services/
+│   ├── archiveService.ts
+│   ├── dataSource.ts
+│   ├── runUtils.ts
+│   ├── staticArchiveConfig.ts
+│   ├── submissionUtils.ts
+│   └── unitCost.ts
 ├── stores/
 ├── types/
 └── views/
+    ├── AdminSubmissionsView.vue
+    ├── ArchiveView.vue
+    ├── ArticlesView.vue
+    ├── FaqView.vue
+    └── SubmitView.vue
 ```
 
 ## 资源策略
 
-`scripts/reference-inventory.mjs` 只生成参考观察清单，不下载 The Genius Archive 资源。当前角色与光锥图片取自 nanoka HSR 数据站，来源接口为 `https://static.nanoka.cc/hsr/4.3.56/character.json` 与 `https://static.nanoka.cc/hsr/4.3.56/lightcone.json`，图片落在 `public/assets/hsr/units/`，映射见 `src/data/unitAssets.ts`。后续补图标、角色图、光锥图或 boss 图时，必须确认资源授权，不能直接复制未确认授权的参考站文件。
+`scripts/reference-inventory.mjs` 只生成参考观察清单，不下载 The Genius Archive 资源。角色、光锥、怪物与命途图片均直连 `static.nanoka.cc`（如 `https://static.nanoka.cc/hsr/4.5/character.json`、`lightcone.json` 提供 `sourceId` 映射，见 `src/data/unitAssets.ts`），不再把图片落盘到 `public/`。补充角色图、光锥图、boss 图或文章封面前，必须确认来源和授权，不能直接复制未确认授权的参考站文件。
 
 更多协作约定见 [AGENTS.md](./AGENTS.md)。
