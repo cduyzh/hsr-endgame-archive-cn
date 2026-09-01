@@ -10,6 +10,7 @@ import type {
   SubmissionReviewStatus,
 } from "@/types/archive"
 import { buildMetaStats, filterRuns } from "@/services/runUtils"
+import { submissionFieldLabels, type SubmissionField } from "@/services/submissionValidation"
 import { fetchStaticArchiveSnapshot, mergeStaticArchiveConfig } from "@/services/staticArchiveConfig"
 
 const API_BASE = import.meta.env.VITE_API_BASE ?? ""
@@ -70,10 +71,20 @@ export async function submitRun(payload: SubmissionPayload): Promise<{ id: strin
   })
 
   if (!response.ok) {
-    throw new Error("提交失败，请稍后重试或联系管理员。")
+    throw new Error(await describeSubmissionFailure(response))
   }
 
   return (await response.json()) as { id: string; status: string }
+}
+
+async function describeSubmissionFailure(response: Response) {
+  const body = (await response.json().catch(() => null)) as { message?: string; missing?: string[] } | null
+  const missing = Array.isArray(body?.missing)
+    ? body.missing.map((field) => submissionFieldLabels[field as SubmissionField] ?? field)
+    : []
+
+  if (missing.length > 0) return `缺少必要字段：${missing.join("、")}。`
+  return body?.message || "提交失败，请稍后重试或联系管理员。"
 }
 
 function encodeBasicCredentials(username: string, password: string) {

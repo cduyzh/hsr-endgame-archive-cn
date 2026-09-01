@@ -2,6 +2,8 @@
 
 框架为 **Vitest + Vue Test Utils + jsdom**，配置内联在根 `vite.config.ts`（`environment: "jsdom"`、`globals: true`）。命令：`pnpm test:unit`（`vitest run`），可用 `--` 过滤，如 `pnpm test:unit -- tests/runUtils.test.ts`。
 
+> 改动本目录或新增测试后，按根 [`../AGENTS.md`](../AGENTS.md) 的「文档同步契约」同步更新本文件（覆盖表）；若测试断言的是数据口径（赛季 id、HP 展示等），根 `AGENTS.md` 的「静态数据维护约束」与 `src/services/AGENTS.md` 也要一起改，**同一提交内完成**。
+
 ## 现有覆盖
 
 | 文件 | 目标 |
@@ -9,9 +11,12 @@
 | `runUtils.test.ts` | `src/services/runUtils.ts` 筛选/排序/统计纯函数 |
 | `staticArchiveConfig.test.ts` | 远程静态快照推导与配置合并（`staticArchiveConfig.ts`） |
 | `submissionUtils.test.ts` | 投稿 → 档案记录转换、光锥偏好统计 |
+| `submissionValidation.test.ts` | 投稿字段校验顺序、步骤归属、限定/常驻统计与预览取数（`submissionValidation.ts`） |
+| `archiveService.test.ts` | `submitRun` 的成功返回与服务端 `{ message, missing }` → 中文错误映射 |
 | `adminAuth.test.ts` | `netlify/functions/_shared.ts` 的 `requireAdmin`（Bearer/Basic/未配置） |
-| `RunGroupList.test.ts` / `SubmitRunForm.test.ts` / `UnitPickerDrawer.test.ts` | 关键档案组件的挂载与交互 |
+| `RunGroupList.test.ts` / `SubmitRunForm.test.ts` / `UnitPickerDrawer.test.ts` | 关键档案组件的挂载与交互；`SubmitRunForm.test.ts` 覆盖三步向导的解锁、回退、预览与提交/失败态 |
 | `fixtures/runs.ts` | 共享 `ArchiveRun` 夹具（`fixtureRuns`），新用例优先复用 |
+| `fixtures/config.ts` | 带敌方阶段的 `fixtureConfig` 与可通过校验的 `fixtureSubmission()` |
 
 ## 约定
 

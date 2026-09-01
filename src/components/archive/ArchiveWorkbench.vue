@@ -10,10 +10,12 @@ import UnitPickerDrawer from "@/components/archive/UnitPickerDrawer.vue"
 import { useArchiveFilters } from "@/composables/useArchiveFilters"
 import { useMetaStats } from "@/composables/useMetaStats"
 import { useRunsQuery } from "@/composables/useRunsQuery"
+import { useSubmissionDialog } from "@/composables/useSubmissionDialog"
 import { useArchiveStore } from "@/stores/archiveStore"
 import type { ArchiveConfig } from "@/types/archive"
 
 const archiveStore = useArchiveStore()
+const { open: openSubmitDialog } = useSubmissionDialog()
 const showStats = shallowRef(false)
 const showUnitPicker = shallowRef(false)
 
@@ -99,16 +101,17 @@ const activeFilterCount = computed(() =>
           />
           环境统计
         </button>
-        <RouterLink
+        <button
           class="icon-button primary-action"
-          to="/submit"
+          type="button"
+          @click="openSubmitDialog"
         >
           <FilePlus2
             :size="17"
             aria-hidden="true"
           />
           提交记录
-        </RouterLink>
+        </button>
       </div>
     </div>
 

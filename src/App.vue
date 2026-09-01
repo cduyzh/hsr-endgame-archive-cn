@@ -7,6 +7,8 @@
     Send,
   } from "lucide-vue-next";
   import PromoSlot from "@/components/PromoSlot.vue";
+  import SubmitRunDialog from "@/components/archive/SubmitRunDialog.vue";
+  import { useSubmissionDialog } from "@/composables/useSubmissionDialog";
 
   const navItems = [
     { to: "/", label: "档案", icon: Database },
@@ -14,6 +16,8 @@
     { to: "/faq", label: "规则", icon: CircleHelp },
     { to: "/admin/submissions", label: "审核", icon: ClipboardCheck },
   ] as const;
+
+  const { isOpen: submitOpen, open: openSubmitDialog, close: closeSubmitDialog } = useSubmissionDialog();
 </script>
 
 <template>
@@ -54,21 +58,27 @@
             {{ item.label }}
           </RouterLink>
         </nav>
-        <RouterLink
+        <button
           class="header-submit"
-          to="/submit"
+          type="button"
+          @click="openSubmitDialog"
         >
           <Send
             :size="15"
             aria-hidden="true"
           />
           提交记录
-        </RouterLink>
+        </button>
       </div>
     </header>
 
     <PromoSlot />
 
     <RouterView />
+
+    <SubmitRunDialog
+      :open="submitOpen"
+      @close="closeSubmitDialog"
+    />
   </div>
 </template>

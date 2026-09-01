@@ -9,7 +9,7 @@
 - **档案工作台**：按赛季、终局模式、敌方阶段、记录分类、队伍人数、成本、角色/光锥和标签筛选竞速记录。
 - **记录展示**：按队伍组合分组展示作者、角色命座、轮次、分数、成本和视频链接。
 - **环境统计**：统计角色使用率、光锥使用率、常见组合与成本分布。
-- **投稿审核**：前端提交记录到 `/api/submissions`，进入待审核队列。
+- **投稿审核**：右上角「提交记录」打开站内弹窗，按「基础信息 → 队伍配置 → 成绩与预览」三步填写，字段级校验与限定/常驻统计实时反馈，提交到 `/api/submissions` 进入待审核队列；`/submit` 深链仍会打开同一弹窗。
 - **文章与规则页**：展示站内说明、规则和文章摘要。
 
 ## 技术栈
@@ -43,7 +43,7 @@ pnpm test:unit
 pnpm build
 ```
 
-`pnpm build` 会依次执行 `typecheck`、`test:unit`、`lint` 和 `vite build`。
+`pnpm build` 通过 `npm-run-all2` 的 `run-p` **并行**执行 `typecheck`、`test:unit`、`lint` 和 `vite build`（任一失败即整体失败）。只想产出 `dist/` 用 `pnpm build:only`，本地预览构建产物用 `pnpm preview`（`http://localhost:39201/`）。
 
 ## Netlify 部署
 
@@ -78,10 +78,10 @@ Netlify 构建环境固定使用 Node 24；业务 API redirects、Functions 目�
 项目目前有两条数据线，需要分开理解：
 
 1. **竞速档案业务数据**  
-   前端通过 `src/services/archiveService.ts` 请求 `/api/archive/config`、`/api/archive/runs`、`/api/archive/stats` 和 `/api/submissions`。Netlify Functions 若配置了 `NETLIFY_DATABASE_URL`、`DATABASE_URL` 或 `POSTGRES_URL`，会读取 Postgres；否则使用 `src/data/seed/` 中的种子数据。请求失败时前端静默回退 seed，保证无数据库环境不白屏。
+   前端通过 `src/services/archiveService.ts` 请求 `/api/archive/config`、`/api/archive/runs`、`/api/archive/stats`、`/api/submissions` 以及 `/api/admin/submissions*`。Netlify Functions 若配置了 `NETLIFY_DATABASE_URL`、`DATABASE_URL` 或 `POSTGRES_URL`，会读取 Postgres；否则使用 `src/data/seed/` 中的种子数据。读取类请求失败时前端静默回退 seed，保证无数据库环境不白屏；投稿与管理端请求失败则直接报错（审核台会提示）。
 
 2. **HSR 终局静态数据（远程直连）**  
-   所有游戏 JSON 与图片均直连 `https://static.nanoka.cc`（已开放 CORS），仓库不落盘、不随构建发布。地址与图片路径集中在 `src/services/dataSource.ts`；`src/services/staticArchiveConfig.ts` 在运行时读取 `manifest.json`、`monster.json` 及各模式索引/详情，推导当前赛季与敌方阶段，并合并进 `/api/archive/config` 的结果。静态读取失败时保留业务配置，不会白屏。
+   所有游戏 JSON 与图片均直连 `https://static.nanoka.cc`（已开放 CORS），仓库不落盘、不随构建发布。地址与图片路径集中在 `src/services/dataSource.ts`；`src/services/staticArchiveConfig.ts` 在运行时读取 `manifest.json`，按代码里硬编码的 `STATIC_SEASON_IDS` 拉取 `monster.json`、`monstervalue.json`、`HardLevelGroup.json`、`EliteGroup.json`、`InfiniteEliteGroup.json` 与各模式单期详情，生成敌方阶段（血量/速度/韧性/弱点/记忆祝福/敌方图），再合并进 `/api/archive/config`（或 seed）的结果。静态读取失败时保留业务配置，不会白屏。
 
 数据库表结构见 `netlify/schema.sql`。访问 `/admin/submissions` 会先显示管理员登录弹框，生产环境建议配置：
 
@@ -113,7 +113,7 @@ ADMIN_REVIEW_PASSWORD=请替换为强密码
 
 ```text
 https://static.nanoka.cc/
-├── manifest.json
+├── manifest.json                               # hsr.{latest,live,available,new}
 ├── assets/hsr/
 │   ├── avatarshopicon/{sourceId}.webp          # 角色头像
 │   ├── lightconemediumicon/{sourceId}.webp     # 光锥图片
@@ -121,26 +121,28 @@ https://static.nanoka.cc/
 │   └── pathicon/{id}.webp                      # 命途图标
 └── hsr/<ver>/
     ├── monster.json
-    ├── maze.json / maze_extra.json / maze_boss.json / maze_peak.json
-    └── <locale>/
-        ├── maze/<id>.json
-        ├── story/<id>.json
-        ├── boss/<id>.json
-        └── peak/<id>.json
+    ├── monstervalue.json
+    ├── HardLevelGroup.json
+    ├── EliteGroup.json
+    ├── InfiniteEliteGroup.json
+    ├── character.json / lightcone.json         # 仅同步脚本读取
+    └── <locale>/{maze,story,boss,peak}/<id>.json   # 各模式单期详情（locale 固定 zh）
 ```
 
-业务终局模式 `EndgameMode` 为 `moc / pf / as / aa`（混沌回忆 / 虚构叙事 / 末日幻影 / 异常仲裁），与静态数据源的模式映射如下：
+业务终局模式 `EndgameMode` 为 `moc / pf / as / aa`（混沌回忆 / 虚构叙事 / 末日幻影 / 异相仲裁），与静态数据源的模式映射如下：
 
-| 业务模式 | 静态模式  | 期数索引          | 单期详情目录               |
-| -------- | --------- | ----------------- | -------------------------- |
-| `moc`    | `moc`     | `maze.json`       | `<locale>/maze/<id>.json`  |
-| `pf`     | `fiction` | `maze_extra.json` | `<locale>/story/<id>.json` |
-| `as`     | `doom`    | `maze_boss.json`  | `<locale>/boss/<id>.json`  |
-| `aa`     | `peak`    | `maze_peak.json`  | `<locale>/peak/<id>.json`  |
+| 业务模式 | 静态模式  | 单期详情目录               | 阶段 `stageKey`                   |
+| -------- | --------- | -------------------------- | --------------------------------- |
+| `moc`    | `moc`     | `<locale>/maze/<id>.json`  | `top` / `bottom` / `starward`     |
+| `pf`     | `fiction` | `<locale>/story/<id>.json` | `top` / `bottom` / `starward`     |
+| `as`     | `doom`    | `<locale>/boss/<id>.json`  | `top` / `bottom` / `starward`     |
+| `aa`     | `peak`    | `<locale>/peak/<id>.json`  | `k1..kN` / `checkmate` / `plight` |
 
-当前赛季由各模式索引文件中的最大 `seasonId` 实时推导（远程不提供 `cache-plan.json`，不依赖本地缓存）。静态数据只覆盖当前赛季的展示字段（名称、弱点、记忆祝福、敌方图等）；记录筛选用的 `seasonId`、`bossId` 仍保持业务配置中的稳定 id，避免已有 seed 或数据库记录失配。
+赛季与版本的解析方式：`src/services/staticArchiveConfig.ts` 里的 `STATIC_SEASON_IDS` 为每个大版本（当前 `4.4`、`4.5`）硬编码四个模式的详情 id；运行时用 `manifest.hsr.available` 选出该大版本的最新数据目录（如 `4.5.51`），用 `manifest.hsr.live` 判定当前赛季。**不读取**上游 `maze.json / maze_extra.json / maze_boss.json / maze_peak.json` 索引，也不依赖 `cache-plan.json`。因此新赛季上线需要先在 `STATIC_SEASON_IDS` 补一条（步骤见 [AGENTS.md](./AGENTS.md) 的「新赛季上线清单」）。
 
-怪物图片统一经 `dataSource.ts` 的 `monsterImageUrl()` 生成，9 位实例怪物 id 自动回退到基础 id。HP 相关逻辑需考虑 `monstervalue.json` 的 `PhaseList.phase_max_hp_ratio`，不能只用单段 `HPBase`。
+合并语义：远程快照**只补充业务配置里没有的敌方阶段 id**，并为缺失赛季追加 `<seasonId> 归档` 条目，不会覆盖 seed 或数据库中已有的赛季 label 与阶段字段。记录筛选用的 `seasonId`、`bossId` 始终是稳定 id。
+
+怪物图片统一经 `dataSource.ts` 的 `monsterImageUrl()` 生成，9 位实例怪物 id（`>= 1e8`）自动回退到基础 id 并对齐整十。血量口径为 `HPBase × HPModifyRatio × HardLevelGroup.HPRatio × (EliteGroup|InfiniteEliteGroup).HPRatio`，多阶段怪物追加 ` x<阶段数>`；虚构叙事（`pf`）因上游未公开每季缩放系数而跳过血量展示。
 
 ## 数据更新流程
 
@@ -158,7 +160,7 @@ pnpm sync:units
 
 ```bash
 pnpm seed:archive            # 实际写入
-pnpm seed:archive -- --dry-run
+pnpm seed:archive:dry        # 空跑（等价于 seed:archive -- --dry-run）
 ```
 
 更新后检查：
@@ -176,6 +178,7 @@ src/
 ├── router/
 ├── assets/
 ├── components/
+│   ├── PromoSlot.vue
 │   ├── admin/
 │   │   ├── AdminLoginDialog.vue
 │   │   └── AdminSubmissionCard.vue
@@ -187,6 +190,7 @@ src/
 │       ├── ModeSeasonFilter.vue
 │       ├── RunGroupList.vue
 │       ├── SubmissionTeamSlot.vue
+│       ├── SubmitRunDialog.vue
 │       ├── SubmitRunForm.vue
 │       ├── UnitPickerDrawer.vue
 │       └── UnitSearchSelect.vue
@@ -194,9 +198,10 @@ src/
 │   ├── useAdminSubmissions.ts
 │   ├── useArchiveFilters.ts
 │   ├── useMetaStats.ts
-│   └── useRunsQuery.ts
+│   ├── useRunsQuery.ts
+│   └── useSubmissionDialog.ts
 ├── data/
-│   ├── seed/
+│   ├── seed/                          # config.json / runs.json / index.ts（+ 同步产物 hsr-*.json）
 │   ├── unitAssets.ts
 │   └── unitPaths.ts
 ├── services/
@@ -205,6 +210,7 @@ src/
 │   ├── runUtils.ts
 │   ├── staticArchiveConfig.ts
 │   ├── submissionUtils.ts
+│   ├── submissionValidation.ts
 │   └── unitCost.ts
 ├── stores/
 ├── types/
@@ -220,4 +226,4 @@ src/
 
 `scripts/reference-inventory.mjs` 只生成参考观察清单，不下载 The Genius Archive 资源。角色、光锥、怪物与命途图片均直连 `static.nanoka.cc`（如 `https://static.nanoka.cc/hsr/4.5/character.json`、`lightcone.json` 提供 `sourceId` 映射，见 `src/data/unitAssets.ts`），不再把图片落盘到 `public/`。补充角色图、光锥图、boss 图或文章封面前，必须确认来源和授权，不能直接复制未确认授权的参考站文件。
 
-更多协作约定见 [AGENTS.md](./AGENTS.md)。
+更多协作约定见 [AGENTS.md](./AGENTS.md)。其中「文档同步契约」给出了**代码改动点 → 必改文档**的映射表和提交前检查清单：改完代码必须在同一次提交里同步本文档与对应模块的 `AGENTS.md`。

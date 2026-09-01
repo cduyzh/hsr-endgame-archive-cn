@@ -1,10 +1,17 @@
-import type { ArchiveRun, ArchiveUnit } from "@/types/archive"
+import type { ArchiveRun, ArchiveUnit, RunUnit } from "@/types/archive"
 
 export type CharacterGoldKind = "limited" | "standard" | "free" | "none"
 
 export interface CharacterGoldCounts {
   limited: number
   standard: number
+}
+
+export const goldKindLabels: Record<CharacterGoldKind, string> = {
+  limited: "限定",
+  standard: "常驻",
+  free: "免费",
+  none: "低星",
 }
 
 const STANDARD_FIVE_STAR_IDS = new Set(["welt", "himeko", "bronya", "gepard", "clara", "yanqing", "bailu"])
@@ -18,9 +25,13 @@ export function getCharacterGoldKind(unit: ArchiveUnit | null | undefined): Char
 }
 
 export function getRunGoldCounts(run: ArchiveRun, units: ArchiveUnit[]): CharacterGoldCounts {
+  return getUnitGoldCounts(run.units, units)
+}
+
+export function getUnitGoldCounts(entries: RunUnit[], units: ArchiveUnit[]): CharacterGoldCounts {
   const unitById = new Map(units.map((unit) => [unit.id, unit]))
 
-  return run.units.reduce<CharacterGoldCounts>(
+  return entries.reduce<CharacterGoldCounts>(
     (counts, entry) => {
       const kind = getCharacterGoldKind(unitById.get(entry.unitId))
       if (kind === "limited") counts.limited += 1

@@ -1,48 +1,90 @@
 <script setup lang="ts">
 import { computed, reactive, shallowRef, watch } from "vue"
-import { CheckCircle2, Send } from "lucide-vue-next"
+import {
+  AlertCircle,
+  Check,
+  CheckCircle2,
+  ChevronLeft,
+  ChevronRight,
+  ClipboardList,
+  Info,
+  ListChecks,
+  Lock,
+  RotateCcw,
+  Send,
+  Sparkles,
+  Users,
+  X,
+} from "lucide-vue-next"
 import SubmissionTeamSlot from "@/components/archive/SubmissionTeamSlot.vue"
 import { submitRun } from "@/services/archiveService"
-import type { ArchiveConfig, EndgameMode, SubmissionPayload } from "@/types/archive"
+import { getUnitGoldCounts, goldKindLabels } from "@/services/unitCost"
+import {
+  COST_MAX,
+  COST_MIN,
+  TEAM_SLOT_COUNT,
+  buildSubmissionRoster,
+  describeSubmissionTarget,
+  errorsOfStep,
+  stepOfField,
+  submissionCategoryLabels,
+  validateSubmissionForm,
+  type SubmissionError,
+  type SubmissionField,
+  type SubmissionStepId,
+} from "@/services/submissionValidation"
+import type { ArchiveConfig, EndgameMode, RunCategory, SubmissionPayload } from "@/types/archive"
 
 const props = defineProps<{
   config: ArchiveConfig
   preferredLightconeByCharacter: Record<string, string>
 }>()
 
-const status = shallowRef<"idle" | "submitting" | "success" | "error">("idle")
-const message = shallowRef("")
+const emit = defineEmits<{
+  close: []
+}>()
 
-const form = reactive<SubmissionPayload>({
-  seasonId: props.config.seasons.find((season) => season.isCurrent)?.id ?? props.config.seasons[0]?.id ?? "",
-  mode: "moc",
-  bossId: "",
-  category: "fullStars",
-  author: "",
-  teamName: "",
-  cycle: 0,
-  score: 40000,
-  cost: 0,
-  videoUrl: "",
-  notes: "",
-  units: [
-    { unitId: "", eidolon: 0 },
-    { unitId: "", eidolon: 0 },
-    { unitId: "", eidolon: 0 },
-    { unitId: "", eidolon: 0 },
-  ],
-  lightcones: [
-    { unitId: "", superimposition: 1 },
-    { unitId: "", superimposition: 1 },
-    { unitId: "", superimposition: 1 },
-    { unitId: "", superimposition: 1 },
-  ],
-})
+const steps: Array<{ id: SubmissionStepId; label: string; icon: typeof ListChecks }> = [
+  { id: "basic", label: "基础信息", icon: ListChecks },
+  { id: "team", label: "队伍配置", icon: Users },
+  { id: "result", label: "成绩与预览", icon: ClipboardList },
+]
 
-const bosses = computed(() =>
-  props.config.bosses.filter((boss) => boss.seasonId === form.seasonId && boss.mode === form.mode),
-)
+function createForm(config: ArchiveConfig): SubmissionPayload {
+  const seasonId = config.seasons.find((season) => season.isCurrent)?.id ?? config.seasons[0]?.id ?? ""
+  const mode = config.modes[0]?.id ?? "moc"
 
+  return {
+    seasonId,
+    mode,
+    bossId: config.bosses.find((boss) => boss.seasonId === seasonId && boss.mode === mode)?.id ?? "",
+    category: "fullStars",
+    author: "",
+    teamName: "",
+    cycle: 0,
+    score: 40000,
+    cost: 0,
+    videoUrl: "",
+    notes: "",
+    units: Array.from({ length: TEAM_SLOT_COUNT }, () => ({ unitId: "", eidolon: 0 })),
+    lightcones: Array.from({ length: TEAM_SLOT_COUNT }, () => ({ unitId: "", superimposition: 1 })),
+  }
+}
+
+const form = reactive<SubmissionPayload>(createForm(props.config))
+const stepIndex = shallowRef(0)
+const unlockedIndex = shallowRef(0)
+const showErrors = shallowRef(false)
+const submitting = shallowRef(false)
+const submitFailure = shallowRef("")
+const acceptedId = shallowRef("")
+
+const currentStep = computed<SubmissionStepId>(() => steps[stepIndex.value].id)
+const allErrors = computed(() => validateSubmissionForm(form, props.config))
+const stepErrors = computed(() => (showErrors.value ? errorsOfStep(allErrors.value, currentStep.value) : []))
+const errorByField = computed(() => new Map<SubmissionField, string>(stepErrors.value.map((e) => [e.field, e.message])))
+
+const stages = computed(() => props.config.bosses.filter((boss) => boss.seasonId === form.seasonId && boss.mode === form.mode))
 const characters = computed(() =>
   props.config.units
     .filter((unit) => unit.kind === "character")
@@ -53,17 +95,17 @@ const lightcones = computed(() =>
     .filter((unit) => unit.kind === "lightcone")
     .sort((a, b) => b.rarity - a.rarity || a.name.localeCompare(b.name, "zh-CN")),
 )
-
-const canSubmit = computed(
-  () =>
-    form.author.trim() &&
-    form.teamName.trim() &&
-    form.videoUrl.trim() &&
-    form.bossId &&
-    form.units.every((unit) => unit.unitId) &&
-    form.lightcones.every((unit) => unit.unitId) &&
-    new Set(form.units.map((unit) => unit.unitId)).size === form.units.length,
+const categoryOptions = computed(() =>
+  Object.entries(submissionCategoryLabels).map(([id, label]) => ({ id: id as Exclude<RunCategory, "all">, label })),
 )
+const roster = computed(() => buildSubmissionRoster(form, props.config))
+const goldCounts = computed(() => getUnitGoldCounts(form.units, props.config.units))
+const target = computed(() => describeSubmissionTarget(form, props.config))
+const configuredSlots = computed(() => roster.value.filter((line) => line.characterId).length)
+
+function fieldError(field: SubmissionField): string | undefined {
+  return errorByField.value.get(field)
+}
 
 function disabledCharacterIds(index: number) {
   return form.units.flatMap((unit, unitIndex) => (unitIndex !== index && unit.unitId ? [unit.unitId] : []))
@@ -78,28 +120,53 @@ function updateCharacter(index: number, unitId: string) {
   }
 }
 
-function syncBossId() {
-  if (bosses.value.some((boss) => boss.id === form.bossId)) return
-  form.bossId = bosses.value[0]?.id ?? ""
-}
-
 function patchMode(mode: EndgameMode) {
   form.mode = mode
-  form.bossId = props.config.bosses.find((boss) => boss.seasonId === form.seasonId && boss.mode === mode)?.id ?? ""
+}
+
+watch(
+  () => [form.seasonId, form.mode],
+  () => {
+    if (!stages.value.some((boss) => boss.id === form.bossId)) {
+      form.bossId = stages.value[0]?.id ?? ""
+    }
+  },
+)
+
+function goTo(index: number) {
+  if (index > unlockedIndex.value) return
+  stepIndex.value = index
+  showErrors.value = false
+}
+
+function nextStep() {
+  const blocking = errorsOfStep(allErrors.value, currentStep.value)
+  showErrors.value = blocking.length > 0
+  if (blocking.length > 0) return
+
+  stepIndex.value = Math.min(stepIndex.value + 1, steps.length - 1)
+  unlockedIndex.value = Math.max(unlockedIndex.value, stepIndex.value)
+  showErrors.value = false
+}
+
+function previousStep() {
+  goTo(Math.max(stepIndex.value - 1, 0))
+}
+
+function handleSubmitError(errors: SubmissionError[]) {
+  const index = steps.findIndex((entry) => entry.id === stepOfField(errors[0].field))
+  stepIndex.value = index < 0 ? 0 : index
+  showErrors.value = true
 }
 
 async function handleSubmit() {
-  if (!canSubmit.value) {
-    status.value = "error"
-    const selectedCharacterIds = form.units.map((unit) => unit.unitId).filter(Boolean)
-    message.value =
-      new Set(selectedCharacterIds).size !== selectedCharacterIds.length
-        ? "同一队伍不能出现重复角色。"
-        : "请补全作者、队伍、视频链接、角色和光锥。"
+  if (allErrors.value.length > 0) {
+    handleSubmitError(allErrors.value)
     return
   }
-  status.value = "submitting"
-  message.value = ""
+
+  submitting.value = true
+  submitFailure.value = ""
   try {
     const result = await submitRun({
       ...form,
@@ -108,128 +175,489 @@ async function handleSubmit() {
       videoUrl: form.videoUrl.trim(),
       notes: form.notes.trim(),
     })
-    status.value = "success"
-    message.value = `已进入审核队列：${result.id}`
+    acceptedId.value = result.id
+    Object.assign(form, createForm(props.config))
+    stepIndex.value = 0
+    unlockedIndex.value = 0
+    showErrors.value = false
   } catch (err) {
-    status.value = "error"
-    message.value = err instanceof Error ? err.message : "提交失败"
+    submitFailure.value = err instanceof Error ? err.message : "提交失败，请稍后重试。"
+  } finally {
+    submitting.value = false
   }
 }
 
-if (!form.bossId) {
-  form.bossId = props.config.bosses.find((boss) => boss.seasonId === form.seasonId && boss.mode === form.mode)?.id ?? ""
+function submitAnother() {
+  acceptedId.value = ""
+  submitFailure.value = ""
 }
-
-watch(() => form.seasonId, syncBossId)
 </script>
 
 <template>
-  <form class="submit-form" @submit.prevent="handleSubmit">
-    <div class="submission-progress" aria-label="提交流程">
-      <span class="active"><b>1</b>记录信息</span>
-      <span class="active"><b>2</b>队伍配置</span>
-      <span><b>3</b>进入审核</span>
-    </div>
-
-    <div class="form-grid">
-      <label class="field">
-        <span>赛季</span>
-        <select v-model="form.seasonId">
-          <option v-for="season in config.seasons" :key="season.id" :value="season.id">
-            {{ season.label }}
-          </option>
-        </select>
-      </label>
-      <label class="field">
-        <span>模式</span>
-        <select :value="form.mode" @change="patchMode(($event.target as HTMLSelectElement).value as EndgameMode)">
-          <option v-for="mode in config.modes" :key="mode.id" :value="mode.id">
-            {{ mode.label }}
-          </option>
-        </select>
-      </label>
-      <label class="field">
-        <span>敌方阶段</span>
-        <select v-model="form.bossId">
-          <option v-for="boss in bosses" :key="boss.id" :value="boss.id">
-            {{ boss.name }}
-          </option>
-        </select>
-      </label>
-      <label class="field">
-        <span>分类</span>
-        <select v-model="form.category">
-          <option value="zeroCycle">0 轮竞速</option>
-          <option value="fullStars">满星记录</option>
-        </select>
-      </label>
-      <label class="field">
-        <span>作者</span>
-        <input v-model.trim="form.author" type="text" placeholder="展示名称" />
-      </label>
-      <label class="field">
-        <span>队伍名称</span>
-        <input v-model.trim="form.teamName" type="text" placeholder="例：大黑塔双同谐" />
-      </label>
-      <label class="field">
-        <span>轮次</span>
-        <input v-model.number="form.cycle" type="number" min="0" />
-      </label>
-      <label class="field">
-        <span>分数</span>
-        <input v-model.number="form.score" type="number" min="0" />
-      </label>
-      <label class="field">
-        <span>成本</span>
-        <input v-model.number="form.cost" type="number" min="0" />
-      </label>
-      <label class="field span-2">
-        <span>视频链接</span>
-        <input v-model.trim="form.videoUrl" type="url" placeholder="B站、YouTube 或可访问的视频地址" />
-      </label>
-    </div>
-
-    <section class="form-block submission-team-block">
-      <div class="form-block-heading">
-        <div>
-          <h2>队伍配置</h2>
-          <p>角色不可重复，光锥可重复。选择角色后会根据本站已收录搭配自动带入常用光锥。</p>
-        </div>
-        <span class="team-rule-chip">角色去重</span>
-      </div>
-      <div class="submission-team-list">
-        <SubmissionTeamSlot
-          v-for="(unit, index) in form.units"
-          :key="`team-slot-${index}`"
-          :index="index"
-          :character="unit"
-          :lightcone="form.lightcones[index]"
-          :characters="characters"
-          :lightcones="lightcones"
-          :disabled-character-ids="disabledCharacterIds(index)"
-          :preferred-lightcone-id="preferredLightconeByCharacter[unit.unitId]"
-          @update-character="updateCharacter(index, $event)"
-          @update-eidolon="unit.eidolon = $event"
-          @update-lightcone="form.lightcones[index].unitId = $event"
-          @update-superimposition="form.lightcones[index].superimposition = $event"
+  <div class="submission-wizard">
+    <p
+      v-if="acceptedId"
+      class="submission-success"
+      role="status"
+    >
+      <span class="submission-success-mark">
+        <CheckCircle2
+          :size="24"
+          aria-hidden="true"
         />
-      </div>
-    </section>
+      </span>
+      <strong>已进入审核队列</strong>
+      <small>
+        投稿编号
+        <code>{{ acceptedId }}</code>
+        ，审核通过后会出现在档案列表；未通过可在审核台查看原因。
+      </small>
+      <span class="submission-success-actions">
+        <button
+          class="icon-button"
+          type="button"
+          @click="submitAnother"
+        >
+          <RotateCcw
+            :size="16"
+            aria-hidden="true"
+          />
+          再提交一条
+        </button>
+        <button
+          class="icon-button primary-action"
+          type="button"
+          @click="emit('close')"
+        >
+          <X
+            :size="16"
+            aria-hidden="true"
+          />
+          完成
+        </button>
+      </span>
+    </p>
 
-    <label class="field">
-      <span>备注</span>
-      <textarea v-model.trim="form.notes" rows="4" placeholder="可填写轴、特殊限制、是否自动等审核信息。" />
-    </label>
+    <form
+      v-else
+      class="submit-form"
+      novalidate
+      @submit.prevent="handleSubmit"
+    >
+      <details class="submission-guidelines">
+        <summary>
+          <Info
+            :size="14"
+            aria-hidden="true"
+          />
+          投稿须知
+        </summary>
+        <ul>
+          <li>请附可访问的原始录像链接，不要剪辑或跳过战斗过程。</li>
+          <li>命座与叠影按最终结算时填写，开拓者不计入限定/常驻成本。</li>
+          <li>成本按 4 名角色合计填写，范围 {{ COST_MIN }}–{{ COST_MAX }}，与档案的成本分桶一致。</li>
+          <li>记录先进入待审核队列，通过后才会在档案页公开展示。</li>
+        </ul>
+      </details>
 
-    <div class="form-actions">
-      <p v-if="message" :class="['form-message', status]">
-        <CheckCircle2 v-if="status === 'success'" :size="16" aria-hidden="true" />
-        {{ message }}
+      <ol
+        class="submission-steps"
+        aria-label="投稿步骤"
+      >
+        <li
+          v-for="(entry, index) in steps"
+          :key="entry.id"
+        >
+          <button
+            class="submission-step-tab"
+            :class="{ active: stepIndex === index, passed: index < stepIndex }"
+            type="button"
+            :disabled="index > unlockedIndex"
+            :aria-current="stepIndex === index ? 'step' : undefined"
+            @click="goTo(index)"
+          >
+            <span class="submission-step-index">
+              <Check
+                v-if="index < stepIndex"
+                :size="13"
+                aria-hidden="true"
+              />
+              <template v-else>{{ index + 1 }}</template>
+            </span>
+            <component
+              :is="entry.icon"
+              :size="15"
+              aria-hidden="true"
+            />
+            <span>{{ entry.label }}</span>
+            <Lock
+              v-if="index > unlockedIndex"
+              :size="13"
+              aria-hidden="true"
+            />
+          </button>
+        </li>
+      </ol>
+
+      <p
+        v-if="stepErrors.length > 0"
+        class="submission-error"
+        role="alert"
+      >
+        <AlertCircle
+          :size="15"
+          aria-hidden="true"
+        />
+        {{ stepErrors[0].message }}
+        <span v-if="stepErrors.length > 1">（另有 {{ stepErrors.length - 1 }} 处待补全）</span>
       </p>
-      <button class="icon-button primary-action" type="submit" :disabled="status === 'submitting'">
-        <Send :size="17" aria-hidden="true" />
-        {{ status === "submitting" ? "提交中" : "提交审核" }}
-      </button>
-    </div>
-  </form>
+
+      <div
+        v-if="currentStep === 'basic'"
+        class="submission-step-body"
+      >
+        <div class="filter-section">
+          <p class="section-label">
+            竞赛模式
+          </p>
+          <div class="mode-grid">
+            <button
+              v-for="mode in config.modes"
+              :key="mode.id"
+              class="mode-tab"
+              :class="{ active: form.mode === mode.id }"
+              type="button"
+              @click="patchMode(mode.id)"
+            >
+              <span
+                v-if="mode.badge"
+                class="mini-badge"
+              >{{ mode.badge }}</span>
+              <strong>{{ mode.shortLabel }}</strong>
+              <span>{{ mode.label }}</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="split-fields">
+          <label class="field">
+            <span>赛季</span>
+            <select v-model="form.seasonId">
+              <option
+                v-for="season in config.seasons"
+                :key="season.id"
+                :value="season.id"
+              >
+                {{ season.label }}
+              </option>
+            </select>
+            <small
+              v-if="fieldError('seasonId')"
+              class="field-error"
+            >{{ fieldError("seasonId") }}</small>
+          </label>
+          <label class="field">
+            <span>敌方阶段</span>
+            <select v-model="form.bossId">
+              <option
+                v-for="boss in stages"
+                :key="boss.id"
+                :value="boss.id"
+              >
+                {{ boss.name }} · {{ boss.subtitle }}
+              </option>
+            </select>
+            <small
+              v-if="fieldError('bossId')"
+              class="field-error"
+            >{{ fieldError("bossId") }}</small>
+          </label>
+        </div>
+
+        <p
+          v-if="target.stageName !== '未选择'"
+          class="submission-stage-meta"
+        >
+          <span>血量 {{ target.hp || "未公开" }}</span>
+          <span>速度 {{ target.speed || "—" }}</span>
+          <span>韧性 {{ target.toughness || "—" }}</span>
+          <span v-if="target.weakness.length">弱点 {{ target.weakness.join(" / ") }}</span>
+        </p>
+
+        <div class="filter-section">
+          <p class="section-label">
+            记录分类
+          </p>
+          <div class="submission-category-grid">
+            <button
+              v-for="category in categoryOptions"
+              :key="category.id"
+              class="wide-option compact"
+              :class="{ active: form.category === category.id }"
+              type="button"
+              @click="form.category = category.id"
+            >
+              {{ category.label }}
+            </button>
+          </div>
+          <p class="submission-field-hint">
+            0 轮竞速要求轮次为 0；满星记录按实际轮次填写。
+          </p>
+        </div>
+
+        <div class="form-grid">
+          <label class="field span-2">
+            <span>作者</span>
+            <input
+              v-model.trim="form.author"
+              type="text"
+              maxlength="32"
+              placeholder="展示名称，例如 夜航"
+            >
+            <small
+              v-if="fieldError('author')"
+              class="field-error"
+            >{{ fieldError("author") }}</small>
+          </label>
+          <label class="field">
+            <span>视频链接</span>
+            <input
+              v-model.trim="form.videoUrl"
+              type="url"
+              placeholder="https://…"
+            >
+            <small
+              v-if="fieldError('videoUrl')"
+              class="field-error"
+            >{{ fieldError("videoUrl") }}</small>
+          </label>
+        </div>
+      </div>
+
+      <div
+        v-else-if="currentStep === 'team'"
+        class="submission-step-body"
+      >
+        <div class="submission-roster-head">
+          <p class="section-label">
+            队伍配置
+          </p>
+          <span class="team-cost-chip">
+            <Sparkles
+              :size="13"
+              aria-hidden="true"
+            />
+            限定 {{ goldCounts.limited }} · 常驻 {{ goldCounts.standard }}
+          </span>
+        </div>
+
+        <label class="field">
+          <span>队伍名称</span>
+          <input
+            v-model.trim="form.teamName"
+            type="text"
+            maxlength="40"
+            placeholder="例：大黑塔双同谐"
+          >
+          <small
+            v-if="fieldError('teamName')"
+            class="field-error"
+          >{{ fieldError("teamName") }}</small>
+        </label>
+
+        <div class="submission-team-list">
+          <SubmissionTeamSlot
+            v-for="(unit, index) in form.units"
+            :key="`team-slot-${index}`"
+            :index="index"
+            :character="unit"
+            :lightcone="form.lightcones[index]"
+            :characters="characters"
+            :lightcones="lightcones"
+            :disabled-character-ids="disabledCharacterIds(index)"
+            :preferred-lightcone-id="preferredLightconeByCharacter[unit.unitId]"
+            @update-character="updateCharacter(index, $event)"
+            @update-eidolon="unit.eidolon = $event"
+            @update-lightcone="form.lightcones[index].unitId = $event"
+            @update-superimposition="form.lightcones[index].superimposition = $event"
+          />
+        </div>
+
+        <p class="submission-field-hint">
+          已配置 {{ configuredSlots }}/{{ TEAM_SLOT_COUNT }} 个槽位；角色不可重复，光锥可重复，光锥列表优先展示与角色同命途的选项。
+        </p>
+      </div>
+
+      <div
+        v-else
+        class="submission-step-body"
+      >
+        <div class="form-grid">
+          <label class="field">
+            <span>轮次</span>
+            <input
+              v-model.number="form.cycle"
+              type="number"
+              min="0"
+              step="1"
+            >
+            <small
+              v-if="fieldError('cycle')"
+              class="field-error"
+            >{{ fieldError("cycle") }}</small>
+          </label>
+          <label class="field">
+            <span>分数</span>
+            <input
+              v-model.number="form.score"
+              type="number"
+              min="0"
+              step="1"
+            >
+            <small
+              v-if="fieldError('score')"
+              class="field-error"
+            >{{ fieldError("score") }}</small>
+          </label>
+          <label class="field">
+            <span>成本</span>
+            <input
+              v-model.number="form.cost"
+              type="number"
+              :min="COST_MIN"
+              :max="COST_MAX"
+              step="1"
+            >
+            <small
+              v-if="fieldError('cost')"
+              class="field-error"
+            >{{ fieldError("cost") }}</small>
+          </label>
+        </div>
+
+        <label class="field">
+          <span>备注</span>
+          <textarea
+            v-model.trim="form.notes"
+            rows="3"
+            placeholder="可填写轴、特殊限制、是否自动等审核信息。"
+          />
+        </label>
+
+        <section class="submission-preview">
+          <h2>投稿预览</h2>
+          <dl class="submission-preview-meta">
+            <div>
+              <dt>模式</dt>
+              <dd>{{ target.modeLabel }}</dd>
+            </div>
+            <div>
+              <dt>赛季</dt>
+              <dd>{{ target.seasonLabel }}</dd>
+            </div>
+            <div>
+              <dt>敌方阶段</dt>
+              <dd>{{ target.stageName }}</dd>
+            </div>
+            <div>
+              <dt>分类</dt>
+              <dd>{{ target.categoryLabel }}</dd>
+            </div>
+            <div>
+              <dt>作者</dt>
+              <dd>{{ form.author.trim() || "未填写" }}</dd>
+            </div>
+            <div>
+              <dt>队伍</dt>
+              <dd>{{ form.teamName.trim() || "未填写" }}</dd>
+            </div>
+          </dl>
+          <ol class="submission-preview-team">
+            <li
+              v-for="line in roster"
+              :key="line.index"
+            >
+              <b>{{ line.index + 1 }}</b>
+              <span class="submission-preview-unit">
+                {{ line.characterName }}
+                <em>E{{ line.eidolon }}</em>
+              </span>
+              <span class="submission-preview-unit">
+                {{ line.lightconeName }}
+                <em>S{{ line.superimposition }}</em>
+              </span>
+              <span
+                class="submission-gold-tag"
+                :data-gold="line.gold"
+              >{{ goldKindLabels[line.gold] }}</span>
+            </li>
+          </ol>
+          <p class="submission-preview-metrics">
+            <span>轮次 {{ form.cycle }}</span>
+            <span>分数 {{ form.score }}</span>
+            <span>成本 {{ form.cost }}</span>
+            <span>限定 {{ goldCounts.limited }} · 常驻 {{ goldCounts.standard }}</span>
+          </p>
+          <a
+            class="submission-preview-video"
+            :href="form.videoUrl.trim() || undefined"
+            target="_blank"
+            rel="noopener noreferrer"
+          >{{ form.videoUrl.trim() || "未填写视频链接" }}</a>
+        </section>
+      </div>
+
+      <div class="submission-nav">
+        <button
+          v-if="stepIndex > 0"
+          class="icon-button"
+          type="button"
+          @click="previousStep"
+        >
+          <ChevronLeft
+            :size="16"
+            aria-hidden="true"
+          />
+          上一步
+        </button>
+        <span v-else />
+        <button
+          v-if="stepIndex < steps.length - 1"
+          class="icon-button primary-action"
+          type="button"
+          @click="nextStep"
+        >
+          下一步
+          <ChevronRight
+            :size="16"
+            aria-hidden="true"
+          />
+        </button>
+        <button
+          v-else
+          class="icon-button primary-action"
+          type="submit"
+          :disabled="submitting"
+        >
+          <Send
+            :size="16"
+            aria-hidden="true"
+          />
+          {{ submitting ? "提交中" : "提交到审核队列" }}
+        </button>
+      </div>
+
+      <p
+        v-if="submitFailure"
+        class="submission-error"
+        role="alert"
+      >
+        <AlertCircle
+          :size="15"
+          aria-hidden="true"
+        />
+        {{ submitFailure }}
+      </p>
+    </form>
+  </div>
 </template>

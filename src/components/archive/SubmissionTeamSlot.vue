@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { computed } from "vue"
-import { Sparkles } from "lucide-vue-next"
+import { Sparkles, TriangleAlert } from "lucide-vue-next"
 import UnitSearchSelect from "@/components/archive/UnitSearchSelect.vue"
+import { getCharacterGoldKind, goldKindLabels } from "@/services/unitCost"
 import type { ArchiveUnit, RunUnit } from "@/types/archive"
 
 const props = defineProps<{
@@ -22,6 +23,11 @@ const emit = defineEmits<{
 }>()
 
 const selectedCharacter = computed(() => props.characters.find((unit) => unit.id === props.character.unitId) ?? null)
+const selectedLightcone = computed(() => props.lightcones.find((unit) => unit.id === props.lightcone.unitId) ?? null)
+const goldLabel = computed(() => goldKindLabels[getCharacterGoldKind(selectedCharacter.value)])
+const isPathMismatch = computed(
+  () => Boolean(selectedCharacter.value && selectedLightcone.value && selectedCharacter.value.path !== selectedLightcone.value.path),
+)
 const orderedLightcones = computed(() => {
   const path = selectedCharacter.value?.path
   return [...props.lightcones].sort((a, b) => {
@@ -41,10 +47,33 @@ const isAutoPaired = computed(
         <span>单位 {{ index + 1 }}</span>
         <strong>{{ index === 0 ? "主位" : "队伍成员" }}</strong>
       </div>
-      <span v-if="isAutoPaired" class="auto-pair-badge">
-        <Sparkles :size="13" aria-hidden="true" />
-        已自动搭配
-      </span>
+      <div class="submission-slot-badges">
+        <span
+          v-if="selectedCharacter"
+          class="submission-gold-tag"
+          :data-gold="getCharacterGoldKind(selectedCharacter)"
+        >{{ goldLabel }}</span>
+        <span
+          v-if="isPathMismatch"
+          class="path-mismatch-badge"
+        >
+          <TriangleAlert
+            :size="13"
+            aria-hidden="true"
+          />
+          命途不同
+        </span>
+        <span
+          v-if="isAutoPaired"
+          class="auto-pair-badge"
+        >
+          <Sparkles
+            :size="13"
+            aria-hidden="true"
+          />
+          已自动搭配
+        </span>
+      </div>
     </div>
 
     <div class="submission-unit-pair">
@@ -58,7 +87,10 @@ const isAutoPaired = computed(
           search-placeholder="搜索角色或命途"
           @update:model-value="emit('updateCharacter', $event)"
         />
-        <div class="level-segments" :aria-label="`角色 ${index + 1} 命座`">
+        <div
+          class="level-segments"
+          :aria-label="`角色 ${index + 1} 命座`"
+        >
           <button
             v-for="level in 7"
             :key="level - 1"
@@ -80,7 +112,10 @@ const isAutoPaired = computed(
           search-placeholder="搜索光锥或命途"
           @update:model-value="emit('updateLightcone', $event)"
         />
-        <div class="level-segments lightcone-levels" :aria-label="`光锥 ${index + 1} 叠影`">
+        <div
+          class="level-segments lightcone-levels"
+          :aria-label="`光锥 ${index + 1} 叠影`"
+        >
           <button
             v-for="level in 5"
             :key="level"
