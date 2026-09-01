@@ -5,27 +5,29 @@
 <template>
   <aside
     class="promo-slot"
-    aria-label="相关项目推广">
+    aria-label="相关项目推广"
+  >
     <a
       class="promo-slot-link"
       href="https://hsr-endgame-hp-trend-20260704.netlify.app"
       target="_blank"
-      rel="noopener noreferrer">
+      rel="noopener noreferrer"
+    >
       <span
         class="promo-slot-mark"
-        aria-hidden="true">
+        aria-hidden="true"
+      >
         <Sparkles :size="16" />
       </span>
       <span class="promo-slot-copy">
         <span class="promo-slot-kicker">相关项目</span>
         <span class="promo-slot-title">终局血量趋势</span>
-        <span class="promo-slot-sub"
-          >聚焦赛季总 HP、节点波次与怪物构成，复盘终局膨胀曲线</span
-        >
+        <span class="promo-slot-sub">聚焦赛季总 HP、节点波次与怪物构成，复盘终局膨胀曲线</span>
       </span>
       <span
         class="promo-slot-cta"
-        aria-hidden="true">
+        aria-hidden="true"
+      >
         前往查看
         <ExternalLink :size="14" />
       </span>

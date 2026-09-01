@@ -2,18 +2,20 @@
 
 服务端为 Netlify Functions（TypeScript），数据库为 Neon/Postgres（`@neondatabase/serverless`）。`netlify.toml` 负责把 `/api/*` 重写到 `/.netlify/functions/*`。核心原则：**有数据库走 SQL，没有数据库走文件/seed fallback，任何情况下都不能 500 或白屏。**
 
+> 改动本目录（含 `netlify.toml`、`schema.sql`）后，按根 [`../AGENTS.md`](../AGENTS.md) 的「文档同步契约」同步更新本文件（文件职责表、路由、环境变量）与根 `AGENTS.md` 的「API 与数据库」、`README.md` 的 API 清单，**同一提交内完成**。
+
 ## 文件职责
 
-| 文件 | 路由 | 说明 |
-| --- | --- | --- |
-| `_shared.ts` | —（非 function） | 公共工具：seed、DB 连接、鉴权、筛选/统计、无库文件 fallback。**被所有 function 复用** |
-| `archive-config.ts` | `/api/archive/config` | 返回配置（赛季/阶段/单位/文章），空表回退 seed |
-| `archive-runs.ts` | `/api/archive/runs` | 已审核记录（`status='approved'`），带筛选，`limit 200` |
-| `archive-stats.ts` | `/api/archive/stats` | 统计，`limit 500` 聚合后 `buildStats` |
-| `submissions.ts` | `/api/submissions` | POST 投稿，校验后入队 `pending`，返回 `202` |
-| `admin-submissions.ts` | `/api/admin/submissions` | GET 审核列表（需鉴权），支持 `status` 过滤 |
-| `admin-submissions-id.ts` | `/api/admin/submissions/:id` | PATCH 审核（通过/驳回/退回），需鉴权 |
-| `schema.sql` | — | 建表语句，手动在 Neon 执行 |
+| 文件                      | 路由                         | 说明                                                                                   |
+| ------------------------- | ---------------------------- | -------------------------------------------------------------------------------------- |
+| `_shared.ts`              | —（非 function）             | 公共工具：seed、DB 连接、鉴权、筛选/统计、无库文件 fallback。**被所有 function 复用**  |
+| `archive-config.ts`       | `/api/archive/config`        | 返回配置（赛季/阶段/单位/文章），空表回退 seed                                         |
+| `archive-runs.ts`         | `/api/archive/runs`          | 已审核记录（`status='approved'`），带筛选，`limit 200`                                 |
+| `archive-stats.ts`        | `/api/archive/stats`         | 统计，`limit 500` 聚合后 `buildStats`                                                  |
+| `submissions.ts`          | `/api/submissions`           | POST 投稿，非法 JSON 返回 `400`，缺字段返回 `400 {missing}`，入队 `pending` 返回 `202` |
+| `admin-submissions.ts`    | `/api/admin/submissions`     | GET 审核列表（需鉴权），支持 `status` 过滤                                             |
+| `admin-submissions-id.ts` | `/api/admin/submissions/:id` | PATCH 审核（通过/驳回/退回），需鉴权                                                   |
+| `schema.sql`              | —                            | 建表语句，手动在 Neon 执行                                                             |
 
 ## `_shared.ts` 关键约定
 
@@ -22,6 +24,7 @@
 - **`requireAdmin(event)`**：支持两种认证：`Bearer <管理员密码>` 与 Basic auth（`ADMIN_REVIEW_USERNAME` 默认 `admin`，密码 `ADMIN_REVIEW_PASSWORD`，旧部署可退回 `ADMIN_REVIEW_TOKEN`）。**未配置任何密码环境变量时返回 `null`（= 无密码则不拦截）**——生产务必配置 `ADMIN_REVIEW_PASSWORD`。
 - **无库投稿存储**：`addFallbackSubmissionReview` 等把审核队列写到 `SUBMISSION_REVIEW_FALLBACK_FILE`（默认 `os.tmpdir()` 下 JSON），用「写临时文件 + rename」保证原子性。注意临时目录在 Netlify 冷启动间不持久，仅用于本地/演示。
 - **筛选/统计纯函数** `filterArchiveRuns` / `buildStats` / `matchesCost`：与前端 `src/services/runUtils.ts` **语义重复但独立实现**（因 Functions 打包不能依赖前端别名）。改口径时两处必须同步。
+- **`parseFilters()` 默认值完全来自 seed，无硬编码赛季**：`season` 缺省依次为 `params.season` → `seedConfig.seasons` 中 `isCurrent` 的赛季 → 首个赛季 → `""`（不再写死某个版本号，避免 seed 换季后兜底值失效）；`bossId` 缺省取 `seedConfig.bosses[0]?.id`，而 seed 的 `bosses` 现为空数组，因此缺省会得到 `""`。
 
 ## 鉴权与安全
 

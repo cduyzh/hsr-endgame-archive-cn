@@ -49,7 +49,11 @@ onBeforeUnmount(() => document.removeEventListener("pointerdown", handleDocument
 </script>
 
 <template>
-  <div ref="root" class="unit-search-select" @keydown.esc="open = false">
+  <div
+    ref="root"
+    class="unit-search-select"
+    @keydown.esc="open = false"
+  >
     <button
       class="unit-search-trigger"
       type="button"
@@ -57,21 +61,47 @@ onBeforeUnmount(() => document.removeEventListener("pointerdown", handleDocument
       :aria-expanded="open"
       @click="toggleOpen"
     >
-      <img v-if="selectedUnit" :src="getUnitImageSrc(selectedUnit) ?? undefined" :alt="selectedUnit.name" />
-      <span v-else class="unit-search-placeholder" aria-hidden="true">+</span>
+      <img
+        v-if="selectedUnit"
+        :src="getUnitImageSrc(selectedUnit) ?? undefined"
+        :alt="selectedUnit.name"
+      >
+      <span
+        v-else
+        class="unit-search-placeholder"
+        aria-hidden="true"
+      >+</span>
       <span class="unit-search-value">
         <strong>{{ selectedUnit?.name ?? placeholder }}</strong>
         <small>{{ selectedUnit ? `${selectedUnit.path} · ${selectedUnit.rarity} 星` : label }}</small>
       </span>
-      <ChevronDown :size="17" aria-hidden="true" />
+      <ChevronDown
+        :size="17"
+        aria-hidden="true"
+      />
     </button>
 
-    <div v-if="open" class="unit-search-popover">
+    <div
+      v-if="open"
+      class="unit-search-popover"
+    >
       <label class="unit-search-box">
-        <Search :size="15" aria-hidden="true" />
-        <input v-model="query" type="search" :placeholder="searchPlaceholder" autofocus />
+        <Search
+          :size="15"
+          aria-hidden="true"
+        />
+        <input
+          v-model="query"
+          type="search"
+          :placeholder="searchPlaceholder"
+          autofocus
+        >
       </label>
-      <div class="unit-search-options" role="listbox" :aria-label="label">
+      <div
+        class="unit-search-options"
+        role="listbox"
+        :aria-label="label"
+      >
         <button
           v-for="unit in filteredUnits"
           :key="unit.id"
@@ -82,15 +112,28 @@ onBeforeUnmount(() => document.removeEventListener("pointerdown", handleDocument
           :data-unit-id="unit.id"
           @click="selectUnit(unit)"
         >
-          <img :src="getUnitImageSrc(unit) ?? undefined" :alt="unit.name" loading="lazy" />
+          <img
+            :src="getUnitImageSrc(unit) ?? undefined"
+            :alt="unit.name"
+            loading="lazy"
+          >
           <span>
             <strong>{{ unit.name }}</strong>
             <small>{{ unit.path }} · {{ unit.rarity }} 星</small>
           </span>
           <em v-if="disabledIds.has(unit.id)">已在队伍中</em>
-          <Check v-else-if="model === unit.id" :size="16" aria-hidden="true" />
+          <Check
+            v-else-if="model === unit.id"
+            :size="16"
+            aria-hidden="true"
+          />
         </button>
-        <p v-if="filteredUnits.length === 0" class="unit-search-empty">没有匹配结果</p>
+        <p
+          v-if="filteredUnits.length === 0"
+          class="unit-search-empty"
+        >
+          没有匹配结果
+        </p>
       </div>
     </div>
   </div>

@@ -1,7 +1,9 @@
 <template>
   <main class="page-narrow">
     <div class="page-heading">
-      <p class="eyebrow">收录规则</p>
+      <p class="eyebrow">
+        收录规则
+      </p>
       <h1>FAQ</h1>
       <p>这里说明首版的投稿、审核和数据来源边界。</p>
     </div>

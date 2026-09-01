@@ -49,19 +49,36 @@ const availablePathOptions = computed(() => {
 </script>
 
 <template>
-  <aside class="unit-drawer" :class="{ open }" aria-label="角色与光锥选择器">
-    <div class="drawer-rail" aria-hidden="true">
+  <aside
+    class="unit-drawer"
+    :class="{ open }"
+    aria-label="角色与光锥选择器"
+  >
+    <div
+      class="drawer-rail"
+      aria-hidden="true"
+    >
       <span>选择器</span>
       <span>{{ unitKind === "character" ? "角色" : "光锥" }}</span>
     </div>
     <div class="drawer-panel">
       <div class="drawer-header">
         <div>
-          <p class="eyebrow">快速限定</p>
+          <p class="eyebrow">
+            快速限定
+          </p>
           <h2>角色 / 光锥选择</h2>
         </div>
-        <button class="square-button" type="button" aria-label="关闭选择器" @click="emit('close')">
-          <X :size="18" aria-hidden="true" />
+        <button
+          class="square-button"
+          type="button"
+          aria-label="关闭选择器"
+          @click="emit('close')"
+        >
+          <X
+            :size="18"
+            aria-hidden="true"
+          />
         </button>
       </div>
 
@@ -82,7 +99,10 @@ const availablePathOptions = computed(() => {
         </button>
       </div>
 
-      <div class="path-grid" aria-label="命途筛选">
+      <div
+        class="path-grid"
+        aria-label="命途筛选"
+      >
         <button
           class="path-filter"
           type="button"
@@ -99,20 +119,39 @@ const availablePathOptions = computed(() => {
           :class="{ active: selectedPath === path.label }"
           @click="selectedPath = path.label"
         >
-          <img :src="path.iconSrc" :alt="path.label" loading="lazy" />
+          <img
+            :src="path.iconSrc"
+            :alt="path.label"
+            loading="lazy"
+          >
           <span class="path-label">{{ path.label }}</span>
         </button>
       </div>
 
       <label class="search-box">
-        <Search :size="15" aria-hidden="true" />
-        <input v-model="query" type="search" placeholder="搜索角色、光锥或命途" />
+        <Search
+          :size="15"
+          aria-hidden="true"
+        />
+        <input
+          v-model="query"
+          type="search"
+          placeholder="搜索角色、光锥或命途"
+        >
       </label>
 
       <div class="unit-groups">
-        <section v-for="group in groupedUnits" :key="group.label" class="unit-path-group">
+        <section
+          v-for="group in groupedUnits"
+          :key="group.label"
+          class="unit-path-group"
+        >
           <h3>
-            <img :src="group.iconSrc" :alt="group.label" loading="lazy" />
+            <img
+              :src="group.iconSrc"
+              :alt="group.label"
+              loading="lazy"
+            >
             <span>{{ group.label }}</span>
             <small>{{ group.units.length }}</small>
           </h3>
@@ -126,9 +165,21 @@ const availablePathOptions = computed(() => {
               :aria-label="unit.name"
               @click="emit('toggleUnit', unit.id)"
             >
-              <span class="unit-avatar" :class="unit.kind">
-                <img v-if="unit.imageSrc" :src="unit.imageSrc" :alt="unit.name" loading="lazy" />
-                <span v-else class="unit-placeholder" aria-hidden="true"></span>
+              <span
+                class="unit-avatar"
+                :class="unit.kind"
+              >
+                <img
+                  v-if="unit.imageSrc"
+                  :src="unit.imageSrc"
+                  :alt="unit.name"
+                  loading="lazy"
+                >
+                <span
+                  v-else
+                  class="unit-placeholder"
+                  aria-hidden="true"
+                />
               </span>
               <span class="unit-name">{{ unit.name }}</span>
               <small>{{ unit.rarity }} 星</small>

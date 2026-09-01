@@ -5,7 +5,13 @@ import type { SubmissionPayload } from "../../src/types/archive"
 export const handler: Handler = async (event) => {
   if (event.httpMethod !== "POST") return jsonResponse({ message: "Method Not Allowed" }, 405)
 
-  const payload = JSON.parse(event.body ?? "{}") as Partial<SubmissionPayload>
+  let payload: Partial<SubmissionPayload>
+  try {
+    payload = JSON.parse(event.body ?? "{}") as Partial<SubmissionPayload>
+  } catch {
+    return jsonResponse({ message: "请求体不是合法 JSON" }, 400)
+  }
+
   const missing = validateSubmission(payload)
   if (missing.length > 0) return jsonResponse({ message: "缺少必要字段", missing }, 400)
 

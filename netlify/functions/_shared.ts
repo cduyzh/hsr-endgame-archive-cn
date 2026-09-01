@@ -127,7 +127,8 @@ export async function updateFallbackSubmissionReview(
 
 export function parseFilters(params: URLSearchParams): ArchiveFilters {
   return {
-    seasonId: params.get("season") ?? seedConfig.seasons.find((season) => season.isCurrent)?.id ?? "4.3",
+    seasonId:
+      params.get("season") ?? seedConfig.seasons.find((season) => season.isCurrent)?.id ?? seedConfig.seasons[0]?.id ?? "",
     mode: (params.get("mode") as ArchiveFilters["mode"]) ?? "moc",
     bossId: params.get("bossId") ?? seedConfig.bosses[0]?.id ?? "",
     category: (params.get("category") as ArchiveFilters["category"]) ?? "all",
