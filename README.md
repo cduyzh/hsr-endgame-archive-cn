@@ -108,15 +108,15 @@ pnpm sync:stages -- --season=4.5  # 只同步指定赛季
 
 `netlify.toml` 将业务 API 转发到 Netlify Functions：
 
-| 前端路径                     | Function               | 说明                                       |
-| ---------------------------- | ---------------------- | ------------------------------------------ |
-| `/api/archive/config`        | `archive-config`       | 赛季、模式、敌方阶段、角色、光锥、文章配置 |
-| `/api/archive/runs`          | `archive-runs`         | 已审核竞速记录，支持筛选                   |
-| `/api/archive/stats`         | `archive-stats`        | 使用率、组合、成本区间统计                 |
-| `/api/submissions`           | `submissions`          | 投稿入口                                   |
-| `/api/admin/submissions`     | `admin-submissions`    | 管理员读取投稿审核列表                     |
-| `/api/admin/submissions/:id` | `admin-submissions-id` | 审核入口                                   |
-| `/api/admin/sync-stages`     | `admin-sync-stages`    | 管理员触发批量同步 `stages` 表（从远程快照）|
+| 前端路径                     | Function               | 说明                                         |
+| ---------------------------- | ---------------------- | -------------------------------------------- |
+| `/api/archive/config`        | `archive-config`       | 赛季、模式、敌方阶段、角色、光锥、文章配置   |
+| `/api/archive/runs`          | `archive-runs`         | 已审核竞速记录，支持筛选                     |
+| `/api/archive/stats`         | `archive-stats`        | 使用率、组合、成本区间统计                   |
+| `/api/submissions`           | `submissions`          | 投稿入口                                     |
+| `/api/admin/submissions`     | `admin-submissions`    | 管理员读取投稿审核列表                       |
+| `/api/admin/submissions/:id` | `admin-submissions-id` | 审核入口                                     |
+| `/api/admin/sync-stages`     | `admin-sync-stages`    | 管理员触发批量同步 `stages` 表（从远程快照） |
 
 ## 静态数据源（远程直连）
 
@@ -214,6 +214,7 @@ src/
 │   └── useSubmissionDraft.ts
 ├── data/
 │   ├── seed/                          # config.json / runs.json / index.ts（+ 同步产物 hsr-*.json）
+│   ├── changelog.ts                   # 站点更新记录与当前版本号（appVersion）
 │   ├── unitAssets.ts
 │   └── unitPaths.ts
 ├── services/
@@ -230,7 +231,9 @@ src/
     ├── AdminSubmissionsView.vue
     ├── ArchiveView.vue
     ├── ArticlesView.vue
+    ├── ChangelogView.vue
     ├── FaqView.vue
+    ├── MySubmissionsView.vue
     └── SubmitView.vue
 ```
 

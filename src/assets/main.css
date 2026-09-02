@@ -2743,6 +2743,114 @@ body.is-modal-open {
   line-height: 1.7;
 }
 
+.changelog-list {
+  display: grid;
+  gap: 12px;
+}
+
+.changelog-list article {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.045),
+      rgba(255, 255, 255, 0.018)
+    ),
+    var(--surface);
+  box-shadow: var(--shadow);
+  padding: 16px;
+}
+
+.changelog-entry-head {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.changelog-entry-head h2 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: 16px;
+  font-variant-numeric: tabular-nums;
+}
+
+.changelog-current {
+  border: 1px solid rgba(112, 213, 154, 0.4);
+  border-radius: 999px;
+  background: rgba(112, 213, 154, 0.1);
+  color: var(--success);
+  padding: 1px 8px;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.changelog-entry-head time {
+  margin-left: auto;
+  color: var(--faint);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.changelog-title {
+  margin: 6px 0 10px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.changelog-list ul {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.changelog-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.changelog-tag {
+  flex: 0 0 auto;
+  border: 1px solid;
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-size: 10px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.changelog-tag.is-feature {
+  border-color: rgba(214, 166, 255, 0.42);
+  background: rgba(214, 166, 255, 0.08);
+  color: var(--accent);
+}
+
+.changelog-tag.is-improve {
+  border-color: rgba(103, 220, 197, 0.42);
+  background: rgba(103, 220, 197, 0.08);
+  color: var(--success);
+}
+
+.changelog-tag.is-fix {
+  border-color: rgba(255, 113, 133, 0.42);
+  background: rgba(255, 113, 133, 0.08);
+  color: var(--danger);
+}
+
+.changelog-tag.is-data {
+  border-color: rgba(120, 167, 255, 0.42);
+  background: rgba(120, 167, 255, 0.08);
+  color: var(--primary);
+}
+
 .system-message,
 .empty-state {
   border: 1px solid var(--line);

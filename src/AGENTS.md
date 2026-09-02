@@ -22,12 +22,12 @@
 | `services/`                | 数据访问与纯函数层，见 [services/AGENTS.md](services/AGENTS.md)                                |
 | `stores/archiveStore.ts`   | Pinia store，缓存 `ArchiveConfig`                                                              |
 | `types/archive.ts`         | 所有 `Archive*` 类型定义（唯一来源）                                                           |
-| `data/`                    | seed 数据与图片/命途映射                                                                       |
+| `data/`                    | seed 数据、图片/命途映射与站点更新记录（`changelog.ts`）                                       |
 | `assets/`                  | `main.css`、`redesign.css` 全局样式                                                            |
 
 ## 路由与视图
 
-`router/index.ts` 当前注册 6 条路由：`/`(archive)、`/submit`、`/me`（我的投稿，按本机 token 反查）、`/admin/submissions`、`/articles`、`/faq`。首页 `ArchiveView` 同步引入，其余懒加载。`views/` 与这 6 条路由一一对应，没有额外未注册的视图文件。导航在 `App.vue` 注册："档案 / 文章 / 规则 / **我的投稿** / 审核"。
+`router/index.ts` 当前注册 7 条路由：`/`(archive)、`/submit`、`/me`（我的投稿，按本机 token 反查）、`/admin/submissions`、`/articles`、`/faq`、`/changelog`（更新记录）。首页 `ArchiveView` 同步引入，其余懒加载。`views/` 与这 7 条路由一一对应，没有额外未注册的视图文件。导航在 `App.vue` 注册："档案 / 文章 / 规则 / **更新** / 我的投稿 / 审核"，头部 `brand-appver` 徽章显示 `src/data/changelog.ts` 的 `appVersion` 并链接到更新记录页。
 
 投稿面板不是独立页面：`SubmitRunDialog.vue` 由 `App.vue` 常驻渲染，头部「提交记录」按钮和工作台工具栏按钮都调用 `useSubmissionDialog().open()`；`/submit` 深链保留，`SubmitView.vue` 只负责打开同一弹窗后 `router.replace("/")`，因此路由结构未变。`/me` 直接是页面，没有弹窗化。
 

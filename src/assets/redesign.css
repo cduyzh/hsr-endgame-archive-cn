@@ -97,6 +97,15 @@ body {
   line-height: 1.2;
 }
 
+.brand-appver {
+  text-decoration: none;
+  font-variant-numeric: tabular-nums;
+}
+
+.brand-appver:hover {
+  border-color: var(--primary-strong);
+}
+
 .header-actions {
   justify-content: flex-end;
   gap: 12px;

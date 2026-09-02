@@ -13,6 +13,7 @@
 | `submissionUtils.test.ts` | 投稿 → 档案记录转换、光锥偏好统计 |
 | `submissionValidation.test.ts` | 投稿字段校验顺序、步骤归属、视频域名白名单、分类与模式/阶段匹配、限定/常驻统计与预览取数 |
 | `archiveService.test.ts` | `submitRun` 的成功返回与服务端 `{ message, missing }` → 中文错误映射 |
+| `changelog.test.ts` | `src/data/changelog.ts` 版本号/日期格式、条目唯一性与新到旧排序、`appVersion` 与 tag 标签口径 |
 | `useSubmissionDraft.test.ts` | 投稿草稿的防抖写入、空表单不覆盖、`discard`、脏数据读取容错 |
 | `adminAuth.test.ts` | `netlify/functions/_shared.ts` 的 `requireAdmin`（Bearer/Basic/未配置） |
 | `RunGroupList.test.ts` / `SubmitRunForm.test.ts` / `UnitPickerDrawer.test.ts` | 关键档案组件的挂载与交互；`SubmitRunForm.test.ts` 覆盖三步向导解锁/回退/预览、分类随模式与阶段联动、as 自动归档、草稿恢复与提交后清除 |
