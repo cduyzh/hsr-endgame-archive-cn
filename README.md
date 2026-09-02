@@ -106,6 +106,7 @@ ADMIN_REVIEW_PASSWORD=请替换为强密码
 | `/api/submissions`           | `submissions`          | 投稿入口                                   |
 | `/api/admin/submissions`     | `admin-submissions`    | 管理员读取投稿审核列表                     |
 | `/api/admin/submissions/:id` | `admin-submissions-id` | 审核入口                                   |
+| `/api/admin/sync-stages`     | `admin-sync-stages`    | 管理员触发批量同步 `stages` 表（从远程快照）|
 
 ## 静态数据源（远程直连）
 

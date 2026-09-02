@@ -104,6 +104,7 @@ pnpm seed:archive:dry    # 灌库空跑
 - `/api/submissions` -> `netlify/functions/submissions.ts`
 - `/api/admin/submissions` -> `netlify/functions/admin-submissions.ts`
 - `/api/admin/submissions/:id` -> `netlify/functions/admin-submissions-id.ts`（`netlify.toml` 中目标写作 `/.netlify/functions/admin-submissions-id/:id`）
+- `/api/admin/sync-stages` -> `netlify/functions/admin-sync-stages.ts`（POST，管理员手动批量同步 `stages` 表）
 
 数据库 URL 读取顺序：
 
