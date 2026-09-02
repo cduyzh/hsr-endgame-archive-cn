@@ -1,9 +1,9 @@
 import { computed, reactive, watch } from "vue"
 import { useRoute, useRouter } from "vue-router"
+import { categoryOptionsFor } from "@/services/runUtils"
 import type { ArchiveConfig, ArchiveFilters, EndgameMode, RunCategory, SortKey } from "@/types/archive"
 
 const modeValues = new Set<EndgameMode>(["moc", "pf", "as", "aa"])
-const categoryValues = new Set<RunCategory>(["all", "zeroCycle", "fullStars"])
 const sortValues = new Set<SortKey>(["score", "limited", "latest"])
 
 function readString(value: unknown): string | undefined {
@@ -61,10 +61,7 @@ export function useArchiveFilters(config: () => ArchiveConfig | null) {
     filters.mode = nextMode && modeValues.has(nextMode as EndgameMode) ? (nextMode as EndgameMode) : "moc"
 
     const nextCategory = readString(query.category)
-    filters.category =
-      nextCategory && categoryValues.has(nextCategory as RunCategory)
-        ? (nextCategory as RunCategory)
-        : "all"
+    filters.category = (nextCategory as RunCategory | undefined) ?? "all"
 
     const nextSort = readString(query.sort)
     filters.sort = nextSort && sortValues.has(nextSort as SortKey) ? (nextSort as SortKey) : "score"
@@ -81,6 +78,13 @@ export function useArchiveFilters(config: () => ArchiveConfig | null) {
     const queryBoss = readString(query.bossId)
     const bosses = availableBosses.value
     filters.bossId = bosses.some((boss) => boss.id === queryBoss) ? queryBoss ?? "" : bosses[0]?.id ?? ""
+    normalizeCategory()
+  }
+
+  /** 分类可用集合随模式与阶段变化：URL 深链或切换上下文后落到不可用的值时回落 all。 */
+  function normalizeCategory() {
+    const allowed: RunCategory[] = ["all", ...categoryOptionsFor(filters.mode, filters.bossId)]
+    if (!allowed.includes(filters.category)) filters.category = "all"
   }
 
   function patchFilter(patch: Partial<ArchiveFilters>) {
@@ -88,6 +92,7 @@ export function useArchiveFilters(config: () => ArchiveConfig | null) {
     if (patch.seasonId || patch.mode) {
       filters.bossId = availableBosses.value[0]?.id ?? ""
     }
+    normalizeCategory()
   }
 
   function toggleFlag(flag: string) {

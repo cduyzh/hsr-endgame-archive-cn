@@ -1,5 +1,21 @@
 export type EndgameMode = "moc" | "pf" | "as" | "aa"
-export type RunCategory = "all" | "zeroCycle" | "fullStars"
+/**
+ * 记录分类。库中 `runs.category` 是开放 text，新增取值只需在
+ * `src/services/runUtils.ts` 的 `categoryLabels` / `categoryOptionsFor` 登记。
+ * `asScore*` 只用于末日幻影（按剩余行动值计分），`plight*` 只用于异相仲裁的绝境阶段。
+ */
+export type RunCategory =
+  | "all"
+  | "zeroCycle"
+  | "fullStars"
+  | "plightZeroCycle"
+  | "plightFullStars"
+  | "asScore3400"
+  | "asScore3650"
+  | "asScore3850"
+  | "asScore4000"
+/** 记录在数据里实际携带的分类（不含筛选用的 `all`）。 */
+export type SpecificRunCategory = Exclude<RunCategory, "all">
 export type SortKey = "score" | "limited" | "latest"
 export type UnitKind = "character" | "lightcone"
 export type UnitPath =
@@ -77,7 +93,7 @@ export interface ArchiveRun {
   seasonId: string
   mode: EndgameMode
   bossId: string
-  category: Exclude<RunCategory, "all">
+  category: SpecificRunCategory
   teamName: string
   author: string
   cycle: number
@@ -128,7 +144,7 @@ export interface SubmissionPayload {
   seasonId: string
   mode: EndgameMode
   bossId: string
-  category: Exclude<RunCategory, "all">
+  category: SpecificRunCategory
   author: string
   teamName: string
   cycle: number

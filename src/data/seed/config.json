@@ -7,7 +7,7 @@
     },
     {
       "id": "4.4",
-      "label": "4.4 归档",
+      "label": "4.4",
       "isCurrent": false
     }
   ],
@@ -15,8 +15,7 @@
     {
       "id": "moc",
       "label": "混沌回忆",
-      "shortLabel": "混沌",
-      "badge": "NEW"
+      "shortLabel": "混沌"
     },
     {
       "id": "pf",
@@ -26,7 +25,8 @@
     {
       "id": "as",
       "label": "末日幻影",
-      "shortLabel": "末日"
+      "shortLabel": "末日",
+      "badge": "NEW"
     },
     {
       "id": "aa",

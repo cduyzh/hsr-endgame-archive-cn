@@ -12,10 +12,10 @@
 
 主要功能：
 
-- 档案工作台：筛选赛季、模式、敌方阶段、记录分类、队伍人数、成本、角色/光锥和标签。
+- 档案工作台：筛选赛季、模式、敌方阶段、记录分类（随模式与阶段变化）、队伍人数、成本、角色/光锥和标签。
 - 记录列表：按队伍组合分组，展示作者、角色命座、轮次、分数、成本和视频链接。
 - 环境统计：角色使用率、光锥使用率、常见队伍组合和成本区间。
-- 投稿入口：右上角「提交记录」打开站内弹窗，按「基础信息 → 队伍配置 → 成绩与预览」三步提交到审核队列。
+- 投稿入口：右上角「提交记录」打开站内弹窗，按「基础信息 → 队伍配置 → 成绩与预览」三步提交到审核队列；草稿存在本地直到提交成功，视频只接受 B 站与 YouTube 链接。
 - 规则/文章页：展示站内说明与文章摘要。
 
 ## 技术栈与命令
@@ -63,7 +63,7 @@ pnpm seed:archive:dry    # 灌库空跑
 - `src/router/index.ts`：5 条路由 `/`、`/submit`、`/admin/submissions`、`/articles`、`/faq`；仅首页同步引入。
 - `src/views/`：`ArchiveView.vue`（只组合 `ArchiveWorkbench`）、`SubmitView.vue`（`/submit` 深链转发：打开投稿弹窗后回到首页）、`AdminSubmissionsView.vue`、`ArticlesView.vue`、`FaqView.vue`。
 - `src/components/archive/`：档案业务组件，含投稿弹窗 `SubmitRunDialog.vue` 与其内部三步向导 `SubmitRunForm.vue`；`src/components/admin/`：审核台弹框与卡片；`src/components/PromoSlot.vue`：站务推广位。
-- `src/composables/`：`useArchiveFilters.ts`（筛选状态 + 路由 query 双向同步）、`useRunsQuery.ts`、`useMetaStats.ts`、`useAdminSubmissions.ts`、`useSubmissionDialog.ts`（投稿弹窗全局开关）。
+- `src/composables/`：`useArchiveFilters.ts`（筛选状态 + 路由 query 双向同步）、`useRunsQuery.ts`、`useMetaStats.ts`、`useAdminSubmissions.ts`、`useSubmissionDialog.ts`（投稿弹窗全局开关）、`useSubmissionDraft.ts`（投稿草稿 localStorage 缓存）。
 - `src/types/archive.ts`：所有 `Archive*` 类型的唯一来源。
 - `src/services/`：`archiveService.ts`（API + seed fallback + 管理员会话）、`staticArchiveConfig.ts`（远程静态快照）、`dataSource.ts`（远程地址与图片）、`runUtils.ts`、`unitCost.ts`、`submissionUtils.ts`、`submissionValidation.ts`（投稿校验与预览纯函数）。
 - `src/data/`：`unitAssets.ts`（`sourceId` -> 远程图）、`unitPaths.ts`（命途图标）、`seed/`。
@@ -85,6 +85,14 @@ pnpm seed:archive:dry    # 灌库空跑
 合并语义（以代码为准）：`mergeStaticArchiveConfig()` **只补充 `config.bosses` 中不存在的阶段 id**，并为缺失的赛季追加 `{ id, label: "<seasonId> 归档", isCurrent: seasonId === manifest.hsr.live }`；**从不覆盖**业务配置里已有的赛季 label 或敌方阶段字段。因此当前赛季的展示字段完全来自远程快照，而 seed/库里已有的历史阶段保持原值。
 
 阶段 id 规则为 `${seasonId}-${mode}-${stageKey}`（`mode` 取业务模式 `moc/pf/as/aa`；`stageKey` 为 `top`/`bottom`/`starward`，`aa` 为 `k1..kN`/`checkmate`/`plight`），是业务筛选与投稿记录引用的稳定 id，不要改动格式。
+
+记录分类（`category`）口径：库里 `runs.category` 是**开放 text、无枚举约束**，新增取值不需要迁移。可用集合随模式与敌方阶段变化，唯一来源是 `src/services/runUtils.ts` 的 `categoryOptionsFor(mode, bossId)` 与 `categoryLabels`：
+
+- `moc` / `pf` / 非绝境的 `aa` → `zeroCycle`（0 轮竞速）、`fullStars`（满星记录）。
+- `aa` 且阶段键为 `plight` → `plightZeroCycle` / `plightFullStars`，绝境记录单独归档。
+- `as` → 按剩余行动值分数分四档：`asScore3400`(3400-3650) / `asScore3650`(3650-3850) / `asScore3850`(3850-3899) / `asScore4000`(4000 满分)；边界归高一档，3900-3999 与 3400 以下不单独归档（`categoryOfAsScore()` 返回 `null`）。
+
+服务端 `filterArchiveRuns()` 与前端 `matchesCategory()` 都只做等值比较、不校验枚举；「分类是否属于当前模式与阶段」在投稿侧由 `submissionValidation.ts` 拦下，主页侧由 `useArchiveFilters` 的 `normalizeCategory()` 在不匹配时回落为 `all`。
 
 ## API 与数据库
 
@@ -169,7 +177,7 @@ https://static.nanoka.cc/
 ### 版本与赛季解析流程
 
 1. `fetchStaticArchiveSnapshot()` 读 `manifest.json`。
-2. 遍历 `STATIC_SEASON_IDS` 的每个大版本（当前 `4.4`、`4.5`），用 `pickVersion(manifest.hsr.available, "4.5")` 取该大版本下**最新的三位版本号目录**（如 `4.5.51`）作为 `<ver>`。
+2. 用 `pickDataDirectory(manifest.hsr.available)` 取**最新的数据目录**（如 `4.5.51`）作为 `<ver>`，所有赛季共用该目录。上游只保留当前大版本目录，历史赛季的详情文件仍在其中累积，因此 `4.4` 的 `1034` 等 id 也从 `4.5.51/` 读取。
 3. 并行拉 `monster.json`、`monstervalue.json`、`HardLevelGroup.json`、`EliteGroup.json`、`InfiniteEliteGroup.json`（最后一个允许缺失）。
 4. 按 `STATIC_SEASON_IDS[seasonId][staticMode]` 直接拼 `<locale>/<dir>/<id>.json` 拉四份模式详情；单个模式详情 404 时该模式为空，不影响其余模式。
 5. `liveVersion` 取 `manifest.hsr.live`（如 `4.5`），用于判定 `isCurrent`。
@@ -196,7 +204,7 @@ pnpm seed:archive:dry   # 等价于 seed:archive -- --dry-run
 
 ### 新赛季上线清单（改代码 + 改文档）
 
-1. 确认 `manifest.json` 的 `hsr.available` 已出现新大版本目录，`hsr.live` 已切换。
+1. 确认 `manifest.json` 的 `hsr.live` 已切换，且 `hsr.available` 最新目录下能取到该赛季的详情文件。
 2. 在线上 `hsr/<ver>/zh/{maze,story,boss,peak}/` 找到四期详情文件名（数字 id）。
 3. 在 `src/services/staticArchiveConfig.ts` 的 `STATIC_SEASON_IDS` 增加一行 `"4.6": { moc, fiction, doom, peak }`。
 4. 若 `modeLabelByStaticMode` 中模式改名，必须同步 `src/data/seed/config.json` 的 `modes[].label`（两处共同决定页面文案），并更新本文件与 `README.md`、`src/AGENTS.md`、`src/services/AGENTS.md` 的模式表。

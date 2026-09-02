@@ -61,7 +61,7 @@ describe("submissionValidation 校验", () => {
   })
 
   it("赛季与模式下没有可选阶段时提示改选赛季或模式", () => {
-    const errors = validateSubmissionForm(fixtureSubmission({ mode: "as" }), fixtureConfig)
+    const errors = validateSubmissionForm(fixtureSubmission({ mode: "pf" }), fixtureConfig)
 
     expect(errors).toHaveLength(1)
     expect(errors[0].message).toContain("暂无可投稿的敌方阶段")
@@ -99,11 +99,32 @@ describe("submissionValidation 校验", () => {
     expect(buildSubmissionRoster(mismatched, fixtureConfig)[0].pathMismatch).toBe(true)
   })
 
-  it("视频链接只接受完整的 http(s) 地址", () => {
+  it("视频链接只认 B 站与 YouTube 的完整地址", () => {
     expect(isUsableVideoUrl("https://www.bilibili.com/video/BV1")).toBe(true)
+    expect(isUsableVideoUrl("https://b23.tv/abc")).toBe(true)
+    expect(isUsableVideoUrl("https://youtu.be/abc")).toBe(true)
+    expect(isUsableVideoUrl("https://m.youtube.com/watch?v=abc")).toBe(true)
+    expect(isUsableVideoUrl("https://bilibili.com.evil.com/video")).toBe(false)
+    expect(isUsableVideoUrl("https://example.com/video")).toBe(false)
     expect(isUsableVideoUrl("bilibili.com/video/BV1")).toBe(false)
     expect(isUsableVideoUrl("javascript:alert(1)")).toBe(false)
-    expect(fieldsOf(fixtureSubmission({ videoUrl: " https://example " }))).toEqual(["videoUrl"])
+    expect(fieldsOf(fixtureSubmission({ videoUrl: "https://example.com/x" }))).toEqual(["videoUrl"])
+  })
+
+  it("分类必须属于当前模式与敌方阶段", () => {
+    const asBracket = fixtureSubmission({ mode: "as", bossId: "4.5-as-top", category: "asScore3850", score: 3860 })
+    expect(fieldsOf(asBracket)).toEqual([])
+
+    expect(fieldsOf(fixtureSubmission({ mode: "as", bossId: "4.5-as-top", score: 3800 }))).toEqual(["category"])
+    expect(fieldsOf(fixtureSubmission({ mode: "aa", bossId: "4.5-aa-plight", category: "fullStars" }))).toEqual(["category"])
+    expect(fieldsOf(fixtureSubmission({ mode: "moc", bossId: "4.5-moc-top", category: "plightFullStars" }))).toEqual(["category"])
+
+    const plight = fixtureSubmission({ mode: "aa", bossId: "4.5-aa-plight", category: "plightFullStars" })
+    expect(fieldsOf(plight)).toEqual([])
+    expect(fieldsOf(fixtureSubmission({ mode: "aa", bossId: "4.5-aa-plight", category: "plightZeroCycle", cycle: 2 }))).toEqual([
+      "cycle",
+    ])
+    expect(fieldsOf(fixtureSubmission({ mode: "as", bossId: "4.5-as-top", category: "asScore3400", score: 4200 }))).toEqual(["score"])
   })
 
   it("0 轮竞速要求轮次为 0，成本受分桶上限约束", () => {

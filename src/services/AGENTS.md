@@ -11,7 +11,7 @@
 | `dataSource.ts`          | 远程数据源配置（唯一入口）                                        | `DATA_SITE`、`dataSourceUrl()`、`IMAGE_BASES`、`monsterImageUrl()`                                                   |
 | `archiveService.ts`      | 前端 API 请求 + seed fallback + 静态快照合并 + 管理员会话         | `fetchArchiveConfig/Runs/MetaStats`、`submitRun`、`createAdminSession`、`fetchSubmissionReviews`、`reviewSubmission` |
 | `staticArchiveConfig.ts` | 按 `STATIC_SEASON_IDS` 直连各赛季详情，生成敌方阶段并补齐配置缺口 | `fetchStaticArchiveSnapshot()`、`mergeStaticArchiveConfig()`                                                         |
-| `runUtils.ts`            | 记录筛选/排序/统计纯函数                                          | `filterRuns`、`buildMetaStats`、`matchesCost`                                                                        |
+| `runUtils.ts`            | 记录筛选/排序/统计纯函数 + 分类口径唯一来源                       | `filterRuns`、`buildMetaStats`、`matchesCost`、`categoryLabels`、`categoryOptionsFor`、`categoryOfAsScore`、`stageKeyOf` |
 | `unitCost.ts`            | 五星角色“限定/常驻”成本分类                                       | `getCharacterGoldKind`、`getRunGoldCounts`、`getUnitGoldCounts`、`goldKindLabels`                                    |
 | `submissionUtils.ts`     | 投稿转换纯函数                                                    | `submissionReviewToArchiveRun`、`buildPreferredLightconeByCharacter`                                                 |
 | `submissionValidation.ts`| 投稿表单的字段校验、步骤归属与预览取数（仅前端使用）              | `validateSubmissionForm`、`errorsOfStep`、`stepOfField`、`buildSubmissionRoster`、`describeSubmissionTarget`         |
@@ -27,7 +27,7 @@
 
 ## 静态快照与合并（`staticArchiveConfig.ts`）
 
-- 入口 `fetchStaticArchiveSnapshot()`：读 `manifest.json` → 遍历 `STATIC_SEASON_IDS` 的每个大版本 → `pickVersion(manifest.hsr.available, "4.5")` 选出该大版本最新目录（如 `4.5.51`）→ 拉 `monster.json`/`monstervalue.json`/`HardLevelGroup.json`/`EliteGroup.json`/`InfiniteEliteGroup.json`（最后一个允许缺失）→ 直接按 id 拉四份模式详情。**不读** `maze.json / maze_extra.json / maze_boss.json / maze_peak.json` 索引，**不用** `hsr.latest`，远程也没有 `cache-plan.json`。`liveVersion` 取 `manifest.hsr.live`。manifest 请求失败返回 `null`；单个赛季构建失败只丢该赛季。
+- 入口 `fetchStaticArchiveSnapshot()`：读 `manifest.json` → `pickDataDirectory(manifest.hsr.available)` 选出**最新数据目录**（如 `4.5.51`），所有赛季共用它（上游只保留当前大版本目录，历史赛季详情在其下累积）→ 拉 `monster.json`/`monstervalue.json`/`HardLevelGroup.json`/`EliteGroup.json`/`InfiniteEliteGroup.json`（最后一个允许缺失）→ 直接按 id 拉四份模式详情。**不读** `maze.json / maze_extra.json / maze_boss.json / maze_peak.json` 索引，**不用** `hsr.latest`，远程也没有 `cache-plan.json`。`liveVersion` 取 `manifest.hsr.live`。manifest 请求失败或 available 为空返回 `null`；单个赛季构建失败只丢该赛季。
 - **赛季详情 id 是硬编码的**：`STATIC_SEASON_IDS = { "4.4": { moc:1034, fiction:2025, doom:3019, peak:8 }, "4.5": { moc:1035, fiction:2026, doom:3020, peak:9 } }`。上线新赛季必须在此新增条目，否则页面不会出现该赛季（见根 `AGENTS.md` 的「新赛季上线清单」）。
 - 模式映射（业务 → 静态 → 详情目录）：`moc→moc/maze`、`pf→fiction/story`、`as→doom/boss`、`aa→peak/peak`，locale 固定 `zh`。阶段副标题文案来自本文件的 `modeLabelByStaticMode`，与 seed `config.json` 的 `modes[].label` 一致（`aa` 统一为「异相仲裁」）——改任一处名称必须同时改另一处。
 - 阶段构建：`buildMocStages` / `buildPfStages` / `buildAsStages` / `buildAaStages` 各自从详情里挑终层与星临层；`aa` 遍历 `pre_level` 生成 `k1..kN`，再加 `checkmate`、`plight`。阶段首领由 `bossMonsterIdOf()` 在末波怪物里按 `rank`（`Elite`/`Minion`/`MinionLv2` 视为随从，未知 rank 视为主首领）+ 血量打分选出。上游偶发的 `"BOSS"` 占位名会退回阶段名。
@@ -49,8 +49,15 @@
 - `validateSubmissionForm(form, config)` 返回**有序** `{ field, message }` 列表：列表顺序就是错误汇总条与字段提示的展示顺序，新增规则时按「赛季/模式/阶段/分类 → 作者/视频 → 队伍 → 数值」插到对应位置。
 - 步骤归属由 `submissionStepFields` 决定（`basic` / `team` / `result`），`errorsOfStep()` 判断能否进入下一步、`stepOfField()` 在提交失败时把用户跳回第一步出错的那个环节；新增字段必须同时登记归属，否则该字段的错误不会被任何步骤拦下。
 - 数值用 `toInteger()` 宽松解析（`v-model.number` 在清空时会留下 `""`）；`COST_MIN/COST_MAX`（0–48）与 `buildMetaStats()` 的 `33-48` 桶对齐，改上限要同时改分桶口径。
-- 视频链接只要求是完整的 `http(s)` 地址（`isUsableVideoUrl()`），不限制具体站点；命途与角色不匹配**不是错误**，只在槽位上给「命途不同」提示。
+- 视频链接必须是 B 站或 YouTube（`isUsableVideoUrl()` 用域名白名单 `bilibili.com`/`b23.tv`/`youtube.com`/`youtube-nocookie.com`/`youtu.be`，按 `host === 域名 || host.endsWith("." + 域名)` 匹配子域，能挡 `bilibili.com.evil.com` 这类伪装后缀）；命途与角色不匹配**不是错误**，只在槽位上给「命途不同」提示。
+- 分类必须是当前模式与阶段的合法取值（`validateSubmissionForm` 直接取 `categoryOptionsFor(form.mode, form.bossId)`），否则报「当前模式与敌方阶段没有该分类」；`zeroCycle`/`plightZeroCycle` 还要求 `cycle === 0`，`as` 模式额外限制 `score <= AS_MAX_SCORE`(4000)。
 - 预览取数：`describeSubmissionTarget()` 把 season/mode/stage/category 的 id 翻成配置里的 label，`buildSubmissionRoster()` 输出每槽角色命座、光锥叠影、金币分类与命途是否错位，单位缺失时用「未选择 / 未搭配」占位。
+
+## 分类口径（`runUtils.ts`）
+
+- `categoryLabels` 与 `categoryOptionsFor(mode, bossId)` 是全站唯一来源：主页分类筛选、投稿向导、审核台回显都用它，不要再抄一份常量。
+- `categoryOptionsFor`：`as` → 四档 `asScore*`；`aa` 且 `stageKeyOf(bossId) === "plight"` → `plightZeroCycle` / `plightFullStars`；其余 → `zeroCycle` / `fullStars`。阶段键从 id 末段解析（`stageKeyOf`），与阶段 id 规则同源。
+- `categoryOfAsScore(score)`：只在 `[min,max]` 命中时返回档位，**边界归高一档**（3650 → `asScore3650`），3900-3999 与 3400 以下返回 `null` 表示不单独归档；投稿里用它自动带入分类，用户手选过后（`categoryTouched`）不再覆盖。
 
 ## 配置读取链路（`archiveService.fetchArchiveConfig`）
 

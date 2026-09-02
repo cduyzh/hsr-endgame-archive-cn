@@ -17,7 +17,9 @@ import {
   X,
 } from "lucide-vue-next"
 import SubmissionTeamSlot from "@/components/archive/SubmissionTeamSlot.vue"
+import { loadSubmissionDraft, useSubmissionDraft } from "@/composables/useSubmissionDraft"
 import { submitRun } from "@/services/archiveService"
+import { AS_MAX_SCORE, categoryLabels, categoryOfAsScore, categoryOptionsFor } from "@/services/runUtils"
 import { getUnitGoldCounts, goldKindLabels } from "@/services/unitCost"
 import {
   COST_MAX,
@@ -27,13 +29,12 @@ import {
   describeSubmissionTarget,
   errorsOfStep,
   stepOfField,
-  submissionCategoryLabels,
   validateSubmissionForm,
   type SubmissionError,
   type SubmissionField,
   type SubmissionStepId,
 } from "@/services/submissionValidation"
-import type { ArchiveConfig, EndgameMode, RunCategory, SubmissionPayload } from "@/types/archive"
+import type { ArchiveConfig, EndgameMode, SpecificRunCategory, SubmissionPayload } from "@/types/archive"
 
 const props = defineProps<{
   config: ArchiveConfig
@@ -71,13 +72,43 @@ function createForm(config: ArchiveConfig): SubmissionPayload {
   }
 }
 
-const form = reactive<SubmissionPayload>(createForm(props.config))
-const stepIndex = shallowRef(0)
-const unlockedIndex = shallowRef(0)
+/** 草稿可能来自旧版本或已下线的阶段：槽位数不对就退回默认阵容，其余交给校验提示。 */
+function restoreForm(config: ArchiveConfig, saved?: SubmissionPayload): SubmissionPayload {
+  const base = createForm(config)
+  if (!saved) return base
+
+  const restored: SubmissionPayload = { ...base, ...saved }
+  if (restored.units.length !== TEAM_SLOT_COUNT) restored.units = base.units
+  if (restored.lightcones.length !== TEAM_SLOT_COUNT) restored.lightcones = base.lightcones
+  return restored
+}
+
+function formatDraftTime(iso: string): string {
+  const date = new Date(iso)
+  if (Number.isNaN(date.getTime())) return ""
+  return date.toLocaleString("zh-CN", { month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" })
+}
+
+const draft = loadSubmissionDraft()
+const lastStep = steps.length - 1
+const restoredStep = Math.min(Math.max(draft?.stepIndex ?? 0, 0), lastStep)
+
+const form = reactive<SubmissionPayload>(restoreForm(props.config, draft?.payload))
+const stepIndex = shallowRef(restoredStep)
+const unlockedIndex = shallowRef(Math.min(Math.max(draft?.unlockedIndex ?? restoredStep, restoredStep), lastStep))
+const draftSavedAt = shallowRef(draft ? formatDraftTime(draft.savedAt) : "")
 const showErrors = shallowRef(false)
 const submitting = shallowRef(false)
 const submitFailure = shallowRef("")
 const acceptedId = shallowRef("")
+const categoryTouched = shallowRef(false)
+
+const { discard: discardDraft } = useSubmissionDraft({
+  payload: form,
+  baseline: createForm(props.config),
+  stepIndex,
+  unlockedIndex,
+})
 
 const currentStep = computed<SubmissionStepId>(() => steps[stepIndex.value].id)
 const allErrors = computed(() => validateSubmissionForm(form, props.config))
@@ -96,12 +127,31 @@ const lightcones = computed(() =>
     .sort((a, b) => b.rarity - a.rarity || a.name.localeCompare(b.name, "zh-CN")),
 )
 const categoryOptions = computed(() =>
-  Object.entries(submissionCategoryLabels).map(([id, label]) => ({ id: id as Exclude<RunCategory, "all">, label })),
+  categoryOptionsFor(form.mode, form.bossId).map((id) => ({ id, label: categoryLabels[id] })),
 )
+const asAutoCategory = computed<SpecificRunCategory | null>(() =>
+  form.mode === "as" ? categoryOfAsScore(Number(form.score)) : null,
+)
+const categoryHint = computed(() => {
+  if (form.mode === "as") {
+    return asAutoCategory.value
+      ? `已按分数 ${form.score} 归入「${categoryLabels[asAutoCategory.value]}」，可手动改。`
+      : "末日幻影满分 4000，3400 以下与 3900-3999 不单独归档；当前分数未命中任何区间，请确认分数或手动选档。"
+  }
+  if (categoryOptions.value.every((option) => option.id.startsWith("plight"))) {
+    return "绝境阶段的记录单独归档，仍按实际轮次与分数填写。"
+  }
+  return "0 轮竞速要求轮次为 0；满星记录按实际轮次填写。"
+})
 const roster = computed(() => buildSubmissionRoster(form, props.config))
 const goldCounts = computed(() => getUnitGoldCounts(form.units, props.config.units))
 const target = computed(() => describeSubmissionTarget(form, props.config))
 const configuredSlots = computed(() => roster.value.filter((line) => line.characterId).length)
+const scoreHint = computed(() =>
+  form.mode === "as"
+    ? `末日幻影按剩余行动值计分，满分 ${AS_MAX_SCORE}；当前归档区间「${categoryLabels[form.category]}」。`
+    : "",
+)
 
 function fieldError(field: SubmissionField): string | undefined {
   return errorByField.value.get(field)
@@ -132,6 +182,37 @@ watch(
     }
   },
 )
+
+watch([() => form.mode, () => form.bossId], () => {
+  categoryTouched.value = false
+  if (form.mode === "as") {
+    form.category = asAutoCategory.value ?? categoryOptions.value[0]?.id ?? form.category
+    return
+  }
+  if (!categoryOptions.value.some((option) => option.id === form.category)) {
+    form.category = categoryOptions.value[0]?.id ?? form.category
+  }
+})
+
+watch(asAutoCategory, (auto) => {
+  if (auto && !categoryTouched.value) form.category = auto
+})
+
+function selectCategory(category: SpecificRunCategory) {
+  form.category = category
+  categoryTouched.value = true
+}
+
+function handleDiscardDraft() {
+  discardDraft()
+  Object.assign(form, createForm(props.config))
+  stepIndex.value = 0
+  unlockedIndex.value = 0
+  showErrors.value = false
+  submitFailure.value = ""
+  categoryTouched.value = false
+  draftSavedAt.value = ""
+}
 
 function goTo(index: number) {
   if (index > unlockedIndex.value) return
@@ -176,6 +257,10 @@ async function handleSubmit() {
       notes: form.notes.trim(),
     })
     acceptedId.value = result.id
+    // 只有入队成功才清草稿；失败时保留原样供重试
+    discardDraft()
+    categoryTouched.value = false
+    draftSavedAt.value = ""
     Object.assign(form, createForm(props.config))
     stepIndex.value = 0
     unlockedIndex.value = 0
@@ -244,6 +329,23 @@ function submitAnother() {
       novalidate
       @submit.prevent="handleSubmit"
     >
+      <div
+        v-if="draftSavedAt"
+        class="submission-draft-note"
+      >
+        <span>已恢复上次未提交的草稿（{{ draftSavedAt }}），提交成功后会自动清除。</span>
+        <button
+          type="button"
+          @click="handleDiscardDraft"
+        >
+          <RotateCcw
+            :size="14"
+            aria-hidden="true"
+          />
+          丢弃草稿
+        </button>
+      </div>
+
       <details class="submission-guidelines">
         <summary>
           <Info
@@ -253,7 +355,8 @@ function submitAnother() {
           投稿须知
         </summary>
         <ul>
-          <li>请附可访问的原始录像链接，不要剪辑或跳过战斗过程。</li>
+          <li>请附 B 站或 YouTube 上可访问的原始录像链接，不要剪辑或跳过战斗过程。</li>
+          <li>记录分类随模式变化：末日幻影按剩余行动值分数分档，异相仲裁的绝境阶段单独归档。</li>
           <li>命座与叠影按最终结算时填写，开拓者不计入限定/常驻成本。</li>
           <li>成本按 4 名角色合计填写，范围 {{ COST_MIN }}–{{ COST_MAX }}，与档案的成本分桶一致。</li>
           <li>记录先进入待审核队列，通过后才会在档案页公开展示。</li>
@@ -395,14 +498,18 @@ function submitAnother() {
               class="wide-option compact"
               :class="{ active: form.category === category.id }"
               type="button"
-              @click="form.category = category.id"
+              @click="selectCategory(category.id)"
             >
               {{ category.label }}
             </button>
           </div>
           <p class="submission-field-hint">
-            0 轮竞速要求轮次为 0；满星记录按实际轮次填写。
+            {{ categoryHint }}
           </p>
+          <small
+            v-if="fieldError('category')"
+            class="field-error"
+          >{{ fieldError("category") }}</small>
         </div>
 
         <div class="form-grid">
@@ -424,7 +531,7 @@ function submitAnother() {
             <input
               v-model.trim="form.videoUrl"
               type="url"
-              placeholder="https://…"
+              placeholder="B 站或 YouTube 原始录像链接"
             >
             <small
               v-if="fieldError('videoUrl')"
@@ -512,6 +619,7 @@ function submitAnother() {
               v-model.number="form.score"
               type="number"
               min="0"
+              :max="form.mode === 'as' ? AS_MAX_SCORE : undefined"
               step="1"
             >
             <small
@@ -534,6 +642,13 @@ function submitAnother() {
             >{{ fieldError("cost") }}</small>
           </label>
         </div>
+
+        <p
+          v-if="scoreHint"
+          class="submission-field-hint"
+        >
+          {{ scoreHint }}
+        </p>
 
         <label class="field">
           <span>备注</span>

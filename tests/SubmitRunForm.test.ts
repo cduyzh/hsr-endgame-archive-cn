@@ -1,10 +1,12 @@
 import { flushPromises, mount } from "@vue/test-utils"
-import { afterEach, describe, expect, it, vi } from "vitest"
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import SubmitRunForm from "@/components/archive/SubmitRunForm.vue"
+import { loadSubmissionDraft } from "@/composables/useSubmissionDraft"
 import { buildPreferredLightconeByCharacter } from "@/services/submissionUtils"
-import { fixtureConfig } from "./fixtures/config"
+import { fixtureConfig, fixtureSubmission } from "./fixtures/config"
 import { fixtureRuns } from "./fixtures/runs"
 
+const DRAFT_KEY = "hsr-archive.submission-draft.v1"
 const preferredLightconeByCharacter = buildPreferredLightconeByCharacter(fixtureRuns, fixtureConfig.units)
 
 const roster = [
@@ -89,6 +91,10 @@ function stubFetch(response: Response) {
   return fetchMock
 }
 
+beforeEach(() => {
+  window.localStorage.clear()
+})
+
 afterEach(() => {
   vi.unstubAllGlobals()
 })
@@ -130,7 +136,7 @@ describe("SubmitRunForm 分步向导", () => {
     await wrapper.findAll(".mode-grid .mode-tab")[3].trigger("click")
 
     const stageOptions = wrapper.findAll(".split-fields select")[1].findAll("option")
-    expect(stageOptions.map((option) => option.attributes("value"))).toEqual(["4.5-aa-k1"])
+    expect(stageOptions.map((option) => option.attributes("value"))).toEqual(["4.5-aa-k1", "4.5-aa-plight"])
     expect(wrapper.text()).toContain("异相仲裁 · K1")
     wrapper.unmount()
   })
@@ -214,7 +220,7 @@ describe("SubmitRunForm 分步向导", () => {
     await wrapper.get('input[type="number"]').setValue("2")
     await wrapper.get("form").trigger("submit")
 
-    expect(wrapper.get(".submission-error").text()).toContain("0 轮竞速分类的轮次必须为 0")
+    expect(wrapper.get(".submission-error").text()).toContain("「0 轮竞速」要求轮次为 0")
     expect(activeStepLabel(wrapper)).toContain("成绩与预览")
     wrapper.unmount()
   })
@@ -269,6 +275,88 @@ describe("SubmitRunForm 分步向导", () => {
     expect(wrapper.get(".submission-error").text()).toContain("写入审核队列失败")
     expect(wrapper.get(".submission-preview-meta").text()).toContain("大黑塔双同谐")
     expect(wrapper.findAll(".submission-step-tab")[2].classes()).toContain("active")
+    wrapper.unmount()
+  })
+
+  it("分类选项随模式与敌方阶段联动", async () => {
+    const wrapper = mountForm()
+    const categoryLabelsOnPage = () => wrapper.findAll(".submission-category-grid button").map((button) => button.text())
+
+    expect(categoryLabelsOnPage()).toEqual(["0 轮竞速", "满星记录"])
+
+    await wrapper.findAll(".mode-grid .mode-tab")[2].trigger("click")
+    expect(categoryLabelsOnPage()).toEqual(["3400-3650", "3650-3850", "3850-3899", "4000 满分"])
+
+    await wrapper.findAll(".mode-grid .mode-tab")[3].trigger("click")
+    expect(categoryLabelsOnPage()).toEqual(["0 轮竞速", "满星记录"])
+
+    await wrapper.findAll(".split-fields select")[1].setValue("4.5-aa-plight")
+    expect(categoryLabelsOnPage()).toEqual(["绝境 0 轮竞速", "绝境满星记录"])
+    wrapper.unmount()
+  })
+
+  it("末日幻影按分数自动归档，手选过分类后不再覆盖", async () => {
+    const wrapper = mountForm()
+
+    await fillBasics(wrapper)
+    await wrapper.findAll(".mode-grid .mode-tab")[2].trigger("click")
+    await goNext(wrapper)
+    expect(wrapper.find(".submission-error").exists()).toBe(false)
+
+    await fillTeam(wrapper)
+    await goNext(wrapper)
+
+    const scoreInput = wrapper.findAll('input[type="number"]')[1]
+    await scoreInput.setValue("3860")
+    expect(wrapper.get(".submission-preview-meta").text()).toContain("3850-3899")
+
+    await wrapper.findAll(".submission-step-tab")[0].trigger("click")
+    await wrapper.findAll(".submission-category-grid button")[0].trigger("click")
+    await wrapper.findAll(".submission-step-tab")[2].trigger("click")
+
+    await scoreInput.setValue("3660")
+    expect(wrapper.get(".submission-preview-meta").text()).toContain("3400-3650")
+    wrapper.unmount()
+  })
+
+  it("误关弹窗后重开会恢复草稿，可丢弃", async () => {
+    const wrapper = mountForm()
+    await fillBasics(wrapper)
+    await new Promise((resolve) => setTimeout(resolve, 450))
+    expect(loadSubmissionDraft()?.payload.author).toBe("夜航")
+    wrapper.unmount()
+
+    const reopened = mountForm()
+    expect(reopened.get(".submission-draft-note").text()).toContain("已恢复上次未提交的草稿")
+    expect(reopened.get('input[placeholder="展示名称，例如 夜航"]').element.value).toBe("夜航")
+
+    await reopened.get(".submission-draft-note button").trigger("click")
+    expect(reopened.find(".submission-draft-note").exists()).toBe(false)
+    expect(reopened.get('input[placeholder="展示名称，例如 夜航"]').element.value).toBe("")
+
+    // 重置后的空表单不该被防抖写回成幽灵草稿
+    await new Promise((resolve) => setTimeout(resolve, 500))
+    expect(loadSubmissionDraft()).toBeNull()
+    reopened.unmount()
+  })
+
+  it("草稿会记住步骤位置，提交成功后清除", async () => {
+    window.localStorage.setItem(
+      DRAFT_KEY,
+      JSON.stringify({ payload: fixtureSubmission(), stepIndex: 2, unlockedIndex: 2, savedAt: new Date().toISOString() }),
+    )
+    const wrapper = mountForm()
+
+    expect(activeStepLabel(wrapper)).toContain("成绩与预览")
+    expect(wrapper.find(".submission-preview").exists()).toBe(true)
+
+    stubFetch(respondWith(202, { id: "sub_draft_1", status: "pending" }))
+    await wrapper.get("form").trigger("submit")
+    await flushPromises()
+
+    expect(wrapper.get(".submission-success").text()).toContain("sub_draft_1")
+    await new Promise((resolve) => setTimeout(resolve, 500))
+    expect(loadSubmissionDraft()).toBeNull()
     wrapper.unmount()
   })
 })

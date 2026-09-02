@@ -25,6 +25,8 @@ export const fixtureConfig: ArchiveConfig = {
     boss({ id: "4.5-moc-top", name: "「黄金」的追猎者" }),
     boss({ id: "4.5-moc-bottom", name: "三头犬", subtitle: "混沌回忆 · 下半" }),
     boss({ id: "4.5-aa-k1", name: "王棋 · 第一局", mode: "aa", subtitle: "异相仲裁 · K1" }),
+    boss({ id: "4.5-aa-plight", name: "绝境 · 王棋", mode: "aa", subtitle: "异相仲裁 · 绝境" }),
+    boss({ id: "4.5-as-top", name: "末日幻影 · 上半", mode: "as", subtitle: "末日幻影 · 上半" }),
   ],
 }
 

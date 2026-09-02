@@ -6,10 +6,10 @@
 
 ## 功能范围
 
-- **档案工作台**：按赛季、终局模式、敌方阶段、记录分类、队伍人数、成本、角色/光锥和标签筛选竞速记录。
+- **档案工作台**：按赛季、终局模式、敌方阶段、记录分类、队伍人数、成本、角色/光锥和标签筛选竞速记录。记录分类随模式与阶段变化：末日幻影按剩余行动值分数分四档（3400-3650 / 3650-3850 / 3850-3899 / 4000 满分），异相仲裁的绝境阶段单独归档为绝境 0 轮与绝境满星。
 - **记录展示**：按队伍组合分组展示作者、角色命座、轮次、分数、成本和视频链接。
 - **环境统计**：统计角色使用率、光锥使用率、常见组合与成本分布。
-- **投稿审核**：右上角「提交记录」打开站内弹窗，按「基础信息 → 队伍配置 → 成绩与预览」三步填写，字段级校验与限定/常驻统计实时反馈，提交到 `/api/submissions` 进入待审核队列；`/submit` 深链仍会打开同一弹窗。
+- **投稿审核**：右上角「提交记录」打开站内弹窗，按「基础信息 → 队伍配置 → 成绩与预览」三步填写，字段级校验与限定/常驻统计实时反馈，提交到 `/api/submissions` 进入待审核队列；`/submit` 深链仍会打开同一弹窗。草稿缓存在浏览器 `localStorage`，误关弹窗可恢复，提交成功或手动丢弃后才清除；视频只接受 B 站与 YouTube 的链接。
 - **文章与规则页**：展示站内说明、规则和文章摘要。
 
 ## 技术栈
@@ -138,7 +138,7 @@ https://static.nanoka.cc/
 | `as`     | `doom`    | `<locale>/boss/<id>.json`  | `top` / `bottom` / `starward`     |
 | `aa`     | `peak`    | `<locale>/peak/<id>.json`  | `k1..kN` / `checkmate` / `plight` |
 
-赛季与版本的解析方式：`src/services/staticArchiveConfig.ts` 里的 `STATIC_SEASON_IDS` 为每个大版本（当前 `4.4`、`4.5`）硬编码四个模式的详情 id；运行时用 `manifest.hsr.available` 选出该大版本的最新数据目录（如 `4.5.51`），用 `manifest.hsr.live` 判定当前赛季。**不读取**上游 `maze.json / maze_extra.json / maze_boss.json / maze_peak.json` 索引，也不依赖 `cache-plan.json`。因此新赛季上线需要先在 `STATIC_SEASON_IDS` 补一条（步骤见 [AGENTS.md](./AGENTS.md) 的「新赛季上线清单」）。
+赛季与版本的解析方式：`src/services/staticArchiveConfig.ts` 里的 `STATIC_SEASON_IDS` 为每个赛季（当前 `4.4`、`4.5`）硬编码四个模式的详情 id；运行时用 `manifest.hsr.available` 选出**最新数据目录**（如 `4.5.51`）供所有赛季共用——上游只保留当前大版本目录，历史赛季的详情文件仍在其中累积；再用 `manifest.hsr.live` 判定当前赛季。**不读取**上游 `maze.json / maze_extra.json / maze_boss.json / maze_peak.json` 索引，也不依赖 `cache-plan.json`。因此新赛季上线需要先在 `STATIC_SEASON_IDS` 补一条（步骤见 [AGENTS.md](./AGENTS.md) 的「新赛季上线清单」）。
 
 合并语义：远程快照**只补充业务配置里没有的敌方阶段 id**，并为缺失赛季追加 `<seasonId> 归档` 条目，不会覆盖 seed 或数据库中已有的赛季 label 与阶段字段。记录筛选用的 `seasonId`、`bossId` 始终是稳定 id。
 
@@ -199,7 +199,8 @@ src/
 │   ├── useArchiveFilters.ts
 │   ├── useMetaStats.ts
 │   ├── useRunsQuery.ts
-│   └── useSubmissionDialog.ts
+│   ├── useSubmissionDialog.ts
+│   └── useSubmissionDraft.ts
 ├── data/
 │   ├── seed/                          # config.json / runs.json / index.ts（+ 同步产物 hsr-*.json）
 │   ├── unitAssets.ts

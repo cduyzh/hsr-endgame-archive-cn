@@ -20,10 +20,17 @@ const fixtureMonster = {
 
 const fixtureFiles: Record<string, unknown> = {
   [`${DATA_SITE}/manifest.json`]: {
-    hsr: { live: "4.5", latest: "4.5.51", available: ["4.4", "4.4.55", "4.5", "4.5.51"] },
+    hsr: { live: "4.5", latest: "4.5.51", available: ["4.5", "4.5.51"] },
   },
   [`${DATA_SITE}/hsr/4.5.51/monster.json`]: {
     "2034010": fixtureMonster,
+    "2034100": {
+      rank: "LittleBoss",
+      icon: "SpriteOutput/MonsterFigure/Monster_2034100.png",
+      child: [2034100],
+      weak: ["Quantum"],
+      zh: "四期示例首领",
+    },
     "1004010": {
       rank: "Elite",
       icon: "SpriteOutput/MonsterFigure/Monster_1004010.png",
@@ -46,6 +53,13 @@ const fixtureFiles: Record<string, unknown> = {
       StanceBase: 720,
       MaxMonsterPhase: 2,
       child: [{ Id: 2034010, HPModifyRatio: 1, SpeedModifyRatio: 1, StanceModifyRatio: 1 }],
+    },
+    "2034100": {
+      HPBase: 1000,
+      SpeedBase: 200,
+      StanceBase: 720,
+      MaxMonsterPhase: 2,
+      child: [{ Id: 2034100, HPModifyRatio: 1, SpeedModifyRatio: 1, StanceModifyRatio: 1 }],
     },
     "1004010": {
       HPBase: 1000,
@@ -98,6 +112,45 @@ const fixtureFiles: Record<string, unknown> = {
       infinite_list: { "9051": { elite_group: 370, monster_group_id_list: [4035010] } },
     },
   },
+  [`${DATA_SITE}/hsr/4.5.51/zh/maze/1034.json`]: [
+    {
+      id: 5401,
+      name: "扫除风暴其一",
+      group_name: "扫除风暴",
+      npc_monster_id_list1: [2034100],
+      npc_monster_id_list2: [2034100],
+      damage_type1: ["Quantum"],
+      damage_type2: ["Quantum"],
+      event_id_list1: [
+        {
+          hard_level_group: 3,
+          level: 95,
+          elite_group: 164,
+          monster_list: [{ monster0: 2034100 }],
+        },
+      ],
+      event_id_list2: [
+        {
+          hard_level_group: 3,
+          level: 95,
+          elite_group: 164,
+          monster_list: [{ monster0: 2034100 }],
+        },
+      ],
+    },
+    {
+      id: 5413,
+      pre_id: 5401,
+      npc_monster_id_list: [2034100],
+      event_id_list: [
+        {
+          hard_level_group: 3,
+          level: 95,
+          monster_list: [{ monster0: 2034100 }],
+        },
+      ],
+    },
+  ],
   [`${DATA_SITE}/hsr/4.5.51/zh/maze/1035.json`]: [
     {
       id: 5501,
@@ -156,13 +209,16 @@ afterEach(() => {
 })
 
 describe("fetchStaticArchiveSnapshot", () => {
-  it("按 manifest 选取 4.4/4.5 数据目录并生成敌方阶段", async () => {
+  it("所有赛季共用 manifest 里的最新数据目录生成敌方阶段", async () => {
     stubFetch()
 
     const snapshot = await fetchStaticArchiveSnapshot()
 
     expect(snapshot?.liveVersion).toBe("4.5")
     expect(snapshot?.bosses.map((boss) => boss.id)).toEqual([
+      "4.4-moc-top",
+      "4.4-moc-bottom",
+      "4.4-moc-starward",
       "4.5-moc-top",
       "4.5-moc-bottom",
       "4.5-moc-starward",
@@ -170,6 +226,17 @@ describe("fetchStaticArchiveSnapshot", () => {
       "4.5-aa-checkmate",
       "4.5-aa-plight",
     ])
+
+    const legacyTop = snapshot?.bosses.find((boss) => boss.id === "4.4-moc-top")
+    expect(legacyTop).toMatchObject({
+      seasonId: "4.4",
+      mode: "moc",
+      name: "四期示例首领",
+      subtitle: "混沌回忆 / 扫除风暴 / 上半",
+      hp: "800,000 x2",
+      weakness: ["量子"],
+      imageUrl: `${DATA_SITE}/assets/hsr/monstermiddleicon/Monster_2034100.webp`,
+    })
 
     const top = snapshot?.bosses.find((boss) => boss.id === "4.5-moc-top")
     expect(top).toMatchObject({

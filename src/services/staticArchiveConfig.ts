@@ -711,11 +711,13 @@ function compareVersions(a: string, b: string): number {
   return 0
 }
 
-/** 从 manifest.available 中取指定大版本（如 4.4 / 4.5）的最新数据目录 */
-function pickVersion(available: string[], major: string): string | undefined {
-  const candidates = available.filter((version) => version === major || version.startsWith(`${major}.`))
-  if (candidates.length === 0) return undefined
-  return [...candidates].sort(compareVersions)[candidates.length - 1]
+/**
+ * 数据源只保留当前大版本目录，历史赛季的详情文件仍在其中累积，
+ * 因此所有赛季共用最新目录，由 STATIC_SEASON_IDS 的显式 id 定位各赛季。
+ */
+function pickDataDirectory(available: string[]): string | undefined {
+  if (available.length === 0) return undefined
+  return [...available].sort(compareVersions)[available.length - 1]
 }
 
 async function buildSeasonBosses(seasonId: string, version: string): Promise<BossStage[]> {
@@ -755,19 +757,13 @@ async function buildSeasonBosses(seasonId: string, version: string): Promise<Bos
 export async function fetchStaticArchiveSnapshot(): Promise<StaticArchiveSnapshot | null> {
   try {
     const manifest = await fetchJson<HsrManifest>(dataSourceUrl("manifest.json"))
-    const available = manifest.hsr?.available ?? []
-
-    const seasons = Object.keys(STATIC_SEASON_IDS)
-    const resolved = seasons
-      .map((seasonId) => ({ seasonId, version: pickVersion(available, seasonId) }))
-      .filter((entry): entry is { seasonId: string; version: string } => Boolean(entry.version))
-
-    if (resolved.length === 0) return null
+    const version = pickDataDirectory(manifest.hsr?.available ?? [])
+    if (!version) return null
 
     const results = await Promise.all(
-      resolved.map(async (entry) => {
+      Object.keys(STATIC_SEASON_IDS).map(async (seasonId) => {
         try {
-          return await buildSeasonBosses(entry.seasonId, entry.version)
+          return await buildSeasonBosses(seasonId, version)
         } catch {
           return [] as BossStage[]
         }

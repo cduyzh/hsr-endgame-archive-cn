@@ -2,13 +2,53 @@ import type {
   ArchiveFilters,
   ArchiveRun,
   ArchiveUnit,
+  EndgameMode,
   MetaStats,
   RunCategory,
+  SpecificRunCategory,
 } from "@/types/archive"
 import { getRunGoldCounts } from "@/services/unitCost"
 
 export function matchesCategory(run: ArchiveRun, category: RunCategory): boolean {
   return category === "all" || run.category === category
+}
+
+export const categoryLabels: Record<SpecificRunCategory, string> = {
+  zeroCycle: "0 轮竞速",
+  fullStars: "满星记录",
+  plightZeroCycle: "绝境 0 轮竞速",
+  plightFullStars: "绝境满星记录",
+  asScore3400: "3400-3650",
+  asScore3650: "3650-3850",
+  asScore3850: "3850-3899",
+  asScore4000: "4000 满分",
+}
+
+/** 末日幻影按剩余行动值计分，满分 4000。 */
+export const AS_MAX_SCORE = 4000
+
+/** 分数区间取「归入更高一档」的口径，3899–4000 之间的分数不属于任何档。 */
+const asScoreBands: Array<{ category: SpecificRunCategory; min: number; max: number }> = [
+  { category: "asScore4000", min: 4000, max: 4000 },
+  { category: "asScore3850", min: 3850, max: 3899 },
+  { category: "asScore3650", min: 3650, max: 3849 },
+  { category: "asScore3400", min: 3400, max: 3649 },
+]
+
+export function categoryOfAsScore(score: number): SpecificRunCategory | null {
+  if (!Number.isInteger(score)) return null
+  return asScoreBands.find((band) => score >= band.min && score <= band.max)?.category ?? null
+}
+
+/** 阶段 id 规则为 `${seasonId}-${mode}-${stageKey}`，末段即阶段键。 */
+export function stageKeyOf(bossId: string): string {
+  return bossId.split("-").pop() ?? ""
+}
+
+export function categoryOptionsFor(mode: EndgameMode, bossId: string): SpecificRunCategory[] {
+  if (mode === "as") return ["asScore3400", "asScore3650", "asScore3850", "asScore4000"]
+  if (mode === "aa" && stageKeyOf(bossId) === "plight") return ["plightZeroCycle", "plightFullStars"]
+  return ["zeroCycle", "fullStars"]
 }
 
 export function matchesCost(run: ArchiveRun, cost: ArchiveFilters["cost"]): boolean {

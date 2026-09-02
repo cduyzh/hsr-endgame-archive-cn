@@ -35,6 +35,7 @@
 
 - 所有领域类型集中在 `types/archive.ts`（`ArchiveConfig`、`ArchiveRun`、`BossStage`、`ArchiveFilters`、`MetaStats`、`SubmissionPayload` 等）。新增字段先改类型，再顺着 `services → composables → views` 传递，不要在组件里散落重复结构。
 - 业务终局模式 `EndgameMode = "moc" | "pf" | "as" | "aa"`（混沌回忆 / 虚构叙事 / 末日幻影 / 异相仲裁），label 来自 `data/seed/config.json` 的 `modes`，与 `services/staticArchiveConfig.ts` 的 `modeLabelByStaticMode` 保持一致——改模式名要同时改这两处。与远程静态数据源的模式映射（`moc/fiction/doom/peak`）见 `services/staticArchiveConfig.ts`，不要混淆。
+- `RunCategory` 的取值随模式与敌方阶段变化（`as` 是四档分数区间、`aa` 的绝境阶段单独归档）。组件与 composable **不要自己列分类**，一律取 `services/runUtils.ts` 的 `categoryOptionsFor(mode, bossId)` 与 `categoryLabels`；库里 `category` 是开放 text，加取值不需要迁移。
 - 数据入口统一走 `services/archiveService.ts`；它负责在 API 失败时回退到 `data/seed`。**不要**在组件里直接 `fetch` 业务 API。
 - 图片一律通过 `services/dataSource.ts` 的 `IMAGE_BASES` / `monsterImageUrl()` 或 `data/unitAssets.ts` 的 `getUnitImageSrc()` 生成，直连 `static.nanoka.cc`，不要引用本地副本。
 
@@ -42,11 +43,12 @@
 
 - 全局配置缓存用 `useArchiveStore()`（`loadConfig()` 幂等，配置只加载一次）。
 - 页面级临时状态用 `composables/`：
-  - `useArchiveFilters(config)`：筛选状态 + 与路由 query 双向同步（`hydrateFromQuery` / `watch` 回写）。
+  - `useArchiveFilters(config)`：筛选状态 + 与路由 query 双向同步（`hydrateFromQuery` / `watch` 回写），其中 `normalizeCategory()` 负责把与当前模式/阶段不匹配的分类回落为 `all`。
   - `useRunsQuery(filters)`：记录请求、加载态、按 `teamName` 分组。
   - `useMetaStats(filters)`：环境统计。
   - `useAdminSubmissions()`：审核台会话（`sessionStorage` 持久化）、列表与审核动作。
   - `useSubmissionDialog()`：投稿弹窗开关，状态是模块级 `shallowRef` 单例，供 `App.vue`、`ArchiveWorkbench.vue` 与 `SubmitView.vue` 共享。
+  - `useSubmissionDraft()`：投稿草稿写入 `localStorage`（键 `hsr-archive.submission-draft.v1`，含表单与步骤位置），变更后 400ms 防抖、空表单不写；只有提交成功或用户点「丢弃草稿」才清除，payload 形状变化时换键名而不是写迁移。
 - 大对象优先 `shallowRef`，避免深层响应式开销（现有代码已如此，保持一致）。
 
 ## 组件实现约定

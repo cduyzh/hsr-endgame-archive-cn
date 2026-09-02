@@ -1,11 +1,12 @@
+import { AS_MAX_SCORE, categoryLabels, categoryOptionsFor } from "@/services/runUtils"
 import { getCharacterGoldKind, type CharacterGoldKind } from "@/services/unitCost"
 import type {
   ArchiveConfig,
   ArchiveUnit,
   BossStage,
   ElementType,
-  RunCategory,
   SubmissionPayload,
+  SpecificRunCategory,
   UnitPath,
 } from "@/types/archive"
 
@@ -58,10 +59,8 @@ export const submissionStepFields: Record<SubmissionStepId, SubmissionField[]> =
   result: ["cycle", "score", "cost"],
 }
 
-export const submissionCategoryLabels: Record<Exclude<RunCategory, "all">, string> = {
-  zeroCycle: "0 轮竞速",
-  fullStars: "满星记录",
-}
+/** 0 轮类分类（含异相仲裁的绝境变体）要求轮次为 0。 */
+const zeroCycleCategories = new Set<SpecificRunCategory>(["zeroCycle", "plightZeroCycle"])
 
 export interface SubmissionRosterLine {
   index: number
@@ -97,12 +96,24 @@ function toInteger(value: unknown): number | null {
   return Number.isInteger(parsed) ? parsed : null
 }
 
+/** 审核只认这两个平台的录像地址；子域任意，短链域名单独列出。 */
+const VIDEO_DOMAINS = ["bilibili.com", "b23.tv", "youtube.com", "youtube-nocookie.com"]
+const VIDEO_SHORT_DOMAINS = ["youtu.be"]
+
+function isAllowedVideoHost(hostname: string): boolean {
+  const host = hostname.toLowerCase().replace(/^www\./, "")
+  return (
+    VIDEO_SHORT_DOMAINS.includes(host) ||
+    VIDEO_DOMAINS.some((domain) => host === domain || host.endsWith(`.${domain}`))
+  )
+}
+
 export function isUsableVideoUrl(value: string): boolean {
   const trimmed = value.trim()
   if (!trimmed) return false
   try {
     const url = new URL(trimmed)
-    return (url.protocol === "https:" || url.protocol === "http:") && url.hostname.includes(".")
+    return (url.protocol === "https:" || url.protocol === "http:") && isAllowedVideoHost(url.hostname)
   } catch {
     return false
   }
@@ -162,7 +173,8 @@ export function validateSubmissionForm(form: SubmissionPayload, config: ArchiveC
   if (stages.length === 0) push("bossId", "该赛季与模式下暂无可投稿的敌方阶段，请改选赛季或模式。")
   else if (!stages.some((boss) => boss.id === form.bossId)) push("bossId", "请选择敌方阶段。")
 
-  if (!submissionCategoryLabels[form.category]) push("category", "请选择记录分类。")
+  const allowedCategories = categoryOptionsFor(form.mode, form.bossId)
+  if (!allowedCategories.includes(form.category)) push("category", "当前模式与敌方阶段没有该分类，请重新选择。")
 
   const author = form.author.trim()
   if (!author) push("author", "请填写作者展示名称。")
@@ -170,7 +182,7 @@ export function validateSubmissionForm(form: SubmissionPayload, config: ArchiveC
 
   const videoUrl = form.videoUrl.trim()
   if (!videoUrl) push("videoUrl", "请填写视频链接，审核需要可访问的原始录像。")
-  else if (!isUsableVideoUrl(videoUrl)) push("videoUrl", "视频链接需是以 http(s):// 开头的完整地址。")
+  else if (!isUsableVideoUrl(videoUrl)) push("videoUrl", "视频链接必须是 B 站或 YouTube 的完整地址。")
 
   const teamName = form.teamName.trim()
   if (!teamName) push("teamName", "请填写队伍名称，档案按队伍组合分组展示。")
@@ -183,10 +195,13 @@ export function validateSubmissionForm(form: SubmissionPayload, config: ArchiveC
 
   const cycle = toInteger(form.cycle)
   if (cycle === null || cycle < 0) push("cycle", "轮次需为不小于 0 的整数。")
-  else if (form.category === "zeroCycle" && cycle !== 0) push("cycle", "0 轮竞速分类的轮次必须为 0。")
+  else if (zeroCycleCategories.has(form.category) && cycle !== 0) {
+    push("cycle", `「${categoryLabels[form.category]}」要求轮次为 0。`)
+  }
 
   const score = toInteger(form.score)
   if (score === null || score < 0) push("score", "分数需为不小于 0 的整数。")
+  else if (form.mode === "as" && score > AS_MAX_SCORE) push("score", `末日幻影分数最高 ${AS_MAX_SCORE}。`)
 
   const cost = toInteger(form.cost)
   if (cost === null || cost < COST_MIN || cost > COST_MAX) push("cost", `成本需在 ${COST_MIN}–${COST_MAX} 之间。`)
@@ -212,7 +227,7 @@ export function describeSubmissionTarget(form: SubmissionPayload, config: Archiv
     modeLabel: config.modes.find((mode) => mode.id === form.mode)?.label ?? form.mode,
     stageName: stage?.name ?? (form.bossId || "未选择"),
     stageSubtitle: stage?.subtitle ?? "",
-    categoryLabel: submissionCategoryLabels[form.category] ?? form.category,
+    categoryLabel: categoryLabels[form.category],
     weakness: stage?.weakness ?? [],
     hp: stage?.hp ?? "",
     speed: stage?.speed ?? "",

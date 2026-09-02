@@ -3,6 +3,7 @@ import { computed } from "vue"
 import { ArchiveRestore, Check, ExternalLink, ShieldCheck, X } from "lucide-vue-next"
 import { getUnitImageSrc } from "@/data/unitAssets"
 import { seedConfig } from "@/data/seed"
+import { categoryLabels } from "@/services/runUtils"
 import type { SubmissionReview, SubmissionReviewStatus } from "@/types/archive"
 
 const props = defineProps<{
@@ -65,6 +66,10 @@ function formatDate(value?: string | null) {
       <div><dt>轮次</dt><dd>{{ review.payload.cycle }}</dd></div>
       <div><dt>分数</dt><dd>{{ review.payload.score }}</dd></div>
       <div><dt>成本</dt><dd>{{ review.payload.cost }}</dd></div>
+      <div>
+        <dt>分类</dt>
+        <dd>{{ categoryLabels[review.payload.category] ?? review.payload.category }}</dd>
+      </div>
     </dl>
 
     <div

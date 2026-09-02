@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { computed, shallowRef } from "vue"
 import { Filter, Search, SlidersHorizontal } from "lucide-vue-next"
+import { categoryLabels, categoryOptionsFor } from "@/services/runUtils"
 import type {
   ArchiveFilters,
   ArchiveUnit,
   BossStage,
   ModeOption,
+  RunCategory,
   Season,
 } from "@/types/archive"
 
@@ -23,11 +25,10 @@ const emit = defineEmits<{
   openPicker: []
 }>()
 
-const categoryOptions = [
+const categoryOptions = computed<Array<{ id: RunCategory; label: string }>>(() => [
   { id: "all", label: "全部记录" },
-  { id: "zeroCycle", label: "0 轮竞速" },
-  { id: "fullStars", label: "满星记录" },
-] as const
+  ...categoryOptionsFor(props.filters.mode, props.filters.bossId).map((id) => ({ id, label: categoryLabels[id] })),
+])
 
 const costOptions = [
   { id: "all", label: "全部成本" },

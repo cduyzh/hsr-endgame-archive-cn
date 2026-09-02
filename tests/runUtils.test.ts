@@ -1,6 +1,13 @@
 import { describe, expect, it } from "vitest"
 import { seedConfig } from "@/data/seed"
-import { buildMetaStats, filterRuns } from "@/services/runUtils"
+import {
+  buildMetaStats,
+  categoryLabels,
+  categoryOfAsScore,
+  categoryOptionsFor,
+  filterRuns,
+  stageKeyOf,
+} from "@/services/runUtils"
 import { getRunGoldCounts } from "@/services/unitCost"
 import type { ArchiveFilters, ArchiveRun, ArchiveUnit } from "@/types/archive"
 import { fixtureRuns } from "./fixtures/runs"
@@ -65,5 +72,43 @@ describe("runUtils", () => {
     } as ArchiveRun
 
     expect(getRunGoldCounts(run, units)).toEqual({ limited: 1, standard: 2 })
+  })
+
+  it("分类可用集合随模式与阶段变化", () => {
+    expect(categoryOptionsFor("moc", "4.5-moc-top")).toEqual(["zeroCycle", "fullStars"])
+    expect(categoryOptionsFor("pf", "4.5-pf-top")).toEqual(["zeroCycle", "fullStars"])
+    expect(categoryOptionsFor("aa", "4.5-aa-k1")).toEqual(["zeroCycle", "fullStars"])
+    expect(categoryOptionsFor("aa", "4.5-aa-plight")).toEqual(["plightZeroCycle", "plightFullStars"])
+    expect(categoryOptionsFor("as", "4.5-as-top")).toEqual(["asScore3400", "asScore3650", "asScore3850", "asScore4000"])
+  })
+
+  it("末日幻影分数按区间归类，边界归高一档，空档不归类", () => {
+    expect(categoryOfAsScore(3400)).toBe("asScore3400")
+    expect(categoryOfAsScore(3649)).toBe("asScore3400")
+    expect(categoryOfAsScore(3650)).toBe("asScore3650")
+    expect(categoryOfAsScore(3850)).toBe("asScore3850")
+    expect(categoryOfAsScore(3899)).toBe("asScore3850")
+    expect(categoryOfAsScore(3900)).toBeNull()
+    expect(categoryOfAsScore(3999)).toBeNull()
+    expect(categoryOfAsScore(4000)).toBe("asScore4000")
+    expect(categoryOfAsScore(3399)).toBeNull()
+    expect(categoryOfAsScore(4001)).toBeNull()
+    expect(categoryOfAsScore(3650.5)).toBeNull()
+  })
+
+  it("每个具体分类都有中文文案，阶段键从 id 末段解析", () => {
+    expect(Object.keys(categoryLabels)).toEqual([
+      "zeroCycle",
+      "fullStars",
+      "plightZeroCycle",
+      "plightFullStars",
+      "asScore3400",
+      "asScore3650",
+      "asScore3850",
+      "asScore4000",
+    ])
+    expect(categoryLabels.asScore3850).toBe("3850-3899")
+    expect(stageKeyOf("4.5-aa-plight")).toBe("plight")
+    expect(stageKeyOf("")).toBe("")
   })
 })
