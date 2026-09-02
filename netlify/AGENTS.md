@@ -6,16 +6,17 @@
 
 ## 文件职责
 
-| 文件                      | 路由                         | 说明                                                                                   |
-| ------------------------- | ---------------------------- | -------------------------------------------------------------------------------------- |
-| `_shared.ts`              | —（非 function）             | 公共工具：seed、DB 连接、鉴权、筛选/统计、无库文件 fallback。**被所有 function 复用**  |
-| `archive-config.ts`       | `/api/archive/config`        | 返回配置（赛季/阶段/单位/文章），空表回退 seed                                         |
-| `archive-runs.ts`         | `/api/archive/runs`          | 已审核记录（`status='approved'`），带筛选，`limit 200`                                 |
-| `archive-stats.ts`        | `/api/archive/stats`         | 统计，`limit 500` 聚合后 `buildStats`                                                  |
-| `submissions.ts`          | `/api/submissions`           | POST 投稿，非法 JSON 返回 `400`，缺字段返回 `400 {missing}`，入队 `pending` 返回 `202` |
-| `admin-submissions.ts`    | `/api/admin/submissions`     | GET 审核列表（需鉴权），支持 `status` 过滤                                             |
-| `admin-submissions-id.ts` | `/api/admin/submissions/:id` | PATCH 审核（通过/驳回/退回），需鉴权                                                   |
-| `schema.sql`              | —                            | 建表语句，手动在 Neon 执行                                                             |
+| 文件                      | 路由                         | 说明                                                                                                                                              |
+| ------------------------- | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `_shared.ts`              | —（非 function）             | 公共工具：seed、DB 连接、鉴权、筛选/统计、无库文件 fallback。**被所有 function 复用**                                                             |
+| `_staticSnapshot.ts`      | —（非 function）             | 服务端远程静态快照包装：调 `getStaticBossMap()` 在 cold start 内 fetch 一次 `static.nanoka.cc` 并缓存，供审核通过时按 `bossId` 查完整 `BossStage` |
+| `archive-config.ts`       | `/api/archive/config`        | 返回配置（赛季/阶段/单位/文章），空表回退 seed                                                                                                    |
+| `archive-runs.ts`         | `/api/archive/runs`          | 已审核记录（`status='approved'`），带筛选，`limit 200`                                                                                            |
+| `archive-stats.ts`        | `/api/archive/stats`         | 统计，`limit 500` 聚合后 `buildStats`                                                                                                             |
+| `submissions.ts`          | `/api/submissions`           | POST 投稿，非法 JSON 返回 `400`，缺字段返回 `400 {missing}`，入队 `pending` 返回 `202`                                                            |
+| `admin-submissions.ts`    | `/api/admin/submissions`     | GET 审核列表（需鉴权），支持 `status` 过滤                                                                                                        |
+| `admin-submissions-id.ts` | `/api/admin/submissions/:id` | PATCH 审核（通过/驳回/退回），需鉴权；通过时从远程静态快照补 `stages` 行                                                                          |
+| `schema.sql`              | —                            | 建表语句，手动在 Neon 执行                                                                                                                        |
 
 ## `_shared.ts` 关键约定
 
@@ -31,6 +32,7 @@
 - 管理端点（`admin-*`）先 `requireAdmin`，失败返回 `401 {message:"未授权"}`。
 - 投稿/审核接口都用参数化 SQL（`neon` 模板），勿拼接字符串。
 - 审核通过（`approved`）会把投稿 `submissionReviewToArchiveRun` 转换后 upsert 进 `runs` + `run_units`，最终 `status='approved'` 才出现在公开档案；`rejected`/`pending` 会从公开列表隐藏。改审核流转逻辑时保持「先 pending 插入、最后置 approved」的顺序。
+- **审核通过时补 `stages` 行**：`runs.boss_id` 是 FK 引用 `stages(id)`，库内 `stages` 默认空。`admin-submissions-id.ts` 的 approved 分支在 `insert into runs` 之前先 `_staticSnapshot.getStaticBossMap()` 拉一次远程 `static.nanoka.cc`（与前端 `staticArchiveConfig.ts` 共用纯计算模块 `src/services/staticBossSnapshot.ts`），按 `run.bossId` 命中则 `insert ... on conflict (id) do update set` 写入 11 列完整数据（name/subtitle/hp/speed/toughness/weakness/resist/clears/memory_buff/banner_tone），用于服务端统计/导出也能读到真实数值；拉取失败或快照不含该 bossId 时降级为最小占位（`name=bossId`，其他列空），前端 `staticArchiveConfig` 仍按 id 合并展示详情。冷启动内多次 PATCH 复用同一份快照，Netlify 冷启动间内存不持久所以每次冷启动都重新拉。
 
 ## 数据库
 

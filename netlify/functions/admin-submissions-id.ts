@@ -1,5 +1,6 @@
 import type {Handler} from "@netlify/functions"
 import {getSql, jsonResponse, requireAdmin, seedConfig, updateFallbackSubmissionReview} from "./_shared"
+import {getStaticBossMap} from "./_staticSnapshot"
 import {submissionReviewToArchiveRun} from "../../src/services/submissionUtils"
 import type {SubmissionReview, SubmissionReviewStatus} from "../../src/types/archive"
 
@@ -44,6 +45,48 @@ export const handler: Handler = async (event) => {
 
     if (body.status === "approved") {
       const run = submissionReviewToArchiveRun(review, seedConfig.units)
+      // 敌方阶段由前端 staticArchiveConfig 从远程快照生成,seed/库中的 stages 默认空。
+      // 审核通过在 insert runs 之前先确保 stages 中存在该 bossId,避免触发 runs_boss_id_fkey。
+      // 优先从远程静态快照拉取完整 stage 字段(HP/速度/韧性/弱点/副标题/横幅色等),
+      // 拉取失败或快照不包含该 bossId 时降级为最小占位,name=bossId,其余留空,
+      // 仍由前端静态快照合并展示详情。
+      const bossMap = await getStaticBossMap()
+      const stage = bossMap?.get(run.bossId)
+      if (stage) {
+        await sql`
+          insert into stages (
+            id, season_id, mode, name, subtitle, hp, speed, toughness,
+            weakness, resist, clears, memory_buff, banner_tone
+          ) values (
+            ${stage.id}, ${stage.seasonId}, ${stage.mode}, ${stage.name}, ${stage.subtitle},
+            ${stage.hp}, ${stage.speed}, ${stage.toughness},
+            ${JSON.stringify(stage.weakness ?? [])},
+            ${JSON.stringify(stage.resist ?? {})},
+            ${Number(stage.clears ?? 0)},
+            ${stage.memoryBuff ?? ""},
+            ${stage.bannerTone ?? "cyan"}
+          )
+          on conflict (id) do update set
+            season_id = excluded.season_id,
+            mode = excluded.mode,
+            name = excluded.name,
+            subtitle = excluded.subtitle,
+            hp = excluded.hp,
+            speed = excluded.speed,
+            toughness = excluded.toughness,
+            weakness = excluded.weakness,
+            resist = excluded.resist,
+            clears = excluded.clears,
+            memory_buff = excluded.memory_buff,
+            banner_tone = excluded.banner_tone
+        `
+      } else {
+        await sql`
+          insert into stages (id, season_id, mode, name, subtitle, hp, speed, toughness, memory_buff)
+          values (${run.bossId}, ${run.seasonId}, ${run.mode}, ${run.bossId}, '', '', '', '', '')
+          on conflict (id) do nothing
+        `
+      }
       await sql`
         insert into runs (
           id, season_id, mode, boss_id, category, team_name, author, cycle, score, cost,

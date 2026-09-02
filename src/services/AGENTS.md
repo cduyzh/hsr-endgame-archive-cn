@@ -10,7 +10,8 @@
 | ------------------------ | ----------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
 | `dataSource.ts`          | 远程数据源配置（唯一入口）                                        | `DATA_SITE`、`dataSourceUrl()`、`IMAGE_BASES`、`monsterImageUrl()`                                                   |
 | `archiveService.ts`      | 前端 API 请求 + seed fallback + 静态快照合并 + 管理员会话         | `fetchArchiveConfig/Runs/MetaStats`、`submitRun`、`createAdminSession`、`fetchSubmissionReviews`、`reviewSubmission` |
-| `staticArchiveConfig.ts` | 按 `STATIC_SEASON_IDS` 直连各赛季详情，生成敌方阶段并补齐配置缺口 | `fetchStaticArchiveSnapshot()`、`mergeStaticArchiveConfig()`                                                         |
+| `staticArchiveConfig.ts` | 浏览器端入口：拉 `manifest` → 定位最新数据目录 → 委托 `staticBossSnapshot` 推导出敌方阶段并补齐配置缺口 | `fetchStaticArchiveSnapshot()`、`mergeStaticArchiveConfig()` |
+| `staticBossSnapshot.ts`  | 远程静态快照的纯计算层（不发起网络），被前端 `staticArchiveConfig.ts` 与服务端 `netlify/functions/_staticSnapshot.ts` 共用 | `buildSeasonBosses(seasonId, version, baseUrl)`、`pickDataDirectory()`、`STATIC_SEASON_IDS`、各类 build*Stages 纯函数 |
 | `runUtils.ts`            | 记录筛选/排序/统计纯函数 + 分类口径唯一来源                       | `filterRuns`、`buildMetaStats`、`matchesCost`、`categoryLabels`、`categoryOptionsFor`、`categoryOfAsScore`、`stageKeyOf` |
 | `unitCost.ts`            | 五星角色“限定/常驻”成本分类                                       | `getCharacterGoldKind`、`getRunGoldCounts`、`getUnitGoldCounts`、`goldKindLabels`                                    |
 | `submissionUtils.ts`     | 投稿转换纯函数                                                    | `submissionReviewToArchiveRun`、`buildPreferredLightconeByCharacter`                                                 |
