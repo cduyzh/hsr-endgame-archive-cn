@@ -35,9 +35,14 @@
   status = 200
 
 [[redirects]]
-from = "/api/admin/submissions/:id"
-to = "/.netlify/functions/admin-submissions-id/:id"
-status = 200
+  from = "/api/admin/submissions/:id"
+  to = "/.netlify/functions/admin-submissions-id/:id"
+  status = 200
+
+[[redirects]]
+  from = "/api/admin/sync-stages"
+  to = "/.netlify/functions/admin-sync-stages"
+  status = 200
 
 [[redirects]]
   from = "/*"
