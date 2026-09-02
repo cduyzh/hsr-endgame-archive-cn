@@ -94,6 +94,16 @@ ADMIN_REVIEW_PASSWORD=请替换为强密码
 
 > ⚠️ 未配置任何管理员密码环境变量时，服务端 `requireAdmin` 不会拦截。生产务必设置 `ADMIN_REVIEW_PASSWORD`。
 
+如果需要从远程静态快照一次性把全部 BossStage upsert 到 `stages` 表（不依赖 Netlify Function 端点），本地可直连 Neon 跑：
+
+```bash
+NETLIFY_DATABASE_URL=postgres://... pnpm sync:stages
+pnpm sync:stages:dry    # 只打印 upsert 计划
+pnpm sync:stages -- --season=4.5  # 只同步指定赛季
+```
+
+底层与 Netlify `admin-sync-stages` Function 共用 `staticBossSnapshot.ts` 的纯计算模块，输出等价。适合在端点部署异常、新赛季上线或远程数值更新时使用。
+
 ## API 路由
 
 `netlify.toml` 将业务 API 转发到 Netlify Functions：

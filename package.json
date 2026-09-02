@@ -16,7 +16,9 @@
     "sync:units": "node scripts/sync-hsr-units.mjs",
     "sync:monsters": "node scripts/sync-hsr-monsters.mjs",
     "seed:archive": "node scripts/seed-archive-tables.mjs",
-    "seed:archive:dry": "node scripts/seed-archive-tables.mjs -- --dry-run"
+    "seed:archive:dry": "node scripts/seed-archive-tables.mjs -- --dry-run",
+    "sync:stages": "node --experimental-strip-types scripts/sync-stages-from-snapshot.mjs",
+    "sync:stages:dry": "node --experimental-strip-types scripts/sync-stages-from-snapshot.mjs -- --dry-run"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.0.2",

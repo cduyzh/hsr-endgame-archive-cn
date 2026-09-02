@@ -6,13 +6,14 @@
 
 ## 脚本一览
 
-| 脚本                      | 命令                  | 作用                                                             | 数据来源 → 写入                                                                                                                        |
-| ------------------------- | --------------------- | ---------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| `sync-hsr-units.mjs`      | `pnpm sync:units`     | 同步角色/光锥元数据                                              | 远程 `static.nanoka.cc/hsr/<ver>/character.json`、`lightcone.json` → `src/data/seed/hsr-units.json`（并更新 `config.json` 的 `units`） |
-| `sync-hsr-monsters.mjs`   | `pnpm sync:monsters`  | 同步怪物元数据（名称/弱点/图片 id）                              | 远程 `static.nanoka.cc/hsr/<ver>/monster.json` → `src/data/seed/hsr-monsters.json`                                                     |
-| `seed-archive-tables.mjs` | `pnpm seed:archive`   | 把 `src/data/seed/config.json` upsert 进 Neon                    | `config.json` → Postgres（`seasons/stages/characters/lightcones/articles`）                                                            |
-| `deploy-netlify.sh`       | `pnpm deploy:netlify` | 先 `pnpm build` 再发布 `dist/` + `netlify/functions/` 到 Netlify | —                                                                                                                                      |
-| `reference-inventory.mjs` | （手动）              | 仅生成参考站观察清单，不下载/不复制/不作为运行时依赖             | —                                                                                                                                      |
+| 脚本                            | 命令                  | 作用                                                                           | 数据来源 → 写入                                                                                                                        |
+| ------------------------------- | --------------------- | ------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------- |
+| `sync-hsr-units.mjs`            | `pnpm sync:units`     | 同步角色/光锥元数据                                                            | 远程 `static.nanoka.cc/hsr/<ver>/character.json`、`lightcone.json` → `src/data/seed/hsr-units.json`（并更新 `config.json` 的 `units`） |
+| `sync-hsr-monsters.mjs`         | `pnpm sync:monsters`  | 同步怪物元数据（名称/弱点/图片 id）                                            | 远程 `static.nanoka.cc/hsr/<ver>/monster.json` → `src/data/seed/hsr-monsters.json`                                                     |
+| `seed-archive-tables.mjs`       | `pnpm seed:archive`   | 把 `src/data/seed/config.json` upsert 进 Neon                                  | `config.json` → Postgres（`seasons/stages/characters/lightcones/articles`）                                                            |
+| `sync-stages-from-snapshot.mjs` | `pnpm sync:stages`    | 从远程 `static.nanoka.cc` 拉所有赛季的 `BossStage`，批量 upsert 进 `stages` 表 | 远程 `manifest.json` + 各模式详情 → Postgres（`stages`）                                                                               |
+| `deploy-netlify.sh`             | `pnpm deploy:netlify` | 先 `pnpm build` 再发布 `dist/` + `netlify/functions/` 到 Netlify               | —                                                                                                                                      |
+| `reference-inventory.mjs`       | （手动）              | 仅生成参考站观察清单，不下载/不复制/不作为运行时依赖                           | —                                                                                                                                      |
 
 ## 关键注意点
 
@@ -21,6 +22,7 @@
 - **同步脚本只更新 seed 数据，不下载图片**；图片由前端经 `dataSource.ts` 直连，勿把图片落盘。
 - `seed:archive` 连接顺序与 `netlify/functions/_shared.ts` 一致：`NETLIFY_DATABASE_URL ?? DATABASE_URL ?? POSTGRES_URL`。支持 `-- --dry-run`、`-- --table=seasons,stages`、`-- --id=<id>`。
 - **`stages` 表来自 `config.json` 的 `bosses`**（不是独立的 `stages` 字段）。当前 seed 的 `bosses` 为空数组，敌方阶段由前端 `staticArchiveConfig.ts` 从远程快照合并生成，因此 `seed:archive` 实际只会写入 `seasons / characters / lightcones / articles`。若要让 DB 里也有 `stages`，需先往 `bosses` 补条目（见根 `AGENTS.md`「数据架构」）。
+- **`sync:stages`**：从 `static.nanoka.cc` 直接拉 `manifest.json` + 所有赛季的 `BossStage`（与 Netlify Function `admin-sync-stages` 共用 `staticBossSnapshot.ts`），批量 upsert 到 `stages` 表。需 Node 24 的 `--experimental-strip-types` 支持以解析 `.ts` import。**用法**：`NETLIFY_DATABASE_URL=... pnpm sync:stages`，加 `-- --dry-run` 只打印不入库，加 `-- --season=4.5` 只同步指定赛季。**适用场景**：新赛季上线、远程快照数值更新、或 Netlify `admin-sync-stages` 端点不可用时的本地补全（端点走的是同一份纯计算模块，本质等价）。
 
 ## 部署
 

@@ -49,6 +49,8 @@ pnpm netlify:login       # 登录态写入被忽略的 .netlify-config/
 pnpm deploy:netlify      # 先完整 pnpm build，再发布 dist/ + netlify/functions/
 pnpm sync:units          # 角色/光锥元数据 -> seed
 pnpm sync:monsters       # 怪物元数据 -> seed
+pnpm sync:stages         # 从远程 static.nanoka.cc 拉所有 BossStage，批量 upsert 到 stages 表
+pnpm sync:stages:dry     # 同上但只打印不入库
 pnpm seed:archive        # config.json 灌库
 pnpm seed:archive:dry    # 灌库空跑
 ```
@@ -199,6 +201,11 @@ pnpm sync:units
 # 填充 archive 表
 pnpm seed:archive
 pnpm seed:archive:dry   # 等价于 seed:archive -- --dry-run
+
+# 从远程快照批量补全 stages 表（新赛季上线 / 远程数值更新 / Netlify admin-sync-stages 端点不可用时使用）
+NETLIFY_DATABASE_URL=... pnpm sync:stages
+pnpm sync:stages:dry    # 只打印 upsert 计划，不连数据库
+pnpm sync:stages -- --season=4.5  # 只同步指定赛季
 ```
 
 数据版本由环境变量 `HSR_DATA_VERSION` 控制（默认 `4.5`）：`HSR_DATA_VERSION=4.4 pnpm sync:units`。
@@ -253,19 +260,19 @@ pnpm build
 
 文档与代码同仓、同提交。**改动下表所列代码时，必须在同一次提交里更新对应文档**；只改代码不改文档视为任务未完成。
 
-| 代码改动点                                                                                          | 必须同步的文档                                                                                                                                     |
-| --------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `package.json` 的 `scripts` / `engines`                                                             | 本文件「技术栈与命令」、`README.md`「本地运行 / 验证命令」、`scripts/AGENTS.md`「脚本一览」                                                        |
-| `netlify.toml`（redirect、Node 版本、构建命令）                                                     | 本文件「API 与数据库」、`README.md`「API 路由 / Netlify 部署」、`netlify/AGENTS.md`「文件职责」                                                    |
-| `netlify/functions/*`（路由、鉴权、limit、fallback、SQL）                                           | `netlify/AGENTS.md`；接口 shape 变化时再同步本文件「API 与数据库」与 `README.md`                                                                   |
-| `src/services/staticArchiveConfig.ts`（`STATIC_SEASON_IDS`、阶段 id/`stageKey`、HP 口径、合并语义） | 本文件「数据架构 / 静态数据维护约束 / 远程数据源使用说明 / 新赛季上线清单」、`README.md`「静态数据源」、`src/services/AGENTS.md`「静态快照与合并」 |
-| `src/services/dataSource.ts`（数据源域名、图片目录、`monsterImageUrl`）                             | 本文件「远程数据源使用说明」路径树、`README.md`「静态数据源」路径树、`src/services/AGENTS.md`「图片寻址」                                          |
-| `src/services/archiveService.ts` / `runUtils.ts` / `unitCost.ts` / `submissionUtils.ts` / `submissionValidation.ts` | `src/services/AGENTS.md`「文件职责 / 成本与统计口径 / 投稿校验」；口径影响 `netlify/functions/_shared.ts` 时同步 `netlify/AGENTS.md`              |
-| `src/types/archive.ts`（字段增删）                                                                  | `src/AGENTS.md`「类型与数据流约定」，并在涉及 seed shape 时同步 `src/data/seed` 说明                                                               |
-| `src/router/index.ts`、`src/views/*`、`src/components/*` 增删                                       | 本文件「代码结构」、`src/AGENTS.md`「模块地图 / 路由与视图」、`README.md`「项目结构」                                                              |
-| `src/data/seed/*`（赛季、模式 label、units 结构）                                                   | 本文件「代码结构」seed 现状说明、`README.md`「数据层」、`scripts/AGENTS.md`「关键注意点」                                                          |
-| `scripts/*`（新增脚本、环境变量）                                                                   | `scripts/AGENTS.md`「脚本一览 / 关键注意点」、本文件「技术栈与命令」                                                                               |
-| `tests/*`（新增/改名用例）                                                                          | `tests/AGENTS.md`「现有覆盖」                                                                                                                      |
+| 代码改动点                                                                                                          | 必须同步的文档                                                                                                                                     |
+| ------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `package.json` 的 `scripts` / `engines`                                                                             | 本文件「技术栈与命令」、`README.md`「本地运行 / 验证命令」、`scripts/AGENTS.md`「脚本一览」                                                        |
+| `netlify.toml`（redirect、Node 版本、构建命令）                                                                     | 本文件「API 与数据库」、`README.md`「API 路由 / Netlify 部署」、`netlify/AGENTS.md`「文件职责」                                                    |
+| `netlify/functions/*`（路由、鉴权、limit、fallback、SQL）                                                           | `netlify/AGENTS.md`；接口 shape 变化时再同步本文件「API 与数据库」与 `README.md`                                                                   |
+| `src/services/staticArchiveConfig.ts`（`STATIC_SEASON_IDS`、阶段 id/`stageKey`、HP 口径、合并语义）                 | 本文件「数据架构 / 静态数据维护约束 / 远程数据源使用说明 / 新赛季上线清单」、`README.md`「静态数据源」、`src/services/AGENTS.md`「静态快照与合并」 |
+| `src/services/dataSource.ts`（数据源域名、图片目录、`monsterImageUrl`）                                             | 本文件「远程数据源使用说明」路径树、`README.md`「静态数据源」路径树、`src/services/AGENTS.md`「图片寻址」                                          |
+| `src/services/archiveService.ts` / `runUtils.ts` / `unitCost.ts` / `submissionUtils.ts` / `submissionValidation.ts` | `src/services/AGENTS.md`「文件职责 / 成本与统计口径 / 投稿校验」；口径影响 `netlify/functions/_shared.ts` 时同步 `netlify/AGENTS.md`               |
+| `src/types/archive.ts`（字段增删）                                                                                  | `src/AGENTS.md`「类型与数据流约定」，并在涉及 seed shape 时同步 `src/data/seed` 说明                                                               |
+| `src/router/index.ts`、`src/views/*`、`src/components/*` 增删                                                       | 本文件「代码结构」、`src/AGENTS.md`「模块地图 / 路由与视图」、`README.md`「项目结构」                                                              |
+| `src/data/seed/*`（赛季、模式 label、units 结构）                                                                   | 本文件「代码结构」seed 现状说明、`README.md`「数据层」、`scripts/AGENTS.md`「关键注意点」                                                          |
+| `scripts/*`（新增脚本、环境变量）                                                                                   | `scripts/AGENTS.md`「脚本一览 / 关键注意点」、本文件「技术栈与命令」                                                                               |
+| `tests/*`（新增/改名用例）                                                                                          | `tests/AGENTS.md`「现有覆盖」                                                                                                                      |
 
 提交前检查清单：
 
