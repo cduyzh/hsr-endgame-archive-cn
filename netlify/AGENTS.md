@@ -6,18 +6,20 @@
 
 ## 文件职责
 
-| 文件                      | 路由                         | 说明                                                                                                                                              |
-| ------------------------- | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `_shared.ts`              | —（非 function）             | 公共工具：seed、DB 连接、鉴权、筛选/统计、无库文件 fallback。**被所有 function 复用**                                                             |
-| `_staticSnapshot.ts`      | —（非 function）             | 服务端远程静态快照包装：调 `getStaticBossMap()` 在 cold start 内 fetch 一次 `static.nanoka.cc` 并缓存，供审核通过时按 `bossId` 查完整 `BossStage` |
-| `archive-config.ts`       | `/api/archive/config`        | 返回配置（赛季/阶段/单位/文章），空表回退 seed                                                                                                    |
-| `archive-runs.ts`         | `/api/archive/runs`          | 已审核记录（`status='approved'`），带筛选，`limit 200`                                                                                            |
-| `archive-stats.ts`        | `/api/archive/stats`         | 统计，`limit 500` 聚合后 `buildStats`                                                                                                             |
-| `submissions.ts`          | `/api/submissions`           | POST 投稿，非法 JSON 返回 `400`，缺字段返回 `400 {missing}`，入队 `pending` 返回 `202`                                                            |
-| `admin-submissions.ts`    | `/api/admin/submissions`     | GET 审核列表（需鉴权），支持 `status` 过滤                                                                                                        |
-| `admin-submissions-id.ts` | `/api/admin/submissions/:id` | PATCH 审核（通过/驳回/退回），需鉴权；通过时从远程静态快照补 `stages` 行                                                                          |
-| `admin-sync-stages.ts`    | `/api/admin/sync-stages`     | POST 批量从远程静态快照 upsert 所有 `stages` 行（需鉴权），新赛季/远程数据更新时手动触发                                                          |
-| `schema.sql`              | —                            | 建表语句，手动在 Neon 执行                                                                                                                        |
+| 文件                      | 路由                            | 说明                                                                                                                                              |
+| ------------------------- | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `_shared.ts`              | —（非 function）                | 公共工具：seed、DB 连接、鉴权、筛选/统计、无库文件 fallback。**被所有 function 复用**                                                             |
+| `_staticSnapshot.ts`      | —（非 function）                | 服务端远程静态快照包装：调 `getStaticBossMap()` 在 cold start 内 fetch 一次 `static.nanoka.cc` 并缓存，供审核通过时按 `bossId` 查完整 `BossStage` |
+| `archive-config.ts`       | `/api/archive/config`           | 返回配置（赛季/阶段/单位/文章），空表回退 seed                                                                                                    |
+| `archive-runs.ts`         | `/api/archive/runs`             | 已审核记录（`status='approved'`），带筛选，`limit 200`                                                                                            |
+| `archive-stats.ts`        | `/api/archive/stats`            | 统计，`limit 500` 聚合后 `buildStats`                                                                                                             |
+| `submissions.ts`          | `/api/submissions`              | POST 投稿，非法 JSON 返回 `400`，缺字段返回 `400 {missing}`，入队 `pending` 返回 `202`，**同时下发 `ownerToken`（`own_<48 hex>`）到响应体**       |
+| `submissions-me.ts`       | `/api/submissions/me`           | POST `{tokens:string[]}`，按本机凭证反查当前用户提过哪些 `submission_reviews` / `runs`，最多 50 个 token、上限 200 条记录                         |
+| `submissions-withdraw.ts` | `/api/submissions/:id/withdraw` | PATCH `{token}`，校验 `owner_token` 匹配后把 `submission_reviews.status='withdrawn'`，并把同一 `owner_token` 的 `runs.status` 同步改 `withdrawn`  |
+| `admin-submissions.ts`    | `/api/admin/submissions`        | GET 审核列表（需鉴权），支持 `status` 过滤                                                                                                        |
+| `admin-submissions-id.ts` | `/api/admin/submissions/:id`    | PATCH 审核（通过/驳回/退回），需鉴权；通过时从远程静态快照补 `stages` 行；**写入 `runs.owner_token` 供用户后续检索**                              |
+| `admin-sync-stages.ts`    | `/api/admin/sync-stages`        | POST 批量从远程静态快照 upsert 所有 `stages` 行（需鉴权），新赛季/远程数据更新时手动触发                                                          |
+| `schema.sql`              | —                               | 建表语句，手动在 Neon 执行                                                                                                                        |
 
 ## `_shared.ts` 关键约定
 
@@ -33,6 +35,7 @@
 - 管理端点（`admin-*`）先 `requireAdmin`，失败返回 `401 {message:"未授权"}`。
 - 投稿/审核接口都用参数化 SQL（`neon` 模板），勿拼接字符串。
 - 审核通过（`approved`）会把投稿 `submissionReviewToArchiveRun` 转换后 upsert 进 `runs` + `run_units`，最终 `status='approved'` 才出现在公开档案；`rejected`/`pending` 会从公开列表隐藏。改审核流转逻辑时保持「先 pending 插入、最后置 approved」的顺序。
+- **owner_token 凭证体系**：`submissions.ts` 接受 POST 时通过 `crypto.getRandomValues(Uint8Array(24))` 生成 48 位 hex token，前缀 `own_`，写入 `submission_reviews.owner_token` 并在响应体返回给前端；`admin-submissions-id.ts` 审核通过时会同步写入 `runs.owner_token`。`submissions-me.ts` 接收 `{tokens:string[]}`（去重、上限 50），按 `owner_token = any(${tokens}::text[])` 拉该用户所有 `submission_reviews` 和 `runs`；`submissions-withdraw.ts` 用同一份 token 校验后把 `submission_reviews.status` 改 `withdrawn`、把同名 token 的 `runs.status` 也改 `withdrawn`（FK 关联的 run 也跟着隐藏）。`addFallbackSubmissionReview` 同步支持 `ownerToken` 字段，便于无 DB 环境演示。
 - **审核通过时补 `stages` 行**：`runs.boss_id` 是 FK 引用 `stages(id)`，库内 `stages` 默认空。`admin-submissions-id.ts` 的 approved 分支在 `insert into runs` 之前先 `_staticSnapshot.getStaticBossMap()` 拉一次远程 `static.nanoka.cc`（与前端 `staticArchiveConfig.ts` 共用纯计算模块 `src/services/staticBossSnapshot.ts`），按 `run.bossId` 命中则 `insert ... on conflict (id) do update set` 写入 11 列完整数据（name/subtitle/hp/speed/toughness/weakness/resist/clears/memory_buff/banner_tone），用于服务端统计/导出也能读到真实数值；拉取失败或快照不含该 bossId 时降级为最小占位（`name=bossId`，其他列空），前端 `staticArchiveConfig` 仍按 id 合并展示详情。冷启动内多次 PATCH 复用同一份快照，Netlify 冷启动间内存不持久所以每次冷启动都重新拉。
 - **批量补全 `stages`**：单次审核只会补当前那一条 `bossId`，其他 `stages` 行仍是空。管理员可调 `POST /api/admin/sync-stages`（Basic auth 即可），该接口会拉一遍远程快照并对所有 `BossStage` upsert；返回 `{ total, synced, failed, syncedIds, failedDetails }`。每次冷启动内多次调用复用同一份快照。建议新赛季上线后跑一次。
 

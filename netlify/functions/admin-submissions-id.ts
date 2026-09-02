@@ -34,6 +34,7 @@ export const handler: Handler = async (event) => {
         payload,
         status,
         reviewer_note as "reviewerNote",
+        owner_token as "ownerToken",
         created_at as "createdAt",
         reviewed_at as "reviewedAt"
       from submission_reviews
@@ -90,11 +91,11 @@ export const handler: Handler = async (event) => {
       await sql`
         insert into runs (
           id, season_id, mode, boss_id, category, team_name, author, cycle, score, cost,
-          limited_count, standard_count, submitted_at, tags, video_url, status
+          limited_count, standard_count, submitted_at, tags, video_url, status, owner_token
         ) values (
           ${run.id}, ${run.seasonId}, ${run.mode}, ${run.bossId}, ${run.category}, ${run.teamName}, ${run.author},
           ${run.cycle}, ${run.score}, ${run.cost}, ${run.limitedCount}, ${run.standardCount}, ${run.submittedAt},
-          ${JSON.stringify(run.tags)}, ${run.videoUrl ?? null}, 'pending'
+          ${JSON.stringify(run.tags)}, ${run.videoUrl ?? null}, 'pending', ${review.ownerToken ?? null}
         )
         on conflict (id) do update set
           season_id = excluded.season_id,
@@ -111,7 +112,8 @@ export const handler: Handler = async (event) => {
           submitted_at = excluded.submitted_at,
           tags = excluded.tags,
           video_url = excluded.video_url,
-          status = 'pending'
+          status = 'pending',
+          owner_token = excluded.owner_token
       `
       await sql`delete from run_units where run_id = ${id}`
       for (const [index, unit] of run.units.entries()) {

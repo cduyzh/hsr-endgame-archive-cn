@@ -29,6 +29,11 @@ const router = createRouter({
       name: "faq",
       component: () => import("@/views/FaqView.vue"),
     },
+    {
+      path: "/me",
+      name: "my-submissions",
+      component: () => import("@/views/MySubmissionsView.vue"),
+    },
   ],
 })
 

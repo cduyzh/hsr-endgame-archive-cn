@@ -1,4 +1,4 @@
-import { seedConfig, seedRuns } from "@/data/seed"
+import {seedConfig, seedRuns} from "@/data/seed"
 import type {
   ArchiveConfig,
   ArchiveFilters,
@@ -9,9 +9,9 @@ import type {
   SubmissionReview,
   SubmissionReviewStatus,
 } from "@/types/archive"
-import { buildMetaStats, filterRuns } from "@/services/runUtils"
-import { submissionFieldLabels, type SubmissionField } from "@/services/submissionValidation"
-import { fetchStaticArchiveSnapshot, mergeStaticArchiveConfig } from "@/services/staticArchiveConfig"
+import {buildMetaStats, filterRuns} from "@/services/runUtils"
+import {submissionFieldLabels, type SubmissionField} from "@/services/submissionValidation"
+import {fetchStaticArchiveSnapshot, mergeStaticArchiveConfig} from "@/services/staticArchiveConfig"
 
 const API_BASE = import.meta.env.VITE_API_BASE ?? ""
 
@@ -63,10 +63,10 @@ export async function fetchMetaStats(filters: ArchiveFilters): Promise<MetaStats
   )
 }
 
-export async function submitRun(payload: SubmissionPayload): Promise<{ id: string; status: string }> {
+export async function submitRun(payload: SubmissionPayload): Promise<{id: string; status: string; ownerToken: string}> {
   const response = await fetch(`${API_BASE}/api/submissions`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {"Content-Type": "application/json"},
     body: JSON.stringify(payload),
   })
 
@@ -74,11 +74,11 @@ export async function submitRun(payload: SubmissionPayload): Promise<{ id: strin
     throw new Error(await describeSubmissionFailure(response))
   }
 
-  return (await response.json()) as { id: string; status: string }
+  return (await response.json()) as {id: string; status: string; ownerToken: string}
 }
 
 async function describeSubmissionFailure(response: Response) {
-  const body = (await response.json().catch(() => null)) as { message?: string; missing?: string[] } | null
+  const body = (await response.json().catch(() => null)) as {message?: string; missing?: string[]} | null
   const missing = Array.isArray(body?.missing)
     ? body.missing.map((field) => submissionFieldLabels[field as SubmissionField] ?? field)
     : []
@@ -102,14 +102,14 @@ export function createAdminSession(username: string, password: string): AdminSes
 }
 
 function buildAdminHeaders(session: AdminSession) {
-  return { Authorization: session.authorization }
+  return {Authorization: session.authorization}
 }
 
 export async function fetchSubmissionReviews(
   session: AdminSession,
   status: SubmissionReviewStatus | "all" = "pending",
 ) {
-  const params = new URLSearchParams({ status })
+  const params = new URLSearchParams({status})
   const response = await fetch(`${API_BASE}/api/admin/submissions?${params.toString()}`, {
     headers: buildAdminHeaders(session),
   })
@@ -133,12 +133,63 @@ export async function reviewSubmission(
       "Content-Type": "application/json",
       ...buildAdminHeaders(session),
     },
-    body: JSON.stringify({ status, note: note.trim() }),
+    body: JSON.stringify({status, note: note.trim()}),
   })
 
   if (!response.ok) {
     throw new Error(response.status === 401 ? "管理员登录已失效。" : "审核操作失败。")
   }
 
-  return (await response.json()) as { id: string; status: SubmissionReviewStatus }
+  return (await response.json()) as {id: string; status: SubmissionReviewStatus}
+}
+
+export interface MySubmissionRun {
+  id: string
+  ownerToken: string
+  status: string
+  seasonId: string
+  mode: string
+  bossId: string
+  category: string
+  teamName: string
+  author: string
+  cycle: number
+  score: number
+  cost: number
+  limitedCount: number
+  standardCount: number
+  submittedAt: string
+  tags: unknown
+  videoUrl: string | null
+}
+
+export interface MySubmissionsPayload {
+  reviews: SubmissionReview[]
+  runs: MySubmissionRun[]
+}
+
+export async function listMySubmissions(tokens: string[]): Promise<MySubmissionsPayload> {
+  if (tokens.length === 0) return {reviews: [], runs: []}
+  const response = await fetch(`${API_BASE}/api/submissions/me`, {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({tokens}),
+  })
+  if (!response.ok) {
+    throw new Error("读取我的投稿失败。")
+  }
+  return (await response.json()) as MySubmissionsPayload
+}
+
+export async function withdrawSubmission(id: string, token: string) {
+  const response = await fetch(`${API_BASE}/api/submissions/${encodeURIComponent(id)}/withdraw`, {
+    method: "PATCH",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({token}),
+  })
+  if (!response.ok) {
+    const body = (await response.json().catch(() => null)) as {message?: string} | null
+    throw new Error(body?.message || "撤回失败，请稍后重试。")
+  }
+  return (await response.json()) as {id: string; status: SubmissionReviewStatus}
 }

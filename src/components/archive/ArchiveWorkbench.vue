@@ -177,6 +177,7 @@ const activeFilterCount = computed(() =>
           :loading="loading"
           :error="error"
           :continuous="filters.continuous"
+          :mode="filters.mode"
         />
       </main>
 

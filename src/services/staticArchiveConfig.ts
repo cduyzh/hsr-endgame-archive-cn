@@ -60,13 +60,32 @@ function mergeSeasons(seasons: Season[], generated: BossStage[], liveVersion: st
 export function mergeStaticArchiveConfig(config: ArchiveConfig, snapshot: StaticArchiveSnapshot | null): ArchiveConfig {
   if (!snapshot || snapshot.bosses.length === 0) return config
 
+  const generatedById = new Map(snapshot.bosses.map((boss) => [boss.id, boss]))
   const existingIds = new Set(config.bosses.map((boss) => boss.id))
-  const generated = snapshot.bosses.filter((boss) => !existingIds.has(boss.id))
-  if (generated.length === 0) return config
+  const missingInConfig = snapshot.bosses.filter((boss) => !existingIds.has(boss.id))
+
+  // 数据库里已有 stage 但缺 imageUrl/monsters 等展示字段时，从静态快照补全，
+  // 避免「生产环境 stages 行有但 imageUrl 为空」导致首图破图。
+  const mergedExisting = config.bosses.map((boss) => enrichWithSnapshot(boss, generatedById.get(boss.id)))
+
+  if (missingInConfig.length === 0) {
+    if (mergedExisting.every((boss, index) => boss === config.bosses[index])) return config
+    return { ...config, bosses: mergedExisting }
+  }
 
   return {
     ...config,
-    seasons: mergeSeasons(config.seasons, generated, snapshot.liveVersion),
-    bosses: [...config.bosses, ...generated],
+    seasons: mergeSeasons(config.seasons, missingInConfig, snapshot.liveVersion),
+    bosses: [...mergedExisting, ...missingInConfig],
   }
+}
+
+function enrichWithSnapshot(stage: BossStage, generated: BossStage | undefined): BossStage {
+  if (!generated) return stage
+  const patch: Partial<BossStage> = {}
+  if (!stage.imageUrl && generated.imageUrl) patch.imageUrl = generated.imageUrl
+  if (!stage.imageAlt && generated.imageAlt) patch.imageAlt = generated.imageAlt
+  if ((!stage.monsters || stage.monsters.length === 0) && generated.monsters) patch.monsters = generated.monsters
+  if (Object.keys(patch).length === 0) return stage
+  return { ...stage, ...patch }
 }

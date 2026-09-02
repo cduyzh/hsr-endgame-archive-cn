@@ -156,13 +156,14 @@ export interface SubmissionPayload {
   lightcones: RunUnit[]
 }
 
-export type SubmissionReviewStatus = "pending" | "approved" | "rejected"
+export type SubmissionReviewStatus = "pending" | "approved" | "rejected" | "withdrawn"
 
 export interface SubmissionReview {
   id: string
   payload: SubmissionPayload
   status: SubmissionReviewStatus
   reviewerNote?: string | null
+  ownerToken?: string | null
   createdAt: string
   reviewedAt?: string | null
 }

@@ -53,6 +53,7 @@ create table if not exists runs (
   submitted_at timestamptz not null default now(),
   tags jsonb not null default '[]',
   video_url text,
+  owner_token text,
   status text not null default 'approved'
 );
 
@@ -80,9 +81,12 @@ create table if not exists submission_reviews (
   payload jsonb not null,
   status text not null default 'pending',
   reviewer_note text,
+  owner_token text,
   created_at timestamptz not null default now(),
   reviewed_at timestamptz
 );
 
 create index if not exists runs_filter_idx on runs (season_id, mode, boss_id, category, status);
 create index if not exists run_units_lookup_idx on run_units (run_id, unit_id, kind);
+create index if not exists runs_owner_token_idx on runs (owner_token) where owner_token is not null;
+create index if not exists submission_reviews_owner_token_idx on submission_reviews (owner_token) where owner_token is not null;

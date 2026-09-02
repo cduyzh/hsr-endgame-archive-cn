@@ -10,26 +10,26 @@
 
 ## 模块地图
 
-| 目录 / 文件                | 职责                                                            |
-| -------------------------- | --------------------------------------------------------------- |
-| `App.vue` / `main.ts`      | 应用外壳、导航、全局投稿弹窗与挂载（Pinia + Router）             |
-| `router/index.ts`          | 路由，懒加载除首页外的所有页面                                  |
-| `views/`                   | 页面级组件（见下）                                              |
+| 目录 / 文件                | 职责                                                                                           |
+| -------------------------- | ---------------------------------------------------------------------------------------------- |
+| `App.vue` / `main.ts`      | 应用外壳、导航、全局投稿弹窗与挂载（Pinia + Router）                                           |
+| `router/index.ts`          | 路由，懒加载除首页外的所有页面                                                                 |
+| `views/`                   | 页面级组件（见下）                                                                             |
 | `components/archive/`      | 档案工作台业务组件，含 `SubmitRunDialog.vue`（投稿弹窗外壳）与 `SubmitRunForm.vue`（三步向导） |
-| `components/admin/`        | 投稿审核台组件（登录弹框、审核卡片）                            |
-| `components/PromoSlot.vue` | 站务推广位（`App.vue` 内使用）                                  |
-| `composables/`             | 可复用状态逻辑（筛选、查询、统计、审核会话、投稿弹窗开关）      |
-| `services/`                | 数据访问与纯函数层，见 [services/AGENTS.md](services/AGENTS.md) |
-| `stores/archiveStore.ts`   | Pinia store，缓存 `ArchiveConfig`                               |
-| `types/archive.ts`         | 所有 `Archive*` 类型定义（唯一来源）                            |
-| `data/`                    | seed 数据与图片/命途映射                                        |
-| `assets/`                  | `main.css`、`redesign.css` 全局样式                             |
+| `components/admin/`        | 投稿审核台组件（登录弹框、审核卡片）                                                           |
+| `components/PromoSlot.vue` | 站务推广位（`App.vue` 内使用）                                                                 |
+| `composables/`             | 可复用状态逻辑（筛选、查询、统计、审核会话、投稿弹窗开关）                                     |
+| `services/`                | 数据访问与纯函数层，见 [services/AGENTS.md](services/AGENTS.md)                                |
+| `stores/archiveStore.ts`   | Pinia store，缓存 `ArchiveConfig`                                                              |
+| `types/archive.ts`         | 所有 `Archive*` 类型定义（唯一来源）                                                           |
+| `data/`                    | seed 数据与图片/命途映射                                                                       |
+| `assets/`                  | `main.css`、`redesign.css` 全局样式                                                            |
 
 ## 路由与视图
 
-`router/index.ts` 当前注册 5 条路由：`/`(archive)、`/submit`、`/admin/submissions`、`/articles`、`/faq`。首页 `ArchiveView` 同步引入，其余懒加载。`views/` 与这 5 条路由一一对应，没有额外未注册的视图文件。
+`router/index.ts` 当前注册 6 条路由：`/`(archive)、`/submit`、`/me`（我的投稿，按本机 token 反查）、`/admin/submissions`、`/articles`、`/faq`。首页 `ArchiveView` 同步引入，其余懒加载。`views/` 与这 6 条路由一一对应，没有额外未注册的视图文件。导航在 `App.vue` 注册："档案 / 文章 / 规则 / **我的投稿** / 审核"。
 
-投稿面板不是独立页面：`SubmitRunDialog.vue` 由 `App.vue` 常驻渲染，头部「提交记录」按钮和工作台工具栏按钮都调用 `useSubmissionDialog().open()`；`/submit` 深链保留，`SubmitView.vue` 只负责打开同一弹窗后 `router.replace("/")`，因此路由结构未变。
+投稿面板不是独立页面：`SubmitRunDialog.vue` 由 `App.vue` 常驻渲染，头部「提交记录」按钮和工作台工具栏按钮都调用 `useSubmissionDialog().open()`；`/submit` 深链保留，`SubmitView.vue` 只负责打开同一弹窗后 `router.replace("/")`，因此路由结构未变。`/me` 直接是页面，没有弹窗化。
 
 ## 类型与数据流约定
 
@@ -49,6 +49,7 @@
   - `useAdminSubmissions()`：审核台会话（`sessionStorage` 持久化）、列表与审核动作。
   - `useSubmissionDialog()`：投稿弹窗开关，状态是模块级 `shallowRef` 单例，供 `App.vue`、`ArchiveWorkbench.vue` 与 `SubmitView.vue` 共享。
   - `useSubmissionDraft()`：投稿草稿写入 `localStorage`（键 `hsr-archive.submission-draft.v1`，含表单与步骤位置），变更后 400ms 防抖、空表单不写；只有提交成功或用户点「丢弃草稿」才清除，payload 形状变化时换键名而不是写迁移。
+  - `useSubmissionMemory()`：作者名 + 配队预设 + 投稿 token 的本机记忆（`localStorage` 键 `hsr-archive.submission-memory.v1`），同键存 `author / presets(最多 3 套) / tokens(最多 50 个 own_xxx)`。配队预设是手动「另存为」+「载入」；token 由 `SubmitRunForm` 提交成功后写入，被 `/me` 页面用做反查与撤回的身份凭证。
 - 大对象优先 `shallowRef`，避免深层响应式开销（现有代码已如此，保持一致）。
 
 ## 组件实现约定

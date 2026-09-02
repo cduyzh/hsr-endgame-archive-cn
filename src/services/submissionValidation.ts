@@ -119,6 +119,26 @@ export function isUsableVideoUrl(value: string): boolean {
   }
 }
 
+/** 根据视频 URL 域名返回平台来源，用于在 UI 上显示对应平台图标与文案。 */
+export type VideoSource = "bilibili" | "youtube"
+
+export function getVideoSource(value: string | undefined | null): VideoSource | null {
+  if (!value) return null
+  try {
+    const url = new URL(value.trim())
+    const host = url.hostname.toLowerCase().replace(/^www\./, "")
+    if (host === "youtu.be" || host === "youtube.com" || host.endsWith(".youtube.com") || host === "youtube-nocookie.com" || host.endsWith(".youtube-nocookie.com")) {
+      return "youtube"
+    }
+    if (host === "bilibili.com" || host.endsWith(".bilibili.com") || host === "b23.tv" || host.endsWith(".b23.tv")) {
+      return "bilibili"
+    }
+  } catch {
+    return null
+  }
+  return null
+}
+
 function findSubmissionStage(config: ArchiveConfig, bossId: string): BossStage | null {
   return config.bosses.find((boss) => boss.id === bossId) ?? null
 }

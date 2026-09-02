@@ -4,6 +4,7 @@
     CircleHelp,
     ClipboardCheck,
     Database,
+    KeyRound,
     Send,
   } from "lucide-vue-next";
   import PromoSlot from "@/components/PromoSlot.vue";
@@ -14,6 +15,7 @@
     { to: "/", label: "档案", icon: Database },
     { to: "/articles", label: "文章", icon: BookOpen },
     { to: "/faq", label: "规则", icon: CircleHelp },
+    { to: "/me", label: "我的投稿", icon: KeyRound },
     { to: "/admin/submissions", label: "审核", icon: ClipboardCheck },
   ] as const;
 

@@ -80,13 +80,14 @@ async function writeFallbackReviews(reviews: SubmissionReview[]) {
   await rename(draftFile, fallbackReviewFile)
 }
 
-export async function addFallbackSubmissionReview(id: string, payload: SubmissionPayload) {
+export async function addFallbackSubmissionReview(id: string, payload: SubmissionPayload, ownerToken?: string) {
   const reviews = await readFallbackReviews()
   reviews.unshift({
     id,
     payload,
     status: "pending",
     reviewerNote: null,
+    ownerToken: ownerToken ?? null,
     createdAt: new Date().toISOString(),
     reviewedAt: null,
   })

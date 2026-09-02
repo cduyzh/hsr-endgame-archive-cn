@@ -1,4 +1,4 @@
-import type { ArchiveRun } from "@/types/archive"
+import type {ArchiveRun} from "@/types/archive"
 
 export const fixtureRuns: ArchiveRun[] = [
   {
@@ -16,18 +16,18 @@ export const fixtureRuns: ArchiveRun[] = [
     standardCount: 1,
     submittedAt: "2026-07-04T12:00:00.000Z",
     tags: ["无复活", "低成本", "手操"],
-    videoUrl: "https://example.com/video/001",
+    videoUrl: "https://www.bilibili.com/video/BV1TubY67E2r/",
     units: [
-      { unitId: "the-herta", eidolon: 0 },
-      { unitId: "trailblazer-remembrance", eidolon: 6 },
-      { unitId: "ruan-mei", eidolon: 1 },
-      { unitId: "tingyun", eidolon: 6 },
+      {unitId: "the-herta", eidolon: 0},
+      {unitId: "trailblazer-remembrance", eidolon: 6},
+      {unitId: "ruan-mei", eidolon: 1},
+      {unitId: "tingyun", eidolon: 6},
     ],
     lightcones: [
-      { unitId: "before-dawn", superimposition: 1 },
-      { unitId: "cruising", superimposition: 5 },
-      { unitId: "dance-dance-dance", superimposition: 5 },
-      { unitId: "dance-dance-dance", superimposition: 3 },
+      {unitId: "before-dawn", superimposition: 1},
+      {unitId: "cruising", superimposition: 5},
+      {unitId: "dance-dance-dance", superimposition: 5},
+      {unitId: "dance-dance-dance", superimposition: 3},
     ],
   },
   {
@@ -45,18 +45,18 @@ export const fixtureRuns: ArchiveRun[] = [
     standardCount: 1,
     submittedAt: "2026-07-03T09:30:00.000Z",
     tags: ["击破", "稳定"],
-    videoUrl: "https://example.com/video/002",
+    videoUrl: "https://www.bilibili.com/video/BV1example0002/",
     units: [
-      { unitId: "firefly", eidolon: 2 },
-      { unitId: "ruan-mei", eidolon: 1 },
-      { unitId: "trailblazer-remembrance", eidolon: 6 },
-      { unitId: "gallagher", eidolon: 6 },
+      {unitId: "firefly", eidolon: 2},
+      {unitId: "ruan-mei", eidolon: 1},
+      {unitId: "trailblazer-remembrance", eidolon: 6},
+      {unitId: "gallagher", eidolon: 6},
     ],
     lightcones: [
-      { unitId: "fall-of-aeon", superimposition: 5 },
-      { unitId: "dance-dance-dance", superimposition: 5 },
-      { unitId: "cruising", superimposition: 5 },
-      { unitId: "post-op", superimposition: 5 },
+      {unitId: "fall-of-aeon", superimposition: 5},
+      {unitId: "dance-dance-dance", superimposition: 5},
+      {unitId: "cruising", superimposition: 5},
+      {unitId: "post-op", superimposition: 5},
     ],
   },
   {
@@ -74,18 +74,18 @@ export const fixtureRuns: ArchiveRun[] = [
     standardCount: 0,
     submittedAt: "2026-07-02T18:40:00.000Z",
     tags: ["高配", "无复活"],
-    videoUrl: "https://example.com/video/003",
+    videoUrl: "https://www.bilibili.com/video/BV1example0003/",
     units: [
-      { unitId: "acheron", eidolon: 2 },
-      { unitId: "silver-wolf", eidolon: 0 },
-      { unitId: "ruan-mei", eidolon: 1 },
-      { unitId: "gallagher", eidolon: 6 },
+      {unitId: "acheron", eidolon: 2},
+      {unitId: "silver-wolf", eidolon: 0},
+      {unitId: "ruan-mei", eidolon: 1},
+      {unitId: "gallagher", eidolon: 6},
     ],
     lightcones: [
-      { unitId: "whereabouts", superimposition: 1 },
-      { unitId: "cruising", superimposition: 5 },
-      { unitId: "dance-dance-dance", superimposition: 5 },
-      { unitId: "post-op", superimposition: 5 },
+      {unitId: "whereabouts", superimposition: 1},
+      {unitId: "cruising", superimposition: 5},
+      {unitId: "dance-dance-dance", superimposition: 5},
+      {unitId: "post-op", superimposition: 5},
     ],
   },
 ]

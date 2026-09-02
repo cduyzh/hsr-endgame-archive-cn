@@ -6,16 +6,16 @@
 
 ## 文件职责
 
-| 文件                     | 角色                                                              | 关键导出                                                                                                             |
-| ------------------------ | ----------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
-| `dataSource.ts`          | 远程数据源配置（唯一入口）                                        | `DATA_SITE`、`dataSourceUrl()`、`IMAGE_BASES`、`monsterImageUrl()`                                                   |
-| `archiveService.ts`      | 前端 API 请求 + seed fallback + 静态快照合并 + 管理员会话         | `fetchArchiveConfig/Runs/MetaStats`、`submitRun`、`createAdminSession`、`fetchSubmissionReviews`、`reviewSubmission` |
-| `staticArchiveConfig.ts` | 浏览器端入口：拉 `manifest` → 定位最新数据目录 → 委托 `staticBossSnapshot` 推导出敌方阶段并补齐配置缺口 | `fetchStaticArchiveSnapshot()`、`mergeStaticArchiveConfig()` |
-| `staticBossSnapshot.ts`  | 远程静态快照的纯计算层（不发起网络），被前端 `staticArchiveConfig.ts` 与服务端 `netlify/functions/_staticSnapshot.ts` 共用 | `buildSeasonBosses(seasonId, version, baseUrl)`、`pickDataDirectory()`、`STATIC_SEASON_IDS`、各类 build*Stages 纯函数 |
-| `runUtils.ts`            | 记录筛选/排序/统计纯函数 + 分类口径唯一来源                       | `filterRuns`、`buildMetaStats`、`matchesCost`、`categoryLabels`、`categoryOptionsFor`、`categoryOfAsScore`、`stageKeyOf` |
-| `unitCost.ts`            | 五星角色“限定/常驻”成本分类                                       | `getCharacterGoldKind`、`getRunGoldCounts`、`getUnitGoldCounts`、`goldKindLabels`                                    |
-| `submissionUtils.ts`     | 投稿转换纯函数                                                    | `submissionReviewToArchiveRun`、`buildPreferredLightconeByCharacter`                                                 |
-| `submissionValidation.ts`| 投稿表单的字段校验、步骤归属与预览取数（仅前端使用）              | `validateSubmissionForm`、`errorsOfStep`、`stepOfField`、`buildSubmissionRoster`、`describeSubmissionTarget`         |
+| 文件                      | 角色                                                                                                                       | 关键导出                                                                                                                 |
+| ------------------------- | -------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| `dataSource.ts`           | 远程数据源配置（唯一入口）                                                                                                 | `DATA_SITE`、`dataSourceUrl()`、`IMAGE_BASES`、`monsterImageUrl()`                                                       |
+| `archiveService.ts`       | 前端 API 请求 + seed fallback + 静态快照合并 + 管理员会话                                                                  | `fetchArchiveConfig/Runs/MetaStats`、`submitRun`、`createAdminSession`、`fetchSubmissionReviews`、`reviewSubmission`     |
+| `staticArchiveConfig.ts`  | 浏览器端入口：拉 `manifest` → 定位最新数据目录 → 委托 `staticBossSnapshot` 推导出敌方阶段并补齐配置缺口                    | `fetchStaticArchiveSnapshot()`、`mergeStaticArchiveConfig()`                                                             |
+| `staticBossSnapshot.ts`   | 远程静态快照的纯计算层（不发起网络），被前端 `staticArchiveConfig.ts` 与服务端 `netlify/functions/_staticSnapshot.ts` 共用 | `buildSeasonBosses(seasonId, version, baseUrl)`、`pickDataDirectory()`、`STATIC_SEASON_IDS`、各类 build\*Stages 纯函数   |
+| `runUtils.ts`             | 记录筛选/排序/统计纯函数 + 分类口径唯一来源                                                                                | `filterRuns`、`buildMetaStats`、`matchesCost`、`categoryLabels`、`categoryOptionsFor`、`categoryOfAsScore`、`stageKeyOf` |
+| `unitCost.ts`             | 五星角色“限定/常驻”成本分类                                                                                                | `getCharacterGoldKind`、`getRunGoldCounts`、`getUnitGoldCounts`、`goldKindLabels`                                        |
+| `submissionUtils.ts`      | 投稿转换纯函数                                                                                                             | `submissionReviewToArchiveRun`、`buildPreferredLightconeByCharacter`                                                     |
+| `submissionValidation.ts` | 投稿表单的字段校验、步骤归属与预览取数（仅前端使用）                                                                       | `validateSubmissionForm`、`errorsOfStep`、`stepOfField`、`buildSubmissionRoster`、`describeSubmissionTarget`             |
 
 ## 两条数据线（不要混用）
 
@@ -31,7 +31,7 @@
 - 入口 `fetchStaticArchiveSnapshot()`：读 `manifest.json` → `pickDataDirectory(manifest.hsr.available)` 选出**最新数据目录**（如 `4.5.51`），所有赛季共用它（上游只保留当前大版本目录，历史赛季详情在其下累积）→ 拉 `monster.json`/`monstervalue.json`/`HardLevelGroup.json`/`EliteGroup.json`/`InfiniteEliteGroup.json`（最后一个允许缺失）→ 直接按 id 拉四份模式详情。**不读** `maze.json / maze_extra.json / maze_boss.json / maze_peak.json` 索引，**不用** `hsr.latest`，远程也没有 `cache-plan.json`。`liveVersion` 取 `manifest.hsr.live`。manifest 请求失败或 available 为空返回 `null`；单个赛季构建失败只丢该赛季。
 - **赛季详情 id 是硬编码的**：`STATIC_SEASON_IDS = { "4.4": { moc:1034, fiction:2025, doom:3019, peak:8 }, "4.5": { moc:1035, fiction:2026, doom:3020, peak:9 } }`。上线新赛季必须在此新增条目，否则页面不会出现该赛季（见根 `AGENTS.md` 的「新赛季上线清单」）。
 - 模式映射（业务 → 静态 → 详情目录）：`moc→moc/maze`、`pf→fiction/story`、`as→doom/boss`、`aa→peak/peak`，locale 固定 `zh`。阶段副标题文案来自本文件的 `modeLabelByStaticMode`，与 seed `config.json` 的 `modes[].label` 一致（`aa` 统一为「异相仲裁」）——改任一处名称必须同时改另一处。
-- 阶段构建：`buildMocStages` / `buildPfStages` / `buildAsStages` / `buildAaStages` 各自从详情里挑终层与星临层；`aa` 遍历 `pre_level` 生成 `k1..kN`，再加 `checkmate`、`plight`。阶段首领由 `bossMonsterIdOf()` 在末波怪物里按 `rank`（`Elite`/`Minion`/`MinionLv2` 视为随从，未知 rank 视为主首领）+ 血量打分选出。上游偶发的 `"BOSS"` 占位名会退回阶段名。
+- 阶段构建：`buildMocStages` / `buildPfStages` / `buildAsStages` / `buildAaStages` 各自从详情里挑终层与星启层；`aa` 遍历 `pre_level` 生成 `k1..kN`，再加 `checkmate`、`plight`。阶段首领由 `bossMonsterIdOf()` 在末波怪物里按 `rank`（`Elite`/`Minion`/`MinionLv2` 视为随从，未知 rank 视为主首领）+ 血量打分选出。上游偶发的 `"BOSS"` 占位名会退回阶段名。
 - 阶段 id：`${seasonId}-${业务模式}-${stageKey}`，是 seed/库里记录 `bossId` 引用的稳定值。
 - 数值口径：`HP = HPBase × child.HPModifyRatio × HardLevelGroup.HPRatio × (EliteGroup|InfiniteEliteGroup).HPRatio`，`MaxMonsterPhase > 1` 时展示值追加 ` x<阶段数>`（如 `800,000 x2`）。速度乘 `HardLevelGroup.SpeedRatio` 保留 1 位小数，韧性额外乘精英组 `StanceRatio`。**没有** `PhaseList.phase_max_hp_ratio` 这一路。`pf` 传 `skipHp`，血量不展示。
 - `mergeStaticArchiveConfig()`：只把 `config.bosses` 中**不存在 id** 的生成阶段追加进去，并为缺失赛季补 `{ id, label: "<seasonId> 归档", isCurrent: seasonId === liveVersion }`。已有条目（含 seed/库中的历史阶段与赛季 label）**一律不覆盖**。快照为空或 `bosses` 为空时原样返回。

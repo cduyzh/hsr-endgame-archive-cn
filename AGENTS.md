@@ -16,6 +16,8 @@
 - 记录列表：按队伍组合分组，展示作者、角色命座、轮次、分数、成本和视频链接。
 - 环境统计：角色使用率、光锥使用率、常见队伍组合和成本区间。
 - 投稿入口：右上角「提交记录」打开站内弹窗，按「基础信息 → 队伍配置 → 成绩与预览」三步提交到审核队列；草稿存在本地直到提交成功，视频只接受 B 站与 YouTube 链接。
+- 配队预设：本机 localStorage 记忆作者名 + 最多 3 套队伍配置，提交时可一键载入。
+- 投稿凭证：投稿成功后服务端下发 `ownerToken`（`own_<48 hex>`），写回本机 localStorage，**`/me` 页面**可按 token 反查该用户提过的所有 `submission_reviews` + `runs`，查看审核进度（pending/approved/rejected/withdrawn）、撤回已通过的记录、忘记某条凭证或一键清空。
 - 规则/文章页：展示站内说明与文章摘要。
 
 ## 技术栈与命令
@@ -61,13 +63,13 @@ pnpm seed:archive:dry    # 灌库空跑
 
 ## 代码结构
 
-- `src/App.vue`：主壳和导航（档案 / 文章 / 规则 / 审核 + 「提交记录」按钮与全局 `SubmitRunDialog` + `PromoSlot`）。
-- `src/router/index.ts`：5 条路由 `/`、`/submit`、`/admin/submissions`、`/articles`、`/faq`；仅首页同步引入。
-- `src/views/`：`ArchiveView.vue`（只组合 `ArchiveWorkbench`）、`SubmitView.vue`（`/submit` 深链转发：打开投稿弹窗后回到首页）、`AdminSubmissionsView.vue`、`ArticlesView.vue`、`FaqView.vue`。
+- `src/App.vue`：主壳和导航（档案 / 文章 / 规则 / **我的投稿** / 审核 + 「提交记录」按钮与全局 `SubmitRunDialog` + `PromoSlot`）。
+- `src/router/index.ts`：6 条路由 `/`、`/submit`、`/me`（按本机 token 列出 / 撤回自己的投稿）、`/admin/submissions`、`/articles`、`/faq`；仅首页同步引入。
+- `src/views/`：`ArchiveView.vue`（只组合 `ArchiveWorkbench`）、`SubmitView.vue`（`/submit` 深链转发：打开投稿弹窗后回到首页）、`MySubmissionsView.vue`（`/me`，本机凭证反查 + 撤回 + 清理）、`AdminSubmissionsView.vue`、`ArticlesView.vue`、`FaqView.vue`。
 - `src/components/archive/`：档案业务组件，含投稿弹窗 `SubmitRunDialog.vue` 与其内部三步向导 `SubmitRunForm.vue`；`src/components/admin/`：审核台弹框与卡片；`src/components/PromoSlot.vue`：站务推广位。
-- `src/composables/`：`useArchiveFilters.ts`（筛选状态 + 路由 query 双向同步）、`useRunsQuery.ts`、`useMetaStats.ts`、`useAdminSubmissions.ts`、`useSubmissionDialog.ts`（投稿弹窗全局开关）、`useSubmissionDraft.ts`（投稿草稿 localStorage 缓存）。
+- `src/composables/`：`useArchiveFilters.ts`（筛选状态 + 路由 query 双向同步）、`useRunsQuery.ts`、`useMetaStats.ts`、`useAdminSubmissions.ts`、`useSubmissionDialog.ts`（投稿弹窗全局开关）、`useSubmissionDraft.ts`（投稿草稿 localStorage 缓存）、`useSubmissionMemory.ts`（作者名 / 配队预设 / 投稿 token 三合一 localStorage 记忆）。
 - `src/types/archive.ts`：所有 `Archive*` 类型的唯一来源。
-- `src/services/`：`archiveService.ts`（API + seed fallback + 管理员会话）、`staticArchiveConfig.ts`（远程静态快照）、`dataSource.ts`（远程地址与图片）、`runUtils.ts`、`unitCost.ts`、`submissionUtils.ts`、`submissionValidation.ts`（投稿校验与预览纯函数）。
+- `src/services/`：`archiveService.ts`（API + seed fallback + 管理员会话 + `listMySubmissions`/`withdrawSubmission`）、`staticArchiveConfig.ts`（远程静态快照）、`dataSource.ts`（远程地址与图片）、`runUtils.ts`、`unitCost.ts`、`submissionUtils.ts`、`submissionValidation.ts`（投稿校验与预览纯函数）。
 - `src/data/`：`unitAssets.ts`（`sourceId` -> 远程图）、`unitPaths.ts`（命途图标）、`seed/`。
 - `src/stores/archiveStore.ts`：档案配置缓存。
 - `src/data/seed/`：无数据库时的本地种子数据。当前 `config.json` 中 `bosses` 为空数组、`runs.json` 为空数组，敌方阶段完全由静态快照生成；`hsr-units.json` / `hsr-monsters.json` 只是同步脚本产物，运行时代码不 import（`seed/index.ts` 仅导出 `config.json` 与 `runs.json`）。
@@ -103,9 +105,11 @@ pnpm seed:archive:dry    # 灌库空跑
 - `/api/archive/config` -> `netlify/functions/archive-config.ts`
 - `/api/archive/runs` -> `netlify/functions/archive-runs.ts`
 - `/api/archive/stats` -> `netlify/functions/archive-stats.ts`
-- `/api/submissions` -> `netlify/functions/submissions.ts`
+- `/api/submissions` -> `netlify/functions/submissions.ts`（POST 投稿；**响应体返回 `ownerToken`（`own_<48 hex>`），前端写本地记忆**）
+- `/api/submissions/me` -> `netlify/functions/submissions-me.ts`（POST `{tokens:string[]}`，按本机凭证反查 `submission_reviews` + `runs`，最多 50 token / 200 条）
+- `/api/submissions/:id/withdraw` -> `netlify/functions/submissions-withdraw.ts`（PATCH `{token}`，校验 `owner_token` 后把对应 `submission_reviews.status` 与同名 token 的 `runs.status` 一起改 `withdrawn`）
 - `/api/admin/submissions` -> `netlify/functions/admin-submissions.ts`
-- `/api/admin/submissions/:id` -> `netlify/functions/admin-submissions-id.ts`（`netlify.toml` 中目标写作 `/.netlify/functions/admin-submissions-id/:id`）
+- `/api/admin/submissions/:id` -> `netlify/functions/admin-submissions-id.ts`（`netlify.toml` 中目标写作 `/.netlify/functions/admin-submissions-id/:id`；**通过时把 `owner_token` 一并写入 `runs`**，让用户能通过 token 找到自己已通过的作品）
 - `/api/admin/sync-stages` -> `netlify/functions/admin-sync-stages.ts`（POST，管理员手动批量同步 `stages` 表）
 
 数据库 URL 读取顺序：

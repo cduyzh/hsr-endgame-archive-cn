@@ -1,18 +1,19 @@
-import { mount } from "@vue/test-utils"
-import { describe, expect, it } from "vitest"
+import {mount} from "@vue/test-utils"
+import {describe, expect, it} from "vitest"
 import RunGroupList from "@/components/archive/RunGroupList.vue"
-import { seedConfig } from "@/data/seed"
-import { fixtureRuns } from "./fixtures/runs"
+import {seedConfig} from "@/data/seed"
+import {fixtureRuns} from "./fixtures/runs"
 
 describe("RunGroupList", () => {
   it("渲染分组并展开记录", async () => {
     const wrapper = mount(RunGroupList, {
       props: {
-        groups: [{ key: "g1", label: "大黑塔双同谐", runs: [fixtureRuns[0]!] }],
+        groups: [{key: "g1", label: "大黑塔双同谐", runs: [fixtureRuns[0]!]}],
         units: seedConfig.units,
         loading: false,
         error: null,
         continuous: true,
+        mode: "moc",
       },
     })
 
@@ -33,6 +34,7 @@ describe("RunGroupList", () => {
         loading: false,
         error: null,
         continuous: false,
+        mode: "moc",
       },
     })
 
