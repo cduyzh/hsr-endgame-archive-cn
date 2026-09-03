@@ -11,12 +11,14 @@ const DATA_VERSION = process.env.HSR_DATA_VERSION ?? "4.5"
 const ROOT = new URL("../", import.meta.url)
 const CONFIG_PATH = new URL("../src/data/seed/config.json", import.meta.url)
 const UNITS_PATH = new URL("../src/data/seed/hsr-units.json", import.meta.url)
+const PAIRS_PATH = new URL("../src/data/seed/lightcone-pairs.json", import.meta.url)
 
 const SOURCE = {
   characterPage: "https://hsr.nanoka.cc/character",
   lightconePage: "https://hsr.nanoka.cc/lightcone",
   characterData: `https://static.nanoka.cc/hsr/${DATA_VERSION}/character.json`,
   lightconeData: `https://static.nanoka.cc/hsr/${DATA_VERSION}/lightcone.json`,
+  characterDetail: `https://static.nanoka.cc/hsr/${DATA_VERSION}/zh/character`,
   characterImageBase: "https://static.nanoka.cc/assets/hsr/avatarshopicon",
   lightconeImageBase: "https://static.nanoka.cc/assets/hsr/lightconemediumicon",
 }
@@ -128,9 +130,48 @@ async function main() {
   await writeJson(CONFIG_PATH, config)
   await writeJson(UNITS_PATH, sourceUnits)
 
+  const { pairs, missing } = await buildSignaturePairs(characters, lightcones)
+  await writeJson(PAIRS_PATH, {
+    version: DATA_VERSION,
+    fetchedAt: new Date().toISOString(),
+    source: `${SOURCE.characterDetail}/<sourceId>.json -> lightcones[0]`,
+    pairs,
+  })
+
   console.log(`synced ${characters.length} characters and ${lightcones.length} lightcones from ${DATA_VERSION}`)
+  console.log(`resolved ${Object.keys(pairs).length} signature lightcones`)
+  if (missing.length > 0) console.warn(`skipped ${missing.length} characters without a resolvable signature: ${missing.join(", ")}`)
   console.log(`updated ${path.relative(fileURLPath(ROOT), fileURLPath(CONFIG_PATH))}`)
   console.log(`updated ${path.relative(fileURLPath(ROOT), fileURLPath(UNITS_PATH))}`)
+  console.log(`updated ${path.relative(fileURLPath(ROOT), fileURLPath(PAIRS_PATH))}`)
+}
+
+/** 上游角色详情的 lightcones[0] 即首选推荐光锥（专武）；命途不一致或解析不到就跳过该角色。 */
+async function buildSignaturePairs(characters, lightcones) {
+  const idBySourceId = new Map([...characters, ...lightcones].map((unit) => [unit.sourceId, unit.id]))
+  const lightconeById = new Map(lightcones.map((unit) => [unit.id, unit]))
+  const pairs = {}
+  const missing = []
+
+  for (const character of characters) {
+    if (character.rarity !== 5 || !character.limited) continue
+    let detail = null
+    try {
+      detail = await fetchJson(`${SOURCE.characterDetail}/${character.sourceId}.json`)
+    } catch {
+      missing.push(character.id)
+      continue
+    }
+    const signatureId = idBySourceId.get(String(detail?.lightcones?.[0] ?? ""))
+    const signature = signatureId ? lightconeById.get(signatureId) : null
+    if (!signature || signature.path !== character.path) {
+      missing.push(character.id)
+      continue
+    }
+    pairs[character.id] = signature.id
+  }
+
+  return { pairs, missing }
 }
 
 async function fetchJson(url) {

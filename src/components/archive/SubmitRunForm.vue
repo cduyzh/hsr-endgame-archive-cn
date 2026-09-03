@@ -34,7 +34,14 @@
     categoryOfAsScore,
     categoryOptionsFor,
   } from "@/services/runUtils";
-  import { getUnitGoldCounts, goldKindLabels } from "@/services/unitCost";
+  import {
+    defaultEidolonFor,
+    defaultSuperimpositionFor,
+    getCharacterGoldKind,
+    getLightconeGoldKind,
+    getUnitGoldCounts,
+    goldKindLabels,
+  } from "@/services/unitCost";
   import {
     COST_MAX,
     COST_MIN,
@@ -239,8 +246,28 @@
     return "0 轮竞速要求轮次为 0；满星记录按实际轮次填写。";
   });
   const roster = computed(() => buildSubmissionRoster(form, props.config));
-  const goldCounts = computed(() =>
-    getUnitGoldCounts(form.units, props.config.units),
+  const teamCost = computed(() =>
+    getUnitGoldCounts(form.units, form.lightcones, props.config.units),
+  );
+  /** 单位库索引：自动搭配与默认命座/叠影都要按 id 取回单位元数据。 */
+  const unitById = computed(
+    () => new Map(props.config.units.map((unit) => [unit.id, unit])),
+  );
+  const autoCost = computed(
+    () => teamCost.value.limited + teamCost.value.standard,
+  );
+  /** 用户手改过成本后停止自动覆盖，「按队伍重算」可重新接管。 */
+  const costTouched = shallowRef(
+    draft?.payload?.cost !== undefined &&
+      Number(draft.payload.cost) !== autoCost.value,
+  );
+
+  watch(
+    autoCost,
+    (value) => {
+      if (!costTouched.value) form.cost = value;
+    },
+    { immediate: true },
   );
   const target = computed(() => describeSubmissionTarget(form, props.config));
   const configuredSlots = computed(
@@ -264,14 +291,30 @@
 
   function updateCharacter(index: number, unitId: string) {
     form.units[index].unitId = unitId;
-    const preferredLightconeId = props.preferredLightconeByCharacter[unitId];
-    if (
-      preferredLightconeId &&
-      lightcones.value.some((unit) => unit.id === preferredLightconeId)
-    ) {
-      form.lightcones[index].unitId = preferredLightconeId;
-      form.lightcones[index].superimposition = 1;
-    }
+
+    const character = unitById.value.get(unitId);
+    const defaultEidolon = character ? defaultEidolonFor(getCharacterGoldKind(character)) : null;
+    if (defaultEidolon !== null) form.units[index].eidolon = defaultEidolon;
+
+    const suggested = props.preferredLightconeByCharacter[unitId];
+    if (!suggested || !lightcones.value.some((unit) => unit.id === suggested)) return;
+    form.lightcones[index].unitId = suggested;
+    form.lightcones[index].superimposition = defaultSuperimpositionFor(
+      getLightconeGoldKind(unitById.value.get(suggested)),
+    );
+  }
+
+  function updateLightcone(index: number, unitId: string) {
+    form.lightcones[index].unitId = unitId;
+    if (!unitId) return;
+    form.lightcones[index].superimposition = defaultSuperimpositionFor(
+      getLightconeGoldKind(unitById.value.get(unitId)),
+    );
+  }
+
+  function recalculateCost() {
+    costTouched.value = false;
+    form.cost = autoCost.value;
   }
 
   function patchMode(mode: EndgameMode) {
@@ -329,6 +372,7 @@
   function handleApplyPreset() {
     if (!activePresetId.value) return;
     applyPreset(activePresetId.value);
+    costTouched.value = false;
     form.teamName =
       memory.value.presets.find((entry) => entry.id === activePresetId.value)
         ?.name ?? form.teamName;
@@ -357,6 +401,7 @@
     showErrors.value = false;
     submitFailure.value = "";
     categoryTouched.value = false;
+    costTouched.value = false;
     draftSavedAt.value = "";
   }
 
@@ -413,6 +458,7 @@
       // 只有入队成功才清草稿；失败时保留原样供重试
       discardDraft();
       categoryTouched.value = false;
+      costTouched.value = false;
       draftSavedAt.value = "";
       Object.assign(form, createForm(props.config));
       stepIndex.value = 0;
@@ -561,11 +607,13 @@
           <li>
             记录分类随模式变化：末日幻影按剩余行动值分数分档，异相仲裁的绝境阶段单独归档。
           </li>
-          <li>命座与叠影按最终结算时填写，开拓者不计入限定/常驻成本。</li>
           <li>
-            成本按 4 名角色合计填写，范围 {{ COST_MIN }}–{{
-              COST_MAX
-            }}，与档案的成本分桶一致。
+            命座与叠影按最终结算时填写；低星角色默认满命，专武默认 S1、低星光锥默认
+            S5。
+          </li>
+          <li>
+            成本按队伍自动合计：限定五星角色算「命座 + 1」，限定五星光锥算叠影数，常驻五星计入常驻成本，低星与无名勋礼光锥不计成本；合计范围
+            {{ COST_MIN }}–{{ COST_MAX }}，可手动改写。
           </li>
           <li>记录先进入待审核队列，通过后才会在档案页公开展示。</li>
         </ul>
@@ -748,7 +796,8 @@
             <Sparkles
               :size="13"
               aria-hidden="true" />
-            限定 {{ goldCounts.limited }} · 常驻 {{ goldCounts.standard }}
+            限定 {{ teamCost.limited }} · 常驻 {{ teamCost.standard }} · 成本
+            {{ autoCost }}
           </span>
         </div>
 
@@ -860,7 +909,7 @@
             :preferred-lightcone-id="preferredLightconeByCharacter[unit.unitId]"
             @update-character="updateCharacter(index, $event)"
             @update-eidolon="unit.eidolon = $event"
-            @update-lightcone="form.lightcones[index].unitId = $event"
+            @update-lightcone="updateLightcone(index, $event)"
             @update-superimposition="
               form.lightcones[index].superimposition = $event
             " />
@@ -868,7 +917,8 @@
 
         <p class="submission-field-hint">
           已配置 {{ configuredSlots }}/{{ TEAM_SLOT_COUNT }}
-          个槽位；角色不可重复，光锥可重复，光锥列表优先展示与角色同命途的选项。
+          个槽位；角色不可重复，光锥可重复，光锥列表优先展示与角色同命途的选项。选角色会自动带出专武（默认
+          S1），手动选低星光锥时默认 S5。
         </p>
       </div>
 
@@ -903,20 +953,40 @@
               >{{ fieldError("score") }}</small
             >
           </label>
-          <label class="field">
+          <div class="field">
             <span>成本</span>
-            <input
-              v-model.number="form.cost"
-              type="number"
-              :min="COST_MIN"
-              :max="COST_MAX"
-              step="1" />
+            <div class="cost-field-row">
+              <input
+                v-model.number="form.cost"
+                type="number"
+                :min="COST_MIN"
+                :max="COST_MAX"
+                step="1"
+                @input="costTouched = true" />
+              <button
+                class="icon-button mini"
+                type="button"
+                :disabled="!costTouched && form.cost === autoCost"
+                :aria-label="`按队伍重算成本（当前合计 ${autoCost}）`"
+                @click="recalculateCost">
+                <RotateCcw
+                  :size="13"
+                  aria-hidden="true" />
+                重算
+              </button>
+            </div>
+            <small
+              v-if="!costTouched"
+              class="submission-field-hint">
+              按队伍自动合计：限定 {{ teamCost.limited }} + 常驻
+              {{ teamCost.standard }}
+            </small>
             <small
               v-if="fieldError('cost')"
               class="field-error"
               >{{ fieldError("cost") }}</small
             >
-          </label>
+          </div>
         </div>
 
         <p
@@ -984,10 +1054,13 @@
           <p class="submission-preview-metrics">
             <span>轮次 {{ form.cycle }}</span>
             <span>分数 {{ form.score }}</span>
-            <span>成本 {{ form.cost }}</span>
+            <span>
+              成本 {{ form.cost }}
+              <template v-if="costTouched">（自动合计 {{ autoCost }}）</template>
+            </span>
             <span
-              >限定 {{ goldCounts.limited }} · 常驻
-              {{ goldCounts.standard }}</span
+              >限定 {{ teamCost.limited }} · 常驻
+              {{ teamCost.standard }}</span
             >
           </p>
           <a

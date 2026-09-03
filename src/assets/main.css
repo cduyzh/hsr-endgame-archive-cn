@@ -320,6 +320,13 @@ a {
   line-height: 1.6;
 }
 
+.cost-field-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 7px;
+}
+
 .filter-section {
   display: grid;
   gap: 8px;

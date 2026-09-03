@@ -2,12 +2,12 @@ import { flushPromises, mount } from "@vue/test-utils"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import SubmitRunForm from "@/components/archive/SubmitRunForm.vue"
 import { loadSubmissionDraft } from "@/composables/useSubmissionDraft"
-import { buildPreferredLightconeByCharacter } from "@/services/submissionUtils"
+import { buildSuggestedLightconeByCharacter } from "@/services/submissionUtils"
 import { fixtureConfig, fixtureSubmission } from "./fixtures/config"
 import { fixtureRuns } from "./fixtures/runs"
 
-const DRAFT_KEY = "hsr-archive.submission-draft.v1"
-const preferredLightconeByCharacter = buildPreferredLightconeByCharacter(fixtureRuns, fixtureConfig.units)
+const DRAFT_KEY = "hsr-archive.submission-draft.v2"
+const preferredLightconeByCharacter = buildSuggestedLightconeByCharacter(fixtureRuns, fixtureConfig.units)
 
 const roster = [
   { id: "the-herta", keyword: "大黑塔" },
@@ -181,16 +181,68 @@ describe("SubmitRunForm 分步向导", () => {
     wrapper.unmount()
   })
 
-  it("第二步实时统计限定与常驻，命途不匹配时给出提示", async () => {
+  it("第二步按成本口径实时统计限定与常驻", async () => {
     const wrapper = mountForm()
 
     await toTeamStep(wrapper)
     await pickCharacter(wrapper, 0, "大黑塔", "the-herta")
     await pickCharacter(wrapper, 1, "停云", "tingyun")
-    expect(wrapper.get(".team-cost-chip").text()).toContain("限定 1 · 常驻 0")
+    // 大黑塔 E0 = 1 + 自动带入的专武 S1 = 1；停云是低星角色，满命也不计成本。
+    expect(wrapper.get(".team-cost-chip").text()).toContain("限定 2 · 常驻 0 · 成本 2")
 
     await pickLightcone(wrapper, 0, "星海", "cruising")
     expect(wrapper.findAll(".submission-team-slot")[0].text()).toContain("命途不同")
+    // 换成无名勋礼光锥后不计叠影成本，成本回落到角色本体。
+    expect(wrapper.get(".team-cost-chip").text()).toContain("限定 1 · 常驻 0 · 成本 1")
+    wrapper.unmount()
+  })
+
+  it("选角色带出专武并按类别给默认叠影与命座", async () => {
+    const wrapper = mountForm()
+
+    await toTeamStep(wrapper)
+    await pickCharacter(wrapper, 0, "黄泉", "acheron")
+    const [firstSlot] = wrapper.findAll(".submission-team-slot")
+    expect(firstSlot.text()).toContain("行于流逝的岸")
+    expect(firstSlot.findAll(".level-segments")[1].get("button.active").text()).toBe("S1")
+    // 限定五星角色保留 E0，交给用户按实际结算改。
+    expect(firstSlot.findAll(".level-segments")[0].get("button.active").text()).toBe("E0")
+
+    await pickCharacter(wrapper, 1, "停云", "tingyun")
+    const secondSlot = wrapper.findAll(".submission-team-slot")[1]
+    expect(secondSlot.findAll(".level-segments")[0].get("button.active").text()).toBe("E6")
+
+    await pickLightcone(wrapper, 2, "舞", "dance-dance-dance")
+    expect(wrapper.findAll(".submission-team-slot")[2].findAll(".level-segments")[1].get("button.active").text()).toBe("S5")
+    wrapper.unmount()
+  })
+
+  it("成本按队伍自动填充，手改后不再覆盖并可一键重算", async () => {
+    const wrapper = mountForm()
+    const costInput = () => wrapper.findAll('input[type="number"]')[2]
+
+    await toTeamStep(wrapper)
+    await wrapper.get('input[placeholder="例：大黑塔双同谐"]').setValue("黄泉双同谐")
+    // 三名限定五星各 E0 + 自动带入的专武 S1 = 2，停云是低星角色不计成本。
+    await pickCharacter(wrapper, 0, "黄泉", "acheron")
+    await pickCharacter(wrapper, 1, "停云", "tingyun")
+    await pickCharacter(wrapper, 2, "银狼", "silver-wolf")
+    await pickCharacter(wrapper, 3, "阮", "ruan-mei")
+    await goNext(wrapper)
+
+    expect(costInput().element.value).toBe("6")
+
+    await costInput().setValue("9")
+    await wrapper.findAll(".submission-step-tab")[1].trigger("click")
+    await pickLightcone(wrapper, 0, "星海", "cruising")
+    await wrapper.findAll(".submission-step-tab")[2].trigger("click")
+
+    expect(costInput().element.value).toBe("9")
+    expect(wrapper.get(".submission-preview-metrics").text()).toContain("成本 9")
+    expect(wrapper.get(".submission-preview-metrics").text()).toContain("自动合计 5")
+
+    await wrapper.get('button[aria-label^="按队伍重算成本"]').trigger("click")
+    expect(costInput().element.value).toBe("5")
     wrapper.unmount()
   })
 
@@ -204,7 +256,8 @@ describe("SubmitRunForm 分步向导", () => {
     expect(preview).toContain("「黄金」的追猎者")
     expect(preview).toContain("满星记录")
     expect(preview).toContain("拂晓之前")
-    expect(wrapper.get(".submission-preview-metrics").text()).toContain("限定 2 · 常驻 0")
+    expect(wrapper.get(".submission-preview-metrics").text()).toContain("限定 4 · 常驻 0")
+    expect(wrapper.get(".submission-preview-metrics").text()).toContain("成本 4")
     wrapper.unmount()
   })
 

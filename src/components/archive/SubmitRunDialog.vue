@@ -2,8 +2,7 @@
 import { computed, onBeforeUnmount, shallowRef, useTemplateRef, watch } from "vue"
 import { Send, X } from "lucide-vue-next"
 import SubmitRunForm from "@/components/archive/SubmitRunForm.vue"
-import { seedRuns } from "@/data/seed"
-import { buildPreferredLightconeByCharacter } from "@/services/submissionUtils"
+import { buildSuggestedLightconeByCharacter } from "@/services/submissionUtils"
 import { useArchiveStore } from "@/stores/archiveStore"
 
 const props = defineProps<{
@@ -19,7 +18,9 @@ const closeButton = useTemplateRef<HTMLButtonElement>("closeButton")
 const previouslyFocused = shallowRef<HTMLElement | null>(null)
 
 const preferredLightconeByCharacter = computed(() =>
-  archiveStore.config ? buildPreferredLightconeByCharacter(seedRuns, archiveStore.config.units) : {},
+  archiveStore.config
+    ? buildSuggestedLightconeByCharacter(archiveStore.pairingRuns, archiveStore.config.units)
+    : {},
 )
 
 function handleKeydown(event: KeyboardEvent) {

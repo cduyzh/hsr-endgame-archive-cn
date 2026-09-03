@@ -1,8 +1,10 @@
 import { computed, shallowRef, watch } from "vue"
 import { fetchRuns } from "@/services/archiveService"
+import { useArchiveStore } from "@/stores/archiveStore"
 import type { ArchiveFilters, ArchiveRun } from "@/types/archive"
 
 export function useRunsQuery(filters: ArchiveFilters) {
+  const archiveStore = useArchiveStore()
   const runs = shallowRef<ArchiveRun[]>([])
   const loading = shallowRef(false)
   const error = shallowRef<string | null>(null)
@@ -13,6 +15,7 @@ export function useRunsQuery(filters: ArchiveFilters) {
     error.value = null
     try {
       runs.value = await fetchRuns(filters)
+      archiveStore.recordPairingRuns(runs.value)
     } catch (err) {
       error.value = err instanceof Error ? err.message : "记录加载失败"
       runs.value = []

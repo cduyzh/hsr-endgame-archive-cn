@@ -58,20 +58,31 @@ describe("runUtils", () => {
     expect(stats.costBuckets.reduce((sum, bucket) => sum + bucket.count, 0)).toBe(runs.length)
   })
 
-  it("按角色规则统计限定金与常驻金", () => {
+  it("按成本口径统计限定金与常驻金", () => {
     const units: ArchiveUnit[] = [
-      { id: "trailblazer-remembrance", kind: "character", name: "开拓者・记忆", path: "记忆", element: "冰", rarity: 5, limited: false },
+      { id: "acheron", kind: "character", name: "黄泉", path: "虚无", element: "雷", rarity: 5, limited: true },
+      { id: "whereabouts", kind: "lightcone", name: "行于流逝的岸", path: "虚无", rarity: 5, limited: true },
       { id: "welt", kind: "character", name: "瓦尔特", path: "虚无", element: "虚数", rarity: 5, limited: false },
-      { id: "bronya", kind: "character", name: "布洛妮娅", path: "同谐", element: "风", rarity: 5, limited: false },
-      { id: "acheron", kind: "character", name: "黄泉", path: "虚无", element: "雷", rarity: 5, limited: false },
-      { id: "gallagher", kind: "character", name: "加拉赫", path: "丰饶", element: "火", rarity: 4, limited: false },
+      { id: "night-on-the-milky-way", kind: "lightcone", name: "银河铁道之夜", path: "智识", rarity: 5, limited: true },
+      { id: "tingyun", kind: "character", name: "停云", path: "同谐", element: "雷", rarity: 4, limited: false },
+      { id: "dance-dance-dance", kind: "lightcone", name: "舞！舞！舞！", path: "同谐", rarity: 4, limited: false },
     ]
     const run = {
       ...fixtureRuns[0],
-      units: units.map((unit) => ({ unitId: unit.id, eidolon: 0 })),
+      units: [
+        { unitId: "acheron", eidolon: 6 },
+        { unitId: "welt", eidolon: 0 },
+        { unitId: "tingyun", eidolon: 6 },
+      ],
+      lightcones: [
+        { unitId: "whereabouts", superimposition: 5 },
+        { unitId: "night-on-the-milky-way", superimposition: 5 },
+        { unitId: "dance-dance-dance", superimposition: 5 },
+      ],
     } as ArchiveRun
 
-    expect(getRunGoldCounts(run, units)).toEqual({ limited: 1, standard: 2 })
+    // 限定 = 黄泉 E6(7) + 专武 S5(5)；常驻 = 瓦尔特 E0(1) + 银河铁道之夜 S5(5)；低星角色与光锥不计。
+    expect(getRunGoldCounts(run, units)).toEqual({ limited: 12, standard: 6 })
   })
 
   it("分类可用集合随模式与阶段变化", () => {

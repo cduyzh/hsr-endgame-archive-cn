@@ -1,6 +1,21 @@
 import {getRunGoldCounts} from "./unitCost"
+import {signatureLightconeByCharacter} from "../data/signatureLightcones"
 // 上面使用相对路径而非 @/ 别名，以保证 netlify/functions 下的 esbuild 打包能解析。
 import type {ArchiveRun, ArchiveUnit, SubmissionReview} from "@/types/archive"
+
+/** 专武表优先覆盖站内统计结果，两者都只保留单位库里存在的光锥。 */
+export function buildSuggestedLightconeByCharacter(runs: ArchiveRun[], units: ArchiveUnit[]) {
+  const knownLightcones = new Set(units.filter((unit) => unit.kind === "lightcone").map((unit) => unit.id))
+  const merged: Record<string, string> = {...buildPreferredLightconeByCharacter(runs, units)}
+
+  for (const [characterId, lightconeId] of Object.entries(signatureLightconeByCharacter)) {
+    if (knownLightcones.has(lightconeId)) merged[characterId] = lightconeId
+  }
+
+  return Object.fromEntries(
+    Object.entries(merged).filter(([, lightconeId]) => knownLightcones.has(lightconeId)),
+  ) as Record<string, string>
+}
 
 export function buildPreferredLightconeByCharacter(runs: ArchiveRun[], units: ArchiveUnit[]) {
   const unitById = new Map(units.map((unit) => [unit.id, unit]))
