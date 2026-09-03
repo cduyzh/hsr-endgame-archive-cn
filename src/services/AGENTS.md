@@ -9,22 +9,23 @@
 | 文件                      | 角色                                                                                                                       | 关键导出                                                                                                                 |
 | ------------------------- | -------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
 | `dataSource.ts`           | 远程数据源配置（唯一入口）                                                                                                 | `DATA_SITE`、`dataSourceUrl()`、`IMAGE_BASES`、`monsterImageUrl()`                                                       |
-| `archiveService.ts`       | 前端 API 请求 + seed fallback + 静态快照合并 + 管理员会话                                                                  | `fetchArchiveConfig/Runs/MetaStats`、`submitRun`、`createAdminSession`、`fetchSubmissionReviews`、`reviewSubmission`     |
+| `archiveService.ts`       | 前端 API 请求 + seed fallback + 静态快照合并 + 管理员会话                                                                  | `fetchArchiveConfig/Runs/MetaStats`、`submitRun`、`checkDuplicateVideo`、`SubmissionDuplicateError`、`createAdminSession`、`fetchSubmissionReviews`、`reviewSubmission`     |
 | `staticArchiveConfig.ts`  | 浏览器端入口：拉 `manifest` → 定位最新数据目录 → 委托 `staticBossSnapshot` 推导出敌方阶段并补齐配置缺口                    | `fetchStaticArchiveSnapshot()`、`mergeStaticArchiveConfig()`                                                             |
 | `staticBossSnapshot.ts`   | 远程静态快照的纯计算层（不发起网络），被前端 `staticArchiveConfig.ts` 与服务端 `netlify/functions/_staticSnapshot.ts` 共用 | `buildSeasonBosses(seasonId, version, baseUrl)`、`pickDataDirectory()`、`STATIC_SEASON_IDS`、各类 build\*Stages 纯函数   |
-| `runUtils.ts`             | 记录筛选/排序/统计纯函数 + 分类/标记/阶段分组口径唯一来源                                                                    | `filterRuns`、`buildMetaStats`、`matchesCost`、`categoryLabels`、`categoryOptionsFor`、`categoryOfAsScore`、`stageKeyOf`、`flagOrder`/`flagLabels`/`isRunFlag`/`flagsOfRun`、`stageGroupOf`/`isStarwardStage` |
-| `unitCost.ts`             | 角色与光锥的“限定/常驻/不计成本”分类 + 成本与默认值口径                                                                     | `getCharacterGoldKind`、`getLightconeGoldKind`、`getRunGoldCounts`、`getUnitGoldCounts`、`defaultEidolonFor`、`defaultSuperimpositionFor`、`goldKindLabels` |
+| `runUtils.ts`             | 记录筛选/排序/统计纯函数 + 分类/标记/阶段分组口径唯一来源                                                                    | `filterRuns`、`buildMetaStats`、`matchesRange`、`categoryLabels`、`categoryOptionsFor`、`categoryOfAsScore`、`stageKeyOf`、`flagOrder`/`flagLabels`/`isRunFlag`/`flagsOfRun`、`stageGroupOf`/`isStarwardStage` |
+| `unitCost.ts`             | 角色与光锥的“限定/常驻/不计成本”分类 + 成本与默认值口径（**无 `@/` 值导入，Functions 可相对引用**）                          | `COST_MIN`/`COST_MAX`、`getCharacterGoldKind`、`getLightconeGoldKind`、`getRunGoldCounts`、`getUnitGoldCounts`、`defaultEidolonFor`、`defaultSuperimpositionFor`、`goldKindLabels` |
 | `submissionUtils.ts`      | 投稿转换纯函数                                                                                                             | `submissionReviewToArchiveRun`、`buildPreferredLightconeByCharacter`、`buildSuggestedLightconeByCharacter`                |
 | `submissionValidation.ts` | 投稿表单的字段校验、步骤归属与预览取数（仅前端使用）                                                                       | `validateSubmissionForm`、`errorsOfStep`、`stepOfField`、`buildSubmissionRoster`、`describeSubmissionTarget`             |
+| `videoUrl.ts`             | 「同一支视频」的唯一口径：从链接提取 BV 号 / YouTube 视频 id，取不到退回规范化 URL；投稿预检与服务端入队拦截共用（**无 `@/` 值导入，Functions 相对引用**） | `videoIdentityOf`、`videoMatchPattern`、`matchesVideoIdentity`、`isSameVideo`、`DUPLICATE_VIDEO_MESSAGE`                 |
 
 ## 两条数据线（不要混用）
 
-1. **业务数据**：`archiveService.ts` 请求 `/api/archive/*`、`/api/submissions`、`/api/admin/submissions*`。API 基础前缀读 `VITE_API_BASE`（默认空）。
+1. **业务数据**：`archiveService.ts` 请求 `/api/archive/*`、`/api/submissions`（含 `/check` 查重预检、`/me` 凭证反查、`/:id/withdraw` 撤回）、`/api/admin/submissions*`。API 基础前缀读 `VITE_API_BASE`（默认空）。
 2. **静态游戏数据**：`dataSource.ts` 直连 `https://static.nanoka.cc`（已开 CORS），不落盘、不代理。
 
 ### 统一请求回退约定（重要）
 
-`archiveService.ts` 的 `requestJson()` 在请求失败或非 2xx 时**静默回退到 `data/seed`**，保证无数据库/无后端环境不白屏。新增请求函数必须沿用这个模式：先试 API，失败回退 seed，绝不抛未处理异常到组件。
+`archiveService.ts` 的 `requestJson()` 在请求失败或非 2xx 时**静默回退到 `data/seed`**，保证无数据库/无后端环境不白屏。新增请求函数必须沿用这个模式：先试 API，失败回退 seed，绝不抛未处理异常到组件。投稿查重 `checkDuplicateVideo()` 是这条约定的一个有意变体：它不回退而是**失败即返回 `[]` 放行**（预检拿不到结果不该挡住正常投稿），真正的拦截由服务端入队时的 `409` 负责。
 
 ## 静态快照与合并（`staticBossSnapshot.ts` 计算 / `staticArchiveConfig.ts` 入口）
 
@@ -50,13 +51,24 @@
 - `filterRuns()` 排序：`latest` 按 `submittedAt` 倒序；`limited` 先按限定成本再按轮次；默认按 `cycle ↑, score ↓, cost ↑`。
 - `buildMetaStats()` 成本分桶固定为 `0-8 / 9-16 / 17-32 / 33-48`，使用率 = `count / runs.length`（百分比，保留 1 位）。改动分桶或使用率口径会同时影响前端与 `netlify/functions/_shared.ts` 的 `buildStats`，两处需保持一致。
 
+## 区间筛选口径（`runUtils.ts` / `useArchiveFilters.ts` / `_shared.parseFilters`）
+
+- `ArchiveFilters` 的成本与分数都是**可空端点** `costMin/costMax/scoreMin/scoreMax`，`null` 表示该侧不限；判断统一走 `matchesRange(value, min, max)`，成本与分数共用同一个函数。**没有** `cost: "all" | "0-8" | …` 这一档了。
+- 筛选面板里的 `不限 / 0-8 / 9-16 / 17-32 / 33-48` 只是**写入这两个端点的 UI 预设**，不进筛选状态形状——同一口径不留两处真值。`buildMetaStats()` 的 `costBuckets` 是统计分桶，与筛选无关，仍然保留。
+- 分数区间只在 `as`（末日幻影）出现：`score` 只有该模式有意义（`RunGroupList` 的 `showScore` 同一判定），上限取 `AS_MAX_SCORE`。
+- 端点解析两侧各有一份同名宽松实现（前端 `readBound` + `readLegacyCostBucket`，服务端 `_shared` 里同样两个函数）：空串 / 非数字 / 负数一律视为不限，成本钳到 `COST_MAX`。改规则要两处同步。
+- **旧深链 `?cost=17-32` 只在读取侧兼容**，映射成 `costMin=17&costMax=32`；写出侧统一用新参数。站内检索链接会被用户转发，静默丢掉成本筛选算行为回归。
+- 不可能的区间（`min > max`）返回空集，不做静默放宽。
+- 请求参数由 `archiveService.ts` 的 `appendRange()` 拼装：只有非 `null` 的一端才进 query，两端都不限时整个键缺席。
+
 ## 投稿校验与预览（`submissionValidation.ts`）
 
 - 只服务前端向导（`SubmitRunForm.vue` / `SubmitRunDialog.vue`），**不被 Netlify Function 引用**，因此可以用 `@/` 别名。服务端字段级校验仍看 `netlify/functions/_shared.ts` 的 `validateSubmission()`。
-- `validateSubmissionForm(form, config)` 返回**有序** `{ field, message }` 列表：列表顺序就是错误汇总条与字段提示的展示顺序，新增规则时按「赛季/模式/阶段/分类 → 作者/视频 → 队伍 → 数值」插到对应位置。
+- `validateSubmissionForm(form, config, options?)` 返回**有序** `{ field, message }` 列表：列表顺序就是错误汇总条与字段提示的展示顺序，新增规则时按「赛季/模式/阶段/分类 → 作者/视频 → 队伍 → 数值」插到对应位置。`options.duplicateVideoUrl` 是唯一的**外部判定**：表单先调 `checkDuplicateVideo()`，命中后把 `videoUrl.ts` 的 `DUPLICATE_VIDEO_MESSAGE` 落到 `videoUrl` 字段上，于是「挡住下一步」「提交前跳回出错步骤」沿用既有的步骤归属机制，不必新增分支。
 - 步骤归属由 `submissionStepFields` 决定（`basic` / `team` / `result`），`errorsOfStep()` 判断能否进入下一步、`stepOfField()` 在提交失败时把用户跳回第一步出错的那个环节；新增字段必须同时登记归属，否则该字段的错误不会被任何步骤拦下。
-- 数值用 `toInteger()` 宽松解析（`v-model.number` 在清空时会留下 `""`）；`COST_MIN/COST_MAX`（0–48）与 `buildMetaStats()` 的 `33-48` 桶对齐，改上限要同时改分桶口径。
+- 数值用 `toInteger()` 宽松解析（`v-model.number` 在清空时会留下 `""`）；`COST_MIN/COST_MAX`（0–48）现在定义在 `unitCost.ts`（服务端 `parseFilters` 也要它来钳筛选区间），与 `buildMetaStats()` 的 `33-48` 桶对齐，改上限要同时改分桶口径。
 - 视频链接必须是 B 站或 YouTube（`isUsableVideoUrl()` 用域名白名单 `bilibili.com`/`b23.tv`/`youtube.com`/`youtube-nocookie.com`/`youtu.be`，按 `host === 域名 || host.endsWith("." + 域名)` 匹配子域，能挡 `bilibili.com.evil.com` 这类伪装后缀）；命途与角色不匹配**不是错误**，只在槽位上给「命途不同」提示。
+- 「同一支视频」的口径只在 `videoUrl.ts` 里定义（BV 号 / YouTube id / 规范化 URL），服务端 `findDuplicateVideoRecords` 与表单预检共用，本文件不重复实现。
 - 分类必须是当前模式与阶段的合法取值（`validateSubmissionForm` 直接取 `categoryOptionsFor(form.mode, form.bossId)`），否则报「当前模式与敌方阶段没有该分类」；`zeroCycle`/`plightZeroCycle` 还要求 `cycle === 0`，`as` 模式额外限制 `score <= AS_MAX_SCORE`(4000)。
 - 预览取数：`describeSubmissionTarget()` 把 season/mode/stage/category 的 id 翻成配置里的 label，`buildSubmissionRoster()` 输出每槽角色命座、光锥叠影、金币分类与命途是否错位，单位缺失时用「未选择 / 未搭配」占位。
 - 成本默认由表单按 `getUnitGoldCounts()` 自动合计回填，用户手改后表单记 `costTouched` 不再覆盖（可点「按队伍重算」交还）；校验仍只做 `COST_MIN–COST_MAX` 的范围检查，**不**要求等于自动值，服务端 `validateSubmission()` 也不校验成本与队伍是否一致——特殊阵容允许人工修正。
@@ -80,6 +92,7 @@
 - 标记**投稿时手动勾选**，落库复用 `runs.tags`（开放 jsonb 数组，加取值不需要迁移）。读取用 `flagsOfRun(run)` 收窄——它顺带过滤掉历史上作为自由文本写进 tags 的中文值，并按 `flagOrder` 归一顺序。
 - 筛选是 **AND 语义**：勾选的标记全部命中才保留。前端 `filterRuns()` 与 `netlify/functions/_shared.ts` 的 `filterArchiveRuns()` 各有一份实现，改语义要两处同步。
 - URL 深链里的非法标记由 `useArchiveFilters` 的 `normalizeFlags()` 丢弃（标记不随模式/阶段变化，所以是丢弃而非回落）。
+- 标记图标不在本层：地址在 `src/data/flagIcons.ts`（`FLAG_ICON_SOURCES`），渲染统一走 `src/components/FlagIcon.vue`，远程图加载失败自动回落 lucide。筛选面板、投稿表单、记录徽标、审核台**四处都只用它**，组件不要再自己引 `lucide` 图标或抄一份映射。
 
 ## 阶段分组口径（`runUtils.ts`）
 
@@ -98,6 +111,7 @@
 - `monsterImageUrl(id)`：9 位实例 id（`>= 1e8`）先 `/100` 回退到基础 id，再按命名规则向下对齐到整十。
 - 单位图经 `data/unitAssets.ts`（用 `config.json` 的 `sourceId` 映射）；命途图经 `data/unitPaths.ts`。不要把数据源 JSON 或图片下载到 `public/` 发布（`public/` 当前只有 `favicon.png`）。
 - `data/seed/hsr-units.json`、`hsr-monsters.json` 只由 `scripts/` 同步脚本写出，运行时不 import；运行时单位图完全依赖 `config.json` 的 `units[].sourceId`。
+- **唯一的例外图源**：标记图标在 `data/flagIcons.ts`（`FLAG_ICON_SOURCES`），是三条指向 `theherta.com/skill_icons/` 的热链。`static.nanoka.cc` 不发布技能图标目录，所以它们**不进 `IMAGE_BASES`**——别把这三条地址并进来，那会让它被误读成统一图源的一部分。授权与回落约定见根 `AGENTS.md`「资源与授权」。
 
 ## 约束
 

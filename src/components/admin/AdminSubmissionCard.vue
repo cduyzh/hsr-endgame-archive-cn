@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from "vue"
 import { ArchiveRestore, Check, ExternalLink, ShieldCheck, X } from "lucide-vue-next"
+import FlagIcon from "@/components/FlagIcon.vue"
 import { getUnitImageSrc } from "@/data/unitAssets"
 import { seedConfig } from "@/data/seed"
 import { categoryLabels, flagLabels, flagOrder } from "@/services/runUtils"
@@ -72,6 +73,9 @@ function formatDate(value?: string | null) {
             class="run-flag"
             :class="`run-flag-${flag}`"
           >
+            <FlagIcon
+              :flag="flag"
+              :size="13" />
             {{ flagLabels[flag] }}
           </span>
         </p>

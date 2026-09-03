@@ -1,6 +1,7 @@
 import { computed, reactive, watch } from "vue"
 import { useRoute, useRouter } from "vue-router"
-import { categoryOptionsFor, isRunFlag } from "@/services/runUtils"
+import { AS_MAX_SCORE, categoryOptionsFor, isRunFlag } from "@/services/runUtils"
+import { COST_MAX } from "@/services/unitCost"
 import type { ArchiveConfig, ArchiveFilters, EndgameMode, RunCategory, RunFlag, SortKey } from "@/types/archive"
 
 const modeValues = new Set<EndgameMode>(["moc", "pf", "as", "aa"])
@@ -24,6 +25,25 @@ function readCsv(value: unknown): string[] {
     .filter(Boolean)
 }
 
+/** 区间端点宽松解析：空串 / 非法 / 负数都视为「该侧不限」，越界时钳到 `0..ceiling`。 */
+function readBound(value: unknown, ceiling: number): number | null {
+  const raw = readString(value)
+  if (raw === undefined || raw.trim() === "") return null
+  const num = Number(raw)
+  if (!Number.isFinite(num) || num < 0) return null
+  return Math.min(Math.floor(num), ceiling)
+}
+
+/** 旧深链的 `?cost=17-32` 桶写法。站内检索链接会被转发，静默丢掉成本筛选算行为回归。 */
+const legacyCostBuckets = new Set(["0-8", "9-16", "17-32", "33-48"])
+
+function readLegacyCostBucket(value: unknown): [number, number] | null {
+  const raw = readString(value)
+  if (!raw || !legacyCostBuckets.has(raw)) return null
+  const [min, max] = raw.split("-").map(Number)
+  return [min, max]
+}
+
 export function useArchiveFilters(config: () => ArchiveConfig | null) {
   const route = useRoute()
   const router = useRouter()
@@ -34,7 +54,10 @@ export function useArchiveFilters(config: () => ArchiveConfig | null) {
     bossId: "",
     category: "all",
     teamSize: "all",
-    cost: "all",
+    costMin: null,
+    costMax: null,
+    scoreMin: null,
+    scoreMax: null,
     sort: "score",
     grouping: true,
     continuous: false,
@@ -68,7 +91,13 @@ export function useArchiveFilters(config: () => ArchiveConfig | null) {
 
     const teamSize = readString(query.teamSize)
     filters.teamSize = teamSize && teamSize !== "all" ? Number(teamSize) : "all"
-    filters.cost = (readString(query.cost) as ArchiveFilters["cost"]) ?? "all"
+
+    const legacyCost = readLegacyCostBucket(query.cost)
+    filters.costMin = readBound(query.costMin, COST_MAX) ?? legacyCost?.[0] ?? null
+    filters.costMax = readBound(query.costMax, COST_MAX) ?? legacyCost?.[1] ?? null
+    filters.scoreMin = readBound(query.scoreMin, AS_MAX_SCORE)
+    filters.scoreMax = readBound(query.scoreMax, AS_MAX_SCORE)
+
     filters.grouping = readBoolean(query.grouping, true)
     filters.continuous = readBoolean(query.continuous, false)
     filters.unitKind = readString(query.unitKind) === "lightcone" ? "lightcone" : "character"
@@ -128,7 +157,10 @@ export function useArchiveFilters(config: () => ArchiveConfig | null) {
           bossId: filters.bossId,
           category: filters.category,
           teamSize: String(filters.teamSize),
-          cost: filters.cost,
+          costMin: filters.costMin ?? undefined,
+          costMax: filters.costMax ?? undefined,
+          scoreMin: filters.scoreMin ?? undefined,
+          scoreMax: filters.scoreMax ?? undefined,
           sort: filters.sort,
           grouping: filters.grouping ? "1" : "0",
           continuous: filters.continuous ? "1" : "0",

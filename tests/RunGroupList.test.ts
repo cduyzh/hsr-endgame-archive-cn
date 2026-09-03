@@ -21,7 +21,12 @@ describe("RunGroupList", () => {
     await wrapper.get("button.group-header").trigger("click")
     expect(wrapper.text()).toContain("档案员K")
     expect(wrapper.text()).toContain("视频")
-    expect(wrapper.findAll("img").length).toBe(8)
+    // 队伍槽位：4 角色 + 4 光锥；标记徽标另各带一枚图标，不混在一个计数里。
+    expect(wrapper.findAll(".unit-chip img").length).toBe(8)
+    expect(wrapper.findAll(".run-flag")).toHaveLength(2)
+    expect(wrapper.findAll(".run-flag .flag-icon").length).toBe(2)
+    expect(wrapper.text()).toContain("复活")
+    expect(wrapper.text()).toContain("火墙")
     expect(wrapper.text()).toContain("限定")
     expect(wrapper.text()).toContain("常驻")
   })

@@ -13,7 +13,8 @@
 | `archive-config.ts`       | `/api/archive/config`           | 返回配置（赛季/阶段/单位/文章），空表回退 seed                                                                                                    |
 | `archive-runs.ts`         | `/api/archive/runs`             | 已审核记录（`status='approved'`），带筛选，`limit 200`                                                                                            |
 | `archive-stats.ts`        | `/api/archive/stats`            | 统计，`limit 500` 聚合后 `buildStats`                                                                                                             |
-| `submissions.ts`          | `/api/submissions`              | POST 投稿，非法 JSON 返回 `400`，缺字段返回 `400 {missing}`，入队 `pending` 返回 `202`，**同时下发 `ownerToken`（`own_<48 hex>`）到响应体**       |
+| `submissions.ts`          | `/api/submissions`              | POST 投稿，非法 JSON 返回 `400`，缺字段返回 `400 {missing}`，**查重命中返回 `409 {message, duplicate}`**，入队 `pending` 返回 `202`，**同时下发 `ownerToken`（`own_<48 hex>`）到响应体**       |
+| `submissions-check.ts`    | `/api/submissions/check`        | GET `?videoUrl=&bossId=`，投稿向导填完链接即预检查重，返回 `{duplicate, matches}`（最多 3 条，按时间倒序）；复用 `findDuplicateVideoRecords`，与入队拦截同一口径，无需鉴权 |
 | `submissions-me.ts`       | `/api/submissions/me`           | POST `{tokens:string[]}`，按本机凭证反查当前用户提过哪些 `submission_reviews` / `runs`，最多 50 个 token、上限 200 条记录                         |
 | `submissions-withdraw.ts` | `/api/submissions/:id/withdraw` | PATCH `{token}`，校验 `owner_token` 匹配后把 `submission_reviews.status='withdrawn'`，并把同一 `owner_token` 的 `runs.status` 同步改 `withdrawn`  |
 | `admin-submissions.ts`    | `/api/admin/submissions`        | GET 审核列表（需鉴权），支持 `status` 过滤                                                                                                        |
@@ -27,8 +28,10 @@
 - **`jsonResponse(body, status)`**：统一返回 `application/json` + `cache-control: no-store`。
 - **`requireAdmin(event)`**：支持两种认证：`Bearer <管理员密码>` 与 Basic auth（`ADMIN_REVIEW_USERNAME` 默认 `admin`，密码 `ADMIN_REVIEW_PASSWORD`，旧部署可退回 `ADMIN_REVIEW_TOKEN`）。**未配置任何密码环境变量时返回 `null`（= 无密码则不拦截）**——生产务必配置 `ADMIN_REVIEW_PASSWORD`。
 - **无库投稿存储**：`addFallbackSubmissionReview` 等把审核队列写到 `SUBMISSION_REVIEW_FALLBACK_FILE`（默认 `os.tmpdir()` 下 JSON），用「写临时文件 + rename」保证原子性。注意临时目录在 Netlify 冷启动间不持久，仅用于本地/演示。
-- **筛选/统计纯函数** `filterArchiveRuns` / `buildStats` / `matchesCost`：与前端 `src/services/runUtils.ts` **语义重复但独立实现**（因 Functions 打包不能依赖前端别名）。改口径时两处必须同步。
+- **筛选/统计纯函数** `filterArchiveRuns` / `buildStats` / `matchesRange`：与前端 `src/services/runUtils.ts` **语义重复但独立实现**（因 Functions 打包不能依赖前端别名）。改口径时两处必须同步。`matchesRange(value, min, max)` 由成本与分数共用，`null` 表示该侧不限。
+- **投稿查重 `findDuplicateVideoRecords({videoUrl, bossId})`**：判重键是「视频链接 + 敌方阶段」，只有 `pending` / `approved` 算已存在（驳回、撤回允许重提）。有库走两条 SQL——`submission_reviews`（`payload->>'bossId'` + `payload->>'videoUrl'`）与 `runs`（`boss_id` + `video_url`，覆盖不经投稿直接灌库的记录），按 id 去重保留投稿侧、最多 3 条；无库用 `isSameVideo()` 过滤 `listFallbackSubmissionReviews("all")` + `listFallbackArchiveRuns()` + `seedRuns`。链接同一性由 `src/services/videoUrl.ts` 决定（BV 号 / YouTube id / 规范化 URL），SQL 用 `~*` 配 `videoMatchPattern()` 生成的**带字母数字边界断言**的正则，避免 `BVxxxx2` 误配 `BVxxxx23`；查重读失败返回 `[]` 放行，不把投稿接口带崩。
 - **`parseFilters()` 默认值完全来自 seed，无硬编码赛季**：`season` 缺省依次为 `params.season` → `seedConfig.seasons` 中 `isCurrent` 的赛季 → 首个赛季 → `""`（不再写死某个版本号，避免 seed 换季后兜底值失效）；`bossId` 缺省取 `seedConfig.bosses[0]?.id`，而 seed 的 `bosses` 现为空数组，因此缺省会得到 `""`。
+- **区间筛选参数** `costMin` / `costMax` / `scoreMin` / `scoreMax`：由本文件的 `readBound()` 宽松解析，空值 / 非数字 / 负数都视为「该侧不限」，成本另钳到 `COST_MAX`。旧的 `?cost=17-32` 桶深链仍读得懂（`readLegacyCostBucket()` 映射成对应端点）。这两个函数与前端 `useArchiveFilters.ts` 里的同名实现是**同一套规则的两份拷贝**，改一处要改两处，否则深链在服务端与浏览器端会解出不同结果。
 
 ## 鉴权与安全
 
@@ -49,6 +52,6 @@
 
 ## 开发约定
 
-- Function 内导入前端代码用**相对路径**（如 `../../src/services/unitCost`），不用 `@/` 别名——esbuild 打包不解析 Vite 别名。`src/services/submissionUtils.ts` 顶部已注明此约束。
+- Function 内导入前端代码用**相对路径**（如 `../../src/services/unitCost`），不用 `@/` 别名——esbuild 打包不解析 Vite 别名。`src/services/submissionUtils.ts` 与 `src/services/videoUrl.ts` 顶部已注明此约束。
 - 新增/修改 function 后，确认「有 DB」「无 DB」两条路径都返回正确 shape，并保持与前端 `ArchiveRun`/`MetaStats` 类型一致。
 - 环境变量：`NETLIFY_DATABASE_URL`（或备选）、`ADMIN_REVIEW_USERNAME`、`ADMIN_REVIEW_PASSWORD`（或 `ADMIN_REVIEW_TOKEN`）、可选 `SUBMISSION_REVIEW_FALLBACK_FILE`。

@@ -1676,6 +1676,70 @@ body.is-modal-open {
   font-weight: 700;
 }
 
+.submission-duplicate {
+  display: grid;
+  gap: 7px;
+  margin: 0;
+  border: 1px solid rgba(255, 110, 119, 0.4);
+  border-radius: var(--radius);
+  background: rgba(255, 110, 119, 0.08);
+  color: #ffb3b8;
+  padding: 9px 11px;
+  font-size: 12px;
+}
+
+.submission-duplicate.is-checking {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  border-color: var(--line);
+  background: var(--surface-soft);
+  color: var(--muted);
+}
+
+.submission-duplicate-title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 7px;
+  margin: 0;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.submission-duplicate-title .icon-button {
+  margin-left: auto;
+}
+
+.submission-duplicate-list {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.submission-duplicate-list li {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 10px;
+  min-width: 0;
+}
+
+.submission-duplicate-list b {
+  color: var(--text);
+}
+
+.submission-duplicate-list a {
+  color: inherit;
+  text-decoration: underline;
+  overflow-wrap: anywhere;
+}
+
+.submission-duplicate .submission-field-hint {
+  color: #d98f95;
+}
+
 .submission-field-hint {
   margin: 0;
   color: var(--faint);

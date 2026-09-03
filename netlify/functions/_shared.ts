@@ -4,13 +4,15 @@ import { tmpdir } from "node:os"
 import { join } from "node:path"
 import configData from "../../src/data/seed/config.json"
 import runsData from "../../src/data/seed/runs.json"
-import { getRunGoldCounts } from "../../src/services/unitCost"
+import { COST_MAX, getRunGoldCounts } from "../../src/services/unitCost"
 import { submissionReviewToArchiveRun } from "../../src/services/submissionUtils"
+import { matchesVideoIdentity, videoIdentityOf, videoMatchPattern } from "../../src/services/videoUrl"
 import type {
   ArchiveConfig,
   ArchiveFilters,
   ArchiveRun,
   ArchiveUnit,
+  DuplicateVideoMatch,
   SubmissionPayload,
   SubmissionReview,
   SubmissionReviewStatus,
@@ -126,7 +128,25 @@ export async function updateFallbackSubmissionReview(
   return nextReview
 }
 
+/** 区间端点宽松解析，与前端 `useArchiveFilters` 的 `readBound` 同一口径：非法值一律视为「该侧不限」。 */
+function readBound(raw: string | null, ceiling: number | null): number | null {
+  if (raw === null || raw.trim() === "") return null
+  const num = Number(raw)
+  if (!Number.isFinite(num) || num < 0) return null
+  return ceiling === null ? Math.floor(num) : Math.min(Math.floor(num), ceiling)
+}
+
+/** 旧深链的 `?cost=17-32` 桶写法；站内检索链接会被转发，静默丢掉成本筛选算行为回归。 */
+const legacyCostBuckets = new Set(["0-8", "9-16", "17-32", "33-48"])
+
+function readLegacyCostBucket(raw: string | null): [number, number] | null {
+  if (!raw || !legacyCostBuckets.has(raw)) return null
+  const [min, max] = raw.split("-").map(Number)
+  return [min, max]
+}
+
 export function parseFilters(params: URLSearchParams): ArchiveFilters {
+  const legacyCost = readLegacyCostBucket(params.get("cost"))
   return {
     seasonId:
       params.get("season") ?? seedConfig.seasons.find((season) => season.isCurrent)?.id ?? seedConfig.seasons[0]?.id ?? "",
@@ -134,7 +154,10 @@ export function parseFilters(params: URLSearchParams): ArchiveFilters {
     bossId: params.get("bossId") ?? seedConfig.bosses[0]?.id ?? "",
     category: (params.get("category") as ArchiveFilters["category"]) ?? "all",
     teamSize: params.get("teamSize") && params.get("teamSize") !== "all" ? Number(params.get("teamSize")) : "all",
-    cost: (params.get("cost") as ArchiveFilters["cost"]) ?? "all",
+    costMin: readBound(params.get("costMin"), COST_MAX) ?? legacyCost?.[0] ?? null,
+    costMax: readBound(params.get("costMax"), COST_MAX) ?? legacyCost?.[1] ?? null,
+    scoreMin: readBound(params.get("scoreMin"), null),
+    scoreMax: readBound(params.get("scoreMax"), null),
     sort: (params.get("sort") as ArchiveFilters["sort"]) ?? "score",
     grouping: true,
     continuous: false,
@@ -144,10 +167,9 @@ export function parseFilters(params: URLSearchParams): ArchiveFilters {
   }
 }
 
-export function matchesCost(run: ArchiveRun, cost: ArchiveFilters["cost"]) {
-  if (cost === "all") return true
-  const [min, max] = cost.split("-").map(Number)
-  return run.cost >= min && run.cost <= max
+/** 区间筛选的统一语义：`null` 表示该侧不限，与前端 `runUtils.matchesRange` 一致。 */
+export function matchesRange(value: number, min: number | null, max: number | null): boolean {
+  return (min === null || value >= min) && (max === null || value <= max)
 }
 
 export function filterArchiveRuns(runs: ArchiveRun[], filters: ArchiveFilters, units: ArchiveUnit[] = seedConfig.units) {
@@ -159,7 +181,8 @@ export function filterArchiveRuns(runs: ArchiveRun[], filters: ArchiveFilters, u
     .filter((run) => run.bossId === filters.bossId)
     .filter((run) => filters.category === "all" || run.category === filters.category)
     .filter((run) => filters.teamSize === "all" || run.units.length === filters.teamSize)
-    .filter((run) => matchesCost(run, filters.cost))
+    .filter((run) => matchesRange(run.cost, filters.costMin, filters.costMax))
+    .filter((run) => matchesRange(run.score, filters.scoreMin, filters.scoreMax))
     .filter((run) => {
       if (selected.size === 0) return true
       const ids = new Set([...run.units, ...run.lightcones].map((unit) => unit.unitId))
@@ -243,4 +266,137 @@ export function validateSubmission(payload: Partial<SubmissionPayload>) {
   if (!payload.units?.length || payload.units.some((unit) => !unit.unitId)) missing.push("units")
   if (!payload.lightcones?.length || payload.lightcones.some((unit) => !unit.unitId)) missing.push("lightcones")
   return missing
+}
+
+/** 查重最多回显几条命中记录，够用户判断是不是自己提重了。 */
+export const DUPLICATE_MATCH_LIMIT = 3
+
+interface DuplicateRow {
+  id: string
+  status: string
+  author: string | null
+  teamName: string | null
+  bossId: string | null
+  category: string | null
+  videoUrl: string | null
+  submittedAt: string
+}
+
+function toDuplicateMatch(row: DuplicateRow, source: DuplicateVideoMatch["source"]): DuplicateVideoMatch {
+  return {
+    id: row.id,
+    source,
+    status: row.status === "approved" ? "approved" : "pending",
+    author: row.author ?? "",
+    teamName: row.teamName ?? "",
+    bossId: row.bossId ?? "",
+    category: row.category ?? "",
+    videoUrl: row.videoUrl ?? "",
+    submittedAt: row.submittedAt,
+  }
+}
+
+function dedupeMatches(matches: DuplicateVideoMatch[]): DuplicateVideoMatch[] {
+  // 同一 id 会同时出现在 submission_reviews 与 runs：保留先出现的投稿侧记录
+  const byId = new Map<string, DuplicateVideoMatch>()
+  for (const match of matches) {
+    if (!byId.has(match.id)) byId.set(match.id, match)
+  }
+  return [...byId.values()].slice(0, DUPLICATE_MATCH_LIMIT)
+}
+
+/**
+ * 按「视频链接 + 敌方阶段」找已存在的投稿：待审与已通过都算重复，驳回 / 撤回允许改完信息再重提。
+ * 同时查 `runs`，覆盖不经投稿直接灌库与种子记录。
+ */
+export async function findDuplicateVideoRecords(input: {
+  videoUrl: string
+  bossId: string
+}): Promise<DuplicateVideoMatch[]> {
+  const identity = videoIdentityOf(input.videoUrl)
+  if (!identity || !input.bossId) return []
+
+  const sql = getSql()
+  if (!sql) {
+    const reviews = await listFallbackSubmissionReviews("all")
+    const approvedRuns = await listFallbackArchiveRuns()
+    const matches: DuplicateVideoMatch[] = reviews
+      .filter(
+        (review) =>
+          (review.status === "pending" || review.status === "approved") &&
+          review.payload?.bossId === input.bossId &&
+          matchesVideoIdentity(identity, review.payload?.videoUrl),
+      )
+      .sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt))
+      .map((review) => ({
+        id: review.id,
+        source: "submission" as const,
+        status: review.status === "approved" ? ("approved" as const) : ("pending" as const),
+        author: review.payload?.author ?? "",
+        teamName: review.payload?.teamName ?? "",
+        bossId: review.payload?.bossId ?? "",
+        category: review.payload?.category ?? "",
+        videoUrl: review.payload?.videoUrl ?? "",
+        submittedAt: review.createdAt,
+      }))
+    const runs = [...approvedRuns, ...seedRuns]
+      .filter((run) => run.bossId === input.bossId && matchesVideoIdentity(identity, run.videoUrl))
+      .map((run) => ({
+        id: run.id,
+        source: "run" as const,
+        status: "approved" as const,
+        author: run.author,
+        teamName: run.teamName,
+        bossId: run.bossId,
+        category: String(run.category ?? ""),
+        videoUrl: run.videoUrl ?? "",
+        submittedAt: run.submittedAt,
+      }))
+    return dedupeMatches([...matches, ...runs])
+  }
+
+  const pattern = videoMatchPattern(identity)
+  try {
+    const reviews = await sql<DuplicateRow[]>`
+      select
+        id,
+        status,
+        payload->>'author' as "author",
+        payload->>'teamName' as "teamName",
+        payload->>'bossId' as "bossId",
+        payload->>'category' as "category",
+        payload->>'videoUrl' as "videoUrl",
+        created_at as "submittedAt"
+      from submission_reviews
+      where status in ('pending', 'approved')
+        and payload->>'bossId' = ${input.bossId}
+        and payload->>'videoUrl' ~* ${pattern}
+      order by created_at desc
+      limit ${DUPLICATE_MATCH_LIMIT}
+    `
+    const runs = await sql<DuplicateRow[]>`
+      select
+        id,
+        status,
+        author,
+        team_name as "teamName",
+        boss_id as "bossId",
+        category,
+        video_url as "videoUrl",
+        submitted_at as "submittedAt"
+      from runs
+      where status = 'approved'
+        and boss_id = ${input.bossId}
+        and video_url ~* ${pattern}
+      order by submitted_at desc
+      limit ${DUPLICATE_MATCH_LIMIT}
+    `
+    return dedupeMatches([
+      ...reviews.map((row) => toDuplicateMatch(row, "submission")),
+      ...runs.map((row) => toDuplicateMatch(row, "run")),
+    ])
+  } catch {
+    // 查重读失败不该把投稿接口带崩，放行交给审核判断。
+    return []
+  }
 }

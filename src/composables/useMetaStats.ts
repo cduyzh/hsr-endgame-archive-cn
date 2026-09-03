@@ -22,7 +22,16 @@ export function useMetaStats(filters: ArchiveFilters) {
   }
 
   watch(
-    () => [filters.seasonId, filters.mode, filters.bossId, filters.category, filters.cost],
+    () => [
+      filters.seasonId,
+      filters.mode,
+      filters.bossId,
+      filters.category,
+      filters.costMin,
+      filters.costMax,
+      filters.scoreMin,
+      filters.scoreMax,
+    ],
     () => void loadStats(),
     { immediate: true },
   )

@@ -15,6 +15,10 @@ export const goldKindLabels: Record<CharacterGoldKind, string> = {
   none: "低星",
 }
 
+/** 四人满配 = 4 × (6 命 + 1) = 48，需与 `buildMetaStats` / `buildStats` 的 `33-48` 桶一致。 */
+export const COST_MIN = 0
+export const COST_MAX = 48
+
 const STANDARD_FIVE_STAR_IDS = new Set(["welt", "himeko", "bronya", "gepard", "clara", "yanqing", "bailu"])
 const STANDARD_FIVE_STAR_NAMES = new Set(["瓦尔特", "姬子", "布洛妮娅", "杰帕德", "克拉拉", "彦卿", "白露"])
 

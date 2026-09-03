@@ -3,6 +3,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import SubmitRunForm from "@/components/archive/SubmitRunForm.vue"
 import { loadSubmissionDraft } from "@/composables/useSubmissionDraft"
 import { buildSuggestedLightconeByCharacter } from "@/services/submissionUtils"
+import { DUPLICATE_VIDEO_MESSAGE } from "@/services/videoUrl"
+import type { DuplicateVideoMatch } from "@/types/archive"
 import { fixtureConfig, fixtureSubmission } from "./fixtures/config"
 import { fixtureRuns } from "./fixtures/runs"
 
@@ -85,10 +87,37 @@ function respondWith(status: number, body: unknown) {
   })
 }
 
-function stubFetch(response: Response) {
-  const fetchMock = vi.fn().mockResolvedValue(response)
+interface DuplicateStub {
+  /** 命中条件：敌方阶段与视频关键词都要对上，才能验证「换阶段 / 换链接即放行」。 */
+  bossId?: string
+  videoKeyword?: string
+  matches?: DuplicateVideoMatch[]
+}
+
+function stubFetch(response: Response, duplicate: DuplicateStub = {}) {
+  const fetchMock = vi.fn((input: RequestInfo | URL) => {
+    const url = String(input)
+    if (!url.startsWith("/api/submissions/check")) return Promise.resolve(response)
+
+    const params = new URL(url, "http://localhost").searchParams
+    const hit =
+      (duplicate.matches?.length ?? 0) > 0 &&
+      params.get("bossId") === duplicate.bossId &&
+      (!duplicate.videoKeyword || String(params.get("videoUrl")).includes(duplicate.videoKeyword))
+    return Promise.resolve(respondWith(200, { duplicate: hit, matches: hit ? duplicate.matches : [] }))
+  })
   vi.stubGlobal("fetch", fetchMock)
   return fetchMock
+}
+
+/** 表单里的查重请求有 400ms 防抖，测试用真实等待让它落定。 */
+async function settleDuplicateCheck() {
+  await new Promise((resolve) => setTimeout(resolve, 450))
+  await flushPromises()
+}
+
+function submitCalls(fetchMock: ReturnType<typeof stubFetch>) {
+  return fetchMock.mock.calls.filter(([input]) => !String(input).startsWith("/api/submissions/check"))
 }
 
 beforeEach(() => {
@@ -302,8 +331,8 @@ describe("SubmitRunForm 分步向导", () => {
     await wrapper.get("form").trigger("submit")
     await flushPromises()
 
-    expect(fetchMock).toHaveBeenCalledOnce()
-    expect(JSON.parse(fetchMock.mock.calls[0][1].body)).toMatchObject({
+    expect(submitCalls(fetchMock)).toHaveLength(1)
+    expect(JSON.parse(submitCalls(fetchMock)[0][1].body)).toMatchObject({
       author: "夜航",
       bossId: "4.5-moc-top",
       teamName: "大黑塔双同谐",
@@ -328,6 +357,120 @@ describe("SubmitRunForm 分步向导", () => {
     expect(wrapper.get(".submission-error").text()).toContain("写入审核队列失败")
     expect(wrapper.get(".submission-preview-meta").text()).toContain("大黑塔双同谐")
     expect(wrapper.findAll(".submission-step-tab")[2].classes()).toContain("active")
+    wrapper.unmount()
+  })
+
+  it("填完视频链接即自动查重，命中后挡在第一步", async () => {
+    const existing: DuplicateVideoMatch = {
+      id: "sub_old",
+      source: "submission",
+      status: "pending",
+      author: "夜航",
+      teamName: "旧队伍",
+      bossId: "4.5-moc-top",
+      category: "fullStars",
+      videoUrl: "https://www.bilibili.com/video/BV1xx411c7mD",
+      submittedAt: "2026-09-01T10:00:00.000Z",
+    }
+    const fetchMock = stubFetch(respondWith(202, { id: "sub_new", status: "pending" }), {
+      bossId: "4.5-moc-top",
+      videoKeyword: "BV1xx411c7mD",
+      matches: [existing],
+    })
+    const wrapper = mountForm()
+
+    await fillBasics(wrapper)
+    expect(wrapper.get(".submission-duplicate").classes()).toContain("is-checking")
+
+    await settleDuplicateCheck()
+    const panel = wrapper.get(".submission-duplicate")
+    expect(panel.classes()).not.toContain("is-checking")
+    expect(panel.text()).toContain("已有投稿记录")
+    expect(panel.text()).toContain("「黄金」的追猎者")
+    expect(panel.text()).toContain("夜航")
+    expect(panel.text()).toContain("待审核")
+    expect(String(fetchMock.mock.calls[0][0])).toContain("/api/submissions/check?")
+
+    await goNext(wrapper)
+    expect(activeStepLabel(wrapper)).toContain("基础信息")
+    expect(wrapper.get(".submission-error").text()).toContain(DUPLICATE_VIDEO_MESSAGE)
+    wrapper.unmount()
+  })
+
+  it("查重按敌方阶段判定：换阶段或改链接都会放行", async () => {
+    stubFetch(respondWith(202, { id: "sub_new", status: "pending" }), {
+      bossId: "4.5-moc-top",
+      videoKeyword: "BV1xx411c7mD",
+      matches: [
+        {
+          id: "sub_old",
+          source: "run",
+          status: "approved",
+          author: "夜航",
+          teamName: "旧队伍",
+          bossId: "4.5-moc-top",
+          category: "fullStars",
+          videoUrl: "https://www.bilibili.com/video/BV1xx411c7mD",
+          submittedAt: "2026-09-01T10:00:00.000Z",
+        },
+      ],
+    })
+    const wrapper = mountForm()
+
+    await fillBasics(wrapper)
+    await settleDuplicateCheck()
+    expect(wrapper.get(".submission-duplicate").text()).toContain("已有投稿记录")
+
+    // 同一条通关录像分别申报上半 / 下半是合法行为：换阶段后旧命中立即失效
+    await wrapper.findAll(".split-fields select")[1].setValue("4.5-moc-bottom")
+    expect(wrapper.get(".submission-duplicate").classes()).toContain("is-checking")
+    await settleDuplicateCheck()
+    expect(wrapper.find(".submission-duplicate").exists()).toBe(false)
+    await goNext(wrapper)
+    expect(activeStepLabel(wrapper)).toContain("队伍配置")
+
+    await wrapper.findAll(".submission-step-tab")[0].trigger("click")
+    await wrapper.findAll(".split-fields select")[1].setValue("4.5-moc-top")
+    await settleDuplicateCheck()
+    expect(wrapper.get(".submission-duplicate").text()).toContain("已有投稿记录")
+
+    await wrapper.get('input[type="url"]').setValue("https://www.bilibili.com/video/BV1example0002")
+    expect(wrapper.find(".submission-duplicate").classes()).toContain("is-checking")
+    await settleDuplicateCheck()
+    expect(wrapper.find(".submission-duplicate").exists()).toBe(false)
+    wrapper.unmount()
+  })
+
+  it("提交时服务端判重会跳回第一步并展示已有记录", async () => {
+    stubFetch(
+      respondWith(409, {
+        message: DUPLICATE_VIDEO_MESSAGE,
+        duplicate: {
+          matches: [
+            {
+              id: "sub_raced",
+              source: "submission",
+              status: "pending",
+              author: "别人",
+              teamName: "抢先的队伍",
+              bossId: "4.5-moc-top",
+              category: "fullStars",
+              videoUrl: "https://www.bilibili.com/video/BV1xx411c7mD",
+              submittedAt: "2026-09-03T10:00:00.000Z",
+            },
+          ],
+        },
+      }),
+    )
+    const wrapper = mountForm()
+
+    await toResultStep(wrapper)
+    await wrapper.get("form").trigger("submit")
+    await flushPromises()
+
+    expect(activeStepLabel(wrapper)).toContain("基础信息")
+    expect(wrapper.get(".submission-duplicate").text()).toContain("抢先的队伍")
+    expect(wrapper.find(".submission-success").exists()).toBe(false)
     wrapper.unmount()
   })
 

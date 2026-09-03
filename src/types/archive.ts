@@ -153,7 +153,14 @@ export interface ArchiveFilters {
   bossId: string
   category: RunCategory
   teamSize: number | "all"
-  cost: "all" | "0-8" | "9-16" | "17-32" | "33-48"
+  /**
+   * 成本与分数的精确区间，`null` 表示该侧不限。
+   * 分数只对 `as`（末日幻影）有意义；成本的快捷档位只是写入这两个字段的 UI 预设。
+   */
+  costMin: number | null
+  costMax: number | null
+  scoreMin: number | null
+  scoreMax: number | null
   sort: SortKey
   grouping: boolean
   continuous: boolean
@@ -190,6 +197,23 @@ export interface SubmissionReview {
   ownerToken?: string | null
   createdAt: string
   reviewedAt?: string | null
+}
+
+/**
+ * 投稿查重命中的历史记录：`视频链接 + 敌方阶段` 相同、且状态为待审或已通过的投稿（以及已入库档案）。
+ * 由 `/api/submissions/check` 返回，供投稿向导展示「已存在记录」摘要。
+ */
+export interface DuplicateVideoMatch {
+  id: string
+  /** 命中来自审核队列还是已通过的公开档案。 */
+  source: "submission" | "run"
+  status: "pending" | "approved"
+  author: string
+  teamName: string
+  bossId: string
+  category: string
+  videoUrl: string
+  submittedAt: string
 }
 
 export interface AdminSession {

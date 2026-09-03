@@ -1,5 +1,11 @@
 import { AS_MAX_SCORE, categoryLabels, categoryOptionsFor } from "@/services/runUtils"
-import { getCharacterGoldKind, type CharacterGoldKind } from "@/services/unitCost"
+import {
+  COST_MAX,
+  COST_MIN,
+  getCharacterGoldKind,
+  type CharacterGoldKind,
+} from "@/services/unitCost"
+import { DUPLICATE_VIDEO_MESSAGE } from "@/services/videoUrl"
 import type {
   ArchiveConfig,
   ArchiveUnit,
@@ -12,10 +18,6 @@ import type {
 
 /** 投稿固定按 4 人队伍录入，与档案侧 `teamSize` 的最大值一致 */
 export const TEAM_SLOT_COUNT = 4
-
-export const COST_MIN = 0
-/** 成本分桶上限，需与 `runUtils.buildMetaStats` / `_shared.buildStats` 的 `33-48` 桶保持一致 */
-export const COST_MAX = 48
 
 export type SubmissionField =
   | "seasonId"
@@ -181,7 +183,16 @@ function validateSlots(
   return duplicated.length > 0 ? [{ field, message: `同一队伍不能重复选择「${duplicated.join("、")}」。` }] : []
 }
 
-export function validateSubmissionForm(form: SubmissionPayload, config: ArchiveConfig): SubmissionError[] {
+export interface SubmissionValidationOptions {
+  /** 视频链接查重接口命中时为 true，让「下一步」与「提交」一起被挡住。 */
+  duplicateVideoUrl?: boolean
+}
+
+export function validateSubmissionForm(
+  form: SubmissionPayload,
+  config: ArchiveConfig,
+  options: SubmissionValidationOptions = {},
+): SubmissionError[] {
   const unitById = new Map(config.units.map((unit) => [unit.id, unit]))
   const errors: SubmissionError[] = []
   const push = (field: SubmissionField, message: string) => errors.push({ field, message })
@@ -203,6 +214,7 @@ export function validateSubmissionForm(form: SubmissionPayload, config: ArchiveC
   const videoUrl = form.videoUrl.trim()
   if (!videoUrl) push("videoUrl", "请填写视频链接，审核需要可访问的原始录像。")
   else if (!isUsableVideoUrl(videoUrl)) push("videoUrl", "视频链接必须是 B 站或 YouTube 的完整地址。")
+  else if (options.duplicateVideoUrl) push("videoUrl", DUPLICATE_VIDEO_MESSAGE)
 
   const teamName = form.teamName.trim()
   if (!teamName) push("teamName", "请填写队伍名称，档案按队伍组合分组展示。")

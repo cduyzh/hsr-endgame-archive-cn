@@ -98,10 +98,9 @@ export function categoryOptionsFor(mode: EndgameMode, bossId: string): SpecificR
   return ["zeroCycle", "fullStars"]
 }
 
-export function matchesCost(run: ArchiveRun, cost: ArchiveFilters["cost"]): boolean {
-  if (cost === "all") return true
-  const [min, max] = cost.split("-").map(Number)
-  return run.cost >= min && run.cost <= max
+/** 区间筛选的统一语义：`null` 表示该侧不限，成本与分数共用。 */
+export function matchesRange(value: number, min: number | null, max: number | null): boolean {
+  return (min === null || value >= min) && (max === null || value <= max)
 }
 
 export function filterRuns(runs: ArchiveRun[], filters: ArchiveFilters, units: ArchiveUnit[] = []): ArchiveRun[] {
@@ -114,7 +113,8 @@ export function filterRuns(runs: ArchiveRun[], filters: ArchiveFilters, units: A
     .filter((run) => run.bossId === filters.bossId)
     .filter((run) => matchesCategory(run, filters.category))
     .filter((run) => filters.teamSize === "all" || run.units.length === filters.teamSize)
-    .filter((run) => matchesCost(run, filters.cost))
+    .filter((run) => matchesRange(run.cost, filters.costMin, filters.costMax))
+    .filter((run) => matchesRange(run.score, filters.scoreMin, filters.scoreMax))
     .filter((run) => {
       if (selected.size === 0) return true
       const runUnitIds = new Set([...run.units, ...run.lightcones].map((unit) => unit.unitId))

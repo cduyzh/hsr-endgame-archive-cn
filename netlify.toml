@@ -30,6 +30,21 @@
   status = 200
 
 [[redirects]]
+  from = "/api/submissions/check"
+  to = "/.netlify/functions/submissions-check"
+  status = 200
+
+[[redirects]]
+  from = "/api/submissions/me"
+  to = "/.netlify/functions/submissions-me"
+  status = 200
+
+[[redirects]]
+  from = "/api/submissions/:id/withdraw"
+  to = "/.netlify/functions/submissions-withdraw/:id"
+  status = 200
+
+[[redirects]]
   from = "/api/admin/submissions"
   to = "/.netlify/functions/admin-submissions"
   status = 200

@@ -21,6 +21,26 @@ export const changelogTagLabels: Record<ChangelogTag, string> = {
 
 export const changelogEntries: ChangelogEntry[] = [
 	{
+		version: "0.4.0",
+		date: "2026-09-03",
+		title: "标记图标与检索区间",
+		items: [
+			{tag: "feature", text: "成本与分数改为精确区间检索，可只填一端；四个成本档保留为快捷预设，分数区间只在末日幻影出现"},
+			{tag: "improve", text: "复活 / 火墙 / 大月卡武器启用游戏内图标，筛选卡、投稿表单、记录徽标与审核台统一呈现，图标不可用时自动回落通用图标"},
+			{tag: "improve", text: "检索控制台重排：赛季并入模式标题行、敌方阶段改两列芯片、标记卡图标在上并按标记各自着色、分组与紧凑列表改成开关"},
+		],
+	},
+	{
+		version: "0.3.0",
+		date: "2026-09-03",
+		title: "投稿视频链接查重",
+		items: [
+			{tag: "feature", text: "视频链接填完即自动查重：同一支录像在同一敌方阶段已有待审或已通过的投稿时，就地给出已有记录摘要并挡住提交"},
+			{tag: "improve", text: "忽略跟踪参数、www./m. 前缀与末尾斜杠识别同一支 B 站 / YouTube 录像；换阶段或改链接会立即重新检测"},
+			{tag: "fix", text: "补齐「我的投稿」查询与撤回接口在 netlify.toml 中缺失的转发规则"},
+		],
+	},
+	{
 		version: "0.2.0",
 		date: "2026-09-02",
 		title: "投稿凭证与配队预设",

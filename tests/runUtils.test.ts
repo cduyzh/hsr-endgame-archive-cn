@@ -11,11 +11,16 @@ import {
   flagsOfRun,
   isRunFlag,
   isStarwardStage,
+  matchesRange,
   stageGroupLabels,
   stageGroupOf,
   stageKeyOf,
 } from "@/services/runUtils"
 import { getRunGoldCounts } from "@/services/unitCost"
+import {
+  matchesRange as serverMatchesRange,
+  parseFilters,
+} from "../netlify/functions/_shared"
 import type { ArchiveFilters, ArchiveRun, ArchiveUnit, EndgameMode } from "@/types/archive"
 import { fixtureRuns } from "./fixtures/runs"
 
@@ -25,7 +30,10 @@ const baseFilters: ArchiveFilters = {
   bossId: "test-boss-moc",
   category: "all",
   teamSize: "all",
-  cost: "all",
+  costMin: null,
+  costMax: null,
+  scoreMin: null,
+  scoreMax: null,
   sort: "score",
   grouping: true,
   continuous: false,
@@ -39,11 +47,54 @@ describe("runUtils", () => {
     const runs = filterRuns(fixtureRuns, {
       ...baseFilters,
       category: "fullStars",
-      cost: "17-32",
+      costMin: 17,
+      costMax: 32,
     })
 
     expect(runs).toHaveLength(1)
     expect(runs[0]?.teamName).toBe("击破流萤")
+  })
+
+  it("成本与分数区间各自可单侧不限", () => {
+    // 夹具成本 18 / 24 / 31，分数 40000 / 39860 / 40000；只验过滤，结果按 id 排序以免混入默认成绩优先的排序。
+    const ids = (patch: Partial<ArchiveFilters>) =>
+      filterRuns(fixtureRuns, { ...baseFilters, ...patch })
+        .map((run) => run.id)
+        .sort()
+
+    expect(ids({ costMin: 20 })).toEqual(["run-002", "run-003"])
+    expect(ids({ costMax: 24 })).toEqual(["run-001", "run-002"])
+    expect(ids({ scoreMin: 40000 })).toEqual(["run-001", "run-003"])
+    expect(ids({ costMin: 20, scoreMin: 40000 })).toEqual(["run-003"])
+    expect(ids({ costMin: null, costMax: null, scoreMin: null, scoreMax: null })).toHaveLength(3)
+    // 不可能的区间是空集，不做静默放宽。
+    expect(ids({ costMin: 30, costMax: 20 })).toEqual([])
+  })
+
+  it("区间判断前后端同口径", () => {
+    for (const [value, min, max] of [
+      [18, null, null],
+      [18, 20, null],
+      [18, null, 18],
+      [18, 17, 32],
+      [18, 30, 20],
+    ] as const) {
+      expect(serverMatchesRange(value, min, max)).toBe(matchesRange(value, min, max))
+    }
+  })
+
+  it("服务端解析区间：旧成本桶深链等价、越界钳位、非法值视为不限", () => {
+    const parse = (raw: string) => {
+      const { costMin, costMax, scoreMin, scoreMax } = parseFilters(new URLSearchParams(raw))
+      return { costMin, costMax, scoreMin, scoreMax }
+    }
+    const unbounded = { costMin: null, costMax: null, scoreMin: null, scoreMax: null }
+
+    expect(parse("cost=17-32")).toEqual({ ...unbounded, costMin: 17, costMax: 32 })
+    expect(parse("costMin=17&costMax=32")).toEqual(parse("cost=17-32"))
+    expect(parse("costMin=99")).toEqual({ ...unbounded, costMin: 48 })
+    expect(parse("scoreMin=3650&scoreMax=3899")).toEqual({ ...unbounded, scoreMin: 3650, scoreMax: 3899 })
+    expect(parse("costMin=abc&scoreMin=-5")).toEqual(unbounded)
   })
 
   it("限定角色时只返回包含该角色的队伍", () => {

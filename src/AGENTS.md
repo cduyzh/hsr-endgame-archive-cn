@@ -16,13 +16,14 @@
 | `router/index.ts`          | 路由，懒加载除首页外的所有页面                                                                 |
 | `views/`                   | 页面级组件（见下）                                                                             |
 | `components/archive/`      | 档案工作台业务组件，含 `SubmitRunDialog.vue`（投稿弹窗外壳）与 `SubmitRunForm.vue`（三步向导） |
-| `components/admin/`        | 投稿审核台组件（登录弹框、审核卡片）                                                           |
-| `components/PromoSlot.vue` | 站务推广位（`App.vue` 内使用）                                                                 |
-| `composables/`             | 可复用状态逻辑（筛选、查询、统计、审核会话、投稿弹窗开关）                                     |
-| `services/`                | 数据访问与纯函数层，见 [services/AGENTS.md](services/AGENTS.md)                                |
-| `stores/archiveStore.ts`   | Pinia store，缓存 `ArchiveConfig` + 投稿自动搭配用的记录样本 `pairingRuns`                     |
-| `types/archive.ts`         | 所有 `Archive*` 类型定义（唯一来源）                                                           |
-| `data/`                    | seed 数据、图片/命途映射、专武映射（`signatureLightcones.ts`）与站点更新记录（`changelog.ts`）   |
+| `components/FlagIcon.vue` | 标记图标的唯一渲染出口：热链游戏图标，加载失败自动回落 lucide（筛选面板 / 投稿表单 / 记录徽标 / 审核台四处共用）              |
+| `components/admin/`       | 投稿审核台组件（登录弹框、审核卡片）                                                                           |
+| `components/PromoSlot.vue`| 站务推广位（`App.vue` 内使用）                                                                                 |
+| `composables/`            | 可复用状态逻辑（筛选、查询、统计、审核会话、投稿弹窗开关）                                                     |
+| `services/`               | 数据访问与纯函数层，见 [services/AGENTS.md](services/AGENTS.md)                                                |
+| `stores/archiveStore.ts`  | Pinia store，缓存 `ArchiveConfig` + 投稿自动搭配用的记录样本 `pairingRuns`                                     |
+| `types/archive.ts`        | 所有 `Archive*` 类型定义（唯一来源）                                                                           |
+| `data/`                   | seed 数据、图片/命途映射（`unitAssets.ts` / `unitPaths.ts`）、标记图标地址（`flagIcons.ts`）、专武映射（`signatureLightcones.ts`）与站点更新记录（`changelog.ts`） |
 | `assets/`                  | `main.css`、`redesign.css` 全局样式                                                            |
 
 ## 路由与视图
@@ -33,18 +34,19 @@
 
 ## 类型与数据流约定
 
-- 所有领域类型集中在 `types/archive.ts`（`ArchiveConfig`、`ArchiveRun`、`BossStage`、`ArchiveFilters`、`MetaStats`、`SubmissionPayload` 等）。新增字段先改类型，再顺着 `services → composables → views` 传递，不要在组件里散落重复结构。
+- 所有领域类型集中在 `types/archive.ts`（`ArchiveConfig`、`ArchiveRun`、`BossStage`、`ArchiveFilters`、`MetaStats`、`SubmissionPayload`、`DuplicateVideoMatch` 等）。新增字段先改类型，再顺着 `services → composables → views` 传递，不要在组件里散落重复结构。
 - 业务终局模式 `EndgameMode = "moc" | "pf" | "as" | "aa"`（混沌回忆 / 虚构叙事 / 末日幻影 / 异相仲裁），label 来自 `data/seed/config.json` 的 `modes`，与 `services/staticArchiveConfig.ts` 的 `modeLabelByStaticMode` 保持一致——改模式名要同时改这两处。与远程静态数据源的模式映射（`moc/fiction/doom/peak`）见 `services/staticArchiveConfig.ts`，不要混淆。
 - `RunCategory` 的取值随模式与敌方阶段变化（`as` 是四档分数区间、`aa` 的绝境阶段单独归档）。组件与 composable **不要自己列分类**，一律取 `services/runUtils.ts` 的 `categoryOptionsFor(mode, bossId)` 与 `categoryLabels`；库里 `category` 是开放 text，加取值不需要迁移。
-- `RunFlag`（`revive` / `firewall` / `bpWeapon`）同理：标记候选与中文文案一律取 `runUtils.ts` 的 `flagOrder` / `flagLabels`，读取记录上的标记用 `flagsOfRun(run)`；敌方阶段的检索分组标题与星启判定用 `stageGroupOf` / `stageGroupLabels` / `isStarwardStage`，组件不要自己从阶段 id 里解析。
+- `RunFlag`（`revive` / `firewall` / `bpWeapon`）同理：标记候选与中文文案一律取 `runUtils.ts` 的 `flagOrder` / `flagLabels`，读取记录上的标记用 `flagsOfRun(run)`，图标只用 `components/FlagIcon.vue`；敌方阶段的检索分组标题与星启判定用 `stageGroupOf` / `stageGroupLabels` / `isStarwardStage`，组件不要自己从阶段 id 里解析。
+- `ArchiveFilters` 的成本与分数都是**可空区间端点**（`costMin` / `costMax` / `scoreMin` / `scoreMax`，`null` = 该侧不限），组件与 composable 不要再假设成本是 `"0-8"` 这类枚举桶；面板上的四个成本档位只是写端点的 UI 预设。口径见 [services/AGENTS.md](services/AGENTS.md)「区间筛选口径」。
 - 数据入口统一走 `services/archiveService.ts`；它负责在 API 失败时回退到 `data/seed`。**不要**在组件里直接 `fetch` 业务 API。
-- 图片一律通过 `services/dataSource.ts` 的 `IMAGE_BASES` / `monsterImageUrl()` 或 `data/unitAssets.ts` 的 `getUnitImageSrc()` 生成，直连 `static.nanoka.cc`，不要引用本地副本。
+- 图片一律通过 `services/dataSource.ts` 的 `IMAGE_BASES` / `monsterImageUrl()` 或 `data/unitAssets.ts` 的 `getUnitImageSrc()` 生成，直连 `static.nanoka.cc`，不要引用本地副本。**唯一例外是标记图标**：地址在 `data/flagIcons.ts`，热链第三方站点，加载失败由 `components/FlagIcon.vue` 回落 lucide——授权与为什么不进 `IMAGE_BASES`，见根 [AGENTS.md](../AGENTS.md)「资源与授权」。
 
 ## 状态管理
 
 - 全局配置缓存用 `useArchiveStore()`（`loadConfig()` 幂等，配置只加载一次）；它另外持有 `pairingRuns` + `recordPairingRuns()`，跨筛选累积记录样本，供投稿弹窗统计「角色→高频光锥」。
 - 页面级临时状态用 `composables/`：
-  - `useArchiveFilters(config)`：筛选状态 + 与路由 query 双向同步（`hydrateFromQuery` / `watch` 回写），其中 `normalizeCategory()` 负责把与当前模式/阶段不匹配的分类回落为 `all`，`normalizeFlags()` 负责丢弃 URL 里非法的标记值。
+  - `useArchiveFilters(config)`：筛选状态 + 与路由 query 双向同步（`hydrateFromQuery` / `watch` 回写），其中 `normalizeCategory()` 负责把与当前模式/阶段不匹配的分类回落为 `all`，`normalizeFlags()` 负责丢弃 URL 里非法的标记值；成本与分数区间四个端点只在非 `null` 时进 query，`readBound()` 把空值/非法值视为不限，`readLegacyCostBucket()` 让旧 `?cost=17-32` 深链仍解得出等价端点。
   - `useRunsQuery(filters)`：记录请求、加载态、按 `teamName` 分组；每次成功拉取都会把结果登记进 `archiveStore.pairingRuns`。
   - `useMetaStats(filters)`：环境统计。
   - `useAdminSubmissions()`：审核台会话（`sessionStorage` 持久化）、列表与审核动作。
@@ -56,8 +58,8 @@
 ## 组件实现约定
 
 - 新增 Vue 一律用 Composition API + `<script setup lang="ts">`。
-- 图标只通过 `lucide-vue-next` 引入，不手写 SVG。
-- 筛选/排序/统计逻辑放 `services/runUtils.ts` 或 composable，组件不写业务计算；投稿的字段校验、步骤归属与预览取数在 `services/submissionValidation.ts`，成本合计与默认命座/叠影口径在 `services/unitCost.ts`，`SubmitRunForm.vue` 只保留“是否展示错误 / 当前步骤 / 成本是否被手改（`costTouched`）”这类 UI 状态。
+- 图标优先通过 `lucide-vue-next` 引入，不手写 SVG。**例外**：三个终局标记（复活 / 火墙 / 大月卡武器）一律用 `components/FlagIcon.vue`，它内部已含热链远程图标与 lucide 回落；组件不要再自己写 `flagIcons` 映射。
+- 筛选/排序/统计逻辑放 `services/runUtils.ts` 或 composable，组件不写业务计算；投稿的字段校验、步骤归属与预览取数在 `services/submissionValidation.ts`，成本合计与默认命座/叠影口径在 `services/unitCost.ts`，`SubmitRunForm.vue` 只保留“是否展示错误 / 当前步骤 / 成本是否被手改（`costTouched`）、视频链接查重是否命中（`duplicateMatches`）”这类 UI 状态。
 - 弹层沿用同一套结构：`Teleport to="body"` + `.modal-backdrop` + `role="dialog" aria-modal="true" aria-labelledby`，打开时给 `body` 加 `is-modal-open` 锁滚动、支持 Esc 与遮罩点击关闭、关闭后把焦点还给触发元素（见 `admin/AdminLoginDialog.vue`、`archive/SubmitRunDialog.vue`）。
 - 保持工作台风格：高信息密度、清晰分组、按钮带图标、移动端不横向溢出。
 

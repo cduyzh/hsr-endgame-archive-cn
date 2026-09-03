@@ -12,10 +12,10 @@
 
 主要功能：
 
-- 档案工作台：筛选赛季、模式、敌方阶段、记录分类（随模式与阶段变化）、队伍人数、成本、角色/光锥和标签。
+- 档案工作台：筛选赛季、模式、敌方阶段、记录分类（随模式与阶段变化）、队伍人数、成本与分数**精确区间**、角色/光锥和标记。
 - 记录列表：按队伍组合分组，展示作者、角色命座、轮次、分数、成本和视频链接。
 - 环境统计：角色使用率、光锥使用率、常见队伍组合和成本区间。
-- 投稿入口：右上角「提交记录」打开站内弹窗，按「基础信息 → 队伍配置 → 成绩与预览」三步提交到审核队列；选角色会自动带出专武（默认 S1，低星光锥默认 S5、低星角色默认满命），成本按队伍自动合计（限定五星角色算 `命座 + 1`、限定五星光锥算叠影，低星与无名勋礼光锥不计）且可手改；草稿存在本地直到提交成功，视频只接受 B 站与 YouTube 链接。
+- 投稿入口：右上角「提交记录」打开站内弹窗，按「基础信息 → 队伍配置 → 成绩与预览」三步提交到审核队列；选角色会自动带出专武（默认 S1，低星光锥默认 S5、低星角色默认满命），成本按队伍自动合计（限定五星角色算 `命座 + 1`、限定五星光锥算叠影，低星与无名勋礼光锥不计）且可手改；草稿存在本地直到提交成功，视频只接受 B 站与 YouTube 链接。**投稿查重**：链接填完即按「视频 + 敌方阶段」调 `GET /api/submissions/check` 预检（400ms 防抖，链接或阶段一变就重查），命中已有待审 / 已通过的投稿时在第一步展示已有记录摘要并挡住「下一步 / 提交」；`POST /api/submissions` 入队前用同一个 `findDuplicateVideoRecords()` 再拦一次返回 409。驳回与撤回的记录不拦重提；`b23.tv` 短链取不到 BV 号，只能按规范化后的短链自身比对。
 - 配队预设：本机 localStorage 记忆作者名 + 最多 3 套队伍配置，提交时可一键载入。
 - 投稿凭证：投稿成功后服务端下发 `ownerToken`（`own_<48 hex>`），写回本机 localStorage，**`/me` 页面**可按 token 反查该用户提过的所有 `submission_reviews` + `runs`，查看审核进度（pending/approved/rejected/withdrawn）、撤回已通过的记录、忘记某条凭证或一键清空。
 - 更新记录：`/changelog` 页展示版本迭代历史，版本号由 `src/data/changelog.ts` 的 `changelogEntries` 唯一维护，头部徽章读取 `appVersion`。
@@ -67,11 +67,11 @@ pnpm seed:archive:dry    # 灌库空跑
 - `src/App.vue`：主壳和导航（档案 / 文章 / 规则 / **更新** / 我的投稿 / 审核 + 「提交记录」按钮、头部版本徽章与全局 `SubmitRunDialog` + `PromoSlot`）。
 - `src/router/index.ts`：7 条路由 `/`、`/submit`、`/me`（按本机 token 列出 / 撤回自己的投稿）、`/admin/submissions`、`/articles`、`/faq`、`/changelog`（更新记录）；仅首页同步引入。
 - `src/views/`：`ArchiveView.vue`（只组合 `ArchiveWorkbench`）、`SubmitView.vue`（`/submit` 深链转发：打开投稿弹窗后回到首页）、`MySubmissionsView.vue`（`/me`，本机凭证反查 + 撤回 + 清理）、`AdminSubmissionsView.vue`、`ArticlesView.vue`、`FaqView.vue`、`ChangelogView.vue`（`/changelog`，渲染 `src/data/changelog.ts` 的版本记录）。
-- `src/components/archive/`：档案业务组件，含投稿弹窗 `SubmitRunDialog.vue` 与其内部三步向导 `SubmitRunForm.vue`；`src/components/admin/`：审核台弹框与卡片；`src/components/PromoSlot.vue`：站务推广位。
+- `src/components/archive/`：档案业务组件，含投稿弹窗 `SubmitRunDialog.vue` 与其内部三步向导 `SubmitRunForm.vue`；`src/components/admin/`：审核台弹框与卡片；`src/components/PromoSlot.vue`：站务推广位；`src/components/FlagIcon.vue`：标记图标的唯一渲染出口（热链图标 + lucide 回落，四处共用）。
 - `src/composables/`：`useArchiveFilters.ts`（筛选状态 + 路由 query 双向同步）、`useRunsQuery.ts`、`useMetaStats.ts`、`useAdminSubmissions.ts`、`useSubmissionDialog.ts`（投稿弹窗全局开关）、`useSubmissionDraft.ts`（投稿草稿 localStorage 缓存）、`useSubmissionMemory.ts`（作者名 / 配队预设 / 投稿 token 三合一 localStorage 记忆）。
 - `src/types/archive.ts`：所有 `Archive*` 类型的唯一来源。
-- `src/services/`：`archiveService.ts`（API + seed fallback + 管理员会话 + `listMySubmissions`/`withdrawSubmission`）、`staticArchiveConfig.ts`（浏览器端静态快照入口）、`staticBossSnapshot.ts`（前后端共用的阶段推导纯计算层：`STATIC_SEASON_IDS`、HP/场地 buff/首领取名口径）、`dataSource.ts`（远程地址与图片）、`runUtils.ts`、`unitCost.ts`、`submissionUtils.ts`、`submissionValidation.ts`（投稿校验与预览纯函数）。
-- `src/data/`：`unitAssets.ts`（`sourceId` -> 远程图）、`unitPaths.ts`（命途图标）、`signatureLightcones.ts`（角色 -> 专武映射的运行时入口）、`changelog.ts`（更新记录数据，`appVersion` 供头部徽章）、`seed/`。
+- `src/services/`：`archiveService.ts`（API + seed fallback + 管理员会话 + `listMySubmissions`/`withdrawSubmission`）、`staticArchiveConfig.ts`（浏览器端静态快照入口）、`staticBossSnapshot.ts`（前后端共用的阶段推导纯计算层：`STATIC_SEASON_IDS`、HP/场地 buff/首领取名口径）、`dataSource.ts`（远程地址与图片）、`runUtils.ts`、`unitCost.ts`、`submissionUtils.ts`、`submissionValidation.ts`（投稿校验与预览纯函数）、`videoUrl.ts`（视频身份归一与查重口径，前后端共用）。
+- `src/data/`：`unitAssets.ts`（`sourceId` -> 远程图）、`unitPaths.ts`（命途图标）、`flagIcons.ts`（三个标记图标的**热链地址**，唯一不走 `dataSource.ts` 的图源）、`signatureLightcones.ts`（角色 -> 专武映射的运行时入口）、`changelog.ts`（更新记录数据，`appVersion` 供头部徽章）、`seed/`。
 - `src/stores/archiveStore.ts`：档案配置缓存 + 投稿自动搭配用的记录样本（`pairingRuns`）。
 - `src/data/seed/`：无数据库时的本地种子数据。当前 `config.json` 中 `bosses` 为空数组、`runs.json` 为空数组，敌方阶段完全由静态快照生成；`hsr-units.json` / `hsr-monsters.json` 只是同步脚本产物，运行时代码不 import（`seed/index.ts` 仅导出 `config.json` 与 `runs.json`）；`lightcone-pairs.json` 同样是 `sync:units` 产物，但**由 `signatureLightcones.ts` 在运行时 import**，为投稿表单提供专武映射。
 - `netlify/functions/`：服务端 API。
@@ -99,7 +99,9 @@ pnpm seed:archive:dry    # 灌库空跑
 
 服务端 `filterArchiveRuns()` 与前端 `matchesCategory()` 都只做等值比较、不校验枚举；「分类是否属于当前模式与阶段」在投稿侧由 `submissionValidation.ts` 拦下，主页侧由 `useArchiveFilters` 的 `normalizeCategory()` 在不匹配时回落为 `all`。
 
-标记（`flags`）口径：`RunFlag = revive | firewall | bpWeapon`（复活 / 火墙 / 大月卡武器），唯一来源是 `src/services/runUtils.ts` 的 `flagOrder` / `flagLabels` / `isRunFlag`，组件与 Functions 都不要另抄一份。标记**必须在投稿时手动勾选**，落库复用 `runs.tags`（开放 jsonb 数组，无需迁移）；读取用 `flagsOfRun()` 收窄掉历史遗留的自由文本。筛选是 **AND 语义**（勾选的标记全部命中才保留），前端 `filterRuns()` 与服务端 `filterArchiveRuns()` 一致；URL 深链里的非法值由 `useArchiveFilters` 的 `normalizeFlags()` 丢弃。
+区间筛选口径：`ArchiveFilters` 的成本与分数都是**可空端点** `costMin` / `costMax` / `scoreMin` / `scoreMax`，`null` 表示该侧不限，判断统一走 `runUtils.ts` 的 `matchesRange(value, min, max)`（已取代旧的 `matchesCost` 与 `cost: "all" | "0-8" | …` 枚举桶）。面板上的 `不限 / 0-8 / 9-16 / 17-32 / 33-48` 只是写入端点的 UI 预设，不进筛选状态形状；`buildMetaStats()` 的 `costBuckets` 是统计分桶，与筛选无关、仍然保留。分数区间只在 `as` 出现（`score` 只有该模式有意义，上限 `AS_MAX_SCORE`）。端点解析在前后端各有一份同名实现（`useArchiveFilters.ts` 与 `_shared.ts` 的 `readBound` / `readLegacyCostBucket`），**改规则要两处同步**；旧的 `?cost=17-32` 深链只在读取侧兼容，映射成对应端点。
+
+标记（`flags`）口径：`RunFlag = revive | firewall | bpWeapon`（复活 / 火墙 / 大月卡武器），唯一来源是 `src/services/runUtils.ts` 的 `flagOrder` / `flagLabels` / `isRunFlag`，组件与 Functions 都不要另抄一份；图标统一走 `src/components/FlagIcon.vue`（地址在 `src/data/flagIcons.ts`），组件不要再自己写 `flagIcons` 映射。标记**必须在投稿时手动勾选**，落库复用 `runs.tags`（开放 jsonb 数组，无需迁移）；读取用 `flagsOfRun()` 收窄掉历史遗留的自由文本。筛选是 **AND 语义**（勾选的标记全部命中才保留），前端 `filterRuns()` 与服务端 `filterArchiveRuns()` 一致；URL 深链里的非法值由 `useArchiveFilters` 的 `normalizeFlags()` 丢弃。
 
 敌方阶段分组口径：`stageGroupOf(boss)` 把阶段分成 `boss`（首领关）/ `knight`（骑士关）/ `checkmate`（将杀关），规则是 `aa` 且阶段键以 `k` 开头 → 骑士关，`aa` 且为 `checkmate`/`plight` → 将杀关（绝境与将杀同组），其余一律首领关。`ModeSeasonFilter` 按 `stageGroupOrder` 渲染分组标题，空组不出标题。第 3 阶段用 `isStarwardStage(boss)` 判定并加金色星启徽标——星启血量约为普通半区的 2–5 倍（4.5 实测 3000 万 vs 上半 1355 万）。
 
@@ -110,7 +112,8 @@ pnpm seed:archive:dry    # 灌库空跑
 - `/api/archive/config` -> `netlify/functions/archive-config.ts`
 - `/api/archive/runs` -> `netlify/functions/archive-runs.ts`
 - `/api/archive/stats` -> `netlify/functions/archive-stats.ts`
-- `/api/submissions` -> `netlify/functions/submissions.ts`（POST 投稿；**响应体返回 `ownerToken`（`own_<48 hex>`），前端写本地记忆**）
+- `/api/submissions` -> `netlify/functions/submissions.ts`（POST 投稿；**响应体返回 `ownerToken`（`own_<48 hex>`），前端写本地记忆**；按「视频 + 敌方阶段」查重命中返回 `409 {message, duplicate:{matches}}`）
+- `/api/submissions/check` -> `netlify/functions/submissions-check.ts`（GET `?videoUrl=&bossId=`，投稿向导填完链接即预检，返回 `{duplicate, matches}`，最多 3 条；链接非法或阶段缺失时返回 `duplicate:false` 不报错）
 - `/api/submissions/me` -> `netlify/functions/submissions-me.ts`（POST `{tokens:string[]}`，按本机凭证反查 `submission_reviews` + `runs`，最多 50 token / 200 条）
 - `/api/submissions/:id/withdraw` -> `netlify/functions/submissions-withdraw.ts`（PATCH `{token}`，校验 `owner_token` 后把对应 `submission_reviews.status` 与同名 token 的 `runs.status` 一起改 `withdrawn`）
 - `/api/admin/submissions` -> `netlify/functions/admin-submissions.ts`
@@ -245,13 +248,26 @@ pnpm sync:stages -- --season=4.5  # 只同步指定赛季
 - UI 保持当前工作台风格：高信息密度、清晰分组、按钮带图标、移动端不横向溢出。
 - 弹层统一沿用既有模式：`Teleport to="body"` + `.modal-backdrop` + `role="dialog" aria-modal="true"`（参考 `src/components/admin/AdminLoginDialog.vue` 与 `src/components/archive/SubmitRunDialog.vue`），打开时给 `body` 加 `is-modal-open` 锁滚动、支持 Esc 与遮罩点击关闭、关闭后把焦点还给触发元素。
 - 表单校验、成本统计、预览等规则放 `src/services/`（如 `submissionValidation.ts`）以便单测，组件只保留“是否展示错误”这类 UI 状态。
-- 使用 lucide 图标时优先通过 `lucide-vue-next` 引入，不手写 SVG 图标。
+- 使用 lucide 图标时优先通过 `lucide-vue-next` 引入，不手写 SVG 图标。**唯一例外**是三个终局标记的图标，见下文「资源与授权」。
 
 ## 资源与授权
 
 `scripts/reference-inventory.mjs` 只生成参考观察清单，不下载、不复制参考站资源，也不作为运行时依赖。
 
 不要直接复制 The Genius Archive 或其他站点的未确认授权代码、样式、图片、图标和 JSON 配置。补充角色图、光锥图、boss 图或文章封面前，先确认来源和授权。
+
+### 已登记的唯一例外：三个终局标记图标
+
+`src/data/flagIcons.ts` 里 `revive` / `firewall` / `bpWeapon` 三条地址热链 `https://theherta.com/skill_icons/`。它们是米哈游的游戏内图标资源、由该站托管；本项目**只热链、不落盘、不代理**，与「不把数据源 JSON / 图片下载到 `public/` 发布」的既有带宽约定一致。渲染统一走 `src/components/FlagIcon.vue`，`@error` 时回落 lucide，所以第三方图源不可用时只是退回通用图标，不会白屏也不会破版。
+
+这条依赖的已知脆弱点：
+
+- 路径由对方决定，随时可能改名或加防盗链。届时改 `flagIcons.ts` 那三条地址，或直接删掉让 `FlagIcon` 全量走 lucide 回落。
+- 该站响应**没有** `access-control-allow-origin`，但 `<img>` 引用不需要 CORS；只有把图标挪进 canvas / `fetch` 才会被挡。
+- 响应是 `max-age=0, must-revalidate`，每次加载都重新校验（Cloudflare 命中，成本很低）。
+- 它**不属于** `src/services/dataSource.ts` 的统一图源，不要并进 `IMAGE_BASES`，否则会被误读成 `static.nanoka.cc` 的一部分。
+
+除此之外没有别的第三方图源；要新增，先在本节登记来源与授权判断。
 
 ## 验证口径
 
@@ -283,7 +299,7 @@ pnpm build
 | `netlify/functions/*`（路由、鉴权、limit、fallback、SQL）                                                           | `netlify/AGENTS.md`；接口 shape 变化时再同步本文件「API 与数据库」与 `README.md`                                                                   |
 | `src/services/staticBossSnapshot.ts` / `staticArchiveConfig.ts`（`STATIC_SEASON_IDS`、阶段 id/`stageKey`、HP 与场地 buff 口径、首领取名、subtitle、合并语义）                 | 本文件「数据架构 / 静态数据维护约束 / 远程数据源使用说明 / 新赛季上线清单」、`README.md`「静态数据源」、`src/services/AGENTS.md`「静态快照与合并」 |
 | `src/services/dataSource.ts`（数据源域名、图片目录、`monsterImageUrl`）                                             | 本文件「远程数据源使用说明」路径树、`README.md`「静态数据源」路径树、`src/services/AGENTS.md`「图片寻址」                                          |
-| `src/services/archiveService.ts` / `runUtils.ts` / `unitCost.ts` / `submissionUtils.ts` / `submissionValidation.ts` | `src/services/AGENTS.md`「文件职责 / 成本与统计口径 / 投稿校验」；口径影响 `netlify/functions/_shared.ts` 时同步 `netlify/AGENTS.md`               |
+| `src/services/archiveService.ts` / `runUtils.ts` / `unitCost.ts` / `submissionUtils.ts` / `submissionValidation.ts` / `videoUrl.ts` | `src/services/AGENTS.md`「文件职责 / 成本与统计口径 / 投稿校验」；口径影响 `netlify/functions/_shared.ts` 时同步 `netlify/AGENTS.md`               |
 | `src/types/archive.ts`（字段增删）                                                                                  | `src/AGENTS.md`「类型与数据流约定」，并在涉及 seed shape 时同步 `src/data/seed` 说明                                                               |
 | `src/router/index.ts`、`src/views/*`、`src/components/*` 增删                                                       | 本文件「代码结构」、`src/AGENTS.md`「模块地图 / 路由与视图」、`README.md`「项目结构」                                                              |
 | `src/data/seed/*`（赛季、模式 label、units 结构）                                                                   | 本文件「代码结构」seed 现状说明、`README.md`「数据层」、`scripts/AGENTS.md`「关键注意点」                                                          |

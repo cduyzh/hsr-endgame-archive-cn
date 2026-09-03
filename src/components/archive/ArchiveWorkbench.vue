@@ -53,7 +53,8 @@ const activeFilterCount = computed(() =>
   + filters.selectedUnitIds.length
   + (filters.category === "all" ? 0 : 1)
   + (filters.teamSize === "all" ? 0 : 1)
-  + (filters.cost === "all" ? 0 : 1),
+  + (filters.costMin === null && filters.costMax === null ? 0 : 1)
+  + (filters.scoreMin === null && filters.scoreMax === null ? 0 : 1),
 )
 </script>
 

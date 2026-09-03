@@ -1,5 +1,6 @@
 import type { Handler } from "@netlify/functions"
-import { addFallbackSubmissionReview, getSql, jsonResponse, validateSubmission } from "./_shared"
+import { addFallbackSubmissionReview, findDuplicateVideoRecords, getSql, jsonResponse, validateSubmission } from "./_shared"
+import { DUPLICATE_VIDEO_MESSAGE } from "../../src/services/videoUrl"
 import type { SubmissionPayload } from "../../src/types/archive"
 
 /**
@@ -26,6 +27,15 @@ export const handler: Handler = async (event) => {
 
   const missing = validateSubmission(payload)
   if (missing.length > 0) return jsonResponse({ message: "缺少必要字段", missing }, 400)
+
+  // 入队前再查一次：前端预检可被绕过，也可能在预检与提交之间被别人的同一条录像抢先。
+  const duplicates = await findDuplicateVideoRecords({
+    videoUrl: payload.videoUrl ?? "",
+    bossId: payload.bossId ?? "",
+  })
+  if (duplicates.length > 0) {
+    return jsonResponse({ message: DUPLICATE_VIDEO_MESSAGE, duplicate: { matches: duplicates } }, 409)
+  }
 
   const id = `sub_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`
   const ownerToken = generateOwnerToken()

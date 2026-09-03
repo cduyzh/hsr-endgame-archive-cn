@@ -1,5 +1,13 @@
 <script setup lang="ts">
-  import { computed, nextTick, reactive, ref, shallowRef, watch } from "vue";
+  import {
+    computed,
+    nextTick,
+    onBeforeUnmount,
+    reactive,
+    ref,
+    shallowRef,
+    watch,
+  } from "vue";
   import { useRouter } from "vue-router";
   import {
     AlertCircle,
@@ -11,26 +19,29 @@
     ClipboardList,
     Copy,
     Download,
-    Flame,
-    HeartPulse,
     Info,
     ListChecks,
+    Loader2,
     Lock,
     RotateCcw,
     Send,
     Sparkles,
-    Ticket,
     Trash2,
     Users,
     X,
   } from "lucide-vue-next";
+  import FlagIcon from "@/components/FlagIcon.vue";
   import SubmissionTeamSlot from "@/components/archive/SubmissionTeamSlot.vue";
   import {
     loadSubmissionDraft,
     useSubmissionDraft,
   } from "@/composables/useSubmissionDraft";
   import { useSubmissionMemory } from "@/composables/useSubmissionMemory";
-  import { submitRun } from "@/services/archiveService";
+  import {
+    checkDuplicateVideo,
+    submitRun,
+    SubmissionDuplicateError,
+  } from "@/services/archiveService";
   import {
     AS_MAX_SCORE,
     categoryLabels,
@@ -40,6 +51,8 @@
     flagOrder,
   } from "@/services/runUtils";
   import {
+    COST_MAX,
+    COST_MIN,
     defaultEidolonFor,
     defaultSuperimpositionFor,
     getCharacterGoldKind,
@@ -48,12 +61,11 @@
     goldKindLabels,
   } from "@/services/unitCost";
   import {
-    COST_MAX,
-    COST_MIN,
     TEAM_SLOT_COUNT,
     buildSubmissionRoster,
     describeSubmissionTarget,
     errorsOfStep,
+    isUsableVideoUrl,
     stepOfField,
     validateSubmissionForm,
     type SubmissionError,
@@ -62,6 +74,7 @@
   } from "@/services/submissionValidation";
   import type {
     ArchiveConfig,
+    DuplicateVideoMatch,
     EndgameMode,
     RunFlag,
     SpecificRunCategory,
@@ -203,7 +216,72 @@
   const currentStep = computed<SubmissionStepId>(
     () => steps[stepIndex.value].id,
   );
-  const allErrors = computed(() => validateSubmissionForm(form, props.config));
+
+  /** 视频链接查重：链接或敌方阶段一变就防抖重查，命中即挡住「下一步」与「提交」。 */
+  const DUPLICATE_CHECK_DELAY = 400;
+
+  const duplicateMatches = shallowRef<DuplicateVideoMatch[]>([]);
+  const duplicateChecking = shallowRef(false);
+  /** 自增序号：用户快速改链接时，过期响应不能覆盖新结果。 */
+  let duplicateSeq = 0;
+  let duplicateTimer: ReturnType<typeof setTimeout> | null = null;
+
+  const hasDuplicateVideo = computed(() => duplicateMatches.value.length > 0);
+
+  function clearDuplicateTimer() {
+    if (duplicateTimer) {
+      clearTimeout(duplicateTimer);
+      duplicateTimer = null;
+    }
+  }
+
+  /** 写入命中记录，并作废在途 / 待触发的预检，避免旧结果把这份记录冲掉。 */
+  function applyDuplicateMatches(matches: DuplicateVideoMatch[]) {
+    duplicateSeq += 1;
+    clearDuplicateTimer();
+    duplicateChecking.value = false;
+    duplicateMatches.value = matches;
+  }
+
+  async function runDuplicateCheck() {
+    clearDuplicateTimer();
+    const seq = ++duplicateSeq;
+    const videoUrl = form.videoUrl.trim();
+    if (!videoUrl || !form.bossId || !isUsableVideoUrl(videoUrl)) {
+      duplicateMatches.value = [];
+      duplicateChecking.value = false;
+      return;
+    }
+
+    duplicateChecking.value = true;
+    const matches = await checkDuplicateVideo({ videoUrl, bossId: form.bossId });
+    if (seq !== duplicateSeq) return;
+    duplicateChecking.value = false;
+    duplicateMatches.value = matches;
+  }
+
+  watch(
+    [() => form.videoUrl, () => form.bossId],
+    () => {
+      // 上一次的命中对新链接不作数，先清掉再防抖重查
+      duplicateMatches.value = [];
+      duplicateChecking.value = Boolean(form.bossId) && isUsableVideoUrl(form.videoUrl);
+      clearDuplicateTimer();
+      duplicateTimer = setTimeout(() => void runDuplicateCheck(), DUPLICATE_CHECK_DELAY);
+    },
+    { immediate: true },
+  );
+
+  onBeforeUnmount(() => {
+    duplicateSeq += 1;
+    clearDuplicateTimer();
+  });
+
+  const allErrors = computed(() =>
+    validateSubmissionForm(form, props.config, {
+      duplicateVideoUrl: hasDuplicateVideo.value,
+    }),
+  );
   const stepErrors = computed(() =>
     showErrors.value ? errorsOfStep(allErrors.value, currentStep.value) : [],
   );
@@ -361,12 +439,6 @@
     categoryTouched.value = true;
   }
 
-  const flagIcons = {
-    revive: HeartPulse,
-    firewall: Flame,
-    bpWeapon: Ticket,
-  } as const;
-
   function toggleFormFlag(flag: RunFlag) {
     const next = form.flags.includes(flag)
       ? form.flags.filter((item) => item !== flag)
@@ -427,6 +499,8 @@
     categoryTouched.value = false;
     costTouched.value = false;
     draftSavedAt.value = "";
+    duplicateMatches.value = [];
+    duplicateChecking.value = false;
   }
 
   function goTo(index: number) {
@@ -489,8 +563,14 @@
       unlockedIndex.value = 0;
       showErrors.value = false;
     } catch (err) {
-      submitFailure.value =
-        err instanceof Error ? err.message : "提交失败，请稍后重试。";
+      if (err instanceof SubmissionDuplicateError) {
+        // 预检之后被别人抢先入队：回填命中记录并跳回基础信息挡住提交
+        applyDuplicateMatches(err.matches);
+        handleSubmitError([{ field: "videoUrl", message: err.message }]);
+      } else {
+        submitFailure.value =
+          err instanceof Error ? err.message : "提交失败，请稍后重试。";
+      }
     } finally {
       submitting.value = false;
     }
@@ -810,6 +890,56 @@
           </label>
         </div>
 
+        <p
+          v-if="duplicateChecking"
+          class="submission-duplicate is-checking"
+          role="status">
+          <Loader2
+            :size="15"
+            class="spin"
+            aria-hidden="true" />
+          正在核对这条录像在「{{ target.stageName }}」是否已收录…
+        </p>
+        <div
+          v-else-if="hasDuplicateVideo"
+          class="submission-duplicate"
+          role="alert">
+          <p class="submission-duplicate-title">
+            <AlertCircle
+              :size="15"
+              aria-hidden="true" />
+            <span>该视频链接在「{{ target.stageName }}」已有投稿记录</span>
+            <button
+              class="icon-button mini"
+              type="button"
+              @click="runDuplicateCheck">
+              <RotateCcw
+                :size="13"
+                aria-hidden="true" />
+              重新检测
+            </button>
+          </p>
+          <ul class="submission-duplicate-list">
+            <li
+              v-for="match in duplicateMatches"
+              :key="`${match.source}-${match.id}`">
+              <b>{{ match.author || "匿名" }}</b>
+              <span>{{ match.teamName || "未命名队伍" }}</span>
+              <span>{{ match.status === "approved" ? "已通过" : "待审核" }}</span>
+              <span>{{ formatDraftTime(match.submittedAt) || match.submittedAt }}</span>
+              <a
+                :href="match.videoUrl"
+                target="_blank"
+                rel="noopener noreferrer"
+                >原视频</a
+              >
+            </li>
+          </ul>
+          <p class="submission-field-hint">
+            同一条录像在同一敌方阶段只收录一次；若这是该录像的另一半区或另一阶段记录，请在上方改选敌方阶段。
+          </p>
+        </div>
+
         <div class="filter-section">
           <p class="section-label">标记</p>
           <div class="flag-grid">
@@ -817,15 +947,14 @@
               v-for="flag in flagOrder"
               :key="flag"
               class="compact"
-              :class="{ active: form.flags.includes(flag) }"
+              :class="[`flag-card-${flag}`, { active: form.flags.includes(flag) }]"
               type="button"
               :aria-pressed="form.flags.includes(flag)"
               @click="toggleFormFlag(flag)">
-              <component
-                :is="flagIcons[flag]"
-                :size="14"
-                aria-hidden="true" />
-              {{ flagLabels[flag] }}
+              <FlagIcon
+                :flag="flag"
+                :size="18" />
+              <span>{{ flagLabels[flag] }}</span>
             </button>
           </div>
           <p class="submission-field-hint">

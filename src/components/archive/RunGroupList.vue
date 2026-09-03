@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, h, shallowRef, watch } from "vue"
 import { ChevronDown } from "lucide-vue-next"
+import FlagIcon from "@/components/FlagIcon.vue"
 import { getUnitImageSrc } from "@/data/unitAssets"
 import { flagLabels, flagsOfRun } from "@/services/runUtils"
 import { getRunGoldCounts } from "@/services/unitCost"
@@ -278,6 +279,9 @@ function platformIcon(source: VideoSource) {
                 class="run-flag"
                 :class="`run-flag-${flag}`"
               >
+                <FlagIcon
+                  :flag="flag"
+                  :size="13" />
                 {{ flagLabels[flag] }}
               </span>
             </header>

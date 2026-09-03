@@ -8,6 +8,7 @@ import {
   submissionStepFields,
   validateSubmissionForm,
 } from "@/services/submissionValidation"
+import { DUPLICATE_VIDEO_MESSAGE } from "@/services/videoUrl"
 import { fixtureConfig, fixtureSubmission } from "./fixtures/config"
 
 const fieldsOf = (payload: Parameters<typeof validateSubmissionForm>[0]) =>
@@ -109,6 +110,26 @@ describe("submissionValidation 校验", () => {
     expect(isUsableVideoUrl("bilibili.com/video/BV1")).toBe(false)
     expect(isUsableVideoUrl("javascript:alert(1)")).toBe(false)
     expect(fieldsOf(fixtureSubmission({ videoUrl: "https://example.com/x" }))).toEqual(["videoUrl"])
+  })
+
+  it("查重命中把错误落在视频链接上并挡住第一步", () => {
+    const form = fixtureSubmission()
+    const errors = validateSubmissionForm(form, fixtureConfig, { duplicateVideoUrl: true })
+
+    expect(errors.map((error) => error.field)).toEqual(["videoUrl"])
+    expect(errors[0].message).toBe(DUPLICATE_VIDEO_MESSAGE)
+    expect(stepOfField("videoUrl")).toBe("basic")
+    expect(errorsOfStep(errors, "basic")).toHaveLength(1)
+    expect(errorsOfStep(errors, "team")).toEqual([])
+
+    // 链接本身不合格时报错优先于查重，且未命中时不留额外错误
+    expect(
+      validateSubmissionForm(fixtureSubmission({ videoUrl: "" }), fixtureConfig, { duplicateVideoUrl: true }).map(
+        (error) => error.field,
+      ),
+    ).toEqual(["videoUrl"])
+    expect(validateSubmissionForm(fixtureSubmission({ videoUrl: "" }), fixtureConfig)[0].message).toContain("请填写视频链接")
+    expect(validateSubmissionForm(form, fixtureConfig, { duplicateVideoUrl: false })).toEqual([])
   })
 
   it("分类必须属于当前模式与敌方阶段", () => {
