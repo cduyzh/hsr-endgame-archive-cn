@@ -56,21 +56,23 @@ export const handler: Handler = async (event) => {
       if (stage) {
         await sql`
           insert into stages (
-            id, season_id, mode, name, subtitle, hp, speed, toughness,
-            weakness, resist, clears, memory_buff, banner_tone
+            id, season_id, mode, name, variant_name, subtitle, hp, speed, toughness,
+            weakness, resist, clears, mechanic, stage_buffs, banner_tone
           ) values (
-            ${stage.id}, ${stage.seasonId}, ${stage.mode}, ${stage.name}, ${stage.subtitle},
+            ${stage.id}, ${stage.seasonId}, ${stage.mode}, ${stage.name}, ${stage.variantName ?? null}, ${stage.subtitle},
             ${stage.hp}, ${stage.speed}, ${stage.toughness},
             ${JSON.stringify(stage.weakness ?? [])},
             ${JSON.stringify(stage.resist ?? {})},
             ${Number(stage.clears ?? 0)},
-            ${stage.memoryBuff ?? ""},
+            ${JSON.stringify(stage.mechanic ?? null)},
+            ${JSON.stringify(stage.stageBuffs ?? [])},
             ${stage.bannerTone ?? "cyan"}
           )
           on conflict (id) do update set
             season_id = excluded.season_id,
             mode = excluded.mode,
             name = excluded.name,
+            variant_name = excluded.variant_name,
             subtitle = excluded.subtitle,
             hp = excluded.hp,
             speed = excluded.speed,
@@ -78,13 +80,14 @@ export const handler: Handler = async (event) => {
             weakness = excluded.weakness,
             resist = excluded.resist,
             clears = excluded.clears,
-            memory_buff = excluded.memory_buff,
+            mechanic = excluded.mechanic,
+            stage_buffs = excluded.stage_buffs,
             banner_tone = excluded.banner_tone
         `
       } else {
         await sql`
-          insert into stages (id, season_id, mode, name, subtitle, hp, speed, toughness, memory_buff)
-          values (${run.bossId}, ${run.seasonId}, ${run.mode}, ${run.bossId}, '', '', '', '', '')
+          insert into stages (id, season_id, mode, name, subtitle, hp, speed, toughness, mechanic, stage_buffs)
+          values (${run.bossId}, ${run.seasonId}, ${run.mode}, ${run.bossId}, '', '', '', '', null, '[]')
           on conflict (id) do nothing
         `
       }

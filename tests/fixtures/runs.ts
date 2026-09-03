@@ -15,7 +15,7 @@ export const fixtureRuns: ArchiveRun[] = [
     limitedCount: 3,
     standardCount: 1,
     submittedAt: "2026-07-04T12:00:00.000Z",
-    tags: ["无复活", "低成本", "手操"],
+    tags: ["revive", "firewall"],
     videoUrl: "https://www.bilibili.com/video/BV1TubY67E2r/",
     units: [
       {unitId: "the-herta", eidolon: 0},
@@ -44,7 +44,7 @@ export const fixtureRuns: ArchiveRun[] = [
     limitedCount: 3,
     standardCount: 1,
     submittedAt: "2026-07-03T09:30:00.000Z",
-    tags: ["击破", "稳定"],
+    tags: ["bpWeapon"],
     videoUrl: "https://www.bilibili.com/video/BV1example0002/",
     units: [
       {unitId: "firefly", eidolon: 2},
@@ -73,7 +73,7 @@ export const fixtureRuns: ArchiveRun[] = [
     limitedCount: 4,
     standardCount: 0,
     submittedAt: "2026-07-02T18:40:00.000Z",
-    tags: ["高配", "无复活"],
+    tags: ["revive", "bpWeapon"],
     videoUrl: "https://www.bilibili.com/video/BV1example0003/",
     units: [
       {unitId: "acheron", eidolon: 2},

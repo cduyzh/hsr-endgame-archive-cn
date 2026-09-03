@@ -10,7 +10,7 @@ import {
 import { fixtureSubmission } from "./fixtures/config"
 import type { SubmissionPayload } from "@/types/archive"
 
-const DRAFT_KEY = "hsr-archive.submission-draft.v1"
+const DRAFT_KEY = "hsr-archive.submission-draft.v2"
 
 function mountDraftWriter(payload: SubmissionPayload, baseline: SubmissionPayload) {
   const state = reactive({ payload })

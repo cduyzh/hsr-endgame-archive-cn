@@ -2,9 +2,11 @@ import type {
   ArchiveFilters,
   ArchiveRun,
   ArchiveUnit,
+  BossStage,
   EndgameMode,
   MetaStats,
   RunCategory,
+  RunFlag,
   SpecificRunCategory,
 } from "@/types/archive"
 import { getRunGoldCounts } from "@/services/unitCost"
@@ -22,6 +24,28 @@ export const categoryLabels: Record<SpecificRunCategory, string> = {
   asScore3650: "3650-3850",
   asScore3850: "3850-3899",
   asScore4000: "4000 满分",
+}
+
+/** 标记的展示顺序：筛选面板、投稿表单与记录徽标都按此排列。 */
+export const flagOrder: RunFlag[] = ["revive", "firewall", "bpWeapon"]
+
+/** 标记中文文案的唯一来源，不要在组件里另写一份。 */
+export const flagLabels: Record<RunFlag, string> = {
+  revive: "复活",
+  firewall: "火墙",
+  bpWeapon: "大月卡武器",
+}
+
+const flagValues = new Set<string>(flagOrder)
+
+export function isRunFlag(value: unknown): value is RunFlag {
+  return typeof value === "string" && flagValues.has(value)
+}
+
+/** `runs.tags` 是开放 text，这里只保留仍是合法标记的值，并按 `flagOrder` 归一顺序。 */
+export function flagsOfRun(run: ArchiveRun): RunFlag[] {
+  const tags = new Set(run.tags.filter(isRunFlag))
+  return flagOrder.filter((flag) => tags.has(flag))
 }
 
 /** 末日幻影按剩余行动值计分，满分 4000。 */
@@ -43,6 +67,29 @@ export function categoryOfAsScore(score: number): SpecificRunCategory | null {
 /** 阶段 id 规则为 `${seasonId}-${mode}-${stageKey}`，末段即阶段键。 */
 export function stageKeyOf(bossId: string): string {
   return bossId.split("-").pop() ?? ""
+}
+
+/** 敌方阶段的检索分组：异相仲裁的骑士关与将杀关（含绝境）在业务上是两类不同的挑战。 */
+export type StageGroup = "boss" | "knight" | "checkmate"
+
+export const stageGroupOrder: StageGroup[] = ["boss", "knight", "checkmate"]
+
+export const stageGroupLabels: Record<StageGroup, string> = {
+  boss: "首领关",
+  knight: "骑士关",
+  checkmate: "将杀关",
+}
+
+export function stageGroupOf(boss: Pick<BossStage, "id" | "mode">): StageGroup {
+  if (boss.mode !== "aa") return "boss"
+  const stageKey = stageKeyOf(boss.id)
+  if (stageKey.startsWith("k")) return "knight"
+  return stageKey === "checkmate" || stageKey === "plight" ? "checkmate" : "boss"
+}
+
+/** 第 3 阶段（星启）血量与难度显著高于上下半，需要单独醒目标识。 */
+export function isStarwardStage(boss: Pick<BossStage, "id">): boolean {
+  return stageKeyOf(boss.id) === "starward"
 }
 
 export function categoryOptionsFor(mode: EndgameMode, bossId: string): SpecificRunCategory[] {

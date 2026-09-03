@@ -15,7 +15,7 @@
 - 档案工作台：筛选赛季、模式、敌方阶段、记录分类（随模式与阶段变化）、队伍人数、成本、角色/光锥和标签。
 - 记录列表：按队伍组合分组，展示作者、角色命座、轮次、分数、成本和视频链接。
 - 环境统计：角色使用率、光锥使用率、常见队伍组合和成本区间。
-- 投稿入口：右上角「提交记录」打开站内弹窗，按「基础信息 → 队伍配置 → 成绩与预览」三步提交到审核队列；草稿存在本地直到提交成功，视频只接受 B 站与 YouTube 链接。
+- 投稿入口：右上角「提交记录」打开站内弹窗，按「基础信息 → 队伍配置 → 成绩与预览」三步提交到审核队列；选角色会自动带出专武（默认 S1，低星光锥默认 S5、低星角色默认满命），成本按队伍自动合计（限定五星角色算 `命座 + 1`、限定五星光锥算叠影，低星与无名勋礼光锥不计）且可手改；草稿存在本地直到提交成功，视频只接受 B 站与 YouTube 链接。
 - 配队预设：本机 localStorage 记忆作者名 + 最多 3 套队伍配置，提交时可一键载入。
 - 投稿凭证：投稿成功后服务端下发 `ownerToken`（`own_<48 hex>`），写回本机 localStorage，**`/me` 页面**可按 token 反查该用户提过的所有 `submission_reviews` + `runs`，查看审核进度（pending/approved/rejected/withdrawn）、撤回已通过的记录、忘记某条凭证或一键清空。
 - 更新记录：`/changelog` 页展示版本迭代历史，版本号由 `src/data/changelog.ts` 的 `changelogEntries` 唯一维护，头部徽章读取 `appVersion`。
@@ -70,10 +70,10 @@ pnpm seed:archive:dry    # 灌库空跑
 - `src/components/archive/`：档案业务组件，含投稿弹窗 `SubmitRunDialog.vue` 与其内部三步向导 `SubmitRunForm.vue`；`src/components/admin/`：审核台弹框与卡片；`src/components/PromoSlot.vue`：站务推广位。
 - `src/composables/`：`useArchiveFilters.ts`（筛选状态 + 路由 query 双向同步）、`useRunsQuery.ts`、`useMetaStats.ts`、`useAdminSubmissions.ts`、`useSubmissionDialog.ts`（投稿弹窗全局开关）、`useSubmissionDraft.ts`（投稿草稿 localStorage 缓存）、`useSubmissionMemory.ts`（作者名 / 配队预设 / 投稿 token 三合一 localStorage 记忆）。
 - `src/types/archive.ts`：所有 `Archive*` 类型的唯一来源。
-- `src/services/`：`archiveService.ts`（API + seed fallback + 管理员会话 + `listMySubmissions`/`withdrawSubmission`）、`staticArchiveConfig.ts`（远程静态快照）、`dataSource.ts`（远程地址与图片）、`runUtils.ts`、`unitCost.ts`、`submissionUtils.ts`、`submissionValidation.ts`（投稿校验与预览纯函数）。
-- `src/data/`：`unitAssets.ts`（`sourceId` -> 远程图）、`unitPaths.ts`（命途图标）、`changelog.ts`（更新记录数据，`appVersion` 供头部徽章）、`seed/`。
-- `src/stores/archiveStore.ts`：档案配置缓存。
-- `src/data/seed/`：无数据库时的本地种子数据。当前 `config.json` 中 `bosses` 为空数组、`runs.json` 为空数组，敌方阶段完全由静态快照生成；`hsr-units.json` / `hsr-monsters.json` 只是同步脚本产物，运行时代码不 import（`seed/index.ts` 仅导出 `config.json` 与 `runs.json`）。
+- `src/services/`：`archiveService.ts`（API + seed fallback + 管理员会话 + `listMySubmissions`/`withdrawSubmission`）、`staticArchiveConfig.ts`（浏览器端静态快照入口）、`staticBossSnapshot.ts`（前后端共用的阶段推导纯计算层：`STATIC_SEASON_IDS`、HP/场地 buff/首领取名口径）、`dataSource.ts`（远程地址与图片）、`runUtils.ts`、`unitCost.ts`、`submissionUtils.ts`、`submissionValidation.ts`（投稿校验与预览纯函数）。
+- `src/data/`：`unitAssets.ts`（`sourceId` -> 远程图）、`unitPaths.ts`（命途图标）、`signatureLightcones.ts`（角色 -> 专武映射的运行时入口）、`changelog.ts`（更新记录数据，`appVersion` 供头部徽章）、`seed/`。
+- `src/stores/archiveStore.ts`：档案配置缓存 + 投稿自动搭配用的记录样本（`pairingRuns`）。
+- `src/data/seed/`：无数据库时的本地种子数据。当前 `config.json` 中 `bosses` 为空数组、`runs.json` 为空数组，敌方阶段完全由静态快照生成；`hsr-units.json` / `hsr-monsters.json` 只是同步脚本产物，运行时代码不 import（`seed/index.ts` 仅导出 `config.json` 与 `runs.json`）；`lightcone-pairs.json` 同样是 `sync:units` 产物，但**由 `signatureLightcones.ts` 在运行时 import**，为投稿表单提供专武映射。
 - `netlify/functions/`：服务端 API。
 - `netlify/schema.sql`：数据库表结构。
 
@@ -89,7 +89,7 @@ pnpm seed:archive:dry    # 灌库空跑
 
 合并语义（以代码为准）：`mergeStaticArchiveConfig()` **只补充 `config.bosses` 中不存在的阶段 id**，并为缺失的赛季追加 `{ id, label: "<seasonId> 归档", isCurrent: seasonId === manifest.hsr.live }`；**从不覆盖**业务配置里已有的赛季 label 或敌方阶段字段。因此当前赛季的展示字段完全来自远程快照，而 seed/库里已有的历史阶段保持原值。
 
-阶段 id 规则为 `${seasonId}-${mode}-${stageKey}`（`mode` 取业务模式 `moc/pf/as/aa`；`stageKey` 为 `top`/`bottom`/`starward`，`aa` 为 `k1..kN`/`checkmate`/`plight`），是业务筛选与投稿记录引用的稳定 id，不要改动格式。
+阶段 id 规则为 `${seasonId}-${mode}-${stageKey}`（`mode` 取业务模式 `moc/pf/as/aa`；`stageKey` 为 `top`/`bottom`/`starward`，`aa` 为 `k1..kN`/`checkmate`/`plight`），是业务筛选与投稿记录引用的稳定 id，不要改动格式。`starward` 的中文展示名统一为**星启**（阶段标签、徽标与样式类名都用这个词）。
 
 记录分类（`category`）口径：库里 `runs.category` 是**开放 text、无枚举约束**，新增取值不需要迁移。可用集合随模式与敌方阶段变化，唯一来源是 `src/services/runUtils.ts` 的 `categoryOptionsFor(mode, bossId)` 与 `categoryLabels`：
 
@@ -98,6 +98,10 @@ pnpm seed:archive:dry    # 灌库空跑
 - `as` → 按剩余行动值分数分四档：`asScore3400`(3400-3650) / `asScore3650`(3650-3850) / `asScore3850`(3850-3899) / `asScore4000`(4000 满分)；边界归高一档，3900-3999 与 3400 以下不单独归档（`categoryOfAsScore()` 返回 `null`）。
 
 服务端 `filterArchiveRuns()` 与前端 `matchesCategory()` 都只做等值比较、不校验枚举；「分类是否属于当前模式与阶段」在投稿侧由 `submissionValidation.ts` 拦下，主页侧由 `useArchiveFilters` 的 `normalizeCategory()` 在不匹配时回落为 `all`。
+
+标记（`flags`）口径：`RunFlag = revive | firewall | bpWeapon`（复活 / 火墙 / 大月卡武器），唯一来源是 `src/services/runUtils.ts` 的 `flagOrder` / `flagLabels` / `isRunFlag`，组件与 Functions 都不要另抄一份。标记**必须在投稿时手动勾选**，落库复用 `runs.tags`（开放 jsonb 数组，无需迁移）；读取用 `flagsOfRun()` 收窄掉历史遗留的自由文本。筛选是 **AND 语义**（勾选的标记全部命中才保留），前端 `filterRuns()` 与服务端 `filterArchiveRuns()` 一致；URL 深链里的非法值由 `useArchiveFilters` 的 `normalizeFlags()` 丢弃。
+
+敌方阶段分组口径：`stageGroupOf(boss)` 把阶段分成 `boss`（首领关）/ `knight`（骑士关）/ `checkmate`（将杀关），规则是 `aa` 且阶段键以 `k` 开头 → 骑士关，`aa` 且为 `checkmate`/`plight` → 将杀关（绝境与将杀同组），其余一律首领关。`ModeSeasonFilter` 按 `stageGroupOrder` 渲染分组标题，空组不出标题。第 3 阶段用 `isStarwardStage(boss)` 判定并加金色星启徽标——星启血量约为普通半区的 2–5 倍（4.5 实测 3000 万 vs 上半 1355 万）。
 
 ## API 与数据库
 
@@ -123,6 +127,8 @@ POSTGRES_URL
 
 没有数据库 URL 时，Functions 和前端请求 fallback 都应保持可用。
 
+`stages` 表存的是**纯派生数据**（远程静态快照的服务端镜像，供统计/导出与 `runs.boss_id` 外键引用），随时可整表重建：`pnpm sync:stages` 或 `POST /api/admin/sync-stages` 走的都是同一份 `staticBossSnapshot.ts`。场地 buff 结构化后该表用 `variant_name text` / `mechanic jsonb` / `stage_buffs jsonb` 三列取代了旧的 `memory_buff text`；`schema.sql` 末尾附有幂等的 `add column if not exists` + `drop column if exists` 迁移，已部署库重新执行 `schema.sql` 即可原地升级，随后跑一次 `sync:stages` 回填。
+
 投稿审核页位于 `/admin/submissions`。生产环境优先通过 `ADMIN_REVIEW_USERNAME` 和 `ADMIN_REVIEW_PASSWORD` 配置管理员账号；为兼容旧部署，`ADMIN_REVIEW_TOKEN` 仍可作为密码 fallback。审核通过会把投稿同步为公开 `runs` 记录，改为驳回或退回待审会从公开列表隐藏。
 
 > ⚠️ 未配置任何管理员密码环境变量时，服务端 `requireAdmin` 直接返回“通过”，**不拦截**。生产务必设置 `ADMIN_REVIEW_PASSWORD`。
@@ -132,11 +138,15 @@ POSTGRES_URL
 
 - 数据源详情 JSON 应保持上游原始结构，不要写入本项目聚合后的 UI 数据。
 - 不要随意重命名索引文件或详情目录。
-- 每个大版本的赛季详情 id 硬编码在 `src/services/staticArchiveConfig.ts` 的 `STATIC_SEASON_IDS` 中（形如 `"4.5": { moc: 1035, fiction: 2026, doom: 3020, peak: 9 }`）。**上线新赛季必须在这里补一条**，否则该赛季不会出现在页面上；id 需对照线上 `hsr/<ver>/zh/` 目录下的详情文件名核实。
+- 每个大版本的赛季详情 id 硬编码在 `src/services/staticBossSnapshot.ts` 的 `STATIC_SEASON_IDS` 中（形如 `"4.5": { moc: 1035, fiction: 2026, doom: 3020, peak: 9 }`）。**上线新赛季必须在这里补一条**，否则该赛季不会出现在页面上；id 需对照线上 `hsr/<ver>/zh/` 目录下的详情文件名核实。
 - HP/速度/韧性口径（`computeStageStats()`）：  
   `HP = monsterValue.HPBase × child.HPModifyRatio × HardLevelGroup.HPRatio × (EliteGroup|InfiniteEliteGroup).HPRatio`，  
   多阶段怪物（`MaxMonsterPhase > 1`）在展示值后追加 ` x<阶段数>`；速度只乘 `HardLevelGroup.SpeedRatio`，韧性再乘精英组 `StanceRatio`。上游 `monstervalue.json` **没有** `PhaseList.phase_max_hp_ratio` 字段，不要按旧文档实现。
 - 虚构叙事（`pf`）的每季额外血量缩放未在数据源公开，代码显式 `skipHp`，因此该模式阶段不展示 HP，只展示速度与韧性。
+- 场地 buff 一律**结构化**存进 `BossStage.mechanic`（单条赛季机制，可为 `null`）与 `BossStage.stageBuffs`（该阶段的增益与词缀列表），不再拼成一整段文本。各模式的取数位置：`moc` 终层 `desc`+`param`（记忆迷阵，上游未公开 `maze_group_id` 的名字/描述，上下半共用同一条）；`pf` 顶层 `buff` + `option`/`sub_option`；`as` 顶层 `buff` + 该半区的 `buff_list1/2/3` **全量**（旧实现只取 `[0]`，会丢两条）；`aa` 的 `boss_config.buff_list`（我方增益）+ 对应层 `tag_list`（敌方词缀）。
+- buff 文案里的 `#N[i]` 占位由同一条目的 `param[N-1]` 代入（`applyBuffParams()`）：**占位后紧跟 `%` 时数值 ×100**（`param=[0.3]` → `30%`），其余按原值输出并去掉浮点尾零。上游用两个字符的字面量 `\n` 分段，`cleanBuffText()` 转成真实换行交给 CSS `white-space: pre-line` 渲染；`cleanText()`（用于名称）仍把空白折叠成单个空格。
+- 首领展示名（`BossStage.name`）优先取**怪物 `icon` 指向的基础模型 id** 解析出的家族短名（如 `2024016`「弗有垂暮的不老仙」的 icon 是 `Monster_2024010` → 「丰饶玄鹿」），与 `getMonsterImageId()` 同源，不引入任何手抄映射表；当期变体名保留在 `BossStage.variantName` 作副行与悬浮提示。家族名解析不到、与变体名相同、或命中的是上游 `"BOSS"` 占位名时，`name` 退回变体名再退回阶段名。
+- `BossStage.subtitle` 口径为 `"<模式> · <赛季名>"`（如「末日幻影 · 仙客天狼」），**不再重复阶段名**——阶段由徽标（上半/下半/星启/K1/将杀/绝境）与分组标题表达。
 - 怪物图片统一通过 `src/services/dataSource.ts` 的 `monsterImageUrl()` 生成，9 位实例怪物 id（`>= 1e8`）自动回退到基础 id 并对齐整十。
 - 新增或调整数据源消费逻辑时，需要同时补测试或最小验证说明，并确认静态读取失败时 seed/API fallback 仍可用。
 - 不要把数据源 JSON 重新下载到 `public/` 发布；这会抵消直连改造带来的带宽收益。
@@ -200,7 +210,7 @@ https://static.nanoka.cc/
 # 同步怪物元数据（名称、弱点、图片 id 等）
 pnpm sync:monsters
 
-# 同步角色/光锥元数据（同时重写 config.json 的 units）
+# 同步角色/光锥元数据（重写 config.json 的 units + hsr-units.json，并抓取专武映射 lightcone-pairs.json）
 pnpm sync:units
 
 # 填充 archive 表
@@ -219,11 +229,12 @@ pnpm sync:stages -- --season=4.5  # 只同步指定赛季
 
 1. 确认 `manifest.json` 的 `hsr.live` 已切换，且 `hsr.available` 最新目录下能取到该赛季的详情文件。
 2. 在线上 `hsr/<ver>/zh/{maze,story,boss,peak}/` 找到四期详情文件名（数字 id）。
-3. 在 `src/services/staticArchiveConfig.ts` 的 `STATIC_SEASON_IDS` 增加一行 `"4.6": { moc, fiction, doom, peak }`。
+3. 在 `src/services/staticBossSnapshot.ts` 的 `STATIC_SEASON_IDS` 增加一行 `"4.6": { moc, fiction, doom, peak }`。
 4. 若 `modeLabelByStaticMode` 中模式改名，必须同步 `src/data/seed/config.json` 的 `modes[].label`（两处共同决定页面文案），并更新本文件与 `README.md`、`src/AGENTS.md`、`src/services/AGENTS.md` 的模式表。
 5. 更新 `tests/staticArchiveConfig.test.ts` 里的断言（阶段 id 列表、HP 字符串）。
-6. 同步本文件、`README.md`、`src/services/AGENTS.md` 中的赛季/版本示例值。
-7. 跑 `pnpm build`，并用 `pnpm dev` 打开 `http://localhost:32200/` 目视确认。
+6. 该赛季有新五星限定角色时跑一次 `pnpm sync:units`，刷新专武映射 `src/data/seed/lightcone-pairs.json`（漏跑会让 `tests/signatureLightcones.test.ts` 的覆盖率断言失败）。
+7. 同步本文件、`README.md`、`src/services/AGENTS.md` 中的赛季/版本示例值。
+8. 跑 `pnpm build`，并用 `pnpm dev` 打开 `http://localhost:32200/` 目视确认。
 
 ## 前端实现约定
 
@@ -270,7 +281,7 @@ pnpm build
 | `package.json` 的 `scripts` / `engines`                                                                             | 本文件「技术栈与命令」、`README.md`「本地运行 / 验证命令」、`scripts/AGENTS.md`「脚本一览」                                                        |
 | `netlify.toml`（redirect、Node 版本、构建命令）                                                                     | 本文件「API 与数据库」、`README.md`「API 路由 / Netlify 部署」、`netlify/AGENTS.md`「文件职责」                                                    |
 | `netlify/functions/*`（路由、鉴权、limit、fallback、SQL）                                                           | `netlify/AGENTS.md`；接口 shape 变化时再同步本文件「API 与数据库」与 `README.md`                                                                   |
-| `src/services/staticArchiveConfig.ts`（`STATIC_SEASON_IDS`、阶段 id/`stageKey`、HP 口径、合并语义）                 | 本文件「数据架构 / 静态数据维护约束 / 远程数据源使用说明 / 新赛季上线清单」、`README.md`「静态数据源」、`src/services/AGENTS.md`「静态快照与合并」 |
+| `src/services/staticBossSnapshot.ts` / `staticArchiveConfig.ts`（`STATIC_SEASON_IDS`、阶段 id/`stageKey`、HP 与场地 buff 口径、首领取名、subtitle、合并语义）                 | 本文件「数据架构 / 静态数据维护约束 / 远程数据源使用说明 / 新赛季上线清单」、`README.md`「静态数据源」、`src/services/AGENTS.md`「静态快照与合并」 |
 | `src/services/dataSource.ts`（数据源域名、图片目录、`monsterImageUrl`）                                             | 本文件「远程数据源使用说明」路径树、`README.md`「静态数据源」路径树、`src/services/AGENTS.md`「图片寻址」                                          |
 | `src/services/archiveService.ts` / `runUtils.ts` / `unitCost.ts` / `submissionUtils.ts` / `submissionValidation.ts` | `src/services/AGENTS.md`「文件职责 / 成本与统计口径 / 投稿校验」；口径影响 `netlify/functions/_shared.ts` 时同步 `netlify/AGENTS.md`               |
 | `src/types/archive.ts`（字段增删）                                                                                  | `src/AGENTS.md`「类型与数据流约定」，并在涉及 seed shape 时同步 `src/data/seed` 说明                                                               |

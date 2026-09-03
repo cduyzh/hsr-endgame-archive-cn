@@ -1,13 +1,24 @@
 <script setup lang="ts">
   import { computed, shallowRef } from "vue";
-  import { Filter, Search, SlidersHorizontal } from "lucide-vue-next";
-  import { categoryLabels, categoryOptionsFor } from "@/services/runUtils";
+  import { Filter, Flame, HeartPulse, Search, SlidersHorizontal, Ticket } from "lucide-vue-next";
+  import {
+    categoryLabels,
+    categoryOptionsFor,
+    flagLabels,
+    flagOrder,
+    isStarwardStage,
+    stageGroupLabels,
+    stageGroupOrder,
+    stageGroupOf,
+    type StageGroup,
+  } from "@/services/runUtils";
   import type {
     ArchiveFilters,
     ArchiveUnit,
     BossStage,
     ModeOption,
     RunCategory,
+    RunFlag,
     Season,
   } from "@/types/archive";
 
@@ -21,7 +32,7 @@
 
   const emit = defineEmits<{
     patchFilter: [patch: Partial<ArchiveFilters>];
-    toggleFlag: [flag: string];
+    toggleFlag: [flag: RunFlag];
     openPicker: [];
   }>();
 
@@ -48,12 +59,28 @@
     { id: "latest", label: "最新" },
   ] as const;
 
-  const flagOptions = ["无复活", "低成本", "手操", "稳定", "击破", "星启"];
+  const flagIcons = {
+    revive: HeartPulse,
+    firewall: Flame,
+    bpWeapon: Ticket,
+  } as const;
 
   const selectedLabel = computed(() =>
     props.selectedUnits.length === 0
       ? "未限定角色或光锥"
       : props.selectedUnits.map((unit) => unit.name).join("、"),
+  );
+
+  /** 敌方阶段按「首领关 / 骑士关 / 将杀关」分组，空组不出标题。 */
+  const groupedStages = computed<Array<{ group: StageGroup; label: string; bosses: BossStage[] }>>(
+    () =>
+      stageGroupOrder
+        .map((group) => ({
+          group,
+          label: stageGroupLabels[group],
+          bosses: props.bosses.filter((boss) => stageGroupOf(boss) === group),
+        }))
+        .filter((section) => section.bosses.length > 0),
   );
 
   const failedThumbs = shallowRef(new Set<string>());
@@ -144,15 +171,18 @@
       </div>
     </div>
 
-    <div class="filter-section">
-      <p class="section-label">敌方阶段</p>
+    <div
+      v-for="section in groupedStages"
+      :key="section.group"
+      class="filter-section">
+      <p class="section-label">{{ section.label }}</p>
       <button
-        v-for="boss in bosses"
+        v-for="boss in section.bosses"
         :key="boss.id"
         class="wide-option stage-option"
-        :class="{ active: filters.bossId === boss.id }"
+        :class="{ active: filters.bossId === boss.id, starward: isStarwardStage(boss) }"
         type="button"
-        :title="boss.subtitle"
+        :title="boss.variantName ? `${boss.subtitle} / ${boss.variantName}` : boss.subtitle"
         @click="emit('patchFilter', { bossId: boss.id })">
         <img
           v-if="showStageThumb(boss)"
@@ -173,6 +203,7 @@
             <em
               v-if="stageBadge(boss)"
               class="stage-badge"
+              :class="{ starward: isStarwardStage(boss) }"
               >{{ stageBadge(boss) }}</em
             >
             {{ boss.name }}
@@ -277,12 +308,16 @@
       <p class="section-label">标记</p>
       <div class="flag-grid">
         <button
-          v-for="flag in flagOptions"
+          v-for="flag in flagOrder"
           :key="flag"
           :class="{ active: filters.flags.includes(flag) }"
           type="button"
           @click="emit('toggleFlag', flag)">
-          {{ flag }}
+          <component
+            :is="flagIcons[flag]"
+            :size="14"
+            aria-hidden="true" />
+          {{ flagLabels[flag] }}
         </button>
       </div>
     </div>

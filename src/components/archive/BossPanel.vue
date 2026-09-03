@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { Activity, Archive, Shield, Swords } from "lucide-vue-next"
-import { computed, shallowRef } from "vue"
+import { Activity, Archive, ChevronDown, Shield, Sparkles, Swords } from "lucide-vue-next"
+import { computed, shallowRef, watch } from "vue"
+import { isStarwardStage } from "@/services/runUtils"
 import type { ElementType, BossStage } from "@/types/archive"
 
 const props = defineProps<{
@@ -17,6 +18,20 @@ const hasResist = computed(() => resistEntries.value.length > 0)
 const failedImageUrl = shallowRef<string | null>(null)
 const showBossImage = computed(() => Boolean(props.boss.imageUrl) && props.boss.imageUrl !== failedImageUrl.value)
 const bossMonsters = computed(() => props.boss.monsters ?? [])
+const starward = computed(() => isStarwardStage(props.boss))
+
+const showMechanic = shallowRef(false)
+const buffIndex = shallowRef(0)
+const activeBuff = computed(() => props.boss.stageBuffs[Math.min(buffIndex.value, props.boss.stageBuffs.length - 1)])
+
+// 换阶段时回到「机制收起 + 第一条增益」，否则会带着上一个阶段的展开态和越界下标。
+watch(
+  () => props.boss.id,
+  () => {
+    showMechanic.value = false
+    buffIndex.value = 0
+  },
+)
 
 function elementClass(element: ElementType) {
   return `element-${element}`
@@ -65,10 +80,77 @@ function handleImageError() {
       <p class="eyebrow">
         {{ seasonLabel }} // {{ boss.subtitle }}
       </p>
-      <h2>{{ boss.name }}</h2>
-      <p class="boss-buff">
-        {{ boss.memoryBuff }}
+      <h2>
+        {{ boss.name }}
+        <em
+          v-if="starward"
+          class="starward-badge"
+        >星启</em>
+      </h2>
+      <p
+        v-if="boss.variantName"
+        class="boss-variant"
+      >
+        {{ boss.variantName }}
       </p>
+
+      <div
+        v-if="boss.mechanic || boss.stageBuffs.length > 0"
+        class="boss-buffs"
+        aria-label="场地增益与机制"
+      >
+        <template v-if="boss.mechanic">
+          <button
+            class="buff-mechanic"
+            type="button"
+            :aria-expanded="showMechanic"
+            @click="showMechanic = !showMechanic"
+          >
+            <Sparkles
+              :size="13"
+              aria-hidden="true"
+            />
+            <span>{{ boss.mechanic.name }}</span>
+            <ChevronDown
+              :size="13"
+              aria-hidden="true"
+              :class="{ open: showMechanic }"
+            />
+          </button>
+          <p
+            v-if="showMechanic"
+            class="buff-desc"
+          >
+            {{ boss.mechanic.desc }}
+          </p>
+        </template>
+
+        <div
+          v-if="boss.stageBuffs.length > 0"
+          class="buff-tabs"
+          role="tablist"
+          aria-label="场地增益"
+        >
+          <button
+            v-for="(buff, index) in boss.stageBuffs"
+            :key="buff.id"
+            class="buff-tab"
+            :class="{ active: buffIndex === index }"
+            type="button"
+            role="tab"
+            :aria-selected="buffIndex === index"
+            @click="buffIndex = index"
+          >
+            {{ buff.name }}
+          </button>
+        </div>
+        <p
+          v-if="activeBuff"
+          class="buff-desc"
+        >
+          {{ activeBuff.desc }}
+        </p>
+      </div>
 
       <div
         class="boss-statline"

@@ -6,10 +6,17 @@ import {
   categoryOfAsScore,
   categoryOptionsFor,
   filterRuns,
+  flagLabels,
+  flagOrder,
+  flagsOfRun,
+  isRunFlag,
+  isStarwardStage,
+  stageGroupLabels,
+  stageGroupOf,
   stageKeyOf,
 } from "@/services/runUtils"
 import { getRunGoldCounts } from "@/services/unitCost"
-import type { ArchiveFilters, ArchiveRun, ArchiveUnit } from "@/types/archive"
+import type { ArchiveFilters, ArchiveRun, ArchiveUnit, EndgameMode } from "@/types/archive"
 import { fixtureRuns } from "./fixtures/runs"
 
 const baseFilters: ArchiveFilters = {
@@ -121,5 +128,44 @@ describe("runUtils", () => {
     expect(categoryLabels.asScore3850).toBe("3850-3899")
     expect(stageKeyOf("4.5-aa-plight")).toBe("plight")
     expect(stageKeyOf("")).toBe("")
+  })
+
+  it("标记筛选按 AND 语义命中，且每个标记都有中文文案", () => {
+    expect(Object.keys(flagLabels)).toEqual(flagOrder)
+
+    const reviveOnly = filterRuns(fixtureRuns, { ...baseFilters, flags: ["revive"] })
+    expect(reviveOnly.map((run) => run.id)).toEqual(["run-001", "run-003"])
+
+    const both = filterRuns(fixtureRuns, { ...baseFilters, flags: ["revive", "bpWeapon"] })
+    expect(both.map((run) => run.id)).toEqual(["run-003"])
+  })
+
+  it("flagsOfRun 忽略库中遗留的自由文本标记并按 flagOrder 归一", () => {
+    const run = fixtureRuns.find((item) => item.id === "run-001")
+    expect(run).toBeTruthy()
+    expect(flagsOfRun({ ...run!, tags: ["bpWeapon", "无复活", "revive", "未知标记"] })).toEqual(["revive", "bpWeapon"])
+    expect(flagsOfRun({ ...run!, tags: [] })).toEqual([])
+    expect(isRunFlag("revive")).toBe(true)
+    expect(isRunFlag("无复活")).toBe(false)
+    expect(isRunFlag(undefined)).toBe(false)
+  })
+
+  it("异相仲裁按骑士关与将杀关分组，其余模式统一为首领关", () => {
+    const group = (mode: EndgameMode, stageKey: string) => stageGroupOf({ id: `4.5-${mode}-${stageKey}`, mode })
+
+    expect(group("aa", "k1")).toBe("knight")
+    expect(group("aa", "k3")).toBe("knight")
+    expect(group("aa", "checkmate")).toBe("checkmate")
+    expect(group("aa", "plight")).toBe("checkmate")
+    expect(group("aa", "top")).toBe("boss")
+    expect(group("moc", "starward")).toBe("boss")
+    expect(group("as", "top")).toBe("boss")
+    expect(stageGroupLabels.checkmate).toBe("将杀关")
+  })
+
+  it("只有第 3 阶段被判为星启", () => {
+    expect(isStarwardStage({ id: "4.5-as-starward" })).toBe(true)
+    expect(isStarwardStage({ id: "4.5-as-top" })).toBe(false)
+    expect(isStarwardStage({ id: "4.5-aa-plight" })).toBe(false)
   })
 })

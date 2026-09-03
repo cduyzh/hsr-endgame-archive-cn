@@ -3,7 +3,7 @@ import { computed } from "vue"
 import { ArchiveRestore, Check, ExternalLink, ShieldCheck, X } from "lucide-vue-next"
 import { getUnitImageSrc } from "@/data/unitAssets"
 import { seedConfig } from "@/data/seed"
-import { categoryLabels } from "@/services/runUtils"
+import { categoryLabels, flagLabels, flagOrder } from "@/services/runUtils"
 import type { SubmissionReview, SubmissionReviewStatus } from "@/types/archive"
 
 const props = defineProps<{
@@ -21,6 +21,10 @@ const bossNameById = new Map(seedConfig.bosses.map((boss) => [boss.id, boss.name
 const modeNameById = new Map(seedConfig.modes.map((mode) => [mode.id, mode.label]))
 const unitNameById = new Map(seedConfig.units.map((unit) => [unit.id, unit.name]))
 const unitById = new Map(seedConfig.units.map((unit) => [unit.id, unit]))
+
+const reviewFlags = computed(() =>
+  flagOrder.filter((flag) => (props.review.payload.flags ?? []).includes(flag)),
+)
 
 const slots = computed(() =>
   props.review.payload.units.map((character, index) => ({
@@ -57,6 +61,19 @@ function formatDate(value?: string | null) {
         <p>
           {{ review.payload.author }} · {{ modeNameById.get(review.payload.mode) ?? review.payload.mode }} ·
           {{ bossNameById.get(review.payload.bossId) ?? review.payload.bossId }}
+        </p>
+        <p
+          v-if="reviewFlags.length"
+          class="review-flags"
+        >
+          <span
+            v-for="flag in reviewFlags"
+            :key="flag"
+            class="run-flag"
+            :class="`run-flag-${flag}`"
+          >
+            {{ flagLabels[flag] }}
+          </span>
         </p>
       </div>
       <span :class="['review-status', review.status]">{{ statusLabel(review.status) }}</span>

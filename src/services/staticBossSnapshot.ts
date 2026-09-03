@@ -6,14 +6,17 @@
  * `baseUrl` 并使用全局 `fetch`，便于前端/服务端共用且在测试中可被 `vi.mock` 拦截。
  */
 
-import type {BossMonsterInfo, BossStage, ElementType, EndgameMode} from "../types/archive"
+import type {BossMonsterInfo, BossStage, ElementType, EndgameMode, StageBuff} from "../types/archive"
 
 type StaticMode = "moc" | "fiction" | "doom" | "peak"
 type LocalizedText = Partial<Record<"zh" | "en" | "ja" | "ko", string>>
 
 interface StaticBuff {
+	id?: number
 	name?: string | null
 	desc?: string | null
+	/** `desc` 中 `#N[i]` 占位的实际数值；占位后紧跟 `%` 时按百分比渲染。 */
+	param?: number[]
 }
 
 interface StaticStageEvent {
@@ -33,7 +36,9 @@ interface StaticLevel {
 	name?: string | null
 	group_name?: string | null
 	desc?: string | null
+	param?: number[]
 	pre_id?: number
+	tag_list?: StaticBuff[]
 	damage_type?: string[]
 	damage_type1?: string[]
 	damage_type2?: string[]
@@ -54,11 +59,17 @@ interface StaticLevel {
 interface PfDetail {
 	name?: string | null
 	buff?: StaticBuff | null
+	/** 叙事强化（狂欢 / 狂想 / 谜狂）。 */
+	option?: StaticBuff[]
+	/** 战意机制（获得笑点 / 战熄潮平 / 战意汹涌）。 */
+	sub_option?: StaticBuff[]
 	level?: StaticLevel[]
 }
 
 interface AsDetail {
 	name?: string | null
+	/** 赛季机制（如「末法余烬」）。 */
+	buff?: StaticBuff | null
 	buff_list1?: StaticBuff[]
 	buff_list2?: StaticBuff[]
 	buff_list3?: StaticBuff[]
@@ -72,6 +83,7 @@ interface AaDetail {
 	boss_config?: {
 		hard_name?: string | null
 		buff_list?: StaticBuff[]
+		tag_list?: StaticBuff[]
 		event_id_list?: StaticStageEvent[]
 		infinite_list?: Record<string, StaticInfiniteWave>
 	}
@@ -153,7 +165,8 @@ interface StageDraft {
 	monsterIds: Array<number | undefined>
 	event?: StaticStageEvent
 	weakness?: string[]
-	memoryBuff?: string
+	mechanic?: StageBuff | null
+	stageBuffs?: StageBuff[]
 	skipHp?: boolean
 	eliteGroup?: number
 }
@@ -216,6 +229,31 @@ export function cleanText(value: string | null | undefined): string {
 		.replace(/#\d+(?:\[i\])?/g, "")
 		.replace(/\s+/g, " ")
 		.trim()
+}
+
+/** buff 文案里的 `\n` 是上游存成两字符的字面量，转成真实换行交给 CSS 的 pre-line 渲染。 */
+function cleanBuffText(value: string | null | undefined): string {
+	return (value ?? "")
+		.replace(/<[^>]+>/g, "")
+		.replace(/\\n/g, "\n")
+		.replace(/[^\S\n]+/g, " ")
+		.replace(/\n{2,}/g, "\n")
+		.trim()
+}
+
+/** 去掉百分比换算带来的浮点误差与尾零（0.3 × 100 = 30.000000000000004）。 */
+function formatBuffParam(value: number, asPercent: boolean): string {
+	const scaled = asPercent ? value * 100 : value
+	return String(Math.round(scaled * 1000) / 1000)
+}
+
+function applyBuffParams(desc: string, param: number[] | undefined): string {
+	if (!param?.length) return desc
+	return desc.replace(/#(\d+)\[i\](%?)/g, (placeholder, index: string, percent: string) => {
+		const value = param[Number(index) - 1]
+		if (value === undefined) return placeholder
+		return formatBuffParam(value, Boolean(percent)) + (percent ? "%" : "")
+	})
 }
 
 function getLocalizedName(value: LocalizedText | undefined): string {
@@ -426,15 +464,41 @@ function buildMonsterInfo(
 	return monsters.slice(0, 4)
 }
 
+/** 上游偶尔以 "BOSS" 作为未定名怪物的占位名。 */
+function isPlaceholderName(name: string): boolean {
+	return !name || /^boss$/i.test(name)
+}
+
+function namedMonsterIdOf(ctx: BuildContext, ids: Array<number | undefined>): number | undefined {
+	return ids.find((id) => id !== undefined && !isPlaceholderName(getLocalizedName(ctx.lookup.monsters.get(id))))
+}
+
+/**
+ * 首领的展示名与变体名。怪物实例的 `icon` 指向基础模型 id（如「弗有垂暮的不老仙」2024016
+ * 的 icon 是 `Monster_2024010`，即「丰饶玄鹿」），解析它可拿到更简短的通用称谓；
+ * 解析不到、与自身相同或是占位名时交给变体名兜底。
+ */
+function stageDisplayNames(
+	ctx: BuildContext,
+	ids: Array<number | undefined>,
+): { name: string; variantName?: string } {
+	const namedId = namedMonsterIdOf(ctx, ids)
+	const variantName = namedId === undefined ? "" : getLocalizedName(ctx.lookup.monsters.get(namedId))
+	if (!variantName) return { name: "" }
+
+	const imageId = namedId === undefined ? undefined : ctx.lookup.imageIds.get(namedId)
+	const familyName =
+		imageId === undefined || imageId === namedId ? "" : getLocalizedName(ctx.lookup.monsters.get(imageId))
+	const name = familyName && !isPlaceholderName(familyName) ? familyName : variantName
+
+	return { name, variantName: name === variantName ? undefined : variantName }
+}
+
 function buildStage(ctx: BuildContext, baseUrl: string, draft: StageDraft): BossStage | null {
 	const bossId = draft.monsterIds.find((id) => id !== undefined)
-	const rawName = draft.monsterIds
-		.map((id) => (id ? getLocalizedName(ctx.lookup.monsters.get(id)) : ""))
-		.find((name) => name.length > 0)
-	// 上游偶尔以 "BOSS" 作为未定名怪物的占位名，此时退回阶段名
-	const monsterName = rawName && !/^boss$/i.test(rawName) ? rawName : ""
+	const { name: displayName, variantName } = stageDisplayNames(ctx, draft.monsterIds)
 
-	if (!bossId && !monsterName) return null
+	if (!bossId && !displayName) return null
 
 	const weakness = draft.weakness?.length ? mapWeakness(draft.weakness) : []
 	const stats = computeStageStats(ctx.tables, bossId, draft.event, {
@@ -446,10 +510,11 @@ function buildStage(ctx: BuildContext, baseUrl: string, draft: StageDraft): Boss
 		id: `${ctx.seasonId}-${draft.mode}-${draft.stageKey}`,
 		seasonId: ctx.seasonId,
 		mode: draft.mode,
-		name: monsterName || draft.stageLabel,
-		subtitle: `${modeLabelByStaticMode[draft.staticMode]} / ${draft.seasonName} / ${draft.stageLabel}`,
+		name: displayName || draft.stageLabel,
+		variantName,
+		subtitle: `${modeLabelByStaticMode[draft.staticMode]} · ${draft.seasonName}`,
 		imageUrl: bossId ? monsterImageUrl(ctx.lookup.imageIds.get(bossId) ?? bossId, baseUrl) : undefined,
-		imageAlt: monsterName ? `${monsterName} 敌方图片` : undefined,
+		imageAlt: displayName ? `${displayName} 敌方图片` : undefined,
 		monsters: buildMonsterInfo(ctx.lookup, baseUrl, draft.monsterIds),
 		hp: stats.hp,
 		speed: stats.speed,
@@ -457,7 +522,8 @@ function buildStage(ctx: BuildContext, baseUrl: string, draft: StageDraft): Boss
 		weakness: weakness.length > 0 ? weakness : getMonsterWeakness(ctx.lookup, draft.monsterIds),
 		resist: {},
 		clears: 0,
-		memoryBuff: draft.memoryBuff ?? "",
+		mechanic: draft.mechanic ?? null,
+		stageBuffs: draft.stageBuffs ?? [],
 		bannerTone: bannerToneByMode[draft.mode],
 	}
 }
@@ -470,6 +536,8 @@ function buildMocStages(ctx: BuildContext, baseUrl: string, detail: StaticLevel[
 	if (!finalFloor) return []
 
 	const seasonName = cleanText(finalFloor.group_name) || cleanText(finalFloor.name) || `赛季 ${ctx.seasonId}`
+	// 上游只公开终层一条迷阵文案（maze_group_id 的名字与描述未公开），上下半共用。
+	const mazeMechanic = buildBuff({ desc: finalFloor.desc, param: finalFloor.param }, "记忆迷阵")
 	const drafts: StageDraft[] = [
 		{
 			mode: "moc",
@@ -480,6 +548,7 @@ function buildMocStages(ctx: BuildContext, baseUrl: string, detail: StaticLevel[
 			monsterIds: [bossMonsterIdOf(ctx, finalFloor.event_id_list1?.[0]), ...(finalFloor.npc_monster_id_list1 ?? [])],
 			event: finalFloor.event_id_list1?.[0],
 			weakness: finalFloor.damage_type1,
+			mechanic: mazeMechanic,
 		},
 		{
 			mode: "moc",
@@ -490,6 +559,7 @@ function buildMocStages(ctx: BuildContext, baseUrl: string, detail: StaticLevel[
 			monsterIds: [bossMonsterIdOf(ctx, finalFloor.event_id_list2?.[0]), ...(finalFloor.npc_monster_id_list2 ?? [])],
 			event: finalFloor.event_id_list2?.[0],
 			weakness: finalFloor.damage_type2,
+			mechanic: mazeMechanic,
 		},
 	]
 
@@ -502,6 +572,7 @@ function buildMocStages(ctx: BuildContext, baseUrl: string, detail: StaticLevel[
 			seasonName,
 			monsterIds: [bossMonsterIdOf(ctx, starward.event_id_list?.[0]), ...(starward.npc_monster_id_list ?? [])],
 			event: starward.event_id_list?.[0],
+			mechanic: mazeMechanic,
 		})
 	}
 
@@ -517,7 +588,8 @@ function buildPfStages(ctx: BuildContext, baseUrl: string, detail: PfDetail): Bo
 	if (!finalFloor) return []
 
 	const seasonName = cleanText(detail.name) || `赛季 ${ctx.seasonId}`
-	const memoryBuff = cleanText(detail.buff?.desc)
+	const mechanic = buildBuff(detail.buff ?? undefined)
+	const stageBuffs = [...buildBuffList(detail.option, "叙事强化"), ...buildBuffList(detail.sub_option, "战意机制")]
 	const drafts: StageDraft[] = [
 		{
 			mode: "pf",
@@ -528,7 +600,8 @@ function buildPfStages(ctx: BuildContext, baseUrl: string, detail: PfDetail): Bo
 			monsterIds: [bossMonsterIdOf(ctx, finalFloor.event_id_list1?.[0]), ...(finalFloor.npc_monster_id_list1 ?? [])],
 			event: finalFloor.event_id_list1?.[0],
 			weakness: finalFloor.damage_type1,
-			memoryBuff,
+			mechanic,
+			stageBuffs,
 			skipHp: true,
 		},
 		{
@@ -540,7 +613,8 @@ function buildPfStages(ctx: BuildContext, baseUrl: string, detail: PfDetail): Bo
 			monsterIds: [bossMonsterIdOf(ctx, finalFloor.event_id_list2?.[0]), ...(finalFloor.npc_monster_id_list2 ?? [])],
 			event: finalFloor.event_id_list2?.[0],
 			weakness: finalFloor.damage_type2,
-			memoryBuff,
+			mechanic,
+			stageBuffs,
 			skipHp: true,
 		},
 	]
@@ -555,7 +629,8 @@ function buildPfStages(ctx: BuildContext, baseUrl: string, detail: PfDetail): Bo
 			monsterIds: [bossMonsterIdOf(ctx, starward.event_id_list?.[0]), ...(starward.npc_monster_id_list ?? [])],
 			event: starward.event_id_list?.[0],
 			weakness: starward.damage_type,
-			memoryBuff,
+			mechanic,
+			stageBuffs,
 			skipHp: true,
 		})
 	}
@@ -563,12 +638,22 @@ function buildPfStages(ctx: BuildContext, baseUrl: string, detail: PfDetail): Bo
 	return drafts.map((draft) => buildStage(ctx, baseUrl, draft)).filter((stage): stage is BossStage => stage !== null)
 }
 
-function buffText(buff: StaticBuff | undefined): string {
-	if (!buff) return ""
-	const desc = cleanText(buff.desc)
-	if (!desc) return ""
-	const name = cleanText(buff.name)
-	return name ? `${name}：${desc}` : desc
+/** 单条场地文案；上游部分模式（混沌回忆的迷阵）只有描述没有名字，用 fallbackName 兜底。 */
+function buildBuff(buff: StaticBuff | undefined, fallbackName = ""): StageBuff | null {
+	const desc = cleanBuffText(applyBuffParams(buff?.desc ?? "", buff?.param))
+	if (!desc) return null
+	const name = cleanText(buff?.name) || fallbackName
+	return {
+		id: buff?.id !== undefined ? String(buff.id) : name || desc.slice(0, 12),
+		name,
+		desc,
+	}
+}
+
+function buildBuffList(list: StaticBuff[] | undefined, fallbackPrefix: string): StageBuff[] {
+	return (list ?? [])
+		.map((buff, index) => buildBuff(buff, `${fallbackPrefix} ${index + 1}`))
+		.filter((buff): buff is StageBuff => buff !== null)
 }
 
 function buildAsStages(ctx: BuildContext, baseUrl: string, detail: AsDetail): BossStage[] {
@@ -578,6 +663,7 @@ function buildAsStages(ctx: BuildContext, baseUrl: string, detail: AsDetail): Bo
 	if (!difficulty) return []
 
 	const seasonName = cleanText(detail.name) || `赛季 ${ctx.seasonId}`
+	const mechanic = buildBuff(detail.buff ?? undefined)
 	const drafts: StageDraft[] = [
 		{
 			mode: "as",
@@ -588,7 +674,8 @@ function buildAsStages(ctx: BuildContext, baseUrl: string, detail: AsDetail): Bo
 			monsterIds: [difficulty.boss_monster_id1],
 			event: difficulty.event_id_list1?.[0],
 			weakness: difficulty.damage_type1,
-			memoryBuff: buffText(detail.buff_list1?.[0]),
+			mechanic,
+			stageBuffs: buildBuffList(detail.buff_list1, "上半增益"),
 		},
 		{
 			mode: "as",
@@ -599,7 +686,8 @@ function buildAsStages(ctx: BuildContext, baseUrl: string, detail: AsDetail): Bo
 			monsterIds: [difficulty.boss_monster_id2],
 			event: difficulty.event_id_list2?.[0],
 			weakness: difficulty.damage_type2,
-			memoryBuff: buffText(detail.buff_list2?.[0]),
+			mechanic,
+			stageBuffs: buildBuffList(detail.buff_list2, "下半增益"),
 		},
 	]
 
@@ -613,7 +701,8 @@ function buildAsStages(ctx: BuildContext, baseUrl: string, detail: AsDetail): Bo
 			monsterIds: [starward.boss_monster_id],
 			event: starward.event_id_list?.[0],
 			weakness: starward.damage_type,
-			memoryBuff: buffText(detail.buff_list3?.[0]),
+			mechanic,
+			stageBuffs: buildBuffList(detail.buff_list3, "星启增益"),
 		})
 	}
 
@@ -635,7 +724,7 @@ function buildAaStages(ctx: BuildContext, baseUrl: string, detail: AaDetail): Bo
 	if (!detail.boss_level || !kingMonsterId) return []
 
 	const seasonName = cleanText(detail.name) || `赛季 ${ctx.seasonId}`
-	const kingBuff = (detail.boss_config?.buff_list ?? []).map((buff) => buffText(buff)).filter(Boolean).join("；")
+	const kingBoons = buildBuffList(detail.boss_config?.buff_list, "我方增益")
 	const kingWeakness = detail.boss_level.damage_type
 	const stages: BossStage[] = []
 
@@ -650,6 +739,7 @@ function buildAaStages(ctx: BuildContext, baseUrl: string, detail: AaDetail): Bo
 			seasonName,
 			monsterIds: [knightBossId],
 			event,
+			stageBuffs: buildBuffList(knight.tag_list, "敌方词缀"),
 			eliteGroup: infiniteEliteGroupOf(knight.infinite_list, knightBossId),
 		})
 		if (stage) stages.push(stage)
@@ -664,7 +754,7 @@ function buildAaStages(ctx: BuildContext, baseUrl: string, detail: AaDetail): Bo
 		monsterIds: [kingMonsterId],
 		event: kingEvent,
 		weakness: kingWeakness,
-		memoryBuff: kingBuff,
+		stageBuffs: [...kingBoons, ...buildBuffList(detail.boss_level.tag_list, "敌方词缀")],
 		eliteGroup: infiniteEliteGroupOf(detail.boss_level.infinite_list, kingMonsterId),
 	})
 	if (checkmate) stages.push(checkmate)
@@ -680,12 +770,15 @@ function buildAaStages(ctx: BuildContext, baseUrl: string, detail: AaDetail): Bo
 		monsterIds: [plightBossId],
 		event: plightEvent,
 		weakness: kingWeakness,
-		memoryBuff: kingBuff,
+		stageBuffs: [...kingBoons, ...buildBuffList(detail.boss_config?.tag_list, "敌方词缀")],
 		eliteGroup: infiniteEliteGroupOf(detail.boss_config?.infinite_list, plightBossId),
 	})
 	if (plight) {
-		const kingName = getLocalizedName(ctx.lookup.monsters.get(kingMonsterId))
-		if (kingName) plight.name = `${kingName}（绝境）`
+		// 绝境与将杀是同一首领，名字沿用将杀关的展示名并加绝境后缀，保持家族名口径一致。
+		if (checkmate) {
+			plight.name = `${checkmate.name}（绝境）`
+			if (checkmate.variantName) plight.variantName = `${checkmate.variantName}（绝境）`
+		}
 		stages.push(plight)
 	}
 

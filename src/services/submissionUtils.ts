@@ -62,7 +62,7 @@ export function submissionReviewToArchiveRun(review: SubmissionReview, units: Ar
     limitedCount: 0,
     standardCount: 0,
     submittedAt: review.createdAt,
-    tags: [],
+    tags: [...(review.payload.flags ?? [])],
     videoUrl: review.payload.videoUrl,
     units: review.payload.units,
     lightcones: review.payload.lightcones,

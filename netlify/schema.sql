@@ -9,6 +9,7 @@ create table if not exists stages (
   season_id text not null references seasons(id),
   mode text not null,
   name text not null,
+  variant_name text,
   subtitle text not null,
   hp text not null,
   speed text not null,
@@ -16,7 +17,8 @@ create table if not exists stages (
   weakness jsonb not null default '[]',
   resist jsonb not null default '{}',
   clears integer not null default 0,
-  memory_buff text not null,
+  mechanic jsonb,
+  stage_buffs jsonb not null default '[]',
   banner_tone text not null default 'cyan'
 );
 
@@ -90,3 +92,10 @@ create index if not exists runs_filter_idx on runs (season_id, mode, boss_id, ca
 create index if not exists run_units_lookup_idx on run_units (run_id, unit_id, kind);
 create index if not exists runs_owner_token_idx on runs (owner_token) where owner_token is not null;
 create index if not exists submission_reviews_owner_token_idx on submission_reviews (owner_token) where owner_token is not null;
+
+-- 幂等列迁移：`create table if not exists` 不会改动已存在的表，已部署库执行本文件即可原地升级。
+-- stages 是纯派生数据，可用 `pnpm sync:stages` 或 POST /api/admin/sync-stages 整表重建，因此直接丢弃被替换的列。
+alter table stages add column if not exists variant_name text;
+alter table stages add column if not exists mechanic jsonb;
+alter table stages add column if not exists stage_buffs jsonb not null default '[]';
+alter table stages drop column if exists memory_buff;

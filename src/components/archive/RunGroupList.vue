@@ -2,6 +2,7 @@
 import { computed, h, shallowRef, watch } from "vue"
 import { ChevronDown } from "lucide-vue-next"
 import { getUnitImageSrc } from "@/data/unitAssets"
+import { flagLabels, flagsOfRun } from "@/services/runUtils"
 import { getRunGoldCounts } from "@/services/unitCost"
 import { getVideoSource, type VideoSource } from "@/services/submissionValidation"
 import type { ArchiveRun, ArchiveUnit, EndgameMode, RunUnit } from "@/types/archive"
@@ -35,6 +36,7 @@ const displayGroups = computed(() =>
       displayUnits: run.units.map(toDisplayUnit),
       displayLightcones: run.lightcones.map(toDisplayUnit),
       goldCounts: getRunGoldCounts(run, props.units),
+      flags: flagsOfRun(run),
       submittedAtLabel: formatSubmittedAt(run.submittedAt),
       video: parseVideo(run.videoUrl),
     })),
@@ -270,6 +272,14 @@ function platformIcon(source: VideoSource) {
                 />
                 <span>{{ run.video.label }}</span>
               </a>
+              <span
+                v-for="flag in run.flags"
+                :key="flag"
+                class="run-flag"
+                :class="`run-flag-${flag}`"
+              >
+                {{ flagLabels[flag] }}
+              </span>
             </header>
             <p class="run-row-team-name">
               {{ run.teamName || run.displayUnits.map((entry) => entry.name).join(" / ") }}

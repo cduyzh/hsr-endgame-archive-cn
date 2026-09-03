@@ -89,21 +89,23 @@ async function upsertStages(rows) {
 	for (const boss of rows) {
 		await sql`
       insert into stages (
-        id, season_id, mode, name, subtitle, hp, speed, toughness,
-        weakness, resist, clears, memory_buff, banner_tone
+        id, season_id, mode, name, variant_name, subtitle, hp, speed, toughness,
+        weakness, resist, clears, mechanic, stage_buffs, banner_tone
       ) values (
-        ${boss.id}, ${boss.seasonId}, ${boss.mode}, ${boss.name}, ${boss.subtitle ?? ""},
+        ${boss.id}, ${boss.seasonId}, ${boss.mode}, ${boss.name}, ${boss.variantName ?? null}, ${boss.subtitle ?? ""},
         ${boss.hp ?? ""}, ${boss.speed ?? ""}, ${boss.toughness ?? ""},
         ${JSON.stringify(boss.weakness ?? [])},
         ${JSON.stringify(boss.resist ?? {})},
         ${Number(boss.clears ?? 0)},
-        ${boss.memoryBuff ?? ""},
+        ${JSON.stringify(boss.mechanic ?? null)},
+        ${JSON.stringify(boss.stageBuffs ?? [])},
         ${boss.bannerTone ?? "cyan"}
       )
       on conflict (id) do update set
         season_id = excluded.season_id,
         mode = excluded.mode,
         name = excluded.name,
+        variant_name = excluded.variant_name,
         subtitle = excluded.subtitle,
         hp = excluded.hp,
         speed = excluded.speed,
@@ -111,7 +113,8 @@ async function upsertStages(rows) {
         weakness = excluded.weakness,
         resist = excluded.resist,
         clears = excluded.clears,
-        memory_buff = excluded.memory_buff,
+        mechanic = excluded.mechanic,
+        stage_buffs = excluded.stage_buffs,
         banner_tone = excluded.banner_tone
     `
 		stats.stages.upserted += 1

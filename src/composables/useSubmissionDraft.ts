@@ -2,7 +2,7 @@ import { onScopeDispose, watch, type Ref } from "vue"
 import type { SubmissionPayload } from "@/types/archive"
 
 /** payload 形状变化时换键名即可，不做历史迁移。 */
-const DRAFT_KEY = "hsr-archive.submission-draft.v1"
+const DRAFT_KEY = "hsr-archive.submission-draft.v2"
 const SAVE_DEBOUNCE_MS = 400
 
 export interface SubmissionDraft {

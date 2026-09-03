@@ -8,15 +8,17 @@
 
 | 文件 | 目标 |
 | --- | --- |
-| `runUtils.test.ts` | `src/services/runUtils.ts` 筛选/排序/统计纯函数与分类口径（`categoryOptionsFor` / `categoryOfAsScore` / `stageKeyOf`） |
-| `staticArchiveConfig.test.ts` | 远程静态快照推导与配置合并（`staticArchiveConfig.ts`） |
-| `submissionUtils.test.ts` | 投稿 → 档案记录转换、光锥偏好统计 |
+| `runUtils.test.ts` | `src/services/runUtils.ts` 筛选/排序/统计纯函数与分类、标记、阶段分组口径（`categoryOptionsFor` / `categoryOfAsScore` / `stageKeyOf` / `flagLabels`+`flagsOfRun`+`isRunFlag` / `stageGroupOf` / `isStarwardStage`）与按成本口径的 `getRunGoldCounts` |
+| `unitCost.test.ts` | 成本口径唯一守卫：光锥限定/常驻/不计成本分档、`defaultEidolonFor`/`defaultSuperimpositionFor`、角色 `命座+1` 与光锥 `叠影` 累加、四人满配 48、越界钳位与未知 id 兜底 |
+| `signatureLightcones.test.ts` | 专武映射防表腐化：键必须是五星限定角色、值必须是同命途五星光锥、覆盖率必须等于五星限定角色集合（新角色未跑 `pnpm sync:units` 会失败）、专武不被两个角色共用 |
+| `staticArchiveConfig.test.ts` | 远程静态快照推导与配置合并（`staticArchiveConfig.ts` + `staticBossSnapshot.ts`）：阶段 id 列表、HP/速度/韧性、场地 buff 结构化（`mechanic` / `stageBuffs`）与 `#N[i]`→`param` 代入、按 icon 解析的家族短名与 `variantName`、subtitle 口径、远程失败返回 `null` |
+| `submissionUtils.test.ts` | 投稿 → 档案记录转换、光锥偏好统计、建议表优先级（专武覆盖统计、统计填空、过滤单位库外 id） |
 | `submissionValidation.test.ts` | 投稿字段校验顺序、步骤归属、视频域名白名单、分类与模式/阶段匹配、限定/常驻统计与预览取数 |
 | `archiveService.test.ts` | `submitRun` 的成功返回与服务端 `{ message, missing }` → 中文错误映射 |
 | `changelog.test.ts` | `src/data/changelog.ts` 版本号/日期格式、条目唯一性与新到旧排序、`appVersion` 与 tag 标签口径 |
 | `useSubmissionDraft.test.ts` | 投稿草稿的防抖写入、空表单不覆盖、`discard`、脏数据读取容错 |
 | `adminAuth.test.ts` | `netlify/functions/_shared.ts` 的 `requireAdmin`（Bearer/Basic/未配置） |
-| `RunGroupList.test.ts` / `SubmitRunForm.test.ts` / `UnitPickerDrawer.test.ts` | 关键档案组件的挂载与交互；`SubmitRunForm.test.ts` 覆盖三步向导解锁/回退/预览、分类随模式与阶段联动、as 自动归档、草稿恢复与提交后清除 |
+| `RunGroupList.test.ts` / `SubmitRunForm.test.ts` / `UnitPickerDrawer.test.ts` | 关键档案组件的挂载与交互；`SubmitRunForm.test.ts` 覆盖三步向导解锁/回退/预览、分类随模式与阶段联动、as 自动归档、选角色带专武与默认 E/S、成本自动填充/手改保护/一键重算、草稿恢复与提交后清除 |
 | `fixtures/runs.ts` | 共享 `ArchiveRun` 夹具（`fixtureRuns`），新用例优先复用 |
 | `fixtures/config.ts` | 带 moc/aa 绝境/as 阶段的 `fixtureConfig` 与可通过校验的 `fixtureSubmission()` |
 

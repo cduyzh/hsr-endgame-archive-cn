@@ -11,12 +11,15 @@
     ClipboardList,
     Copy,
     Download,
+    Flame,
+    HeartPulse,
     Info,
     ListChecks,
     Lock,
     RotateCcw,
     Send,
     Sparkles,
+    Ticket,
     Trash2,
     Users,
     X,
@@ -33,6 +36,8 @@
     categoryLabels,
     categoryOfAsScore,
     categoryOptionsFor,
+    flagLabels,
+    flagOrder,
   } from "@/services/runUtils";
   import {
     defaultEidolonFor,
@@ -58,6 +63,7 @@
   import type {
     ArchiveConfig,
     EndgameMode,
+    RunFlag,
     SpecificRunCategory,
     SubmissionPayload,
   } from "@/types/archive";
@@ -103,6 +109,7 @@
       cost: 0,
       videoUrl: "",
       notes: "",
+      flags: [],
       units: Array.from({ length: TEAM_SLOT_COUNT }, () => ({
         unitId: "",
         eidolon: 0,
@@ -126,6 +133,9 @@
     if (restored.units.length !== TEAM_SLOT_COUNT) restored.units = base.units;
     if (restored.lightcones.length !== TEAM_SLOT_COUNT)
       restored.lightcones = base.lightcones;
+    restored.flags = Array.isArray(saved.flags)
+      ? flagOrder.filter((flag) => saved.flags?.includes(flag))
+      : base.flags;
     return restored;
   }
 
@@ -349,6 +359,20 @@
   function selectCategory(category: SpecificRunCategory) {
     form.category = category;
     categoryTouched.value = true;
+  }
+
+  const flagIcons = {
+    revive: HeartPulse,
+    firewall: Flame,
+    bpWeapon: Ticket,
+  } as const;
+
+  function toggleFormFlag(flag: RunFlag) {
+    const next = form.flags.includes(flag)
+      ? form.flags.filter((item) => item !== flag)
+      : [...form.flags, flag];
+    // 按 flagOrder 归一，保证草稿与提交的 tags 顺序稳定。
+    form.flags = flagOrder.filter((item) => next.includes(item));
   }
 
   /** 已配置的槽位过少时拒绝保存，避免空表占位；新名字直接插入到队首。 */
@@ -785,6 +809,29 @@
             >
           </label>
         </div>
+
+        <div class="filter-section">
+          <p class="section-label">标记</p>
+          <div class="flag-grid">
+            <button
+              v-for="flag in flagOrder"
+              :key="flag"
+              class="compact"
+              :class="{ active: form.flags.includes(flag) }"
+              type="button"
+              :aria-pressed="form.flags.includes(flag)"
+              @click="toggleFormFlag(flag)">
+              <component
+                :is="flagIcons[flag]"
+                :size="14"
+                aria-hidden="true" />
+              {{ flagLabels[flag] }}
+            </button>
+          </div>
+          <p class="submission-field-hint">
+            用于主页按标记检索，可留空；只勾选本次记录确实成立的条件。
+          </p>
+        </div>
       </div>
 
       <div
@@ -1029,6 +1076,12 @@
             <div>
               <dt>队伍</dt>
               <dd>{{ form.teamName.trim() || "未填写" }}</dd>
+            </div>
+            <div>
+              <dt>标记</dt>
+              <dd>
+                {{ form.flags.length ? form.flags.map((flag) => flagLabels[flag]).join("、") : "未勾选" }}
+              </dd>
             </div>
           </dl>
           <ol class="submission-preview-team">

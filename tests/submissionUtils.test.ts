@@ -56,6 +56,7 @@ describe("submissionUtils", () => {
         cost: source.cost,
         videoUrl: source.videoUrl ?? "https://example.com/video",
         notes: "审核测试",
+        flags: ["revive", "bpWeapon"],
         units: source.units,
         lightcones: source.lightcones,
       },
@@ -66,6 +67,34 @@ describe("submissionUtils", () => {
     expect(run.id).toBe("sub_test")
     expect(run.submittedAt).toBe(review.createdAt)
     expect(run.units).toEqual(source.units)
+    // 投稿勾选的标记原样写入 tags，供主页按标记筛选。
+    expect(run.tags).toEqual(["revive", "bpWeapon"])
     expect(run.limitedCount + run.standardCount).toBeGreaterThan(0)
+  })
+
+  it("旧投稿行缺失 flags 时 tags 回落为空数组", () => {
+    const source = fixtureRuns[0]
+    const review: SubmissionReview = {
+      id: "sub_legacy",
+      status: "approved",
+      createdAt: "2026-07-14T08:00:00.000Z",
+      payload: {
+        seasonId: source.seasonId,
+        mode: source.mode,
+        bossId: source.bossId,
+        category: source.category,
+        author: source.author,
+        teamName: source.teamName,
+        cycle: source.cycle,
+        score: source.score,
+        cost: source.cost,
+        videoUrl: source.videoUrl ?? "https://example.com/video",
+        notes: "",
+        units: source.units,
+        lightcones: source.lightcones,
+      } as SubmissionReview["payload"],
+    }
+
+    expect(submissionReviewToArchiveRun(review, seedConfig.units).tags).toEqual([])
   })
 })

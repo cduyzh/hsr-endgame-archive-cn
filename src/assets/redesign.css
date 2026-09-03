@@ -431,6 +431,14 @@ body {
   min-height: 60px;
 }
 
+/* 标记按钮带图标，需要把 svg 与文案对齐。 */
+.flag-grid button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
 .mode-tab.active,
 .wide-option.active,
 .segmented button.active,
@@ -506,6 +514,29 @@ body {
   font-style: normal;
   font-size: 9px;
   letter-spacing: 0.04em;
+}
+
+.stage-badge.starward {
+  border-color: rgba(255, 196, 92, 0.62);
+  background: linear-gradient(135deg, rgba(255, 196, 92, 0.3), rgba(255, 132, 60, 0.16));
+  color: #ffd894;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  box-shadow: 0 0 10px rgba(255, 176, 64, 0.22);
+}
+
+/* 星启阶段的血量与难度显著高于上下半，用琥珀金把这类条目从普通阶段里拉出来。 */
+.stage-option.starward {
+  border-color: rgba(255, 196, 92, 0.34);
+  background: linear-gradient(120deg, rgba(255, 176, 64, 0.07), transparent 62%);
+}
+
+.stage-option.starward.active {
+  border-color: rgba(255, 210, 128, 0.78);
+  background:
+    linear-gradient(135deg, rgba(255, 196, 92, 0.24), rgba(214, 166, 255, 0.06)),
+    linear-gradient(120deg, rgba(255, 176, 64, 0.1), transparent 62%);
+  box-shadow: inset 2px 0 0 #ffc45c;
 }
 
 .stage-copy small {
@@ -625,14 +656,93 @@ body {
 }
 
 .boss-copy h2 {
-  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
   font-size: clamp(26px, 2.8vw, 36px);
 }
 
-.boss-buff {
+.starward-badge {
+  flex: 0 0 auto;
+  padding: 2px 8px;
+  border: 1px solid rgba(255, 196, 92, 0.62);
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(255, 196, 92, 0.3), rgba(255, 132, 60, 0.16));
+  color: #ffd894;
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  box-shadow: 0 0 12px rgba(255, 176, 64, 0.24);
+}
+
+.boss-variant {
+  margin-bottom: 10px;
+  color: var(--faint);
+  font-size: 12px;
+}
+
+.boss-buffs {
+  display: grid;
+  gap: 8px;
   margin-bottom: 12px;
-  font-size: 13px;
-  line-height: 1.65;
+}
+
+.buff-mechanic {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  justify-self: start;
+  padding: 4px 10px;
+  border-color: rgba(255, 196, 92, 0.4);
+  border-radius: 999px;
+  background: rgba(255, 176, 64, 0.09);
+  color: #ffd894;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.buff-mechanic svg:last-child {
+  transition: transform 0.18s ease;
+}
+
+.buff-mechanic svg:last-child.open {
+  transform: rotate(180deg);
+}
+
+.buff-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.buff-tab {
+  padding: 4px 10px;
+  border-color: rgba(160, 177, 220, 0.16);
+  border-radius: 7px;
+  background: rgba(255, 255, 255, 0.02);
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.buff-tab.active {
+  border-color: rgba(120, 167, 255, 0.56);
+  background: rgba(120, 167, 255, 0.14);
+  color: #edf2ff;
+  font-weight: 600;
+}
+
+.buff-desc {
+  padding: 8px 10px;
+  border-left: 2px solid rgba(120, 167, 255, 0.34);
+  border-radius: 0 6px 6px 0;
+  background: rgba(255, 255, 255, 0.025);
+  color: var(--text);
+  font-size: 12px;
+  line-height: 1.7;
+  /* 上游用字面量 \n 分隔同一条 buff 的多段效果。 */
+  white-space: pre-line;
 }
 
 .boss-statline span {
@@ -731,6 +841,42 @@ body {
 .author-button {
   color: #eef2ff;
   font-size: 18px;
+}
+
+/* 投稿时手动勾选的标记，行内回显让筛选结果可自证。 */
+.run-flag {
+  flex: 0 0 auto;
+  padding: 1px 7px;
+  border: 1px solid rgba(160, 177, 220, 0.22);
+  border-radius: 999px;
+  color: var(--muted);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+}
+
+.run-flag-revive {
+  border-color: rgba(255, 132, 160, 0.42);
+  background: rgba(255, 132, 160, 0.1);
+  color: #ffb3c4;
+}
+
+.run-flag-firewall {
+  border-color: rgba(110, 220, 235, 0.42);
+  background: rgba(110, 220, 235, 0.1);
+  color: #9be8f3;
+}
+
+.run-flag-bpWeapon {
+  border-color: rgba(206, 166, 255, 0.42);
+  background: rgba(206, 166, 255, 0.1);
+  color: #d9bcff;
+}
+
+.review-flags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 6px;
 }
 
 .run-metrics span,

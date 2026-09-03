@@ -9,7 +9,7 @@
 - **档案工作台**：按赛季、终局模式、敌方阶段、记录分类、队伍人数、成本、角色/光锥和标签筛选竞速记录。记录分类随模式与阶段变化：末日幻影按剩余行动值分数分四档（3400-3650 / 3650-3850 / 3850-3899 / 4000 满分），异相仲裁的绝境阶段单独归档为绝境 0 轮与绝境满星。
 - **记录展示**：按队伍组合分组展示作者、角色命座、轮次、分数、成本和视频链接。
 - **环境统计**：统计角色使用率、光锥使用率、常见组合与成本分布。
-- **投稿审核**：右上角「提交记录」打开站内弹窗，按「基础信息 → 队伍配置 → 成绩与预览」三步填写，字段级校验与限定/常驻统计实时反馈，提交到 `/api/submissions` 进入待审核队列；`/submit` 深链仍会打开同一弹窗。草稿缓存在浏览器 `localStorage`，误关弹窗可恢复，提交成功或手动丢弃后才清除；视频只接受 B 站与 YouTube 的链接。
+- **投稿审核**：右上角「提交记录」打开站内弹窗，按「基础信息 → 队伍配置 → 成绩与预览」三步填写，字段级校验与限定/常驻成本实时反馈；选角色会自动带出专武（默认 S1，低星光锥默认 S5、低星角色默认满命），成本按队伍自动合计（限定五星角色算「命座 + 1」、限定五星光锥算叠影，低星与无名勋礼光锥不计）且可手动改写。提交到 `/api/submissions` 进入待审核队列；`/submit` 深链仍会打开同一弹窗。草稿缓存在浏览器 `localStorage`，误关弹窗可恢复，提交成功或手动丢弃后才清除；视频只接受 B 站与 YouTube 的链接。
 - **文章与规则页**：展示站内说明、规则和文章摘要。
 
 ## 技术栈
@@ -81,7 +81,7 @@ Netlify 构建环境固定使用 Node 24；业务 API redirects、Functions 目�
    前端通过 `src/services/archiveService.ts` 请求 `/api/archive/config`、`/api/archive/runs`、`/api/archive/stats`、`/api/submissions` 以及 `/api/admin/submissions*`。Netlify Functions 若配置了 `NETLIFY_DATABASE_URL`、`DATABASE_URL` 或 `POSTGRES_URL`，会读取 Postgres；否则使用 `src/data/seed/` 中的种子数据。读取类请求失败时前端静默回退 seed，保证无数据库环境不白屏；投稿与管理端请求失败则直接报错（审核台会提示）。
 
 2. **HSR 终局静态数据（远程直连）**  
-   所有游戏 JSON 与图片均直连 `https://static.nanoka.cc`（已开放 CORS），仓库不落盘、不随构建发布。地址与图片路径集中在 `src/services/dataSource.ts`；`src/services/staticArchiveConfig.ts` 在运行时读取 `manifest.json`，按代码里硬编码的 `STATIC_SEASON_IDS` 拉取 `monster.json`、`monstervalue.json`、`HardLevelGroup.json`、`EliteGroup.json`、`InfiniteEliteGroup.json` 与各模式单期详情，生成敌方阶段（血量/速度/韧性/弱点/记忆祝福/敌方图），再合并进 `/api/archive/config`（或 seed）的结果。静态读取失败时保留业务配置，不会白屏。
+   所有游戏 JSON 与图片均直连 `https://static.nanoka.cc`（已开放 CORS），仓库不落盘、不随构建发布。地址与图片路径集中在 `src/services/dataSource.ts`；`src/services/staticArchiveConfig.ts`（浏览器端入口）在运行时读取 `manifest.json`，把推导工作交给前后端共用的纯计算层 `src/services/staticBossSnapshot.ts`：按硬编码的 `STATIC_SEASON_IDS` 拉取 `monster.json`、`monstervalue.json`、`HardLevelGroup.json`、`EliteGroup.json`、`InfiniteEliteGroup.json` 与各模式单期详情，生成敌方阶段（血量/速度/韧性/弱点/场地 buff 与赛季机制/敌方图），再合并进 `/api/archive/config`（或 seed）的结果。静态读取失败时保留业务配置，不会白屏。
 
 数据库表结构见 `netlify/schema.sql`。访问 `/admin/submissions` 会先显示管理员登录弹框，生产环境建议配置：
 
@@ -149,9 +149,13 @@ https://static.nanoka.cc/
 | `as`     | `doom`    | `<locale>/boss/<id>.json`  | `top` / `bottom` / `starward`     |
 | `aa`     | `peak`    | `<locale>/peak/<id>.json`  | `k1..kN` / `checkmate` / `plight` |
 
-赛季与版本的解析方式：`src/services/staticArchiveConfig.ts` 里的 `STATIC_SEASON_IDS` 为每个赛季（当前 `4.4`、`4.5`）硬编码四个模式的详情 id；运行时用 `manifest.hsr.available` 选出**最新数据目录**（如 `4.5.51`）供所有赛季共用——上游只保留当前大版本目录，历史赛季的详情文件仍在其中累积；再用 `manifest.hsr.live` 判定当前赛季。**不读取**上游 `maze.json / maze_extra.json / maze_boss.json / maze_peak.json` 索引，也不依赖 `cache-plan.json`。因此新赛季上线需要先在 `STATIC_SEASON_IDS` 补一条（步骤见 [AGENTS.md](./AGENTS.md) 的「新赛季上线清单」）。
+赛季与版本的解析方式：`src/services/staticBossSnapshot.ts` 里的 `STATIC_SEASON_IDS` 为每个赛季（当前 `4.4`、`4.5`）硬编码四个模式的详情 id；运行时用 `manifest.hsr.available` 选出**最新数据目录**（如 `4.5.51`）供所有赛季共用——上游只保留当前大版本目录，历史赛季的详情文件仍在其中累积；再用 `manifest.hsr.live` 判定当前赛季。**不读取**上游 `maze.json / maze_extra.json / maze_boss.json / maze_peak.json` 索引，也不依赖 `cache-plan.json`。因此新赛季上线需要先在 `STATIC_SEASON_IDS` 补一条（步骤见 [AGENTS.md](./AGENTS.md) 的「新赛季上线清单」）。
 
 合并语义：远程快照**只补充业务配置里没有的敌方阶段 id**，并为缺失赛季追加 `<seasonId> 归档` 条目，不会覆盖 seed 或数据库中已有的赛季 label 与阶段字段。记录筛选用的 `seasonId`、`bossId` 始终是稳定 id。
+
+敌方阶段的展示字段同样来自这些详情 JSON：`HP/速度/韧性` 由 `monstervalue` × `HardLevelGroup` × 精英组系数算出；**场地 buff** 取各模式的 `buff` / `buff_list1~3` / `option` / `sub_option` / `tag_list`，文案里的 `#N[i]` 占位用同条目的 `param` 代入真实数值（占位后跟 `%` 时 ×100，如 `0.3` → `30%`）；首领名优先取怪物 `icon` 指向的基础模型名（更短的家族名，如「丰饶玄鹿」），当期变体名（「弗有垂暮的不老仙」）保留为副行。
+
+主页筛选的**标记**（复活 / 火墙 / 大月卡武器）需要投稿时手动勾选才会写入记录，勾选后按 AND 语义筛选；异相仲裁的阶段在面板上分成「骑士关」与「将杀关（含绝境）」两组，其余模式统一为「首领关」，第 3 阶段带金色**星启**徽标（血量约为普通半区的 2–5 倍）。
 
 怪物图片统一经 `dataSource.ts` 的 `monsterImageUrl()` 生成，9 位实例怪物 id（`>= 1e8`）自动回退到基础 id 并对齐整十。血量口径为 `HPBase × HPModifyRatio × HardLevelGroup.HPRatio × (EliteGroup|InfiniteEliteGroup).HPRatio`，多阶段怪物追加 ` x<阶段数>`；虚构叙事（`pf`）因上游未公开每季缩放系数而跳过血量展示。
 
@@ -213,8 +217,9 @@ src/
 │   ├── useSubmissionDialog.ts
 │   └── useSubmissionDraft.ts
 ├── data/
-│   ├── seed/                          # config.json / runs.json / index.ts（+ 同步产物 hsr-*.json）
+│   ├── seed/                          # config.json / runs.json / index.ts（+ 同步产物 hsr-*.json、运行时读取的 lightcone-pairs.json）
 │   ├── changelog.ts                   # 站点更新记录与当前版本号（appVersion）
+│   ├── signatureLightcones.ts         # 角色 -> 专武映射（投稿自动搭配）
 │   ├── unitAssets.ts
 │   └── unitPaths.ts
 ├── services/

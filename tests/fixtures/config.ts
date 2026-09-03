@@ -12,7 +12,8 @@ function boss(overrides: Partial<BossStage> & Pick<BossStage, "id" | "name">): B
     weakness: ["量子", "虚数"],
     resist: {},
     clears: 12,
-    memoryBuff: "示例记忆加成",
+    mechanic: { id: "示例机制", name: "示例机制", desc: "示例赛季机制文案" },
+    stageBuffs: [{ id: "示例词缀", name: "示例词缀", desc: "示例敌方词缀文案" }],
     bannerTone: "red",
     ...overrides,
   }

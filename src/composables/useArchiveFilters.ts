@@ -1,7 +1,7 @@
 import { computed, reactive, watch } from "vue"
 import { useRoute, useRouter } from "vue-router"
-import { categoryOptionsFor } from "@/services/runUtils"
-import type { ArchiveConfig, ArchiveFilters, EndgameMode, RunCategory, SortKey } from "@/types/archive"
+import { categoryOptionsFor, isRunFlag } from "@/services/runUtils"
+import type { ArchiveConfig, ArchiveFilters, EndgameMode, RunCategory, RunFlag, SortKey } from "@/types/archive"
 
 const modeValues = new Set<EndgameMode>(["moc", "pf", "as", "aa"])
 const sortValues = new Set<SortKey>(["score", "limited", "latest"])
@@ -72,13 +72,18 @@ export function useArchiveFilters(config: () => ArchiveConfig | null) {
     filters.grouping = readBoolean(query.grouping, true)
     filters.continuous = readBoolean(query.continuous, false)
     filters.unitKind = readString(query.unitKind) === "lightcone" ? "lightcone" : "character"
-    filters.flags = readCsv(query.flags)
+    filters.flags = normalizeFlags(readCsv(query.flags))
     filters.selectedUnitIds = readCsv(query.selected)
 
     const queryBoss = readString(query.bossId)
     const bosses = availableBosses.value
     filters.bossId = bosses.some((boss) => boss.id === queryBoss) ? queryBoss ?? "" : bosses[0]?.id ?? ""
     normalizeCategory()
+  }
+
+  /** 标记不随模式与阶段变化，因此 URL 深链里的非法值（含历史遗留的中文文本）直接丢弃。 */
+  function normalizeFlags(raw: string[]): RunFlag[] {
+    return raw.filter(isRunFlag)
   }
 
   /** 分类可用集合随模式与阶段变化：URL 深链或切换上下文后落到不可用的值时回落 all。 */
@@ -95,7 +100,7 @@ export function useArchiveFilters(config: () => ArchiveConfig | null) {
     normalizeCategory()
   }
 
-  function toggleFlag(flag: string) {
+  function toggleFlag(flag: RunFlag) {
     filters.flags = filters.flags.includes(flag)
       ? filters.flags.filter((item) => item !== flag)
       : [...filters.flags, flag]

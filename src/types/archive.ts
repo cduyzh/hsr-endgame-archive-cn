@@ -16,6 +16,11 @@ export type RunCategory =
   | "asScore4000"
 /** 记录在数据里实际携带的分类（不含筛选用的 `all`）。 */
 export type SpecificRunCategory = Exclude<RunCategory, "all">
+/**
+ * 投稿时手动勾选、主页可筛选的稳定标记 id。落库复用 `runs.tags`（开放 jsonb 数组），
+ * 中文文案唯一来源是 `src/services/runUtils.ts` 的 `flagLabels`。
+ */
+export type RunFlag = "revive" | "firewall" | "bpWeapon"
 export type SortKey = "score" | "limited" | "latest"
 export type UnitKind = "character" | "lightcone"
 export type UnitPath =
@@ -43,11 +48,24 @@ export interface ModeOption {
   badge?: string
 }
 
+/**
+ * 场地增益 / 机制条目。`desc` 已在解析阶段把上游 `#N[i]` 占位替换为 `param` 实际数值，
+ * 组件直接渲染，不要再做代入。
+ */
+export interface StageBuff {
+  id: string
+  name: string
+  desc: string
+}
+
 export interface BossStage {
   id: string
   seasonId: string
   mode: EndgameMode
+  /** 首领展示名：可由怪物 icon 推导的家族短名（如「丰饶玄鹿」），解析不到时退回变体名或阶段名。 */
   name: string
+  /** 当期游戏内的变体首领称谓（如「弗有垂暮的不老仙」），与 `name` 相同时省略。 */
+  variantName?: string
   subtitle: string
   imageUrl?: string
   imageAlt?: string
@@ -58,7 +76,10 @@ export interface BossStage {
   weakness: ElementType[]
   resist: Partial<Record<ElementType, string>>
   clears: number
-  memoryBuff: string
+  /** 赛季/首领机制：末日幻影的忆质、混沌回忆的记忆迷阵、虚构叙事的叙事机制等。 */
+  mechanic: StageBuff | null
+  /** 该阶段自身的增益与敌方词缀。 */
+  stageBuffs: StageBuff[]
   bannerTone: "red" | "cyan" | "amber" | "green"
 }
 
@@ -102,6 +123,7 @@ export interface ArchiveRun {
   limitedCount: number
   standardCount: number
   submittedAt: string
+  /** 库中开放 jsonb 数组，承载 `RunFlag` id；读取请用 `runUtils.flagsOfRun` 收窄。 */
   tags: string[]
   videoUrl?: string
   units: RunUnit[]
@@ -136,7 +158,7 @@ export interface ArchiveFilters {
   grouping: boolean
   continuous: boolean
   unitKind: UnitKind
-  flags: string[]
+  flags: RunFlag[]
   selectedUnitIds: string[]
 }
 
@@ -152,6 +174,8 @@ export interface SubmissionPayload {
   cost: number
   videoUrl: string
   notes: string
+  /** 投稿时手动勾选的标记，审核通过后原样写入 `runs.tags`。 */
+  flags: RunFlag[]
   units: RunUnit[]
   lightcones: RunUnit[]
 }
