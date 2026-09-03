@@ -254,7 +254,10 @@
     }
 
     duplicateChecking.value = true;
-    const matches = await checkDuplicateVideo({ videoUrl, bossId: form.bossId });
+    const matches = await checkDuplicateVideo({
+      videoUrl,
+      bossId: form.bossId,
+    });
     if (seq !== duplicateSeq) return;
     duplicateChecking.value = false;
     duplicateMatches.value = matches;
@@ -265,9 +268,13 @@
     () => {
       // 上一次的命中对新链接不作数，先清掉再防抖重查
       duplicateMatches.value = [];
-      duplicateChecking.value = Boolean(form.bossId) && isUsableVideoUrl(form.videoUrl);
+      duplicateChecking.value =
+        Boolean(form.bossId) && isUsableVideoUrl(form.videoUrl);
       clearDuplicateTimer();
-      duplicateTimer = setTimeout(() => void runDuplicateCheck(), DUPLICATE_CHECK_DELAY);
+      duplicateTimer = setTimeout(
+        () => void runDuplicateCheck(),
+        DUPLICATE_CHECK_DELAY,
+      );
     },
     { immediate: true },
   );
@@ -381,11 +388,14 @@
     form.units[index].unitId = unitId;
 
     const character = unitById.value.get(unitId);
-    const defaultEidolon = character ? defaultEidolonFor(getCharacterGoldKind(character)) : null;
+    const defaultEidolon = character
+      ? defaultEidolonFor(getCharacterGoldKind(character))
+      : null;
     if (defaultEidolon !== null) form.units[index].eidolon = defaultEidolon;
 
     const suggested = props.preferredLightconeByCharacter[unitId];
-    if (!suggested || !lightcones.value.some((unit) => unit.id === suggested)) return;
+    if (!suggested || !lightcones.value.some((unit) => unit.id === suggested))
+      return;
     form.lightcones[index].unitId = suggested;
     form.lightcones[index].superimposition = defaultSuperimpositionFor(
       getLightconeGoldKind(unitById.value.get(suggested)),
@@ -712,11 +722,12 @@
             记录分类随模式变化：末日幻影按剩余行动值分数分档，异相仲裁的绝境阶段单独归档。
           </li>
           <li>
-            命座与叠影按最终结算时填写；低星角色默认满命，专武默认 S1、低星光锥默认
-            S5。
+            命座与叠影按最终结算时填写；低星角色默认满命，专武默认
+            S1、低星光锥默认 S5。
           </li>
           <li>
-            成本按队伍自动合计：限定五星角色算「命座 + 1」，限定五星光锥算叠影数，常驻五星计入常驻成本，低星与无名勋礼光锥不计成本；合计范围
+            成本按队伍自动合计：限定五星角色算「命座 +
+            1」，限定五星光锥算叠影数，常驻五星计入常驻成本，低星与无名勋礼光锥不计成本；合计范围
             {{ COST_MIN }}–{{ COST_MAX }}，可手动改写。
           </li>
           <li>记录先进入待审核队列，通过后才会在档案页公开展示。</li>
@@ -925,8 +936,12 @@
               :key="`${match.source}-${match.id}`">
               <b>{{ match.author || "匿名" }}</b>
               <span>{{ match.teamName || "未命名队伍" }}</span>
-              <span>{{ match.status === "approved" ? "已通过" : "待审核" }}</span>
-              <span>{{ formatDraftTime(match.submittedAt) || match.submittedAt }}</span>
+              <span>{{
+                match.status === "approved" ? "已通过" : "待审核"
+              }}</span>
+              <span>{{
+                formatDraftTime(match.submittedAt) || match.submittedAt
+              }}</span>
               <a
                 :href="match.videoUrl"
                 target="_blank"
@@ -947,7 +962,10 @@
               v-for="flag in flagOrder"
               :key="flag"
               class="compact"
-              :class="[`flag-card-${flag}`, { active: form.flags.includes(flag) }]"
+              :class="[
+                `flag-card-${flag}`,
+                { active: form.flags.includes(flag) },
+              ]"
               type="button"
               :aria-pressed="form.flags.includes(flag)"
               @click="toggleFormFlag(flag)">
@@ -1039,7 +1057,7 @@
               v-model="presetNameDraft"
               type="text"
               maxlength="24"
-              placeholder="配队名（如：黄泉双魂）"
+              placeholder="配队名（如：白刻记鸟|红花凛缇|蝶风昔月  X|低|中 金）"
               class="preset-name-input" />
           </div>
           <ul
@@ -1209,7 +1227,11 @@
             <div>
               <dt>标记</dt>
               <dd>
-                {{ form.flags.length ? form.flags.map((flag) => flagLabels[flag]).join("、") : "未勾选" }}
+                {{
+                  form.flags.length
+                    ? form.flags.map((flag) => flagLabels[flag]).join("、")
+                    : "未勾选"
+                }}
               </dd>
             </div>
           </dl>
@@ -1238,11 +1260,12 @@
             <span>分数 {{ form.score }}</span>
             <span>
               成本 {{ form.cost }}
-              <template v-if="costTouched">（自动合计 {{ autoCost }}）</template>
+              <template v-if="costTouched"
+                >（自动合计 {{ autoCost }}）</template
+              >
             </span>
             <span
-              >限定 {{ teamCost.limited }} · 常驻
-              {{ teamCost.standard }}</span
+              >限定 {{ teamCost.limited }} · 常驻 {{ teamCost.standard }}</span
             >
           </p>
           <a
