@@ -47,6 +47,7 @@
     categoryLabels,
     categoryOfAsScore,
     categoryOptionsFor,
+    defaultModeOf,
     flagLabels,
     flagOrder,
   } from "@/services/runUtils";
@@ -63,6 +64,7 @@
   import {
     TEAM_SLOT_COUNT,
     buildSubmissionRoster,
+    defaultResultFor,
     describeSubmissionTarget,
     errorsOfStep,
     isUsableVideoUrl,
@@ -105,20 +107,22 @@
       config.seasons.find((season) => season.isCurrent)?.id ??
       config.seasons[0]?.id ??
       "";
-    const mode = config.modes[0]?.id ?? "moc";
+    const mode = defaultModeOf(config.modes);
+    const bossId =
+      config.bosses.find(
+        (boss) => boss.seasonId === seasonId && boss.mode === mode,
+      )?.id ?? "";
+    const { category, score } = defaultResultFor(mode, bossId);
 
     return {
       seasonId,
       mode,
-      bossId:
-        config.bosses.find(
-          (boss) => boss.seasonId === seasonId && boss.mode === mode,
-        )?.id ?? "",
-      category: "fullStars",
+      bossId,
+      category,
       author: "",
       teamName: "",
       cycle: 0,
-      score: 40000,
+      score,
       cost: 0,
       videoUrl: "",
       notes: "",

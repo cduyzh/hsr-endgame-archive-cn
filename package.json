@@ -15,6 +15,8 @@
     "deploy:netlify": "sh ./scripts/deploy-netlify.sh",
     "sync:units": "node scripts/sync-hsr-units.mjs",
     "sync:monsters": "node scripts/sync-hsr-monsters.mjs",
+    "sync:articles": "node scripts/sync-articles.mjs",
+    "sync:articles:dry": "node scripts/sync-articles.mjs -- --dry-run",
     "seed:archive": "node scripts/seed-archive-tables.mjs",
     "seed:archive:dry": "node scripts/seed-archive-tables.mjs -- --dry-run",
     "sync:stages": "node --experimental-strip-types scripts/sync-stages-from-snapshot.mjs",

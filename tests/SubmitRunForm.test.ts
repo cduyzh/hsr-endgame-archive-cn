@@ -32,6 +32,15 @@ function mountForm() {
   })
 }
 
+/** 模式签顺序跟随 seed `config.modes`：混沌 / 虚构 / 末日 / 仲裁。 */
+const modeTabIndexes = { moc: 0, pf: 1, as: 2, aa: 3 } as const
+
+/** 表单默认落在带 NEW 徽标的模式上，按混沌回忆取证的用例要先显式切回去。 */
+async function pickMode(wrapper: ReturnType<typeof mountForm>, mode: keyof typeof modeTabIndexes) {
+  await wrapper.findAll(".mode-grid .mode-tab")[modeTabIndexes[mode]].trigger("click")
+  await flushPromises()
+}
+
 function activeStepLabel(wrapper: ReturnType<typeof mountForm>) {
   return wrapper.get(".submission-step-tab.active").text()
 }
@@ -162,11 +171,27 @@ describe("SubmitRunForm 分步向导", () => {
   it("敌方阶段随赛季与模式联动，切换后自动选中该模式首个阶段", async () => {
     const wrapper = mountForm()
 
-    await wrapper.findAll(".mode-grid .mode-tab")[3].trigger("click")
+    await pickMode(wrapper, "aa")
 
     const stageOptions = wrapper.findAll(".split-fields select")[1].findAll("option")
     expect(stageOptions.map((option) => option.attributes("value"))).toEqual(["4.5-aa-k1", "4.5-aa-plight"])
     expect(wrapper.text()).toContain("异相仲裁 · K1")
+    wrapper.unmount()
+  })
+
+  it("默认落在带 NEW 徽标的模式上，默认成绩与该模式自洽", async () => {
+    const wrapper = mountForm()
+
+    const activeMode = wrapper.get(".mode-grid .mode-tab.active")
+    expect(activeMode.text()).toContain("末日幻影")
+    expect(activeMode.get(".mini-badge").text()).toBe("NEW")
+    expect(wrapper.findAll(".split-fields select")[1].element.value).toBe("4.5-as-top")
+    expect(wrapper.get(".submission-category-grid button.active").text()).toBe("4000 满分")
+
+    // 默认分数必须落在默认档位里，否则走不到第三步就会被「分数最高 4000」挡住
+    await toResultStep(wrapper)
+    expect(activeStepLabel(wrapper)).toContain("成绩与预览")
+    expect(wrapper.findAll('input[type="number"]')[1].element.value).toBe("4000")
     wrapper.unmount()
   })
 
@@ -277,6 +302,9 @@ describe("SubmitRunForm 分步向导", () => {
 
   it("第三步汇总投稿预览", async () => {
     const wrapper = mountForm()
+    await pickMode(wrapper, "moc")
+    // 切模式后原分类不再合法，回落到该模式第一档（0 轮竞速），这里按满星记录取证
+    await wrapper.findAll(".submission-category-grid button")[1].trigger("click")
 
     await toResultStep(wrapper)
 
@@ -292,6 +320,7 @@ describe("SubmitRunForm 分步向导", () => {
 
   it("0 轮竞速分类下轮次非 0 会被拦下", async () => {
     const wrapper = mountForm()
+    await pickMode(wrapper, "moc")
 
     await fillBasics(wrapper)
     await wrapper.findAll(".submission-category-grid button")[0].trigger("click")
@@ -326,6 +355,7 @@ describe("SubmitRunForm 分步向导", () => {
   it("提交成功后展示投稿编号，再提交一条时重置表单", async () => {
     const fetchMock = stubFetch(respondWith(202, { id: "sub_test_1", status: "pending" }))
     const wrapper = mountForm()
+    await pickMode(wrapper, "moc")
 
     await toResultStep(wrapper)
     await wrapper.get("form").trigger("submit")
@@ -378,6 +408,7 @@ describe("SubmitRunForm 分步向导", () => {
       matches: [existing],
     })
     const wrapper = mountForm()
+    await pickMode(wrapper, "moc")
 
     await fillBasics(wrapper)
     expect(wrapper.get(".submission-duplicate").classes()).toContain("is-checking")
@@ -416,6 +447,7 @@ describe("SubmitRunForm 分步向导", () => {
       ],
     })
     const wrapper = mountForm()
+    await pickMode(wrapper, "moc")
 
     await fillBasics(wrapper)
     await settleDuplicateCheck()
@@ -478,12 +510,13 @@ describe("SubmitRunForm 分步向导", () => {
     const wrapper = mountForm()
     const categoryLabelsOnPage = () => wrapper.findAll(".submission-category-grid button").map((button) => button.text())
 
-    expect(categoryLabelsOnPage()).toEqual(["0 轮竞速", "满星记录"])
-
-    await wrapper.findAll(".mode-grid .mode-tab")[2].trigger("click")
+    // 默认即带 NEW 徽标的末日幻影，分类换成四档剩余行动值区间
     expect(categoryLabelsOnPage()).toEqual(["3400-3650", "3650-3850", "3850-3899", "4000 满分"])
 
-    await wrapper.findAll(".mode-grid .mode-tab")[3].trigger("click")
+    await pickMode(wrapper, "moc")
+    expect(categoryLabelsOnPage()).toEqual(["0 轮竞速", "满星记录"])
+
+    await pickMode(wrapper, "aa")
     expect(categoryLabelsOnPage()).toEqual(["0 轮竞速", "满星记录"])
 
     await wrapper.findAll(".split-fields select")[1].setValue("4.5-aa-plight")
@@ -495,7 +528,7 @@ describe("SubmitRunForm 分步向导", () => {
     const wrapper = mountForm()
 
     await fillBasics(wrapper)
-    await wrapper.findAll(".mode-grid .mode-tab")[2].trigger("click")
+    await pickMode(wrapper, "as")
     await goNext(wrapper)
     expect(wrapper.find(".submission-error").exists()).toBe(false)
 

@@ -1,0 +1,212 @@
+{
+  "$comment": "文章 URL 清单：唯一需要人工维护的文件。发现新链接就往 articles 数组里加一行，然后跑 pnpm sync:articles。excerpt/category/readMinutes/featured/bossIds/version/subject 是人工覆盖位，留空则用抓取值或估算值；version 只在 /articles 分段用（如 \"4.5\"），未填时退回按发布年份分段。",
+  "articles": [
+    {
+      "url": "https://mp.weixin.qq.com/s/dcv9Y6zZ7lXu_AY-jOvWaA",
+      "category": "",
+      "featured": false,
+      "bossIds": [],
+      "excerpt": "",
+      "readMinutes": null,
+      "version": null
+    },
+    {
+      "type": "original",
+      "id": "cn-endgame-report",
+      "title": "4.3 竞速档案：哪些队伍正在抬头",
+      "excerpt": "基于当前收录样本整理角色出场、成本分布和低轮次趋势。",
+      "category": "环境观察",
+      "publishedAt": "2026-07-02",
+      "readMinutes": 7
+    },
+    {
+      "type": "original",
+      "id": "submit-guide",
+      "title": "投稿格式与审核标准",
+      "excerpt": "说明视频链接、队伍成本、命座叠影和异常机制标注方式。",
+      "category": "站点公告",
+      "publishedAt": "2026-06-28",
+      "readMinutes": 4
+    },
+    {
+      "url": "https://mp.weixin.qq.com/s/HsI4sdF3DN0nYToXtKUPVg",
+      "category": "",
+      "featured": false,
+      "bossIds": [],
+      "excerpt": "",
+      "readMinutes": null,
+      "version": null
+    },
+    {
+      "url": "https://mp.weixin.qq.com/s/kgk_WNvE4lH8YhY_Q4NsLA",
+      "category": "",
+      "featured": false,
+      "bossIds": [],
+      "excerpt": "",
+      "readMinutes": null,
+      "version": null
+    },
+    {
+      "url": "https://mp.weixin.qq.com/s/wLxiIX1iGRN-SgM7Vn-Tdg",
+      "category": "",
+      "featured": false,
+      "bossIds": [],
+      "excerpt": "",
+      "readMinutes": null,
+      "version": null
+    },
+    {
+      "url": "https://mp.weixin.qq.com/s/9WfrUece9UfQOeah_cROgA",
+      "category": "",
+      "featured": false,
+      "bossIds": [],
+      "excerpt": "",
+      "readMinutes": null,
+      "version": null
+    },
+    {
+      "url": "https://mp.weixin.qq.com/s/c8RXLRtllIbuqmb3ro8e5g",
+      "category": "",
+      "featured": false,
+      "bossIds": [],
+      "excerpt": "",
+      "readMinutes": null,
+      "version": null
+    },
+    {
+      "url": "https://mp.weixin.qq.com/s/hOCHrwjtcrHuwm1JDB6bKg",
+      "category": "",
+      "featured": false,
+      "bossIds": [],
+      "excerpt": "",
+      "readMinutes": null,
+      "version": null
+    },
+    {
+      "url": "https://mp.weixin.qq.com/s/JxqJHUlkQx9Be_HtQ1oedQ",
+      "category": "",
+      "featured": false,
+      "bossIds": [],
+      "excerpt": "",
+      "readMinutes": null,
+      "version": null
+    },
+    {
+      "url": "https://mp.weixin.qq.com/s/13c0JrpkGaBA7fGh8dTD2A",
+      "category": "",
+      "featured": false,
+      "bossIds": [],
+      "excerpt": "",
+      "readMinutes": null,
+      "version": null
+    },
+    {
+      "url": "https://mp.weixin.qq.com/s/Eoftwz0xV2UZskMijev97A",
+      "category": "",
+      "featured": false,
+      "bossIds": [],
+      "excerpt": "",
+      "readMinutes": null,
+      "version": null
+    },
+    {
+      "url": "https://mp.weixin.qq.com/s/guoAX1HnP9mH6Y_Q_ii3Qg",
+      "category": "",
+      "featured": false,
+      "bossIds": [],
+      "excerpt": "",
+      "readMinutes": null,
+      "version": null
+    },
+    {
+      "url": "https://mp.weixin.qq.com/s/e_CGWOB8PE8yekS_5U6DtQ",
+      "category": "",
+      "featured": false,
+      "bossIds": [],
+      "excerpt": "",
+      "readMinutes": null,
+      "version": null
+    },
+    {
+      "url": "https://mp.weixin.qq.com/s/kIuPU20XYL2uxi1brgjb1Q",
+      "category": "",
+      "featured": false,
+      "bossIds": [],
+      "excerpt": "",
+      "readMinutes": null,
+      "version": null
+    },
+    {
+      "url": "https://mp.weixin.qq.com/s/vyzEAOEjSstxa0IbnSkkYg",
+      "category": "",
+      "featured": false,
+      "bossIds": [],
+      "excerpt": "",
+      "readMinutes": null,
+      "version": null
+    },
+    {
+      "url": "https://mp.weixin.qq.com/s/H0-87m476ubzekvvD-u-Jg",
+      "category": "",
+      "featured": false,
+      "bossIds": [],
+      "excerpt": "",
+      "readMinutes": null,
+      "version": null
+    },
+    {
+      "url": "https://mp.weixin.qq.com/s/bpgt-sIQaEgmBk2GZ1-0og",
+      "category": "",
+      "featured": false,
+      "bossIds": [],
+      "excerpt": "",
+      "readMinutes": null,
+      "version": null
+    },
+    {
+      "url": "https://mp.weixin.qq.com/s/rlx3WEVkQsivLSTr6OGE4w",
+      "category": "",
+      "featured": false,
+      "bossIds": [],
+      "excerpt": "",
+      "readMinutes": null,
+      "version": null
+    },
+    {
+      "url": "https://mp.weixin.qq.com/s/LJcbVgTitMBPrAVp4fhe1A",
+      "category": "",
+      "featured": false,
+      "bossIds": [],
+      "excerpt": "",
+      "readMinutes": null,
+      "version": null
+    },
+    {
+      "url": "https://mp.weixin.qq.com/s/oo9f9Nuajj4ZLoFLmDt82Q",
+      "category": "",
+      "featured": false,
+      "bossIds": [],
+      "excerpt": "",
+      "readMinutes": null,
+      "version": null
+    },
+    {
+      "url": "https://mp.weixin.qq.com/s/o_LlodvyuMrDm4ZT_xxyiA",
+      "category": "",
+      "featured": false,
+      "bossIds": [],
+      "excerpt": "",
+      "readMinutes": null,
+      "version": null
+    },
+    {
+      "url": "https://mp.weixin.qq.com/s/UFLuPNLrq1ILTehejLItkg",
+      "category": "",
+      "featured": false,
+      "bossIds": [],
+      "excerpt": "",
+      "readMinutes": null,
+      "version": null
+    }
+  ]
+}

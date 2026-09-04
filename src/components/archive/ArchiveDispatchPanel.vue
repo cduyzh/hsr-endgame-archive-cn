@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { ArrowUpRight, BookOpenText } from "lucide-vue-next"
-import type { ArticleSummary } from "@/types/archive"
+import ArticleImage from "@/components/ArticleImage.vue"
+import { articleCover, dispatchArticles } from "@/data/articles"
 
-defineProps<{
-  articles: ArticleSummary[]
-}>()
+/** 速报最多铺 3 张卡，第 1 张为大图位。 */
+const articles = dispatchArticles(3)
 </script>
 
 <template>
@@ -36,24 +36,34 @@ defineProps<{
 
     <div class="dispatch-grid">
       <RouterLink
-        v-for="(article, index) in articles.slice(0, 3)"
+        v-for="(article, index) in articles"
         :key="article.id"
         class="dispatch-item"
-        :class="{ featured: index === 0 }"
-        to="/articles"
+        :class="{ featured: index === 0, 'no-media': !articleCover(article) }"
+        :to="`/articles/${article.id}`"
       >
-        <span class="dispatch-index">0{{ index + 1 }}</span>
+        <div
+          v-if="articleCover(article)"
+          class="dispatch-media"
+        >
+          <ArticleImage
+            :src="articleCover(article)"
+            :alt="article.title"
+            :eager="index === 0"
+          />
+        </div>
         <div class="dispatch-copy">
           <span class="dispatch-meta">
             <BookOpenText
               :size="13"
               aria-hidden="true"
             />
-            {{ article.category }} · {{ article.readMinutes }} 分钟
+            0{{ index + 1 }} · {{ article.category }} · {{ article.readMinutes }} 分钟
           </span>
           <h3>{{ article.title }}</h3>
           <p>{{ article.excerpt }}</p>
-          <time>{{ article.publishedAt }}</time>
+          <time :datetime="article.publishedAt || undefined">{{ article.publishedAt }}</time>
+          <small class="dispatch-source">{{ article.sourceName }}</small>
         </div>
         <ArrowUpRight
           class="dispatch-arrow"

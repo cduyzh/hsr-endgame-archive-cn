@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest"
+import { AS_MAX_SCORE, categoryOptionsFor } from "@/services/runUtils"
 import {
   buildSubmissionRoster,
+  defaultResultFor,
   describeSubmissionTarget,
   errorsOfStep,
   isUsableVideoUrl,
@@ -167,6 +169,22 @@ describe("submissionValidation 校验", () => {
     expect(stepOfField("author")).toBe("basic")
     expect(stepOfField("lightcones")).toBe("team")
     expect(stepOfField("cost")).toBe("result")
+  })
+
+  it("新建投稿的默认成绩落在该模式与阶段的合法档位上", () => {
+    const defaults = [
+      { mode: "moc", bossId: "4.5-moc-top", category: "fullStars", score: 40000 },
+      { mode: "aa", bossId: "4.5-aa-plight", category: "plightFullStars", score: 40000 },
+      // 末日幻影分数上限 4000，默认必须从满分起稿
+      { mode: "as", bossId: "4.5-as-top", category: "asScore4000", score: AS_MAX_SCORE },
+    ] as const
+
+    for (const { mode, bossId, category, score } of defaults) {
+      expect(defaultResultFor(mode, bossId)).toEqual({ category, score })
+      expect(categoryOptionsFor(mode, bossId)).toContain(category)
+      const errors = validateSubmissionForm(fixtureSubmission({ mode, bossId, category, score }), fixtureConfig)
+      expect(errors.filter((error) => error.field === "category" || error.field === "score")).toEqual([])
+    }
   })
 })
 

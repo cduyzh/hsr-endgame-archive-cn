@@ -5,6 +5,7 @@ import type {
   BossStage,
   EndgameMode,
   MetaStats,
+  ModeOption,
   RunCategory,
   RunFlag,
   SpecificRunCategory,
@@ -96,6 +97,14 @@ export function categoryOptionsFor(mode: EndgameMode, bossId: string): SpecificR
   if (mode === "as") return ["asScore3400", "asScore3650", "asScore3850", "asScore4000"]
   if (mode === "aa" && stageKeyOf(bossId) === "plight") return ["plightZeroCycle", "plightFullStars"]
   return ["zeroCycle", "fullStars"]
+}
+
+/**
+ * 进入站点与新建投稿的默认模式：带徽标（`NEW`）的那个即当期主推。
+ * 徽标在 seed `config.json` 的 `modes` 上随版本迁移，所以这里按徽标取，不要在调用处写死模式 id。
+ */
+export function defaultModeOf(modes: Array<Pick<ModeOption, "id" | "badge">>): EndgameMode {
+  return modes.find((mode) => mode.badge)?.id ?? modes[0]?.id ?? "moc"
 }
 
 /** 区间筛选的统一语义：`null` 表示该侧不限，成本与分数共用。 */

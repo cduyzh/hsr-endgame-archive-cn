@@ -6,10 +6,10 @@
 
 ## 功能范围
 
-- **档案工作台**：按赛季、终局模式、敌方阶段、记录分类、队伍人数、成本与分数精确区间、角色/光锥和标记筛选竞速记录。记录分类随模式与阶段变化：末日幻影按剩余行动值分数分四档（3400-3650 / 3650-3850 / 3850-3899 / 4000 满分），异相仲裁的绝境阶段单独归档为绝境 0 轮与绝境满星。
+- **档案工作台**：按赛季、终局模式、敌方阶段、记录分类、队伍人数、成本与分数精确区间、角色/光锥和标记筛选竞速记录。进入站点时默认选中带 `NEW` 徽标的那个模式（当期主推，当前是末日幻影），链接里带了 `?mode=` 时以链接为准。记录分类随模式与阶段变化：末日幻影按剩余行动值分数分四档（3400-3650 / 3650-3850 / 3850-3899 / 4000 满分），异相仲裁的绝境阶段单独归档为绝境 0 轮与绝境满星。
 - **记录展示**：按队伍组合分组展示作者、角色命座、轮次、分数、成本和视频链接。
 - **环境统计**：统计角色使用率、光锥使用率、常见组合与成本分布。
-- **投稿审核**：右上角「提交记录」打开站内弹窗，按「基础信息 → 队伍配置 → 成绩与预览」三步填写，字段级校验与限定/常驻成本实时反馈；选角色会自动带出专武（默认 S1，低星光锥默认 S5、低星角色默认满命），成本按队伍自动合计（限定五星角色算「命座 + 1」、限定五星光锥算叠影，低星与无名勋礼光锥不计）且可手动改写。提交到 `/api/submissions` 进入待审核队列；`/submit` 深链仍会打开同一弹窗。草稿缓存在浏览器 `localStorage`，误关弹窗可恢复，提交成功或手动丢弃后才清除；视频只接受 B 站与 YouTube 的链接；链接填完会立即按「视频 + 敌方阶段」自动查重，命中已有待审或已通过的投稿时就地拦下，不必填完三步才被服务端退回。
+- **投稿审核**：右上角「提交记录」打开站内弹窗，按「基础信息 → 队伍配置 → 成绩与预览」三步填写，字段级校验与限定/常驻成本实时反馈；弹窗打开时模式默认落在带 `NEW` 徽标的那个并自动选中该模式当期首个敌方阶段，分类与分数给该模式合法的默认档（末日幻影按满分 4000 起稿，不会是别的模式那种超上限的占位分数）；选角色会自动带出专武（默认 S1，低星光锥默认 S5、低星角色默认满命），成本按队伍自动合计（限定五星角色算「命座 + 1」、限定五星光锥算叠影，低星与无名勋礼光锥不计）且可手动改写。提交到 `/api/submissions` 进入待审核队列；`/submit` 深链仍会打开同一弹窗。草稿缓存在浏览器 `localStorage`，误关弹窗可恢复，提交成功或手动丢弃后才清除；视频只接受 B 站与 YouTube 的链接；链接填完会立即按「视频 + 敌方阶段」自动查重，命中已有待审或已通过的投稿时就地拦下，不必填完三步才被服务端退回。
 - **文章与规则页**：展示站内说明、规则和文章摘要。
 
 ## 技术栈
@@ -172,6 +172,11 @@ pnpm sync:monsters
 
 # 同步角色/光锥元数据
 pnpm sync:units
+
+# 抓取公众号文章（强敌侦察笔记等）-> src/data/articles.json
+# URL 清单在 scripts/article-sources.json，只存图片地址、不落盘图片
+# 收录判据是标题含「强敌侦察」，不限赛季；分类与首领名(subject)都从标题推导
+pnpm sync:articles
 ```
 
 数据版本由环境变量 `HSR_DATA_VERSION` 控制（默认 `4.5`）。把 `config.json` 灌入/同步到数据库：
@@ -223,6 +228,8 @@ src/
 ├── data/
 │   ├── seed/                          # config.json / runs.json / index.ts（+ 同步产物 hsr-*.json、运行时读取的 lightcone-pairs.json）
 │   ├── changelog.ts                   # 站点更新记录与当前版本号（appVersion）
+│   ├── articles.ts                    # 文章模块唯一取数入口（首页速报 / /articles*）
+│   ├── articles.json                  # pnpm sync:articles 产物（微信文章元数据 + 热链图地址）
 │   ├── flagIcons.ts                   # 三个标记图标的热链地址（唯一不走 dataSource.ts 的图源）
 │   ├── signatureLightcones.ts         # 角色 -> 专武映射（投稿自动搭配）
 │   ├── unitAssets.ts
@@ -242,6 +249,7 @@ src/
     ├── AdminSubmissionsView.vue
     ├── ArchiveView.vue
     ├── ArticlesView.vue
+    ├── ArticleDetailView.vue
     ├── ChangelogView.vue
     ├── FaqView.vue
     ├── MySubmissionsView.vue
@@ -252,6 +260,6 @@ src/
 
 `scripts/reference-inventory.mjs` 只生成参考观察清单，不下载 The Genius Archive 资源。角色、光锥、怪物与命途图片均直连 `static.nanoka.cc`（如 `https://static.nanoka.cc/hsr/4.5/character.json`、`lightcone.json` 提供 `sourceId` 映射，见 `src/data/unitAssets.ts`），不再把图片落盘到 `public/`。补充角色图、光锥图、boss 图或文章封面前，必须确认来源和授权，不能直接复制未确认授权的参考站文件。
 
-**唯一的例外**是三个终局标记的图标：`src/data/flagIcons.ts` 热链 `theherta.com/skill_icons/` 上的游戏内图标，只热链、不落盘、不代理，加载失败由 `src/components/FlagIcon.vue` 回落 lucide。来源判断与这条依赖的脆弱点登记在 [`AGENTS.md`](AGENTS.md)「资源与授权」。
+例外有两条。**其一是三个终局标记的图标**：`src/data/flagIcons.ts` 热链 `theherta.com/skill_icons/` 上的游戏内图标，只热链、不落盘、不代理，加载失败由 `src/components/FlagIcon.vue` 回落 lucide。**其二是文章模块的微信配图**：`src/data/articles.json` 里的封面与正文图全部热链 `mmbiz.qpic.cn`，由 `pnpm sync:articles` 从文章页提取；该图床按 Referer 防盗链（带外域 Referer 会拿到一张 140x140 占位图），因此渲染必须走 `src/components/ArticleImage.vue`，它内部固定 `referrerpolicy="no-referrer"` 并自检是否取到了原图。两者的来源判断与脆弱点都登记在 [`AGENTS.md`](AGENTS.md)「资源与授权」。
 
 更多协作约定见 [AGENTS.md](./AGENTS.md)。其中「文档同步契约」给出了**代码改动点 → 必改文档**的映射表和提交前检查清单：改完代码必须在同一次提交里同步本文档与对应模块的 `AGENTS.md`。

@@ -17,18 +17,19 @@
 | `views/`                   | 页面级组件（见下）                                                                             |
 | `components/archive/`      | 档案工作台业务组件，含 `SubmitRunDialog.vue`（投稿弹窗外壳）与 `SubmitRunForm.vue`（三步向导） |
 | `components/FlagIcon.vue` | 标记图标的唯一渲染出口：热链游戏图标，加载失败自动回落 lucide（筛选面板 / 投稿表单 / 记录徽标 / 审核台四处共用）              |
+| `components/ArticleImage.vue` | 微信文章配图的唯一渲染出口：`referrerpolicy="no-referrer"` + 防盗链占位图尺寸自检 + 加载失败回落占位块 |
 | `components/admin/`       | 投稿审核台组件（登录弹框、审核卡片）                                                                           |
 | `components/PromoSlot.vue`| 站务推广位（`App.vue` 内使用）                                                                                 |
 | `composables/`            | 可复用状态逻辑（筛选、查询、统计、审核会话、投稿弹窗开关）                                                     |
 | `services/`               | 数据访问与纯函数层，见 [services/AGENTS.md](services/AGENTS.md)                                                |
 | `stores/archiveStore.ts`  | Pinia store，缓存 `ArchiveConfig` + 投稿自动搭配用的记录样本 `pairingRuns`                                     |
 | `types/archive.ts`        | 所有 `Archive*` 类型定义（唯一来源）                                                                           |
-| `data/`                   | seed 数据、图片/命途映射（`unitAssets.ts` / `unitPaths.ts`）、标记图标地址（`flagIcons.ts`）、专武映射（`signatureLightcones.ts`）与站点更新记录（`changelog.ts`） |
+| `data/`                   | seed 数据、图片/命途映射（`unitAssets.ts` / `unitPaths.ts`）、标记图标地址（`flagIcons.ts`）、专武映射（`signatureLightcones.ts`）、文章模块（`articles.ts` + 产物 `articles.json`）与站点更新记录（`changelog.ts`） |
 | `assets/`                  | `main.css`、`redesign.css` 全局样式                                                            |
 
 ## 路由与视图
 
-`router/index.ts` 当前注册 7 条路由：`/`(archive)、`/submit`、`/me`（我的投稿，按本机 token 反查）、`/admin/submissions`、`/articles`、`/faq`、`/changelog`（更新记录）。首页 `ArchiveView` 同步引入，其余懒加载。`views/` 与这 7 条路由一一对应，没有额外未注册的视图文件。导航在 `App.vue` 注册："档案 / 文章 / 规则 / **更新** / 我的投稿 / 审核"，头部 `brand-appver` 徽章显示 `src/data/changelog.ts` 的 `appVersion` 并链接到更新记录页。
+`router/index.ts` 当前注册 8 条路由：`/`(archive)、`/submit`、`/me`（我的投稿，按本机 token 反查）、`/admin/submissions`、`/articles`、`/articles/:id`（文章详情）、`/faq`、`/changelog`（更新记录）。首页 `ArchiveView` 同步引入，其余懒加载。`views/` 与这 8 条路由一一对应，没有额外未注册的视图文件。导航在 `App.vue` 注册："档案 / 文章 / 规则 / **更新** / 我的投稿 / 审核"，头部 `brand-appver` 徽章显示 `src/data/changelog.ts` 的 `appVersion` 并链接到更新记录页。
 
 投稿面板不是独立页面：`SubmitRunDialog.vue` 由 `App.vue` 常驻渲染，头部「提交记录」按钮和工作台工具栏按钮都调用 `useSubmissionDialog().open()`；`/submit` 深链保留，`SubmitView.vue` 只负责打开同一弹窗后 `router.replace("/")`，因此路由结构未变。`/me` 直接是页面，没有弹窗化。
 
@@ -46,7 +47,7 @@
 
 - 全局配置缓存用 `useArchiveStore()`（`loadConfig()` 幂等，配置只加载一次）；它另外持有 `pairingRuns` + `recordPairingRuns()`，跨筛选累积记录样本，供投稿弹窗统计「角色→高频光锥」。
 - 页面级临时状态用 `composables/`：
-  - `useArchiveFilters(config)`：筛选状态 + 与路由 query 双向同步（`hydrateFromQuery` / `watch` 回写），其中 `normalizeCategory()` 负责把与当前模式/阶段不匹配的分类回落为 `all`，`normalizeFlags()` 负责丢弃 URL 里非法的标记值；成本与分数区间四个端点只在非 `null` 时进 query，`readBound()` 把空值/非法值视为不限，`readLegacyCostBucket()` 让旧 `?cost=17-32` 深链仍解得出等价端点。
+  - `useArchiveFilters(config)`：筛选状态 + 与路由 query 双向同步（`hydrateFromQuery` / `watch` 回写），其中 `normalizeCategory()` 负责把与当前模式/阶段不匹配的分类回落为 `all`，`normalizeFlags()` 负责丢弃 URL 里非法的标记值；URL 缺省或非法的 `mode` 回落到 `runUtils.defaultModeOf(config.modes)`（带 `NEW` 徽标的那个），组件与 composable 都不要写死 `"moc"`；成本与分数区间四个端点只在非 `null` 时进 query，`readBound()` 把空值/非法值视为不限，`readLegacyCostBucket()` 让旧 `?cost=17-32` 深链仍解得出等价端点。
   - `useRunsQuery(filters)`：记录请求、加载态、按 `teamName` 分组；每次成功拉取都会把结果登记进 `archiveStore.pairingRuns`。
   - `useMetaStats(filters)`：环境统计。
   - `useAdminSubmissions()`：审核台会话（`sessionStorage` 持久化）、列表与审核动作。
@@ -70,6 +71,7 @@
 - `data/seed/lightcone-pairs.json`：同样是 `pnpm sync:units` 的产物（角色 id -> 专武 id），但**会被 `data/signatureLightcones.ts` 运行时 import**——投稿表单要在选角色时同步查表。
 - `data/unitAssets.ts`：用 `config.json` 的 `sourceId` 把本地 slug id 映射为远程图片 `sourceId`。
 - `data/unitPaths.ts`：命途图标选项（`IMAGE_BASES.path`，9 个命途）。
+- `data/articles.ts` + `data/articles.json`：文章模块。`articles.json` 是 `pnpm sync:articles` 的产物（**运行时 import**），`articles.ts` 是首页速报与 `/articles*` 的唯一取数入口（`siteArticles` / `dispatchArticles` / `articleById` / `groupedArticles` / `articleCover` / `SERIES_CATEGORY` / `matchBossIds` / `versionLabelOf` / `splitByVersion`）。`matchBossIds(subject, bosses)` 拿标题里提取的首领名去撞 `BossStage.name` 与 `variantName`，**只出候选**：构建期没有本地首领清单（阶段来自远程快照），所以候选不落 `articles.json`，在运行时算。配图热链 `mmbiz.qpic.cn`，只能经 `components/ArticleImage.vue` 渲染（`no-referrer`），不要落盘到 `public/`。人工文案与 boss 关联改 `scripts/article-sources.json`，不要直接改产物。
 - `public/`：当前只有 `favicon.png`。所有游戏数据与图片都直连远程，**不要**把数据源 JSON 或图片落盘到 `public/`。
 
 ## 验证

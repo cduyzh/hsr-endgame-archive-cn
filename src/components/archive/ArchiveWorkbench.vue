@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, shallowRef } from "vue"
-import { BarChart3, FilePlus2, SlidersHorizontal, Sparkles, X } from "lucide-vue-next"
+import { BarChart3, FilePlus2, SlidersHorizontal, X } from "lucide-vue-next"
 import ArchiveDispatchPanel from "@/components/archive/ArchiveDispatchPanel.vue"
 import BossPanel from "@/components/archive/BossPanel.vue"
 import MetaReportPanel from "@/components/archive/MetaReportPanel.vue"
@@ -63,10 +63,10 @@ const activeFilterCount = computed(() =>
     class="archive-workbench"
     aria-label="竞速档案工作台"
   >
-    <ArchiveDispatchPanel :articles="archiveStore.articles" />
+    <ArchiveDispatchPanel />
 
     <div class="terminal-strip">
-      <div>
+      <div class="terminal-heading">
         <p class="eyebrow">
           ENDGAME RUN DATABASE // LIVE ARCHIVE
         </p>
@@ -145,33 +145,27 @@ const activeFilterCount = computed(() =>
       />
 
       <main class="results-column">
-        <div
-          class="context-ribbon"
-          aria-label="当前档案上下文"
-        >
-          <span><Sparkles
-            :size="14"
-            aria-hidden="true"
-          /> 当前档案</span>
-          <strong>{{ activeSeason?.label ?? filters.seasonId }}</strong>
-          <span>{{ activeBoss.subtitle }}</span>
-          <button
-            v-if="showUnitPicker"
-            type="button"
-            @click="showUnitPicker = false"
-          >
-            <X
-              :size="14"
-              aria-hidden="true"
-            />
-            收起选择器
-          </button>
-        </div>
         <BossPanel
           :boss="activeBoss"
           :season-label="activeSeason?.label ?? filters.seasonId"
           :run-count="runs.length"
-        />
+        >
+          <template
+            v-if="showUnitPicker"
+            #actions
+          >
+            <button
+              type="button"
+              @click="showUnitPicker = false"
+            >
+              <X
+                :size="14"
+                aria-hidden="true"
+              />
+              收起选择器
+            </button>
+          </template>
+        </BossPanel>
         <RunGroupList
           :groups="groupedRuns"
           :units="archiveStore.units"

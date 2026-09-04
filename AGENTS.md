@@ -12,14 +12,15 @@
 
 主要功能：
 
-- 档案工作台：筛选赛季、模式、敌方阶段、记录分类（随模式与阶段变化）、队伍人数、成本与分数**精确区间**、角色/光锥和标记。
+- 档案工作台：筛选赛季、模式、敌方阶段、记录分类（随模式与阶段变化）、队伍人数、成本与分数**精确区间**、角色/光锥和标记。进入站点时默认落在带 `NEW` 徽标（`modes[].badge`）的模式上，口径在 `runUtils.defaultModeOf()`，当前是末日幻影；URL 显式带了 `?mode=` 时以 URL 为准。
 - 记录列表：按队伍组合分组，展示作者、角色命座、轮次、分数、成本和视频链接。
 - 环境统计：角色使用率、光锥使用率、常见队伍组合和成本区间。
-- 投稿入口：右上角「提交记录」打开站内弹窗，按「基础信息 → 队伍配置 → 成绩与预览」三步提交到审核队列；选角色会自动带出专武（默认 S1，低星光锥默认 S5、低星角色默认满命），成本按队伍自动合计（限定五星角色算 `命座 + 1`、限定五星光锥算叠影，低星与无名勋礼光锥不计）且可手改；草稿存在本地直到提交成功，视频只接受 B 站与 YouTube 链接。**投稿查重**：链接填完即按「视频 + 敌方阶段」调 `GET /api/submissions/check` 预检（400ms 防抖，链接或阶段一变就重查），命中已有待审 / 已通过的投稿时在第一步展示已有记录摘要并挡住「下一步 / 提交」；`POST /api/submissions` 入队前用同一个 `findDuplicateVideoRecords()` 再拦一次返回 409。驳回与撤回的记录不拦重提；`b23.tv` 短链取不到 BV 号，只能按规范化后的短链自身比对。
+- 投稿入口：右上角「提交记录」打开站内弹窗，按「基础信息 → 队伍配置 → 成绩与预览」三步提交到审核队列；新建投稿默认落在带 `NEW` 徽标的模式上（同工作台，走 `defaultModeOf()`）并自动选中该模式当期首个敌方阶段，分类与分数的默认值走 `submissionValidation.defaultResultFor()`——取该模式与阶段的最后一档（满星 / 绝境满星 / `4000` 满分），末日幻影按满分 `4000` 起稿，其余模式沿用 `40000`，避免初始表单就带着校验错误；选角色会自动带出专武（默认 S1，低星光锥默认 S5、低星角色默认满命），成本按队伍自动合计（限定五星角色算 `命座 + 1`、限定五星光锥算叠影，低星与无名勋礼光锥不计）且可手改；草稿存在本地直到提交成功，视频只接受 B 站与 YouTube 链接。**投稿查重**：链接填完即按「视频 + 敌方阶段」调 `GET /api/submissions/check` 预检（400ms 防抖，链接或阶段一变就重查），命中已有待审 / 已通过的投稿时在第一步展示已有记录摘要并挡住「下一步 / 提交」；`POST /api/submissions` 入队前用同一个 `findDuplicateVideoRecords()` 再拦一次返回 409。驳回与撤回的记录不拦重提；`b23.tv` 短链取不到 BV 号，只能按规范化后的短链自身比对。
 - 配队预设：本机 localStorage 记忆作者名 + 最多 3 套队伍配置，提交时可一键载入。
 - 投稿凭证：投稿成功后服务端下发 `ownerToken`（`own_<48 hex>`），写回本机 localStorage，**`/me` 页面**可按 token 反查该用户提过的所有 `submission_reviews` + `runs`，查看审核进度（pending/approved/rejected/withdrawn）、撤回已通过的记录、忘记某条凭证或一键清空。
 - 更新记录：`/changelog` 页展示版本迭代历史，版本号由 `src/data/changelog.ts` 的 `changelogEntries` 唯一维护，头部徽章读取 `appVersion`。
-- 规则/文章页：展示站内说明与文章摘要。
+- 文章模块：首页「档案速报」与 `/articles`、`/articles/:id` 由 `src/data/articles.ts` 独立供数，强敌机制类内容取自《崩坏：星穹铁道》官方公众号的「强敌侦察笔记」系列，由 `pnpm sync:articles` 建立索引；正文与配图热链微信图床，本站不落盘。收录判据是**标题含「强敌…侦察」**（「强敌」与「侦察」之间可能插字，如「强敌泰坦侦察笔记」）——该系列不按赛季节奏更新、栏目名改过（「强敌侦察狸记」）、早期标题带《崩坏：星穹铁道》前缀，因此不按版本或前缀筛。标题里的首领名提取为 `subject`，`matchBossIds()` 可拿它撞站内敌方阶段，但**只出候选**：人工确认的关联仍只认清单里的 `bossIds`。`/articles` 在「强敌机制」组内再按版本分段（`version` 未标注时退回发布年份），条目用紧凑行；速报在无人工 `featured` 时默认置顶最新一篇强敌笔记。详情页顺序渲染原文配图并给出「查看微信原文」外链。**链接清单是唯一的维护入口**（`pnpm sync:articles -- --add <url>` 或直接在 `scripts/article-sources.json` 加一行），站内与同步脚本都不做自动发现——公众号侧没有可用的批量枚举通路，已逐条试尽（见 `scripts/AGENTS.md`）。**范围已定：清单里现有的 21 篇即视为全系列基线**，1.x～3.x 早期首领有意不补，后续只跟进新发布的笔记，不要再追求历史枚举与补全。
+- 规则页：`/faq` 展示站内说明。
 
 ## 技术栈与命令
 
@@ -52,6 +53,8 @@ pnpm netlify:login       # 登录态写入被忽略的 .netlify-config/
 pnpm deploy:netlify      # 先完整 pnpm build，再发布 dist/ + netlify/functions/
 pnpm sync:units          # 角色/光锥元数据 -> seed
 pnpm sync:monsters       # 怪物元数据 -> seed
+pnpm sync:articles       # 抓取 article-sources.json 里的公众号文章 -> src/data/articles.json
+pnpm sync:articles:dry   # 同上但只打印计划，不写产物
 pnpm sync:stages         # 从远程 static.nanoka.cc 拉所有 BossStage，批量 upsert 到 stages 表
 pnpm sync:stages:dry     # 同上但只打印不入库
 pnpm seed:archive        # config.json 灌库
@@ -65,15 +68,15 @@ pnpm seed:archive:dry    # 灌库空跑
 ## 代码结构
 
 - `src/App.vue`：主壳和导航（档案 / 文章 / 规则 / **更新** / 我的投稿 / 审核 + 「提交记录」按钮、头部版本徽章与全局 `SubmitRunDialog` + `PromoSlot`）。
-- `src/router/index.ts`：7 条路由 `/`、`/submit`、`/me`（按本机 token 列出 / 撤回自己的投稿）、`/admin/submissions`、`/articles`、`/faq`、`/changelog`（更新记录）；仅首页同步引入。
-- `src/views/`：`ArchiveView.vue`（只组合 `ArchiveWorkbench`）、`SubmitView.vue`（`/submit` 深链转发：打开投稿弹窗后回到首页）、`MySubmissionsView.vue`（`/me`，本机凭证反查 + 撤回 + 清理）、`AdminSubmissionsView.vue`、`ArticlesView.vue`、`FaqView.vue`、`ChangelogView.vue`（`/changelog`，渲染 `src/data/changelog.ts` 的版本记录）。
+- `src/router/index.ts`：8 条路由 `/`、`/submit`、`/me`（按本机 token 列出 / 撤回自己的投稿）、`/admin/submissions`、`/articles`、`/articles/:id`（文章详情）、`/faq`、`/changelog`（更新记录）；仅首页同步引入。
+- `src/views/`：`ArchiveView.vue`（只组合 `ArchiveWorkbench`）、`SubmitView.vue`（`/submit` 深链转发：打开投稿弹窗后回到首页）、`MySubmissionsView.vue`（`/me`，本机凭证反查 + 撤回 + 清理）、`AdminSubmissionsView.vue`、`ArticlesView.vue`（文章列表，按分类分组；强敌机制组内再按版本分段、条目走紧凑行）、`ArticleDetailView.vue`（`/articles/:id`，顺序渲染原文配图 + 微信原文外链）、`FaqView.vue`、`ChangelogView.vue`（`/changelog`，渲染 `src/data/changelog.ts` 的版本记录）。
 - `src/components/archive/`：档案业务组件，含投稿弹窗 `SubmitRunDialog.vue` 与其内部三步向导 `SubmitRunForm.vue`；`src/components/admin/`：审核台弹框与卡片；`src/components/PromoSlot.vue`：站务推广位；`src/components/FlagIcon.vue`：标记图标的唯一渲染出口（热链图标 + lucide 回落，四处共用）。
 - `src/composables/`：`useArchiveFilters.ts`（筛选状态 + 路由 query 双向同步）、`useRunsQuery.ts`、`useMetaStats.ts`、`useAdminSubmissions.ts`、`useSubmissionDialog.ts`（投稿弹窗全局开关）、`useSubmissionDraft.ts`（投稿草稿 localStorage 缓存）、`useSubmissionMemory.ts`（作者名 / 配队预设 / 投稿 token 三合一 localStorage 记忆）。
 - `src/types/archive.ts`：所有 `Archive*` 类型的唯一来源。
 - `src/services/`：`archiveService.ts`（API + seed fallback + 管理员会话 + `listMySubmissions`/`withdrawSubmission`）、`staticArchiveConfig.ts`（浏览器端静态快照入口）、`staticBossSnapshot.ts`（前后端共用的阶段推导纯计算层：`STATIC_SEASON_IDS`、HP/场地 buff/首领取名口径）、`dataSource.ts`（远程地址与图片）、`runUtils.ts`、`unitCost.ts`、`submissionUtils.ts`、`submissionValidation.ts`（投稿校验与预览纯函数）、`videoUrl.ts`（视频身份归一与查重口径，前后端共用）。
-- `src/data/`：`unitAssets.ts`（`sourceId` -> 远程图）、`unitPaths.ts`（命途图标）、`flagIcons.ts`（三个标记图标的**热链地址**，唯一不走 `dataSource.ts` 的图源）、`signatureLightcones.ts`（角色 -> 专武映射的运行时入口）、`changelog.ts`（更新记录数据，`appVersion` 供头部徽章）、`seed/`。
+- `src/data/`：`unitAssets.ts`（`sourceId` -> 远程图）、`unitPaths.ts`（命途图标）、`flagIcons.ts`（三个标记图标的**热链地址**，唯一不走 `dataSource.ts` 的图源）、`signatureLightcones.ts`（角色 -> 专武映射的运行时入口）、`articles.ts`（文章模块唯一取数入口，读 `sync:articles` 产物 `articles.json`）、`changelog.ts`（更新记录数据，`appVersion` 供头部徽章）、`seed/`。
 - `src/stores/archiveStore.ts`：档案配置缓存 + 投稿自动搭配用的记录样本（`pairingRuns`）。
-- `src/data/seed/`：无数据库时的本地种子数据。当前 `config.json` 中 `bosses` 为空数组、`runs.json` 为空数组，敌方阶段完全由静态快照生成；`hsr-units.json` / `hsr-monsters.json` 只是同步脚本产物，运行时代码不 import（`seed/index.ts` 仅导出 `config.json` 与 `runs.json`）；`lightcone-pairs.json` 同样是 `sync:units` 产物，但**由 `signatureLightcones.ts` 在运行时 import**，为投稿表单提供专武映射。
+- `src/data/seed/`：无数据库时的本地种子数据。当前 `config.json` 中 `bosses` 为空数组、`runs.json` 为空数组，敌方阶段完全由静态快照生成；`hsr-units.json` / `hsr-monsters.json` 只是同步脚本产物，运行时代码不 import（`seed/index.ts` 仅导出 `config.json` 与 `runs.json`）；`lightcone-pairs.json` 同样是 `sync:units` 产物，但**由 `signatureLightcones.ts` 在运行时 import**，为投稿表单提供专武映射。`config.json` 的 `articles` 与库里 `articles` 表**已不再驱动任何界面**，文章板块只读 `src/data/articles.ts`（见「已知不一致」）。
 - `netlify/functions/`：服务端 API。
 - `netlify/schema.sql`：数据库表结构。
 
@@ -256,7 +259,7 @@ pnpm sync:stages -- --season=4.5  # 只同步指定赛季
 
 不要直接复制 The Genius Archive 或其他站点的未确认授权代码、样式、图片、图标和 JSON 配置。补充角色图、光锥图、boss 图或文章封面前，先确认来源和授权。
 
-### 已登记的唯一例外：三个终局标记图标
+### 已登记的例外一：三个终局标记图标
 
 `src/data/flagIcons.ts` 里 `revive` / `firewall` / `bpWeapon` 三条地址热链 `https://theherta.com/skill_icons/`。它们是米哈游的游戏内图标资源、由该站托管；本项目**只热链、不落盘、不代理**，与「不把数据源 JSON / 图片下载到 `public/` 发布」的既有带宽约定一致。渲染统一走 `src/components/FlagIcon.vue`，`@error` 时回落 lucide，所以第三方图源不可用时只是退回通用图标，不会白屏也不会破版。
 
@@ -267,7 +270,18 @@ pnpm sync:stages -- --season=4.5  # 只同步指定赛季
 - 响应是 `max-age=0, must-revalidate`，每次加载都重新校验（Cloudflare 命中，成本很低）。
 - 它**不属于** `src/services/dataSource.ts` 的统一图源，不要并进 `IMAGE_BASES`，否则会被误读成 `static.nanoka.cc` 的一部分。
 
-除此之外没有别的第三方图源；要新增，先在本节登记来源与授权判断。
+### 已登记的例外二：文章模块的微信配图
+
+`src/data/articles.json` 里的 `cover` 与 `images` 全部热链 `https://mmbiz.qpic.cn/`——它们是米哈游官方公众号「强敌侦察笔记」等文章的原图，由 `scripts/sync-articles.mjs` 从文章页 `#js_content` 的 `data-src` 提取，**本站不落盘、不代理、不下载**，与既有带宽约定一致。渲染统一走 `src/components/ArticleImage.vue`。
+
+这条依赖的已知脆弱点（2026-09 实测）：
+
+- 该图床按 **Referer 防盗链**：带非腾讯域名 Referer 时返回 `200` + 一张 **140x140 占位图**（约 2KB），**不带 Referer 时返回原图**，且响应带 `access-control-allow-origin: *`。因此所有图片必须 `referrerpolicy="no-referrer"`——这一条写在 `ArticleImage.vue` 里，不要在别处裸写 `<img>` 引这些地址。
+- 因为占位图也是 `200`，`@error` 不会触发；组件用 `naturalWidth <= 160` 的尺寸自检识别被拦截的情况并回落占位块，同时打一条 `console.warn`。**本地 `localhost` 通过不代表线上通过，部署后要复验一次。**
+- 地址由腾讯决定，随时可能整体失效。届时详情页仍有「查看微信原文」外链兜底，卡片退化成无图版式，不会白屏。
+- 它**不属于** `src/services/dataSource.ts` 的统一图源，不要并进 `IMAGE_BASES`，否则会被误读成 `static.nanoka.cc` 的一部分。
+
+除上述两条外没有别的第三方图源；要新增，先在本节登记来源与授权判断。
 
 ## 验证口径
 
@@ -315,7 +329,7 @@ pnpm build
 
 ## 已知不一致（待决策，勿在文档里当作既有能力宣传）
 
-当前无待决策项。
+- **老的文章数据线仍在但无人消费**：`netlify/functions/archive-config.ts` 仍 `select ... from articles` 并把结果塞进 `ArchiveConfig.articles`，`src/data/seed/config.json` 也仍保留 `articles` 字段与 `netlify/schema.sql` 的 `articles` 表；但首页速报、`/articles`、`/articles/:id` 已全部改读 `src/data/articles.ts`，`useArchiveStore` 上的 `articles` 计算属性已删除。影响面：每次 `/api/archive/config` 多打一条无用的库查询，且改 `config.json.articles` 不会有任何界面效果。收口方案（删字段 / 删查询 / `DROP TABLE`）需要单独决策，`DROP TABLE` 属破坏性操作，未获批准前不要执行。
 
 发现代码行为与文档描述冲突、且当次不打算改代码时，在此登记一条（写清文件、当前行为、期望行为、影响面）；代码修复落地后**删除该条目**并同步修订正文相关章节。
 

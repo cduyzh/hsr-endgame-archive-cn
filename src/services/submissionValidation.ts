@@ -10,6 +10,7 @@ import type {
   ArchiveConfig,
   ArchiveUnit,
   BossStage,
+  EndgameMode,
   ElementType,
   SubmissionPayload,
   SpecificRunCategory,
@@ -63,6 +64,25 @@ export const submissionStepFields: Record<SubmissionStepId, SubmissionField[]> =
 
 /** 0 轮类分类（含异相仲裁的绝境变体）要求轮次为 0。 */
 const zeroCycleCategories = new Set<SpecificRunCategory>(["zeroCycle", "plightZeroCycle"])
+
+/** 非末日幻影模式的默认分数：这些模式的分数没有上限，只是记录值。 */
+const DEFAULT_RESULT_SCORE = 40000
+
+/**
+ * 新建投稿的成绩默认值。分类必须落在 `categoryOptionsFor(mode, bossId)` 内（取最后一档：
+ * 满星记录 / 绝境满星记录 / 4000 满分），分数要跟着模式走——末日幻影的上限是 4000，
+ * 沿用其他模式的默认分数会让初始表单就带着「分数最高 4000」的校验错误。
+ */
+export function defaultResultFor(
+  mode: EndgameMode,
+  bossId: string,
+): { category: SpecificRunCategory; score: number } {
+  const options = categoryOptionsFor(mode, bossId)
+  return {
+    category: options[options.length - 1],
+    score: mode === "as" ? AS_MAX_SCORE : DEFAULT_RESULT_SCORE,
+  }
+}
 
 export interface SubmissionRosterLine {
   index: number

@@ -5,6 +5,7 @@ import {
   categoryLabels,
   categoryOfAsScore,
   categoryOptionsFor,
+  defaultModeOf,
   filterRuns,
   flagLabels,
   flagOrder,
@@ -149,6 +150,17 @@ describe("runUtils", () => {
     expect(categoryOptionsFor("aa", "4.5-aa-k1")).toEqual(["zeroCycle", "fullStars"])
     expect(categoryOptionsFor("aa", "4.5-aa-plight")).toEqual(["plightZeroCycle", "plightFullStars"])
     expect(categoryOptionsFor("as", "4.5-as-top")).toEqual(["asScore3400", "asScore3650", "asScore3850", "asScore4000"])
+  })
+
+  it("默认模式取带徽标的那个，徽标迁走时跟着迁移", () => {
+    // seed 的 NEW 目前挂在末日幻影上，主页与投稿表单都从这里取默认落点
+    expect(defaultModeOf(seedConfig.modes)).toBe("as")
+    expect(defaultModeOf([
+      { id: "moc", label: "混沌回忆", shortLabel: "混沌" },
+      { id: "aa", label: "异相仲裁", shortLabel: "仲裁", badge: "NEW" },
+    ])).toBe("aa")
+    expect(defaultModeOf([{ id: "moc", label: "混沌回忆", shortLabel: "混沌" }])).toBe("moc")
+    expect(defaultModeOf([])).toBe("moc")
   })
 
   it("末日幻影分数按区间归类，边界归高一档，空档不归类", () => {

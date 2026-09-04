@@ -1,6 +1,6 @@
 import { computed, reactive, watch } from "vue"
 import { useRoute, useRouter } from "vue-router"
-import { AS_MAX_SCORE, categoryOptionsFor, isRunFlag } from "@/services/runUtils"
+import { AS_MAX_SCORE, categoryOptionsFor, defaultModeOf, isRunFlag } from "@/services/runUtils"
 import { COST_MAX } from "@/services/unitCost"
 import type { ArchiveConfig, ArchiveFilters, EndgameMode, RunCategory, RunFlag, SortKey } from "@/types/archive"
 
@@ -81,7 +81,8 @@ export function useArchiveFilters(config: () => ArchiveConfig | null) {
     filters.seasonId = readString(query.season) ?? currentSeason?.id ?? archiveConfig.seasons[0]?.id ?? ""
 
     const nextMode = readString(query.mode)
-    filters.mode = nextMode && modeValues.has(nextMode as EndgameMode) ? (nextMode as EndgameMode) : "moc"
+    filters.mode =
+      nextMode && modeValues.has(nextMode as EndgameMode) ? (nextMode as EndgameMode) : defaultModeOf(archiveConfig.modes)
 
     const nextCategory = readString(query.category)
     filters.category = (nextCategory as RunCategory | undefined) ?? "all"

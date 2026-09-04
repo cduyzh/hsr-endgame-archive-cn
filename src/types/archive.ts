@@ -139,6 +139,39 @@ export interface ArticleSummary {
   readMinutes: number
 }
 
+/**
+ * 文章模块（首页速报 / `/articles` / `/articles/:id`）的视图模型。
+ *
+ * 数据来源是 `scripts/sync-articles.mjs` 生成的 `src/data/articles.json`，
+ * 与 `ArchiveConfig.articles`（`ArticleSummary`，走数据库与 seed 那条线）
+ * 是**两条独立数据线**，不要互相喂数据。
+ */
+export interface SiteArticle {
+  id: string
+  /** 微信原文地址；站内原创条目为 `null`。 */
+  url: string | null
+  title: string
+  /** 从标题「强敌侦察* | <首领名>」推导出的首领名；非系列文章为 `null`。 */
+  subject: string | null
+  /** 人工标注的游戏版本（如 `4.5`）；缺省时 `/articles` 的分段退回按发布年份。 */
+  version: string | null
+  cover: string | null
+  /** 正文图片，按微信页面里的出现顺序；全部热链 `mmbiz.qpic.cn`。 */
+  images: string[]
+  imageCount: number
+  /** `YYYY-MM-DD`（北京时间）；原创条目缺省时为 `null`。 */
+  publishedAt: string | null
+  sourceName: string
+  category: string
+  excerpt: string
+  readMinutes: number
+  featured: boolean
+  /** 关联的敌方阶段 id（`${seasonId}-${mode}-${stageKey}`），可空。 */
+  bossIds: string[]
+  /** 抓取时间；原创条目为 `null`。 */
+  fetchedAt: string | null
+}
+
 export interface ArchiveConfig {
   seasons: Season[]
   modes: ModeOption[]

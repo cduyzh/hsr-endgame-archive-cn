@@ -16,7 +16,6 @@ export const useArchiveStore = defineStore("archive", () => {
   const modes = computed(() => config.value?.modes ?? [])
   const bosses = computed(() => config.value?.bosses ?? [])
   const units = computed(() => config.value?.units ?? [])
-  const articles = computed(() => config.value?.articles ?? [])
 
   async function loadConfig() {
     if (config.value || loading.value) return
@@ -51,7 +50,6 @@ export const useArchiveStore = defineStore("archive", () => {
     modes,
     bosses,
     units,
-    articles,
     pairingRuns,
     loadConfig,
     recordPairingRuns,

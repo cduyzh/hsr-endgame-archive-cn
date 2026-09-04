@@ -469,19 +469,23 @@ a {
 .boss-panel {
   position: relative;
   display: grid;
-  grid-template-columns: minmax(160px, 220px) minmax(0, 1fr) minmax(
-      170px,
-      220px
-    );
-  gap: clamp(14px, 2vw, 26px);
-  align-items: center;
+  gap: 10px;
+  align-content: start;
   overflow: hidden;
-  min-height: 300px;
   border-color: rgba(218, 178, 105, 0.34);
   background:
     linear-gradient(90deg, rgba(8, 8, 8, 0.3), rgba(0, 0, 0, 0.12)),
     var(--surface-soft);
-  padding: clamp(16px, 3vw, 28px);
+  padding: clamp(12px, 1.6vw, 16px);
+}
+
+.boss-bar {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: start;
+  gap: clamp(12px, 1.6vw, 20px);
 }
 
 .boss-panel::before {
@@ -550,14 +554,13 @@ a {
 
 .boss-sigil {
   position: absolute;
-  left: 24px;
-  bottom: -28px;
+  right: 10px;
+  bottom: -52px;
   z-index: 1;
   display: grid;
   aspect-ratio: 1;
-  width: 220px;
+  width: 132px;
   place-items: center;
-  justify-self: center;
   overflow: hidden;
   border: 1px solid rgba(220, 206, 176, 0.2);
   border-radius: 14px;
@@ -573,14 +576,14 @@ a {
       rgba(255, 255, 255, 0.015)
     );
   box-shadow: inset 0 0 34px rgba(0, 0, 0, 0.34);
-  opacity: 0.22;
+  opacity: 0.14;
   pointer-events: none;
 }
 
 .boss-sigil span {
   color: rgba(244, 240, 231, 0.72);
   font-family: "Noto Serif SC", "Songti SC", serif;
-  font-size: clamp(56px, 7vw, 92px);
+  font-size: 96px;
   font-weight: 900;
   line-height: 1;
   text-shadow: 0 0 28px rgba(218, 178, 105, 0.24);
@@ -590,6 +593,7 @@ a {
   position: relative;
   z-index: 2;
   display: grid;
+  width: 104px;
   min-width: 0;
   margin: 0;
   place-items: center;
@@ -598,23 +602,23 @@ a {
 .boss-visual::before {
   content: "";
   position: absolute;
-  inset: 8%;
+  inset: 6%;
   border-radius: 999px;
   background: radial-gradient(
     circle,
     rgba(218, 178, 105, 0.16),
     transparent 68%
   );
-  filter: blur(18px);
+  filter: blur(14px);
 }
 
 .boss-visual img {
   position: relative;
-  width: min(100%, 210px);
-  max-height: 210px;
+  width: 100%;
+  max-height: 104px;
   object-fit: contain;
   object-position: center bottom;
-  filter: drop-shadow(0 20px 28px rgba(0, 0, 0, 0.46));
+  filter: drop-shadow(0 12px 18px rgba(0, 0, 0, 0.46));
 }
 
 .boss-copy,
@@ -624,118 +628,219 @@ a {
   min-width: 0;
 }
 
-.boss-kicker {
+.boss-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex-wrap: wrap;
+  margin: 0 0 5px;
+  color: var(--muted);
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 11px;
+  line-height: 1.3;
+}
+
+.boss-eyebrow i {
+  color: var(--faint);
+  font-style: normal;
+}
+
+/* 插槽容器不参与布局，让按钮直接成为 eyebrow 的 flex 项贴到行尾。 */
+.boss-eyebrow-actions {
+  display: contents;
+}
+
+.boss-eyebrow-actions button {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  min-height: 42px;
-  margin: 0 0 18px;
-  border: 1px solid rgba(218, 178, 105, 0.42);
+  gap: 5px;
+  margin-left: auto;
+  border: 1px solid var(--line);
   border-radius: 999px;
-  background: rgba(218, 178, 105, 0.09);
-  color: #ead3a3;
-  padding: 8px 16px;
-  font-size: 16px;
-  font-weight: 800;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--muted);
+  padding: 2px 9px;
+  font-family: inherit;
+  font-size: 11px;
 }
 
 .boss-copy h2 {
-  margin-bottom: 14px;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
   font-family: "Noto Serif SC", "Songti SC", serif;
-  font-size: clamp(32px, 5vw, 52px);
+  font-size: clamp(20px, 2.1vw, 24px);
   letter-spacing: 0;
 }
 
-.boss-buff {
-  max-width: 680px;
-  margin: 0 0 18px;
+.boss-copy h2 small {
+  color: var(--faint);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+.boss-buffs,
+.boss-lineup {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  gap: 6px;
+}
+
+.buff-row {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex-wrap: wrap;
+}
+
+.buff-tabs {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+
+.buff-desc {
+  margin: 0;
   color: var(--muted);
-  line-height: 1.75;
+  font-size: 12px;
+  line-height: 1.6;
+  /* 上游用字面量 \n 分隔同一条 buff 的多段效果。 */
+  white-space: pre-line;
 }
 
-.boss-monster-strip {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(132px, 1fr));
-  gap: 8px;
-  margin-top: 16px;
+.lineup-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  justify-self: start;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--muted);
+  padding: 3px 11px;
+  font-size: 11px;
+  font-weight: 700;
 }
 
-.boss-monster-card {
+.lineup-toggle svg {
+  transition: transform 0.18s ease;
+}
+
+.lineup-toggle svg.open {
+  transform: rotate(180deg);
+}
+
+.lineup-list {
   display: grid;
-  grid-template-columns: 42px minmax(0, 1fr);
-  align-items: start;
+  gap: 5px;
+}
+
+.lineup-row {
+  display: flex;
+  align-items: center;
   gap: 8px;
-  min-height: 74px;
+  flex-wrap: wrap;
   border: 1px solid rgba(220, 206, 176, 0.14);
-  border-radius: var(--radius);
+  border-radius: 8px;
   background: rgba(0, 0, 0, 0.2);
-  padding: 7px;
+  padding: 5px 8px;
 }
 
-.boss-monster-card img {
-  width: 42px;
-  height: 42px;
+.lineup-row img {
+  width: 26px;
+  height: 26px;
+  flex: 0 0 auto;
   object-fit: contain;
 }
 
-.boss-monster-meta {
-  display: grid;
-  gap: 2px;
-  min-width: 0;
-}
-
-.boss-monster-meta strong,
-.boss-monster-meta span {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.boss-monster-meta strong {
+.lineup-row strong {
   color: var(--text);
-  font-size: 13px;
+  font-size: 12px;
 }
 
-.boss-monster-meta span {
+.lineup-rank {
   color: var(--faint);
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
-.boss-monster-weakness {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-  min-width: 0;
+.lineup-weakness {
+  margin-left: auto;
 }
 
-.element-dot {
+.element-chip {
   display: inline-grid;
-  min-height: 18px;
+  justify-items: center;
+  gap: 1px;
+}
+
+.element-chip b {
   border: 1px solid
     color-mix(in srgb, var(--element-color, var(--line)) 45%, transparent);
-  border-radius: 999px;
+  border-radius: 6px;
   background: color-mix(
     in srgb,
     var(--element-color, var(--line)) 14%,
     transparent
   );
   color: var(--element-color, var(--text));
-  padding: 2px 6px;
+  padding: 1px 5px;
   font-size: 10px;
-  font-weight: 900;
-  line-height: 1.2;
+  font-weight: 800;
+  line-height: 1.4;
   white-space: nowrap;
+}
+
+.element-chip small {
+  color: var(--muted);
+  font-size: 9px;
+  font-weight: 700;
+  line-height: 1.2;
 }
 
 .boss-statline,
 .affinity-row {
   display: flex;
-  gap: 8px;
   flex-wrap: wrap;
 }
 
-.boss-statline span,
+.boss-statline {
+  gap: 6px 14px;
+  align-items: center;
+  margin: 0;
+}
+
+.stat-item {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 5px;
+}
+
+.stat-item i {
+  color: var(--faint);
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 10px;
+  font-style: normal;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.stat-item b {
+  color: #ff727c;
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.stat-affinity {
+  gap: 6px;
+}
+
 .run-metrics span,
 .run-metrics a {
   border: 1px solid var(--line);
@@ -746,64 +851,29 @@ a {
   font-size: 12px;
 }
 
-.boss-statline span {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  min-height: 34px;
-  color: var(--muted);
-  font-size: 14px;
-}
-
-.boss-statline b {
-  color: #ff727c;
-  font-size: 18px;
-}
-
 .boss-side {
   display: grid;
-  align-content: space-between;
-  gap: 20px;
-  min-height: 100%;
+  align-content: start;
+  justify-items: end;
+  gap: 10px;
 }
 
-.boss-affinity-block {
+.affinity-group {
   display: grid;
-  gap: 8px;
   justify-items: end;
+  gap: 3px;
+}
+
+.affinity-row {
+  gap: 4px;
+  justify-content: flex-end;
+  min-width: 0;
 }
 
 .affinity-title {
   color: var(--muted);
-  font-size: 13px;
+  font-size: 11px;
   font-weight: 900;
-}
-
-.element-badge {
-  display: inline-grid;
-  min-width: 48px;
-  justify-items: center;
-  gap: 2px;
-  border: 1px solid rgba(255, 255, 255, 0.13);
-  border-radius: 999px;
-  background: rgba(0, 0, 0, 0.24);
-  padding: 6px 9px;
-  line-height: 1;
-}
-
-.element-badge.compact {
-  min-width: 44px;
-}
-
-.element-badge b {
-  color: var(--element-color, var(--text));
-  font-size: 13px;
-}
-
-.element-badge small {
-  color: var(--text);
-  font-size: 12px;
-  font-weight: 800;
 }
 
 .element-物理 {
@@ -835,15 +905,17 @@ a {
 }
 
 .boss-clear-count {
-  display: grid;
-  justify-items: end;
+  display: flex;
+  align-items: baseline;
   gap: 4px;
+  margin: 0;
   color: var(--muted);
+  font-size: 11px;
 }
 
-.boss-clear-count strong {
+.boss-clear-count b {
   color: var(--text);
-  font-size: 18px;
+  font-size: 15px;
 }
 
 .run-list {
@@ -2985,22 +3057,39 @@ body.is-modal-open {
     display: none;
   }
 
-  .boss-panel {
-    grid-template-columns: 1fr;
+  .boss-bar {
+    grid-template-columns: 84px minmax(0, 1fr);
   }
 
   .boss-visual {
+    width: 84px;
     place-items: center;
+  }
+
+  .boss-visual img {
+    max-height: 84px;
+  }
+
+  .boss-side {
+    grid-column: 1 / -1;
+    grid-auto-flow: column;
+    align-items: center;
+    justify-content: start;
+    justify-items: start;
+    gap: 16px;
+  }
+
+  .affinity-group,
+  .boss-clear-count {
+    justify-items: start;
+  }
+
+  .affinity-row {
+    justify-content: flex-start;
   }
 
   .boss-sigil {
     width: min(180px, 60vw);
-  }
-
-  .boss-side,
-  .boss-affinity-block,
-  .boss-clear-count {
-    justify-items: start;
   }
 
   .run-row {

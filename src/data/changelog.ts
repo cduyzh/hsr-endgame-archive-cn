@@ -21,6 +21,28 @@ export const changelogTagLabels: Record<ChangelogTag, string> = {
 
 export const changelogEntries: ChangelogEntry[] = [
 	{
+		version: "0.6.0",
+		date: "2026-09-04",
+		title: "强敌侦察系列全量口径",
+		items: [
+			{tag: "improve", text: "收录判据放宽为「标题含『强敌…侦察』」：「强敌」与「侦察」之间允许插字（如「强敌泰坦侦察笔记」），并覆盖栏目改名后的「强敌侦察狸记」与早期带《崩坏：星穹铁道》前缀的标题，不再按赛季或版本筛选，全系列首领笔记都在收录范围内"},
+			{tag: "data", text: "回填 21 篇强敌侦察笔记（2023-02 至 2026-07，共 376 张原文配图），后续新增仍按人工传链接的方式补进清单后同步"},
+			{tag: "feature", text: "从标题自动提取首领名，用于与站内敌方阶段做候选匹配（只作建议，人工确认的关联仍以清单里的 bossIds 为准）"},
+			{tag: "improve", text: "/articles 的强敌机制组内再按版本分段（未标注版本时退回按年份），条目改用紧凑行式：小方图 + 首领名 + 日期与图数"},
+			{tag: "improve", text: "首页速报在没有人工作置顶时默认取最新一篇强敌笔记，新增文章不必再回头改清单"},
+		],
+	},
+	{
+		version: "0.5.0",
+		date: "2026-09-03",
+		title: "文章模块独立化",
+		items: [
+			{tag: "feature", text: "档案速报与 /articles 改读独立的文章数据层，卡片带封面、分类、日期与阅读时长；新增 /articles/:id 详情页，顺序渲染原文配图并给出「查看微信原文」外链"},
+			{tag: "feature", text: "新增 pnpm sync:articles：按 scripts/article-sources.json 里的清单抓取《崩坏：星穹铁道》官方公众号「强敌侦察笔记」等文章，生成 src/data/articles.json"},
+			{tag: "improve", text: "文章配图统一走新的渲染出口热链微信图床（no-referrer + 防盗链占位图自检 + 加载失败回落），本站不落盘任何图片"},
+		],
+	},
+	{
 		version: "0.4.0",
 		date: "2026-09-03",
 		title: "标记图标与检索区间",
