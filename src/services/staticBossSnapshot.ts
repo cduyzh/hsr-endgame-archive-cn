@@ -875,9 +875,23 @@ function fullUrl(baseUrl: string, path: string): string {
 }
 
 async function fetchJson<T>(baseUrl: string, path: string): Promise<T> {
-	const response = await fetch(fullUrl(baseUrl, path))
-	if (!response.ok) throw new Error(`HTTP ${response.status}`)
-	return (await response.json()) as T
+	const url = fullUrl(baseUrl, path)
+	let lastErr: unknown
+	for (let i = 0; i < 3; i++) {
+		try {
+			const controller = new AbortController()
+			const timeout = setTimeout(() => controller.abort(), 15000)
+			const response = await fetch(url, { signal: controller.signal })
+			clearTimeout(timeout)
+			if (!response.ok) throw new Error(`HTTP ${response.status}`)
+			return (await response.json()) as T
+		} catch (err) {
+			lastErr = err
+			console.warn(`  retrying ${url} (${i + 1}/3): ${err instanceof Error ? err.message : err}`)
+			await new Promise(resolve => setTimeout(resolve, 1000 * (i + 1)))
+		}
+	}
+	throw lastErr
 }
 
 async function fetchJsonSafe<T>(baseUrl: string, path: string): Promise<T | undefined> {
