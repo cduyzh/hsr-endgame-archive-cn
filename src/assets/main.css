@@ -804,6 +804,10 @@ a {
   line-height: 1.2;
 }
 
+.element-icon {
+  object-fit: contain;
+}
+
 .boss-statline,
 .affinity-row {
   display: flex;

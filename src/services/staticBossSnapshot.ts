@@ -39,9 +39,6 @@ interface StaticLevel {
 	param?: number[]
 	pre_id?: number
 	tag_list?: StaticBuff[]
-	damage_type?: string[]
-	damage_type1?: string[]
-	damage_type2?: string[]
 	npc_monster_id_list?: number[]
 	npc_monster_id_list1?: number[]
 	npc_monster_id_list2?: number[]
@@ -109,7 +106,24 @@ interface MonsterValueEntry {
 	SpeedBase?: number
 	StanceBase?: number
 	MaxMonsterPhase?: number
+	/** 各阶段的最大血量比例，长度与 `MaxMonsterPhase` 一致（实测 632 条全部对齐）。 */
+	PhaseList?: Array<{phase_num?: number, phase_max_hp_ratio?: number}> | null
 	child?: MonsterValueChild[]
+}
+
+/**
+ * `hsr/<ver>/zh/monster/<baseId>.json` 的 child 条目。
+ * 索引版 `monstervalue.json` 省略了 `*_modify_value` 与抗性表，只有这份单怪详情里有。
+ */
+interface MonsterDetailChild {
+	id?: number
+	speed_modify_value?: number | null
+	stance_modify_value?: number | null
+	damage_type_resistance?: Array<{damage_type?: string, value?: number}> | null
+}
+
+interface MonsterDetailFile {
+	child?: MonsterDetailChild[]
 }
 
 interface RatioRow {
@@ -148,12 +162,17 @@ interface ResolvedMonsterValue {
 	stanceBase: number
 	stanceRatio: number
 	phaseCount: number
+	phaseHpRatios: number[]
 }
 
 interface BuildContext {
 	seasonId: string
+	version: string
+	baseUrl: string
 	lookup: MonsterLookup
 	tables: ScalingTables
+	/** 基础怪物 id -> (实例 id -> 单怪详情 child)，按需拉取并缓存。 */
+	monsterDetails: Map<number, Record<number, MonsterDetailChild>>
 }
 
 interface StageDraft {
@@ -164,7 +183,6 @@ interface StageDraft {
 	seasonName: string
 	monsterIds: Array<number | undefined>
 	event?: StaticStageEvent
-	weakness?: string[]
 	mechanic?: StageBuff | null
 	stageBuffs?: StageBuff[]
 	skipHp?: boolean
@@ -215,6 +233,9 @@ const damageTypeMap: Record<string, ElementType> = {
 }
 
 const hpNumberFormat = new Intl.NumberFormat("en-US")
+
+/** 上游 stance 单位与游戏内展示韧性的换算比（480 → 160、360 → 120，全量样本 92% 精确命中）。 */
+const TOUGHNESS_UNIT = 3
 
 /** 末波中 rank 低于首领的随从；未知 rank 视为首领，避免新增 rank 时被随从挤掉 */
 const supportBossRanks: Record<string, number> = {
@@ -335,6 +356,9 @@ function buildScalingTables(
 }
 
 function normalizeMonsterValue(entry: MonsterValueEntry, child?: MonsterValueChild): ResolvedMonsterValue {
+	const phaseCount = entry.MaxMonsterPhase ?? 1
+	const ratios = (entry.PhaseList ?? []).map((phase) => phase.phase_max_hp_ratio ?? 1)
+
 	return {
 		hpBase: entry.HPBase ?? 0,
 		hpRatio: child?.HPModifyRatio ?? 1,
@@ -342,7 +366,8 @@ function normalizeMonsterValue(entry: MonsterValueEntry, child?: MonsterValueChi
 		speedRatio: child?.SpeedModifyRatio ?? 1,
 		stanceBase: entry.StanceBase ?? 0,
 		stanceRatio: child?.StanceModifyRatio ?? 1,
-		phaseCount: entry.MaxMonsterPhase ?? 1,
+		phaseCount,
+		phaseHpRatios: ratios.length === phaseCount ? ratios : [],
 	}
 }
 
@@ -378,15 +403,34 @@ function bossMonsterIdOf(ctx: BuildContext, event: StaticStageEvent | undefined)
 }
 
 /**
+ * 多阶段首领默认按「每阶段等量」压成 `<血量> x<阶段数>`；一旦各阶段的 `phase_max_hp_ratio` 不相等
+ * （如 4.5 异相仲裁将杀关的 `1.0 / 1.25 / 1.0`），就必须按阶段顺序逐个列出——否则读的人拿 `x3`
+ * 去理解，会跟游戏里每一管的实际血量对不上。
+ */
+function formatHp(raw: number, phaseCount: number, ratios: number[]): string {
+	if (raw <= 0) return ""
+	const multi = phaseCount > 1
+	// 上游有相当一部分怪物根本不公开 PhaseList，所以「是否列出」只认比例真的不相等。
+	if (multi && ratios.length === phaseCount && ratios.some((ratio) => ratio !== ratios[0])) {
+		return ratios.map((ratio) => hpNumberFormat.format(Math.round(raw * ratio))).join(" / ")
+	}
+	const single = Math.round(raw * (ratios[0] ?? 1))
+	if (single <= 0) return ""
+	return multi ? `${hpNumberFormat.format(single)} x${phaseCount}` : hpNumberFormat.format(single)
+}
+
+/**
  * HP = HPBase × HPModifyRatio × HardLevelGroup.HPRatio × EliteGroup.HPRatio。
  * 异相仲裁的精英组系数挂在 infinite wave 上且存于 InfiniteEliteGroup.json，由调用方传入。
+ * 速度与韧性还要在全部比例乘完后叠加 `*_modify_value`（索引版 monstervalue.json 没有这一项，
+ * 来自单怪详情）；韧性展示值除以 3，与游戏内面板一致。
  * 虚构叙事（PF）的每季额外缩放系数未在数据源公开，因此跳过 hp。
  */
 function computeStageStats(
 	tables: ScalingTables,
 	monsterId: number | undefined,
 	event: StaticStageEvent | undefined,
-	options: {skipHp?: boolean; eliteGroupOverride?: number} = {},
+	options: {skipHp?: boolean; eliteGroupOverride?: number; detail?: MonsterDetailChild} = {},
 ): StageStats {
 	const empty: StageStats = {hp: "", speed: "", toughness: ""}
 	if (!monsterId || !event) return empty
@@ -408,31 +452,72 @@ function computeStageStats(
 
 	let hp = ""
 	if (!options.skipHp) {
-		const total = Math.round(
+		hp = formatHp(
 			value.hpBase * value.hpRatio * (hardLevel.HPRatio ?? 1) * (elite?.HPRatio ?? 1),
+			value.phaseCount,
+			value.phaseHpRatios,
 		)
-		hp = total > 0 ? hpNumberFormat.format(total) : ""
-		if (hp && value.phaseCount > 1) hp += ` x${value.phaseCount}`
 	}
 
-	const speedValue = value.speedBase * value.speedRatio * (hardLevel.SpeedRatio ?? 1)
+	const speedValue =
+		value.speedBase * value.speedRatio * (hardLevel.SpeedRatio ?? 1) + (options.detail?.speed_modify_value ?? 0)
 	const speed = speedValue > 0 ? String(Math.round(speedValue * 10) / 10) : ""
 
-	const toughnessValue = Math.round(
-		value.stanceBase * value.stanceRatio * (hardLevel.StanceRatio ?? 1) * (elite?.StanceRatio ?? 1),
+	const stanceValue = Math.round(
+		value.stanceBase * value.stanceRatio * (hardLevel.StanceRatio ?? 1) * (elite?.StanceRatio ?? 1) +
+			(options.detail?.stance_modify_value ?? 0),
 	)
-	const toughness = toughnessValue > 0 ? String(toughnessValue) : ""
+	const toughness = stanceValue > 0 ? String(Math.round(stanceValue / TOUGHNESS_UNIT)) : ""
 
 	return {hp, speed, toughness}
 }
 
-function getMonsterWeakness(lookup: MonsterLookup, ids: Array<number | undefined>): ElementType[] {
-	for (const id of ids) {
-		if (!id) continue
-		const weakness = mapWeakness(lookup.monsters.get(id)?.weak)
-		if (weakness.length > 0) return weakness
+/** 阶段首领自身的弱点。随从的弱点不算进阶段，所以只查首领这一个 id。 */
+function bossWeaknessOf(lookup: MonsterLookup, bossId: number | undefined): ElementType[] {
+	if (bossId === undefined) return []
+	return mapWeakness(lookup.monsters.get(bossId)?.weak)
+}
+
+/**
+ * 实例怪物 id -> 基础 id。9 位实例 id（`>= 1e8`）按 `基础 id × 100 + 序号` 编码，与
+ * `monsterImageUrl` 的回退同源；注意**不是** icon 指向的展示模型 id，变体首领两者并不相同。
+ */
+function monsterBaseId(monsterId: number): number {
+	return monsterId >= 1e8 ? Math.floor(monsterId / 100) : monsterId
+}
+
+/**
+ * 拉单怪详情 `hsr/<ver>/zh/monster/<基础 id>.json`，返回实例 id -> child。
+ * 索引版 monstervalue.json 缺 `*_modify_value` 与抗性表，只有这份详情里有；拉不到只是少了
+ * 这两项修正（韧性退回未叠加 modify_value 的值、抗性为空），不影响阶段本身。
+ */
+async function monsterDetailChildren(
+	ctx: BuildContext,
+	monsterId: number | undefined,
+): Promise<Record<number, MonsterDetailChild>> {
+	if (monsterId === undefined) return {}
+	const baseId = monsterBaseId(monsterId)
+	const cached = ctx.monsterDetails.get(baseId)
+	if (cached) return cached
+
+	const detail = await fetchJsonSafe<MonsterDetailFile>(ctx.baseUrl, `hsr/${ctx.version}/zh/monster/${baseId}.json`)
+	const byId: Record<number, MonsterDetailChild> = {}
+	for (const child of detail?.child ?? []) {
+		if (child.id !== undefined) byId[child.id] = child
 	}
-	return []
+	ctx.monsterDetails.set(baseId, byId)
+	return byId
+}
+
+/** 非弱点属性的抗性百分比；上游用负值表示「反而更脆」，展示时只保留正数。 */
+function buildResist(detail?: MonsterDetailChild): Partial<Record<ElementType, string>> {
+	const resist: Partial<Record<ElementType, string>> = {}
+	for (const entry of detail?.damage_type_resistance ?? []) {
+		const element = entry.damage_type ? damageTypeMap[entry.damage_type] : undefined
+		const value = entry.value ?? 0
+		if (element && value > 0) resist[element] = `${Math.round(value * 100)}%`
+	}
+	return resist
 }
 
 function buildMonsterInfo(
@@ -494,16 +579,17 @@ function stageDisplayNames(
 	return { name, variantName: name === variantName ? undefined : variantName }
 }
 
-function buildStage(ctx: BuildContext, baseUrl: string, draft: StageDraft): BossStage | null {
+async function buildStage(ctx: BuildContext, baseUrl: string, draft: StageDraft): Promise<BossStage | null> {
 	const bossId = draft.monsterIds.find((id) => id !== undefined)
 	const { name: displayName, variantName } = stageDisplayNames(ctx, draft.monsterIds)
 
 	if (!bossId && !displayName) return null
 
-	const weakness = draft.weakness?.length ? mapWeakness(draft.weakness) : []
+	const detail = bossId === undefined ? undefined : (await monsterDetailChildren(ctx, bossId))[bossId]
 	const stats = computeStageStats(ctx.tables, bossId, draft.event, {
 		skipHp: draft.skipHp,
 		eliteGroupOverride: draft.eliteGroup,
+		detail,
 	})
 
 	return {
@@ -519,8 +605,8 @@ function buildStage(ctx: BuildContext, baseUrl: string, draft: StageDraft): Boss
 		hp: stats.hp,
 		speed: stats.speed,
 		toughness: stats.toughness,
-		weakness: weakness.length > 0 ? weakness : getMonsterWeakness(ctx.lookup, draft.monsterIds),
-		resist: {},
+		weakness: bossWeaknessOf(ctx.lookup, bossId),
+		resist: buildResist(detail),
 		clears: 0,
 		mechanic: draft.mechanic ?? null,
 		stageBuffs: draft.stageBuffs ?? [],
@@ -528,7 +614,13 @@ function buildStage(ctx: BuildContext, baseUrl: string, draft: StageDraft): Boss
 	}
 }
 
-function buildMocStages(ctx: BuildContext, baseUrl: string, detail: StaticLevel[]): BossStage[] {
+/** 并发构建同一赛季内的多个阶段；单怪详情按基础 id 去重复用。 */
+async function buildStages(ctx: BuildContext, baseUrl: string, drafts: StageDraft[]): Promise<BossStage[]> {
+	const stages = await Promise.all(drafts.map((draft) => buildStage(ctx, baseUrl, draft)))
+	return stages.filter((stage): stage is BossStage => stage !== null)
+}
+
+async function buildMocStages(ctx: BuildContext, baseUrl: string, detail: StaticLevel[]): Promise<BossStage[]> {
 	const finalFloor = [...detail]
 		.reverse()
 		.find((level) => level.npc_monster_id_list1?.length && level.npc_monster_id_list2?.length)
@@ -547,7 +639,6 @@ function buildMocStages(ctx: BuildContext, baseUrl: string, detail: StaticLevel[
 			seasonName,
 			monsterIds: [bossMonsterIdOf(ctx, finalFloor.event_id_list1?.[0]), ...(finalFloor.npc_monster_id_list1 ?? [])],
 			event: finalFloor.event_id_list1?.[0],
-			weakness: finalFloor.damage_type1,
 			mechanic: mazeMechanic,
 		},
 		{
@@ -558,7 +649,6 @@ function buildMocStages(ctx: BuildContext, baseUrl: string, detail: StaticLevel[
 			seasonName,
 			monsterIds: [bossMonsterIdOf(ctx, finalFloor.event_id_list2?.[0]), ...(finalFloor.npc_monster_id_list2 ?? [])],
 			event: finalFloor.event_id_list2?.[0],
-			weakness: finalFloor.damage_type2,
 			mechanic: mazeMechanic,
 		},
 	]
@@ -576,10 +666,11 @@ function buildMocStages(ctx: BuildContext, baseUrl: string, detail: StaticLevel[
 		})
 	}
 
-	return drafts.map((draft) => buildStage(ctx, baseUrl, draft)).filter((stage): stage is BossStage => stage !== null)
+	return buildStages(ctx, baseUrl, drafts)
 }
 
-function buildPfStages(ctx: BuildContext, baseUrl: string, detail: PfDetail): BossStage[] {
+
+async function buildPfStages(ctx: BuildContext, baseUrl: string, detail: PfDetail): Promise<BossStage[]> {
 	const levels = detail.level ?? []
 	const finalFloor = [...levels]
 		.reverse()
@@ -599,7 +690,6 @@ function buildPfStages(ctx: BuildContext, baseUrl: string, detail: PfDetail): Bo
 			seasonName,
 			monsterIds: [bossMonsterIdOf(ctx, finalFloor.event_id_list1?.[0]), ...(finalFloor.npc_monster_id_list1 ?? [])],
 			event: finalFloor.event_id_list1?.[0],
-			weakness: finalFloor.damage_type1,
 			mechanic,
 			stageBuffs,
 			skipHp: true,
@@ -612,7 +702,6 @@ function buildPfStages(ctx: BuildContext, baseUrl: string, detail: PfDetail): Bo
 			seasonName,
 			monsterIds: [bossMonsterIdOf(ctx, finalFloor.event_id_list2?.[0]), ...(finalFloor.npc_monster_id_list2 ?? [])],
 			event: finalFloor.event_id_list2?.[0],
-			weakness: finalFloor.damage_type2,
 			mechanic,
 			stageBuffs,
 			skipHp: true,
@@ -628,14 +717,13 @@ function buildPfStages(ctx: BuildContext, baseUrl: string, detail: PfDetail): Bo
 			seasonName,
 			monsterIds: [bossMonsterIdOf(ctx, starward.event_id_list?.[0]), ...(starward.npc_monster_id_list ?? [])],
 			event: starward.event_id_list?.[0],
-			weakness: starward.damage_type,
 			mechanic,
 			stageBuffs,
 			skipHp: true,
 		})
 	}
 
-	return drafts.map((draft) => buildStage(ctx, baseUrl, draft)).filter((stage): stage is BossStage => stage !== null)
+	return buildStages(ctx, baseUrl, drafts)
 }
 
 /** 单条场地文案；上游部分模式（混沌回忆的迷阵）只有描述没有名字，用 fallbackName 兜底。 */
@@ -656,7 +744,7 @@ function buildBuffList(list: StaticBuff[] | undefined, fallbackPrefix: string): 
 		.filter((buff): buff is StageBuff => buff !== null)
 }
 
-function buildAsStages(ctx: BuildContext, baseUrl: string, detail: AsDetail): BossStage[] {
+async function buildAsStages(ctx: BuildContext, baseUrl: string, detail: AsDetail): Promise<BossStage[]> {
 	const levels = detail.level ?? []
 	const difficulty = [...levels].reverse().find((level) => level.boss_monster_id1 && level.boss_monster_id2)
 	const starward = [...levels].reverse().find((level) => level.boss_monster_id && !level.boss_monster_id1)
@@ -673,7 +761,6 @@ function buildAsStages(ctx: BuildContext, baseUrl: string, detail: AsDetail): Bo
 			seasonName,
 			monsterIds: [difficulty.boss_monster_id1],
 			event: difficulty.event_id_list1?.[0],
-			weakness: difficulty.damage_type1,
 			mechanic,
 			stageBuffs: buildBuffList(detail.buff_list1, "上半增益"),
 		},
@@ -685,7 +772,6 @@ function buildAsStages(ctx: BuildContext, baseUrl: string, detail: AsDetail): Bo
 			seasonName,
 			monsterIds: [difficulty.boss_monster_id2],
 			event: difficulty.event_id_list2?.[0],
-			weakness: difficulty.damage_type2,
 			mechanic,
 			stageBuffs: buildBuffList(detail.buff_list2, "下半增益"),
 		},
@@ -700,13 +786,12 @@ function buildAsStages(ctx: BuildContext, baseUrl: string, detail: AsDetail): Bo
 			seasonName,
 			monsterIds: [starward.boss_monster_id],
 			event: starward.event_id_list?.[0],
-			weakness: starward.damage_type,
 			mechanic,
 			stageBuffs: buildBuffList(detail.buff_list3, "星启增益"),
 		})
 	}
 
-	return drafts.map((draft) => buildStage(ctx, baseUrl, draft)).filter((stage): stage is BossStage => stage !== null)
+	return buildStages(ctx, baseUrl, drafts)
 }
 
 function infiniteEliteGroupOf(
@@ -718,20 +803,17 @@ function infiniteEliteGroupOf(
 	return wave?.elite_group
 }
 
-function buildAaStages(ctx: BuildContext, baseUrl: string, detail: AaDetail): BossStage[] {
+async function buildAaStages(ctx: BuildContext, baseUrl: string, detail: AaDetail): Promise<BossStage[]> {
 	const kingEvent = detail.boss_level?.event_id_list?.[0]
 	const kingMonsterId = bossMonsterIdOf(ctx, kingEvent)
 	if (!detail.boss_level || !kingMonsterId) return []
 
 	const seasonName = cleanText(detail.name) || `赛季 ${ctx.seasonId}`
 	const kingBoons = buildBuffList(detail.boss_config?.buff_list, "我方增益")
-	const kingWeakness = detail.boss_level.damage_type
-	const stages: BossStage[] = []
-
-	for (const [index, knight] of (detail.pre_level ?? []).entries()) {
+	const knightDrafts: StageDraft[] = (detail.pre_level ?? []).map((knight, index) => {
 		const event = knight.event_id_list?.[0]
 		const knightBossId = bossMonsterIdOf(ctx, event)
-		const stage = buildStage(ctx, baseUrl, {
+		return {
 			mode: "aa",
 			staticMode: "peak",
 			stageKey: `k${index + 1}`,
@@ -741,38 +823,40 @@ function buildAaStages(ctx: BuildContext, baseUrl: string, detail: AaDetail): Bo
 			event,
 			stageBuffs: buildBuffList(knight.tag_list, "敌方词缀"),
 			eliteGroup: infiniteEliteGroupOf(knight.infinite_list, knightBossId),
-		})
-		if (stage) stages.push(stage)
-	}
-
-	const checkmate = buildStage(ctx, baseUrl, {
-		mode: "aa",
-		staticMode: "peak",
-		stageKey: "checkmate",
-		stageLabel: cleanText(detail.boss_level.name) || "将杀王棋",
-		seasonName,
-		monsterIds: [kingMonsterId],
-		event: kingEvent,
-		weakness: kingWeakness,
-		stageBuffs: [...kingBoons, ...buildBuffList(detail.boss_level.tag_list, "敌方词缀")],
-		eliteGroup: infiniteEliteGroupOf(detail.boss_level.infinite_list, kingMonsterId),
+		}
 	})
+	const stages = await buildStages(ctx, baseUrl, knightDrafts)
+
+	const [checkmate] = await buildStages(ctx, baseUrl, [
+		{
+			mode: "aa",
+			staticMode: "peak",
+			stageKey: "checkmate",
+			stageLabel: cleanText(detail.boss_level.name) || "将杀王棋",
+			seasonName,
+			monsterIds: [kingMonsterId],
+			event: kingEvent,
+			stageBuffs: [...kingBoons, ...buildBuffList(detail.boss_level.tag_list, "敌方词缀")],
+			eliteGroup: infiniteEliteGroupOf(detail.boss_level.infinite_list, kingMonsterId),
+		},
+	])
 	if (checkmate) stages.push(checkmate)
 
 	const plightEvent = detail.boss_config?.event_id_list?.[0]
 	const plightBossId = bossMonsterIdOf(ctx, plightEvent) ?? kingMonsterId
-	const plight = buildStage(ctx, baseUrl, {
-		mode: "aa",
-		staticMode: "peak",
-		stageKey: "plight",
-		stageLabel: cleanText(detail.boss_config?.hard_name) || "将杀王棋·绝境",
-		seasonName,
-		monsterIds: [plightBossId],
-		event: plightEvent,
-		weakness: kingWeakness,
-		stageBuffs: [...kingBoons, ...buildBuffList(detail.boss_config?.tag_list, "敌方词缀")],
-		eliteGroup: infiniteEliteGroupOf(detail.boss_config?.infinite_list, plightBossId),
-	})
+	const [plight] = await buildStages(ctx, baseUrl, [
+		{
+			mode: "aa",
+			staticMode: "peak",
+			stageKey: "plight",
+			stageLabel: cleanText(detail.boss_config?.hard_name) || "将杀王棋·绝境",
+			seasonName,
+			monsterIds: [plightBossId],
+			event: plightEvent,
+			stageBuffs: [...kingBoons, ...buildBuffList(detail.boss_config?.tag_list, "敌方词缀")],
+			eliteGroup: infiniteEliteGroupOf(detail.boss_config?.infinite_list, plightBossId),
+		},
+	])
 	if (plight) {
 		// 绝境与将杀是同一首领，名字沿用将杀关的展示名并加绝境后缀，保持家族名口径一致。
 		if (checkmate) {
@@ -824,8 +908,11 @@ export async function buildSeasonBosses(
 
 	const ctx: BuildContext = {
 		seasonId,
+		version,
+		baseUrl,
 		lookup: buildMonsterLookup(monstersRaw),
 		tables: buildScalingTables(monsterValuesRaw, hardLevelRaw, eliteRaw, infiniteEliteRaw ?? {}),
+		monsterDetails: new Map(),
 	}
 
 	const seasonIds = STATIC_SEASON_IDS[seasonId]
@@ -839,10 +926,10 @@ export async function buildSeasonBosses(
 	])
 
 	const bosses: BossStage[] = []
-	if (Array.isArray(mocDetail)) bosses.push(...buildMocStages(ctx, baseUrl, mocDetail))
-	if (pfDetail) bosses.push(...buildPfStages(ctx, baseUrl, pfDetail))
-	if (asDetail) bosses.push(...buildAsStages(ctx, baseUrl, asDetail))
-	if (aaDetail) bosses.push(...buildAaStages(ctx, baseUrl, aaDetail))
+	if (Array.isArray(mocDetail)) bosses.push(...(await buildMocStages(ctx, baseUrl, mocDetail)))
+	if (pfDetail) bosses.push(...(await buildPfStages(ctx, baseUrl, pfDetail)))
+	if (asDetail) bosses.push(...(await buildAsStages(ctx, baseUrl, asDetail)))
+	if (aaDetail) bosses.push(...(await buildAaStages(ctx, baseUrl, aaDetail)))
 	return bosses
 }
 

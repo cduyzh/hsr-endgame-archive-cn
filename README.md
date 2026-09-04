@@ -140,7 +140,9 @@ https://static.nanoka.cc/
     ├── EliteGroup.json
     ├── InfiniteEliteGroup.json
     ├── character.json / lightcone.json         # 仅同步脚本读取
-    └── <locale>/{maze,story,boss,peak}/<id>.json   # 各模式单期详情（locale 固定 zh）
+    └── <locale>/
+        ├── monster/<基础id>.json               # 单怪详情：*ModifyValue 与属性抗性的唯一来源
+        └── {maze,story,boss,peak}/<id>.json      # 各模式单期详情（locale 固定 zh）
 ```
 
 业务终局模式 `EndgameMode` 为 `moc / pf / as / aa`（混沌回忆 / 虚构叙事 / 末日幻影 / 异相仲裁），与静态数据源的模式映射如下：
@@ -156,11 +158,11 @@ https://static.nanoka.cc/
 
 合并语义：远程快照**只补充业务配置里没有的敌方阶段 id**，并为缺失赛季追加 `<seasonId> 归档` 条目，不会覆盖 seed 或数据库中已有的赛季 label 与阶段字段。记录筛选用的 `seasonId`、`bossId` 始终是稳定 id。
 
-敌方阶段的展示字段同样来自这些详情 JSON：`HP/速度/韧性` 由 `monstervalue` × `HardLevelGroup` × 精英组系数算出；**场地 buff** 取各模式的 `buff` / `buff_list1~3` / `option` / `sub_option` / `tag_list`，文案里的 `#N[i]` 占位用同条目的 `param` 代入真实数值（占位后跟 `%` 时 ×100，如 `0.3` → `30%`）；首领名优先取怪物 `icon` 指向的基础模型名（更短的家族名，如「丰饶玄鹿」），当期变体名（「弗有垂暮的不老仙」）保留为副行。
+敌方阶段的展示字段同样来自这些详情 JSON：`HP/速度/韧性` 由 `monstervalue` × `HardLevelGroup` × 精英组系数算出，其中**韧性还要除以 3** 才是游戏内展示值，且速度与韧性都要在比例乘完后叠加单怪详情（`<locale>/monster/<基础id>.json`）里的 `*ModifyValue`；**弱点**取首领怪物自身的 `weak` 全集（阶段上的 `damage_type` 只是子集，不用于弱点），**抗性**取同一份单怪详情里非弱点属性的 `damage_type_resistance`；**场地 buff** 取各模式的 `buff` / `buff_list1~3` / `option` / `sub_option` / `tag_list`，文案里的 `#N[i]` 占位用同条目的 `param` 代入真实数值（占位后跟 `%` 时 ×100，如 `0.3` → `30%`）；首领名优先取怪物 `icon` 指向的基础模型名（更短的家族名，如「丰饶玄鹿」），当期变体名（「弗有垂暮的不老仙」）保留为副行。
 
 主页筛选的**标记**（复活 / 火墙 / 大月卡武器）需要投稿时手动勾选才会写入记录，勾选后按 AND 语义筛选；三个标记在筛选面板、投稿表单、记录徽标与审核台都用同一批游戏内图标，由 `src/components/FlagIcon.vue` 热链渲染、加载失败自动回落 lucide。成本与分数都支持**精确区间**检索（`costMin` / `costMax` / `scoreMin` / `scoreMax`，留空即不限；分数区间只在末日幻影出现），面板上的 `0-8 / 9-16 / 17-32 / 33-48` 只是快捷预设。异相仲裁的阶段在面板上分成「骑士关」与「将杀关（含绝境）」两组，其余模式统一为「首领关」，第 3 阶段带金色**星启**徽标（血量约为普通半区的 2–5 倍）。
 
-怪物图片统一经 `dataSource.ts` 的 `monsterImageUrl()` 生成，9 位实例怪物 id（`>= 1e8`）自动回退到基础 id 并对齐整十。血量口径为 `HPBase × HPModifyRatio × HardLevelGroup.HPRatio × (EliteGroup|InfiniteEliteGroup).HPRatio`，多阶段怪物追加 ` x<阶段数>`；虚构叙事（`pf`）因上游未公开每季缩放系数而跳过血量展示。
+怪物图片统一经 `dataSource.ts` 的 `monsterImageUrl()` 生成，9 位实例怪物 id（`>= 1e8`）自动回退到基础 id 并对齐整十。血量口径为 `HPBase × HPModifyRatio × HardLevelGroup.HPRatio × (EliteGroup|InfiniteEliteGroup).HPRatio`，多阶段怪物追加 ` x<阶段数>`，但各阶段血量上限不相等时（`PhaseList[].phase_max_hp_ratio` 互异，如 4.5 异相仲裁将杀关的 `1.0 / 1.25 / 1.0`）改成按阶段顺序逐个列出、不再压成 `x3`；虚构叙事（`pf`）因上游未公开每季缩放系数而跳过血量展示。敌方面板的 WEAK / RESIST 用游戏内属性图标（`src/data/elementIcons.ts` 热链 + `src/components/ElementIcon.vue` 渲染，加载失败回落中文属性名）。
 
 ## 数据更新流程
 
@@ -202,6 +204,7 @@ src/
 ├── assets/
 ├── components/
 │   ├── FlagIcon.vue                   # 标记图标唯一出口：热链图标 + lucide 回落
+│   ├── ElementIcon.vue                # 属性图标唯一出口：热链图标 + 中文属性名回落
 │   ├── PromoSlot.vue
 │   ├── admin/
 │   │   ├── AdminLoginDialog.vue
@@ -230,7 +233,8 @@ src/
 │   ├── changelog.ts                   # 站点更新记录与当前版本号（appVersion）
 │   ├── articles.ts                    # 文章模块唯一取数入口（首页速报 / /articles*）
 │   ├── articles.json                  # pnpm sync:articles 产物（微信文章元数据 + 热链图地址）
-│   ├── flagIcons.ts                   # 三个标记图标的热链地址（唯一不走 dataSource.ts 的图源）
+│   ├── flagIcons.ts                   # 三个标记图标的热链地址（与 elementIcons.ts 一起是不走 dataSource.ts 的图源）
+│   ├── elementIcons.ts                # 七个属性（弱点/抗性）图标的热链地址
 │   ├── signatureLightcones.ts         # 角色 -> 专武映射（投稿自动搭配）
 │   ├── unitAssets.ts
 │   └── unitPaths.ts
@@ -260,6 +264,6 @@ src/
 
 `scripts/reference-inventory.mjs` 只生成参考观察清单，不下载 The Genius Archive 资源。角色、光锥、怪物与命途图片均直连 `static.nanoka.cc`（如 `https://static.nanoka.cc/hsr/4.5/character.json`、`lightcone.json` 提供 `sourceId` 映射，见 `src/data/unitAssets.ts`），不再把图片落盘到 `public/`。补充角色图、光锥图、boss 图或文章封面前，必须确认来源和授权，不能直接复制未确认授权的参考站文件。
 
-例外有两条。**其一是三个终局标记的图标**：`src/data/flagIcons.ts` 热链 `theherta.com/skill_icons/` 上的游戏内图标，只热链、不落盘、不代理，加载失败由 `src/components/FlagIcon.vue` 回落 lucide。**其二是文章模块的微信配图**：`src/data/articles.json` 里的封面与正文图全部热链 `mmbiz.qpic.cn`，由 `pnpm sync:articles` 从文章页提取；该图床按 Referer 防盗链（带外域 Referer 会拿到一张 140x140 占位图），因此渲染必须走 `src/components/ArticleImage.vue`，它内部固定 `referrerpolicy="no-referrer"` 并自检是否取到了原图。两者的来源判断与脆弱点都登记在 [`AGENTS.md`](AGENTS.md)「资源与授权」。
+例外有三条。**其一是三个终局标记的图标**：`src/data/flagIcons.ts` 热链 `theherta.com/skill_icons/` 上的游戏内图标，只热链、不落盘、不代理，加载失败由 `src/components/FlagIcon.vue` 回落 lucide。**其二是文章模块的微信配图**：`src/data/articles.json` 里的封面与正文图全部热链 `mmbiz.qpic.cn`，由 `pnpm sync:articles` 从文章页提取；该图床按 Referer 防盗链（带外域 Referer 会拿到一张 140x140 占位图），因此渲染必须走 `src/components/ArticleImage.vue`，它内部固定 `referrerpolicy="no-referrer"` 并自检是否取到了原图。**其三是七个属性（弱点 / 抗性）图标**：`src/data/elementIcons.ts` 热链 `theherta.com/elements/`，同样只热链、不落盘，加载失败由 `src/components/ElementIcon.vue` 回落成中文属性名。三者的来源判断与脆弱点都登记在 [`AGENTS.md`](AGENTS.md)「资源与授权」。
 
 更多协作约定见 [AGENTS.md](./AGENTS.md)。其中「文档同步契约」给出了**代码改动点 → 必改文档**的映射表和提交前检查清单：改完代码必须在同一次提交里同步本文档与对应模块的 `AGENTS.md`。

@@ -17,6 +17,7 @@
 | `views/`                   | 页面级组件（见下）                                                                             |
 | `components/archive/`      | 档案工作台业务组件，含 `SubmitRunDialog.vue`（投稿弹窗外壳）与 `SubmitRunForm.vue`（三步向导） |
 | `components/FlagIcon.vue` | 标记图标的唯一渲染出口：热链游戏图标，加载失败自动回落 lucide（筛选面板 / 投稿表单 / 记录徽标 / 审核台四处共用）              |
+| `components/ElementIcon.vue` | 属性（弱点 / 抗性）图标的唯一渲染出口：热链游戏图标，加载失败自动回落中文属性名（敌方面板的 WEAK 行 / RESIST 行 / 敌方阵容三处共用） |
 | `components/ArticleImage.vue` | 微信文章配图的唯一渲染出口：`referrerpolicy="no-referrer"` + 防盗链占位图尺寸自检 + 加载失败回落占位块 |
 | `components/admin/`       | 投稿审核台组件（登录弹框、审核卡片）                                                                           |
 | `components/PromoSlot.vue`| 站务推广位（`App.vue` 内使用）                                                                                 |
@@ -24,7 +25,7 @@
 | `services/`               | 数据访问与纯函数层，见 [services/AGENTS.md](services/AGENTS.md)                                                |
 | `stores/archiveStore.ts`  | Pinia store，缓存 `ArchiveConfig` + 投稿自动搭配用的记录样本 `pairingRuns`                                     |
 | `types/archive.ts`        | 所有 `Archive*` 类型定义（唯一来源）                                                                           |
-| `data/`                   | seed 数据、图片/命途映射（`unitAssets.ts` / `unitPaths.ts`）、标记图标地址（`flagIcons.ts`）、专武映射（`signatureLightcones.ts`）、文章模块（`articles.ts` + 产物 `articles.json`）与站点更新记录（`changelog.ts`） |
+| `data/`                   | seed 数据、图片/命途映射（`unitAssets.ts` / `unitPaths.ts`）、标记图标地址（`flagIcons.ts`）与属性图标地址（`elementIcons.ts`）、专武映射（`signatureLightcones.ts`）、文章模块（`articles.ts` + 产物 `articles.json`）与站点更新记录（`changelog.ts`） |
 | `assets/`                  | `main.css`、`redesign.css` 全局样式                                                            |
 
 ## 路由与视图
@@ -41,7 +42,7 @@
 - `RunFlag`（`revive` / `firewall` / `bpWeapon`）同理：标记候选与中文文案一律取 `runUtils.ts` 的 `flagOrder` / `flagLabels`，读取记录上的标记用 `flagsOfRun(run)`，图标只用 `components/FlagIcon.vue`；敌方阶段的检索分组标题与星启判定用 `stageGroupOf` / `stageGroupLabels` / `isStarwardStage`，组件不要自己从阶段 id 里解析。
 - `ArchiveFilters` 的成本与分数都是**可空区间端点**（`costMin` / `costMax` / `scoreMin` / `scoreMax`，`null` = 该侧不限），组件与 composable 不要再假设成本是 `"0-8"` 这类枚举桶；面板上的四个成本档位只是写端点的 UI 预设。口径见 [services/AGENTS.md](services/AGENTS.md)「区间筛选口径」。
 - 数据入口统一走 `services/archiveService.ts`；它负责在 API 失败时回退到 `data/seed`。**不要**在组件里直接 `fetch` 业务 API。
-- 图片一律通过 `services/dataSource.ts` 的 `IMAGE_BASES` / `monsterImageUrl()` 或 `data/unitAssets.ts` 的 `getUnitImageSrc()` 生成，直连 `static.nanoka.cc`，不要引用本地副本。**唯一例外是标记图标**：地址在 `data/flagIcons.ts`，热链第三方站点，加载失败由 `components/FlagIcon.vue` 回落 lucide——授权与为什么不进 `IMAGE_BASES`，见根 [AGENTS.md](../AGENTS.md)「资源与授权」。
+- 图片一律通过 `services/dataSource.ts` 的 `IMAGE_BASES` / `monsterImageUrl()` 或 `data/unitAssets.ts` 的 `getUnitImageSrc()` 生成，直连 `static.nanoka.cc`，不要引用本地副本。**两处例外都是热链第三方站点的游戏内图标**：标记图标地址在 `data/flagIcons.ts`（失败由 `components/FlagIcon.vue` 回落 lucide）、属性弱点/抗性图标地址在 `data/elementIcons.ts`（失败由 `components/ElementIcon.vue` 回落中文属性名）——授权与为什么不进 `IMAGE_BASES`，见根 [AGENTS.md](../AGENTS.md)「资源与授权」。
 
 ## 状态管理
 
@@ -59,7 +60,7 @@
 ## 组件实现约定
 
 - 新增 Vue 一律用 Composition API + `<script setup lang="ts">`。
-- 图标优先通过 `lucide-vue-next` 引入，不手写 SVG。**例外**：三个终局标记（复活 / 火墙 / 大月卡武器）一律用 `components/FlagIcon.vue`，它内部已含热链远程图标与 lucide 回落；组件不要再自己写 `flagIcons` 映射。
+- 图标优先通过 `lucide-vue-next` 引入，不手写 SVG。**两处例外**：三个终局标记（复活 / 火墙 / 大月卡武器）一律用 `components/FlagIcon.vue`，七个属性（弱点 / 抗性）一律用 `components/ElementIcon.vue`；两者内部都已含热链远程图标与本地回落，组件不要再自己写 `flagIcons` / `elementIcons` 映射或直接裸写 `<img>`。
 - 筛选/排序/统计逻辑放 `services/runUtils.ts` 或 composable，组件不写业务计算；投稿的字段校验、步骤归属与预览取数在 `services/submissionValidation.ts`，成本合计与默认命座/叠影口径在 `services/unitCost.ts`，`SubmitRunForm.vue` 只保留“是否展示错误 / 当前步骤 / 成本是否被手改（`costTouched`）、视频链接查重是否命中（`duplicateMatches`）”这类 UI 状态。
 - 弹层沿用同一套结构：`Teleport to="body"` + `.modal-backdrop` + `role="dialog" aria-modal="true" aria-labelledby`，打开时给 `body` 加 `is-modal-open` 锁滚动、支持 Esc 与遮罩点击关闭、关闭后把焦点还给触发元素（见 `admin/AdminLoginDialog.vue`、`archive/SubmitRunDialog.vue`）。
 - 保持工作台风格：高信息密度、清晰分组、按钮带图标、移动端不横向溢出。
@@ -71,6 +72,7 @@
 - `data/seed/lightcone-pairs.json`：同样是 `pnpm sync:units` 的产物（角色 id -> 专武 id），但**会被 `data/signatureLightcones.ts` 运行时 import**——投稿表单要在选角色时同步查表。
 - `data/unitAssets.ts`：用 `config.json` 的 `sourceId` 把本地 slug id 映射为远程图片 `sourceId`。
 - `data/unitPaths.ts`：命途图标选项（`IMAGE_BASES.path`，9 个命途）。
+- `data/elementIcons.ts`：七个属性（弱点 / 抗性）图标的**热链地址**（`ELEMENT_ICON_SOURCES`），只能经 `components/ElementIcon.vue` 渲染；`BossPanel` 的 WEAK 行、RESIST 行与敌方阵容三处共用它。
 - `data/articles.ts` + `data/articles.json`：文章模块。`articles.json` 是 `pnpm sync:articles` 的产物（**运行时 import**），`articles.ts` 是首页速报与 `/articles*` 的唯一取数入口（`siteArticles` / `dispatchArticles` / `articleById` / `groupedArticles` / `articleCover` / `SERIES_CATEGORY` / `matchBossIds` / `versionLabelOf` / `splitByVersion`）。`matchBossIds(subject, bosses)` 拿标题里提取的首领名去撞 `BossStage.name` 与 `variantName`，**只出候选**：构建期没有本地首领清单（阶段来自远程快照），所以候选不落 `articles.json`，在运行时算。配图热链 `mmbiz.qpic.cn`，只能经 `components/ArticleImage.vue` 渲染（`no-referrer`），不要落盘到 `public/`。人工文案与 boss 关联改 `scripts/article-sources.json`，不要直接改产物。
 - `public/`：当前只有 `favicon.png`。所有游戏数据与图片都直连远程，**不要**把数据源 JSON 或图片落盘到 `public/`。
 

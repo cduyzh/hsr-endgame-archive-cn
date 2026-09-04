@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ChevronDown, Sparkles } from "lucide-vue-next"
 import { computed, shallowRef, watch } from "vue"
+import ElementIcon from "@/components/ElementIcon.vue"
 import { isStarwardStage } from "@/services/runUtils"
 import type { BossStage, ElementType } from "@/types/archive"
 
@@ -38,10 +39,6 @@ watch(
     buffIndex.value = 0
   },
 )
-
-function elementClass(element: ElementType) {
-  return `element-${element}`
-}
 
 function handleImageError() {
   failedImageUrl.value = props.boss.imageUrl ?? null
@@ -125,14 +122,11 @@ function handleImageError() {
           >
             <i>WEAK</i>
             <span class="affinity-row">
-              <span
+              <ElementIcon
                 v-for="weakness in boss.weakness"
                 :key="weakness"
-                class="element-chip"
-                :class="elementClass(weakness)"
-              >
-                <b>{{ weakness }}</b>
-              </span>
+                :element="weakness"
+              />
             </span>
           </span>
         </p>
@@ -148,15 +142,12 @@ function handleImageError() {
         >
           <span class="affinity-title">RESIST</span>
           <div class="affinity-row">
-            <span
+            <ElementIcon
               v-for="[element, value] in resistEntries"
               :key="element"
-              class="element-chip"
-              :class="elementClass(element)"
-            >
-              <b>{{ element }}</b>
-              <small>{{ value }}</small>
-            </span>
+              :element="element"
+              :value="value"
+            />
           </div>
         </div>
 
@@ -273,14 +264,12 @@ function handleImageError() {
             v-if="monster.weakness.length > 0"
             class="affinity-row lineup-weakness"
           >
-            <span
+            <ElementIcon
               v-for="weakness in monster.weakness"
               :key="weakness"
-              class="element-chip"
-              :class="elementClass(weakness)"
-            >
-              <b>{{ weakness }}</b>
-            </span>
+              :element="weakness"
+              :size="14"
+            />
           </span>
         </article>
       </div>

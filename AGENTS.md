@@ -70,11 +70,11 @@ pnpm seed:archive:dry    # 灌库空跑
 - `src/App.vue`：主壳和导航（档案 / 文章 / 规则 / **更新** / 我的投稿 / 审核 + 「提交记录」按钮、头部版本徽章与全局 `SubmitRunDialog` + `PromoSlot`）。
 - `src/router/index.ts`：8 条路由 `/`、`/submit`、`/me`（按本机 token 列出 / 撤回自己的投稿）、`/admin/submissions`、`/articles`、`/articles/:id`（文章详情）、`/faq`、`/changelog`（更新记录）；仅首页同步引入。
 - `src/views/`：`ArchiveView.vue`（只组合 `ArchiveWorkbench`）、`SubmitView.vue`（`/submit` 深链转发：打开投稿弹窗后回到首页）、`MySubmissionsView.vue`（`/me`，本机凭证反查 + 撤回 + 清理）、`AdminSubmissionsView.vue`、`ArticlesView.vue`（文章列表，按分类分组；强敌机制组内再按版本分段、条目走紧凑行）、`ArticleDetailView.vue`（`/articles/:id`，顺序渲染原文配图 + 微信原文外链）、`FaqView.vue`、`ChangelogView.vue`（`/changelog`，渲染 `src/data/changelog.ts` 的版本记录）。
-- `src/components/archive/`：档案业务组件，含投稿弹窗 `SubmitRunDialog.vue` 与其内部三步向导 `SubmitRunForm.vue`；`src/components/admin/`：审核台弹框与卡片；`src/components/PromoSlot.vue`：站务推广位；`src/components/FlagIcon.vue`：标记图标的唯一渲染出口（热链图标 + lucide 回落，四处共用）。
+- `src/components/archive/`：档案业务组件，含投稿弹窗 `SubmitRunDialog.vue` 与其内部三步向导 `SubmitRunForm.vue`；`src/components/admin/`：审核台弹框与卡片；`src/components/PromoSlot.vue`：站务推广位；`src/components/FlagIcon.vue`：标记图标的唯一渲染出口（热链图标 + lucide 回落，四处共用）；`src/components/ElementIcon.vue`：属性（弱点/抗性）图标的唯一渲染出口（热链图标 + 中文属性名回落，弱点行、抗性行与敌方阵容三处共用）。
 - `src/composables/`：`useArchiveFilters.ts`（筛选状态 + 路由 query 双向同步）、`useRunsQuery.ts`、`useMetaStats.ts`、`useAdminSubmissions.ts`、`useSubmissionDialog.ts`（投稿弹窗全局开关）、`useSubmissionDraft.ts`（投稿草稿 localStorage 缓存）、`useSubmissionMemory.ts`（作者名 / 配队预设 / 投稿 token 三合一 localStorage 记忆）。
 - `src/types/archive.ts`：所有 `Archive*` 类型的唯一来源。
-- `src/services/`：`archiveService.ts`（API + seed fallback + 管理员会话 + `listMySubmissions`/`withdrawSubmission`）、`staticArchiveConfig.ts`（浏览器端静态快照入口）、`staticBossSnapshot.ts`（前后端共用的阶段推导纯计算层：`STATIC_SEASON_IDS`、HP/场地 buff/首领取名口径）、`dataSource.ts`（远程地址与图片）、`runUtils.ts`、`unitCost.ts`、`submissionUtils.ts`、`submissionValidation.ts`（投稿校验与预览纯函数）、`videoUrl.ts`（视频身份归一与查重口径，前后端共用）。
-- `src/data/`：`unitAssets.ts`（`sourceId` -> 远程图）、`unitPaths.ts`（命途图标）、`flagIcons.ts`（三个标记图标的**热链地址**，唯一不走 `dataSource.ts` 的图源）、`signatureLightcones.ts`（角色 -> 专武映射的运行时入口）、`articles.ts`（文章模块唯一取数入口，读 `sync:articles` 产物 `articles.json`）、`changelog.ts`（更新记录数据，`appVersion` 供头部徽章）、`seed/`。
+- `src/services/`：`archiveService.ts`（API + seed fallback + 管理员会话 + `listMySubmissions`/`withdrawSubmission`）、`staticArchiveConfig.ts`（浏览器端静态快照入口）、`staticBossSnapshot.ts`（前后端共用的阶段推导纯计算层：`STATIC_SEASON_IDS`、HP/速度/韧性/弱点/抗性/场地 buff/首领取名口径）、`dataSource.ts`（远程地址与图片）、`runUtils.ts`、`unitCost.ts`、`submissionUtils.ts`、`submissionValidation.ts`（投稿校验与预览纯函数）、`videoUrl.ts`（视频身份归一与查重口径，前后端共用）。
+- `src/data/`：`unitAssets.ts`（`sourceId` -> 远程图）、`unitPaths.ts`（命途图标）、`flagIcons.ts`（三个标记图标的**热链地址**）与 `elementIcons.ts`（七个属性图标的**热链地址**）——这两个是**唯一不走 `dataSource.ts`** 的图源、`signatureLightcones.ts`（角色 -> 专武映射的运行时入口）、`articles.ts`（文章模块唯一取数入口，读 `sync:articles` 产物 `articles.json`）、`changelog.ts`（更新记录数据，`appVersion` 供头部徽章）、`seed/`。
 - `src/stores/archiveStore.ts`：档案配置缓存 + 投稿自动搭配用的记录样本（`pairingRuns`）。
 - `src/data/seed/`：无数据库时的本地种子数据。当前 `config.json` 中 `bosses` 为空数组、`runs.json` 为空数组，敌方阶段完全由静态快照生成；`hsr-units.json` / `hsr-monsters.json` 只是同步脚本产物，运行时代码不 import（`seed/index.ts` 仅导出 `config.json` 与 `runs.json`）；`lightcone-pairs.json` 同样是 `sync:units` 产物，但**由 `signatureLightcones.ts` 在运行时 import**，为投稿表单提供专武映射。`config.json` 的 `articles` 与库里 `articles` 表**已不再驱动任何界面**，文章板块只读 `src/data/articles.ts`（见「已知不一致」）。
 - `netlify/functions/`：服务端 API。
@@ -147,7 +147,12 @@ POSTGRES_URL
 - 每个大版本的赛季详情 id 硬编码在 `src/services/staticBossSnapshot.ts` 的 `STATIC_SEASON_IDS` 中（形如 `"4.5": { moc: 1035, fiction: 2026, doom: 3020, peak: 9 }`）。**上线新赛季必须在这里补一条**，否则该赛季不会出现在页面上；id 需对照线上 `hsr/<ver>/zh/` 目录下的详情文件名核实。
 - HP/速度/韧性口径（`computeStageStats()`）：  
   `HP = monsterValue.HPBase × child.HPModifyRatio × HardLevelGroup.HPRatio × (EliteGroup|InfiniteEliteGroup).HPRatio`，  
-  多阶段怪物（`MaxMonsterPhase > 1`）在展示值后追加 ` x<阶段数>`；速度只乘 `HardLevelGroup.SpeedRatio`，韧性再乘精英组 `StanceRatio`。上游 `monstervalue.json` **没有** `PhaseList.phase_max_hp_ratio` 字段，不要按旧文档实现。
+  多阶段怪物（`MaxMonsterPhase > 1`）在展示值后追加 ` x<阶段数>`；但 `PhaseList[].phase_max_hp_ratio` **互不相等**时（4.5 异相仲裁将杀关是 `1.0 / 1.25 / 1.0`）改由 `formatHp()` 按阶段顺序逐个列出（`12,395,970 / 15,494,962 / 12,395,970`），不能压成 `x3`——否则读者拿 `x3` 去理解，会跟游戏里每一管的实际血量对不上。比例全相等、或上游根本没给 `PhaseList` 时仍走 `xN`；  
+  `速度 = SpeedBase × SpeedModifyRatio × HardLevelGroup.SpeedRatio + child.SpeedModifyValue`（保留 1 位小数）；  
+  `韧性 = (StanceBase × StanceModifyRatio × HardLevelGroup.StanceRatio × 精英组.StanceRatio + child.StanceModifyValue) ÷ 3`——**上游 stance 单位是游戏内展示韧性的 3 倍**（480 → 160、360 → 120，全量样本 92% 精确命中，其余由精英组 `StanceRatio` 解释）。  
+  两个 `*ModifyValue` **只在单怪详情文件里**（`monstervalue.json` 的 child 只有 Ratio），所以每个阶段首领要额外拉一次 `zh/monster/<基础 id>.json`；`HardLevelGroup.StanceRatio` 上游全为 1，`InfiniteEliteGroup` 也全为 1，只有普通 `EliteGroup` 有非 1 值。  
+  `PhaseList[].phase_max_hp_ratio` 与 `MaxMonsterPhase` **长度恒等**（实测 632 条无一例外），HP 侧**要**乘它；但 632 个怪物里有 474 个根本不公开 `PhaseList`，所以**不能**把「没有 PhaseList」当成「单阶段」来推断。
+- 弱点与抗性口径：`BossStage.weakness` **只取阶段首领怪物自身的 `weak`**（`bossWeaknessOf()`）。上游阶段上的 `damage_type` / `damage_type1/2` **不是弱点表**，它只是弱点的一个子集（4.4 异相仲裁将杀关给 `火/量子`，首领实际弱点是 `火/雷/量子`；4.4 末日幻影星启的「心蕉如火的猴把戏」根本没有弱点，按 `damage_type` 显示会凭空多出 4 个属性），所以 `StageDraft` 已经没有 `weakness` 字段、`StaticLevel` 也不再声明 `damage_type*`。`BossStage.resist` 取单怪详情 child 的 `damage_type_resistance`，只保留 `value > 0` 的项（上游用负值表示「反而更脆」，如 `Assistant Graffiti: Slacker` 对自己弱点的雷/风给 `-0.2`），格式化成 `20%`～`80%` 字符串。
 - 虚构叙事（`pf`）的每季额外血量缩放未在数据源公开，代码显式 `skipHp`，因此该模式阶段不展示 HP，只展示速度与韧性。
 - 场地 buff 一律**结构化**存进 `BossStage.mechanic`（单条赛季机制，可为 `null`）与 `BossStage.stageBuffs`（该阶段的增益与词缀列表），不再拼成一整段文本。各模式的取数位置：`moc` 终层 `desc`+`param`（记忆迷阵，上游未公开 `maze_group_id` 的名字/描述，上下半共用同一条）；`pf` 顶层 `buff` + `option`/`sub_option`；`as` 顶层 `buff` + 该半区的 `buff_list1/2/3` **全量**（旧实现只取 `[0]`，会丢两条）；`aa` 的 `boss_config.buff_list`（我方增益）+ 对应层 `tag_list`（敌方词缀）。
 - buff 文案里的 `#N[i]` 占位由同一条目的 `param[N-1]` 代入（`applyBuffParams()`）：**占位后紧跟 `%` 时数值 ×100**（`param=[0.3]` → `30%`），其余按原值输出并去掉浮点尾零。上游用两个字符的字面量 `\n` 分段，`cleanBuffText()` 转成真实换行交给 CSS `white-space: pre-line` 渲染；`cleanText()`（用于名称）仍把空白折叠成单个空格。
@@ -183,6 +188,7 @@ https://static.nanoka.cc/
     ├── maze.json / maze_extra.json / maze_boss.json / maze_peak.json
     │                                           # 上游索引文件，当前代码不再消费
     └── <locale>/                               # locale 固定为 zh
+        ├── monster/<基础id>.json               # 运行时读取（首领粒度：*ModifyValue 与 damage_type_resistance）
         ├── maze/<id>.json                      # 混沌回忆（结构为 level 数组）
         ├── story/<id>.json                     # 虚构叙事
         ├── boss/<id>.json                      # 末日幻影
@@ -203,7 +209,7 @@ https://static.nanoka.cc/
 1. `fetchStaticArchiveSnapshot()` 读 `manifest.json`。
 2. 用 `pickDataDirectory(manifest.hsr.available)` 取**最新的数据目录**（如 `4.5.51`）作为 `<ver>`，所有赛季共用该目录。上游只保留当前大版本目录，历史赛季的详情文件仍在其中累积，因此 `4.4` 的 `1034` 等 id 也从 `4.5.51/` 读取。
 3. 并行拉 `monster.json`、`monstervalue.json`、`HardLevelGroup.json`、`EliteGroup.json`、`InfiniteEliteGroup.json`（最后一个允许缺失）。
-4. 按 `STATIC_SEASON_IDS[seasonId][staticMode]` 直接拼 `<locale>/<dir>/<id>.json` 拉四份模式详情；单个模式详情 404 时该模式为空，不影响其余模式。
+4. 按 `STATIC_SEASON_IDS[seasonId][staticMode]` 直接拼 `<locale>/<dir>/<id>.json` 拉四份模式详情；单个模式详情 404 时该模式为空，不影响其余模式。构建每个阶段时还会**按首领粒度**再拉一次 `<locale>/monster/<基础id>.json`（同一基础 id 复用缓存，一个赛季约十余个首领、单个 gzip 后 2KB 上下；404 时只是不叠加 `*ModifyValue`、抗性为空）。
 5. `liveVersion` 取 `manifest.hsr.live`（如 `4.5`），用于判定 `isCurrent`。
 
 **不再**从 `maze*.json` 索引里取最大 `seasonId` 推导赛季，也**不使用** `hsr.latest` 或 `cache-plan.json`。这意味着：新赛季数据推上 `static.nanoka.cc` 后，只有补了 `STATIC_SEASON_IDS` 条目页面才会出现对应赛季。
@@ -251,7 +257,7 @@ pnpm sync:stages -- --season=4.5  # 只同步指定赛季
 - UI 保持当前工作台风格：高信息密度、清晰分组、按钮带图标、移动端不横向溢出。
 - 弹层统一沿用既有模式：`Teleport to="body"` + `.modal-backdrop` + `role="dialog" aria-modal="true"`（参考 `src/components/admin/AdminLoginDialog.vue` 与 `src/components/archive/SubmitRunDialog.vue`），打开时给 `body` 加 `is-modal-open` 锁滚动、支持 Esc 与遮罩点击关闭、关闭后把焦点还给触发元素。
 - 表单校验、成本统计、预览等规则放 `src/services/`（如 `submissionValidation.ts`）以便单测，组件只保留“是否展示错误”这类 UI 状态。
-- 使用 lucide 图标时优先通过 `lucide-vue-next` 引入，不手写 SVG 图标。**唯一例外**是三个终局标记的图标，见下文「资源与授权」。
+- 使用 lucide 图标时优先通过 `lucide-vue-next` 引入，不手写 SVG 图标。**两处例外**都是热链米哈游的游戏内图标、且各自有唯一的渲染出口组件：三个终局标记走 `FlagIcon.vue`、七个属性（弱点/抗性）图标走 `ElementIcon.vue`。见下文「资源与授权」。
 
 ## 资源与授权
 
@@ -281,7 +287,19 @@ pnpm sync:stages -- --season=4.5  # 只同步指定赛季
 - 地址由腾讯决定，随时可能整体失效。届时详情页仍有「查看微信原文」外链兜底，卡片退化成无图版式，不会白屏。
 - 它**不属于** `src/services/dataSource.ts` 的统一图源，不要并进 `IMAGE_BASES`，否则会被误读成 `static.nanoka.cc` 的一部分。
 
-除上述两条外没有别的第三方图源；要新增，先在本节登记来源与授权判断。
+### 已登记的例外三：七个属性（弱点 / 抗性）图标
+
+`src/data/elementIcons.ts` 里 `物理 / 火 / 冰 / 雷 / 风 / 量子 / 虚数` 七条地址热链 `https://theherta.com/elements/`（原图 256×256 PNG，20～63KB）。它们是米哈游的游戏内属性图标、由该站托管；本项目**只热链、不落盘、不代理**，与例外一同理。渲染统一走 `src/components/ElementIcon.vue`，`@error` 时回落成中文属性名文字 chip，所以第三方图源不可用时只是退回文字版式，不会白屏。
+
+`static.nanoka.cc` 只有怪物中图 / 角色头像 / 光锥图 / 命途图四类（见 `IMAGE_BASES`），**没有属性图标目录**，所以这七条不进 `IMAGE_BASES`，否则会把它误读成统一图源的一部分。
+
+这条依赖的已知脆弱点（2026-09 实测）：
+
+- 文件名口径是 `physical / fire / ice / lightning / wind / quantum / imaginary`，注意**雷是 `lightning.png` 而不是 `thunder.png`**（参考站自己也在 `thunder → lightning` 做过一次改名）。
+- 与例外一同源同性质：路径由对方决定，响应**没有** `access-control-allow-origin`（`<img>` 引用不需要 CORS），`cache-control: public, max-age=0, must-revalidate` 每次都要重新校验。**按 Referer 不拦**——带外部 Referer 仍返回原图，所以不需要 `referrerpolicy`。
+- 届时改 `elementIcons.ts` 那七条地址，或直接删掉让 `ElementIcon` 全量走文字 chip 回落。
+
+除上述三条外没有别的第三方图源；要新增，先在本节登记来源与授权判断。
 
 ## 验证口径
 
@@ -311,11 +329,12 @@ pnpm build
 | `package.json` 的 `scripts` / `engines`                                                                             | 本文件「技术栈与命令」、`README.md`「本地运行 / 验证命令」、`scripts/AGENTS.md`「脚本一览」                                                        |
 | `netlify.toml`（redirect、Node 版本、构建命令）                                                                     | 本文件「API 与数据库」、`README.md`「API 路由 / Netlify 部署」、`netlify/AGENTS.md`「文件职责」                                                    |
 | `netlify/functions/*`（路由、鉴权、limit、fallback、SQL）                                                           | `netlify/AGENTS.md`；接口 shape 变化时再同步本文件「API 与数据库」与 `README.md`                                                                   |
-| `src/services/staticBossSnapshot.ts` / `staticArchiveConfig.ts`（`STATIC_SEASON_IDS`、阶段 id/`stageKey`、HP 与场地 buff 口径、首领取名、subtitle、合并语义）                 | 本文件「数据架构 / 静态数据维护约束 / 远程数据源使用说明 / 新赛季上线清单」、`README.md`「静态数据源」、`src/services/AGENTS.md`「静态快照与合并」 |
+| `src/services/staticBossSnapshot.ts` / `staticArchiveConfig.ts`（`STATIC_SEASON_IDS`、阶段 id/`stageKey`、HP/速度/韧性/弱点/抗性与场地 buff 口径、单怪详情拉取、首领取名、subtitle、合并语义）                 | 本文件「数据架构 / 静态数据维护约束 / 远程数据源使用说明 / 新赛季上线清单」、`README.md`「静态数据源」、`src/services/AGENTS.md`「静态快照与合并」 |
 | `src/services/dataSource.ts`（数据源域名、图片目录、`monsterImageUrl`）                                             | 本文件「远程数据源使用说明」路径树、`README.md`「静态数据源」路径树、`src/services/AGENTS.md`「图片寻址」                                          |
 | `src/services/archiveService.ts` / `runUtils.ts` / `unitCost.ts` / `submissionUtils.ts` / `submissionValidation.ts` / `videoUrl.ts` | `src/services/AGENTS.md`「文件职责 / 成本与统计口径 / 投稿校验」；口径影响 `netlify/functions/_shared.ts` 时同步 `netlify/AGENTS.md`               |
 | `src/types/archive.ts`（字段增删）                                                                                  | `src/AGENTS.md`「类型与数据流约定」，并在涉及 seed shape 时同步 `src/data/seed` 说明                                                               |
 | `src/router/index.ts`、`src/views/*`、`src/components/*` 增删                                                       | 本文件「代码结构」、`src/AGENTS.md`「模块地图 / 路由与视图」、`README.md`「项目结构」                                                              |
+| `src/data/flagIcons.ts` / `src/data/elementIcons.ts`（第三方热链图源，或新增任何热链图源）                          | 本文件「资源与授权」登记的例外条目、`src/AGENTS.md`「本地数据与图片」                     |
 | `src/data/seed/*`（赛季、模式 label、units 结构）                                                                   | 本文件「代码结构」seed 现状说明、`README.md`「数据层」、`scripts/AGENTS.md`「关键注意点」                                                          |
 | `scripts/*`（新增脚本、环境变量）                                                                                   | `scripts/AGENTS.md`「脚本一览 / 关键注意点」、本文件「技术栈与命令」                                                                               |
 | `tests/*`（新增/改名用例）                                                                                          | `tests/AGENTS.md`「现有覆盖」                                                                                                                      |

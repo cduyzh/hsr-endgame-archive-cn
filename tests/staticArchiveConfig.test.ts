@@ -50,7 +50,7 @@ const fixtureFiles: Record<string, unknown> = {
       rank: "LittleBoss",
       icon: "SpriteOutput/MonsterFigure/Monster_4035010.png",
       child: [4035010],
-      weak: ["量子"],
+      weak: ["Ice"],
       zh: "示例王棋",
     },
   },
@@ -67,6 +67,7 @@ const fixtureFiles: Record<string, unknown> = {
       SpeedBase: 200,
       StanceBase: 720,
       MaxMonsterPhase: 2,
+      PhaseList: [{phase_num: 1, phase_max_hp_ratio: 1.0}, {phase_num: 2, phase_max_hp_ratio: 1.0}],
       child: [{ Id: 2034100, HPModifyRatio: 1, SpeedModifyRatio: 1, StanceModifyRatio: 1 }],
     },
     "1004010": {
@@ -88,6 +89,12 @@ const fixtureFiles: Record<string, unknown> = {
       SpeedBase: 120,
       StanceBase: 720,
       MaxMonsterPhase: 3,
+      // 各阶段上限不等（4.5 异相仲裁将杀关就是 1.0 / 1.25 / 1.0），不能压成 x3
+      PhaseList: [
+        {phase_num: 1, phase_max_hp_ratio: 1.0},
+        {phase_num: 2, phase_max_hp_ratio: 1.25},
+        {phase_num: 3, phase_max_hp_ratio: 1.0},
+      ],
       child: [{ Id: 4035010, HPModifyRatio: 1, SpeedModifyRatio: 1, StanceModifyRatio: 1 }],
     },
   },
@@ -99,6 +106,37 @@ const fixtureFiles: Record<string, unknown> = {
   },
   [`${DATA_SITE}/hsr/4.5.51/InfiniteEliteGroup.json`]: {
     "0": { EliteGroup: 370, HPRatio: 3, SpeedRatio: 1, StanceRatio: 1 },
+  },
+  // 单怪详情：`*_modify_value` 与抗性表只在这份里有，索引版 monstervalue.json 不带。
+  // 有意只给 2034010 / 4035010 两份，其余阶段走「详情缺失」分支（不叠加修正值、抗性为空）。
+  [`${DATA_SITE}/hsr/4.5.51/zh/monster/2034010.json`]: {
+    id: 2034010,
+    child: [
+      {
+        id: 2034010,
+        speed_modify_value: 10,
+        stance_modify_value: 90,
+        damage_type_resistance: [
+          { damage_type: "Ice", value: 0.2 },
+          { damage_type: "Thunder", value: 0.4 },
+          { damage_type: "Quantum", value: 0.2 },
+          { damage_type: "Imaginary", value: -0.2 },
+        ],
+      },
+    ],
+  },
+  [`${DATA_SITE}/hsr/4.5.51/zh/monster/4035010.json`]: {
+    id: 4035010,
+    child: [
+      {
+        id: 4035010,
+        stance_modify_value: 60,
+        damage_type_resistance: [
+          { damage_type: "Fire", value: 0.2 },
+          { damage_type: "Wind", value: 0.2 },
+        ],
+      },
+    ],
   },
   [`${DATA_SITE}/hsr/4.5.51/zh/peak/9.json`]: {
     name: "军团再临",
@@ -337,9 +375,12 @@ describe("fetchStaticArchiveSnapshot", () => {
       name: "步离战首·呼雷",
       subtitle: "混沌回忆 · 物竞天择",
       hp: "800,000 x2",
-      speed: "264",
-      toughness: "720",
-      weakness: ["物理"],
+      speed: "274",
+      toughness: "270",
+      weakness: ["物理", "火", "风"],
+      // 弱点取首领自身 weak 的全集，不是阶段 damage_type 的那一两个；
+      // 抗性只留正数，所以详情里的 Imaginary: -0.2 不出现。
+      resist: { 冰: "20%", 雷: "40%", 量子: "20%" },
       imageUrl: `${DATA_SITE}/assets/hsr/monstermiddleicon/Monster_2034010.webp`,
     })
     expect(top?.monsters?.[0]).toMatchObject({ id: "2034010", name: "步离战首·呼雷" })
@@ -359,13 +400,13 @@ describe("fetchStaticArchiveSnapshot", () => {
     expect(knight?.stageBuffs).toEqual([{ id: "3033088", name: "刚毅", desc: "敌方目标受到的击破伤害降低50%。" }])
 
     const checkmate = snapshot?.bosses.find((boss) => boss.id === "4.5-aa-checkmate")
-    expect(checkmate).toMatchObject({ name: "示例王棋", hp: "400,000 x3", weakness: ["冰"] })
+    expect(checkmate).toMatchObject({ name: "示例王棋", hp: "400,000 / 500,000 / 400,000", weakness: ["冰"] })
     // 将杀关：我方增益在前、本层敌方词缀在后，各自独立成条而不是拼成一整段。
     expect(checkmate?.stageBuffs.map((buff) => buff.name)).toEqual(["美妙奇笑", "血嗜"])
     expect(checkmate?.stageBuffs[0]?.desc).toBe("我方全体目标欢愉度提高40%。")
 
     const plight = snapshot?.bosses.find((boss) => boss.id === "4.5-aa-plight")
-    expect(plight).toMatchObject({ name: "示例王棋（绝境）", hp: "1,200,000 x3" })
+    expect(plight).toMatchObject({ name: "示例王棋（绝境）", hp: "1,200,000 / 1,500,000 / 1,200,000" })
     expect(plight?.stageBuffs.map((buff) => buff.name)).toEqual(["美妙奇笑", "血嗜+"])
 
     // 末日幻影：顶层 buff 是赛季机制，buff_list1 的三条全部保留（旧实现只取第一条）。
@@ -395,6 +436,13 @@ describe("fetchStaticArchiveSnapshot", () => {
     expect(pfTop?.stageBuffs.map((buff) => buff.name)).toEqual(["狂欢", "狂想", "谜狂", "获得笑点"])
     expect(pfTop?.stageBuffs[0]?.desc).toBe("敌方目标受到的欢愉伤害提高30%。")
     expect(pfTop?.stageBuffs[3]?.desc).toBe("使我方额外积累2点战意值。")
+
+    // 单怪详情按首领粒度拉：缺详情时韧性退回不叠加修正值、抗性为空，阶段本身不受影响。
+    expect(knight).toMatchObject({ toughness: "120", resist: {} })
+
+    // 有详情时修正值在全部比例乘完之后叠加，再除以 3：(720 + 60) / 3 = 260。
+    expect(checkmate).toMatchObject({ toughness: "260", resist: { 火: "20%", 风: "20%" } })
+    expect(plight?.toughness).toBe("260")
   })
 
   it("远程数据源不可用时返回 null", async () => {
@@ -416,7 +464,7 @@ function makeGeneratedBoss(id: string, seasonId = "4.5"): BossStage {
     subtitle: "混沌回忆 · 物竞天择",
     hp: "800,000 x2",
     speed: "264",
-    toughness: "720",
+    toughness: "240",
     weakness: ["物理"],
     resist: {},
     clears: 0,

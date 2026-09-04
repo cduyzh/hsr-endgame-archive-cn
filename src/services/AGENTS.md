@@ -33,11 +33,12 @@
 - **赛季详情 id 是硬编码的**：`STATIC_SEASON_IDS = { "4.4": { moc:1034, fiction:2025, doom:3019, peak:8 }, "4.5": { moc:1035, fiction:2026, doom:3020, peak:9 } }`。上线新赛季必须在此新增条目，否则页面不会出现该赛季（见根 `AGENTS.md` 的「新赛季上线清单」）。
 - 模式映射（业务 → 静态 → 详情目录）：`moc→moc/maze`、`pf→fiction/story`、`as→doom/boss`、`aa→peak/peak`，locale 固定 `zh`。阶段副标题文案来自本文件的 `modeLabelByStaticMode`，与 seed `config.json` 的 `modes[].label` 一致（`aa` 统一为「异相仲裁」）——改任一处名称必须同时改另一处。
 - 阶段构建：`buildMocStages` / `buildPfStages` / `buildAsStages` / `buildAaStages` 各自从详情里挑终层与星启层；`aa` 遍历 `pre_level` 生成 `k1..kN`，再加 `checkmate`、`plight`。阶段首领由 `bossMonsterIdOf()` 在末波怪物里按 `rank`（`Elite`/`Minion`/`MinionLv2` 视为随从，未知 rank 视为主首领）+ 血量打分选出。上游偶发的 `"BOSS"` 占位名会退回阶段名。
+- 弱点与抗性：`BossStage.weakness` **只取阶段首领自身的 `weak`**（`bossWeaknessOf()`）——上游阶段上的 `damage_type` / `damage_type1/2` 只是弱点的一个子集，不是弱点表（4.4 异相仲裁将杀关 `damage_type` 给 `火/量子`，首领实际弱点是 `火/雷/量子`；4.4 末日幻影星启的「心蕉如火的猴把戏」根本没有弱点），所以 `StageDraft` 不带 `weakness` 字段、`StaticLevel` 也不声明 `damage_type*`。`BossStage.resist` 取单怪详情 child 的 `damage_type_resistance`，只留 `value > 0` 的项并格式化成 `20%`～`80%`（上游用负值表示「反而更脆」）。
 - 首领取名（`stageDisplayNames()`）：`BossStage.name` 优先取**怪物 `icon` 指向的基础模型 id** 解析出的家族短名（`2024016`「弗有垂暮的不老仙」的 icon 是 `Monster_2024010` → 「丰饶玄鹿」），与 `getMonsterImageId()` 同源、不需要手抄名单；当期变体名放 `BossStage.variantName`。解析不到、与变体名相同、或命中 `"BOSS"` 占位时退回变体名再退回阶段名。`aa` 的 `plight` 直接复用 `checkmate` 的展示名加「（绝境）」，避免同一首领两处口径不一致。
 - 场地 buff：`BossStage.mechanic`（单条赛季机制，可为 `null`）+ `BossStage.stageBuffs`（该阶段增益与词缀数组），由 `buildBuff()` / `buildBuffList()` 产出，**不再拼成一整段文本**。取数位置：`moc` 终层 `desc`+`param`（上游未公开 `maze_group_id` 的名字/描述，故上下半共用一条、名字兜底为「记忆迷阵」）；`pf` 顶层 `buff` + `option` + `sub_option`；`as` 顶层 `buff` + 该半区的 `buff_list1/2/3` 全量；`aa` 的 `boss_config.buff_list`（我方增益，在前）+ 对应层 `tag_list`（敌方词缀，在后）。
 - `subtitle` 口径为 `"<模式> · <赛季名>"`（如「末日幻影 · 仙客天狼」），**不含阶段名**——阶段由徽标与 `runUtils.stageGroupOf()` 的分组标题表达。
 - 阶段 id：`${seasonId}-${业务模式}-${stageKey}`，是 seed/库里记录 `bossId` 引用的稳定值。
-- 数值口径：`HP = HPBase × child.HPModifyRatio × HardLevelGroup.HPRatio × (EliteGroup|InfiniteEliteGroup).HPRatio`，`MaxMonsterPhase > 1` 时展示值追加 ` x<阶段数>`（如 `800,000 x2`）。速度乘 `HardLevelGroup.SpeedRatio` 保留 1 位小数，韧性额外乘精英组 `StanceRatio`。**没有** `PhaseList.phase_max_hp_ratio` 这一路。`pf` 传 `skipHp`，血量不展示。
+- 数值口径：`HP = HPBase × child.HPModifyRatio × HardLevelGroup.HPRatio × (EliteGroup|InfiniteEliteGroup).HPRatio`，`MaxMonsterPhase > 1` 时展示值追加 ` x<阶段数>`（如 `800,000 x2`）；`PhaseList[].phase_max_hp_ratio` 互不相等时改走 `formatHp()` 按阶段列出（`400,000 / 500,000 / 400,000`），比例相等或没有 `PhaseList` 时仍是 `xN`。速度 = `SpeedBase × SpeedModifyRatio × HardLevelGroup.SpeedRatio` 保留 1 位小数；韧性 = `(StanceBase × StanceModifyRatio × HardLevelGroup.StanceRatio × 精英组.StanceRatio) ÷ 3`——**上游 stance 单位是游戏内展示韧性的 3 倍**（480 → 160）。两个 `*ModifyValue` 只在**单怪详情**里（`monstervalue.json` 的 child 只有 Ratio），所以 `buildStage` 会按首领粒度再拉一次 `hsr/<ver>/zh/monster/<基础id>.json`（`monsterDetailChildren()`，同基础 id 复用缓存、404 时只是不叠加修正值且抗性为空，不抛错）。`pf` 传 `skipHp`，血量不展示。`PhaseList` 与 `MaxMonsterPhase` 长度恒等，但 632 个怪物里 474 个不公开 `PhaseList`——**不能**把「没有 PhaseList」当成「单阶段」。
 - `mergeStaticArchiveConfig()`：只把 `config.bosses` 中**不存在 id** 的生成阶段追加进去，并为缺失赛季补 `{ id, label: "<seasonId> 归档", isCurrent: seasonId === liveVersion }`。已有条目（含 seed/库中的历史阶段与赛季 label）**一律不覆盖**。快照为空或 `bosses` 为空时原样返回。
 - 文本：名称类走 `cleanText()`（去富文本标签与 `#n[i]` 占位、把空白折叠成单个空格）；buff 文案走 `cleanBuffText()` + `applyBuffParams()`——先把 `#N[i]` 用同条目的 `param[N-1]` 代入（**占位后紧跟 `%` 时 ×100**，`0.3` → `30%`；其余去浮点尾零），再把上游以两字符存的字面量 `\n` 转成真实换行，交给 CSS `white-space: pre-line`。多语言取 `zh → en → ja → ko`。
 
@@ -112,7 +113,7 @@
 - `monsterImageUrl(id)`：9 位实例 id（`>= 1e8`）先 `/100` 回退到基础 id，再按命名规则向下对齐到整十。
 - 单位图经 `data/unitAssets.ts`（用 `config.json` 的 `sourceId` 映射）；命途图经 `data/unitPaths.ts`。不要把数据源 JSON 或图片下载到 `public/` 发布（`public/` 当前只有 `favicon.png`）。
 - `data/seed/hsr-units.json`、`hsr-monsters.json` 只由 `scripts/` 同步脚本写出，运行时不 import；运行时单位图完全依赖 `config.json` 的 `units[].sourceId`。
-- **唯一的例外图源**：标记图标在 `data/flagIcons.ts`（`FLAG_ICON_SOURCES`），是三条指向 `theherta.com/skill_icons/` 的热链。`static.nanoka.cc` 不发布技能图标目录，所以它们**不进 `IMAGE_BASES`**——别把这三条地址并进来，那会让它被误读成统一图源的一部分。授权与回落约定见根 `AGENTS.md`「资源与授权」。
+- **两处例外图源**：标记图标在 `data/flagIcons.ts`（`FLAG_ICON_SOURCES`，三条指向 `theherta.com/skill_icons/` 的热链）；属性（弱点 / 抗性）图标在 `data/elementIcons.ts`（`ELEMENT_ICON_SOURCES`，七条指向 `theherta.com/elements/` 的热链，注意雷是 `lightning.png`）。`static.nanoka.cc` 既不发布技能图标也不发布属性图标目录，所以这两批地址**不进 `IMAGE_BASES`**——别并进来，那会让它们被误读成统一图源的一部分。授权与回落约定见根 `AGENTS.md`「资源与授权」。
 
 ## 约束
 

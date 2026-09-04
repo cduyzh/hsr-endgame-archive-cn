@@ -11,7 +11,8 @@
 | `runUtils.test.ts` | `src/services/runUtils.ts` 筛选/排序/统计纯函数与分类、标记、阶段分组口径（`categoryOptionsFor` / `categoryOfAsScore` / `defaultModeOf`（默认模式取带 `NEW` 徽标的那个，无徽标退回第一个、空退回 `moc`）/ `stageKeyOf` / `flagLabels`+`flagsOfRun`+`isRunFlag` / `stageGroupOf` / `isStarwardStage`）、按成本口径的 `getRunGoldCounts`；另守**成本/分数区间**（`matchesRange` 单侧不限、不可能区间为空集）、前后端 `matchesRange` 同口径、服务端 `parseFilters` 的区间解析与旧 `?cost=17-32` 深链等价 |
 | `unitCost.test.ts` | 成本口径唯一守卫：光锥限定/常驻/不计成本分档、`defaultEidolonFor`/`defaultSuperimpositionFor`、角色 `命座+1` 与光锥 `叠影` 累加、四人满配 48、越界钳位与未知 id 兜底 |
 | `signatureLightcones.test.ts` | 专武映射防表腐化：键必须是五星限定角色、值必须是同命途五星光锥、覆盖率必须等于五星限定角色集合（新角色未跑 `pnpm sync:units` 会失败）、专武不被两个角色共用 |
-| `staticArchiveConfig.test.ts` | 远程静态快照推导与配置合并（`staticArchiveConfig.ts` + `staticBossSnapshot.ts`）：阶段 id 列表、HP/速度/韧性、场地 buff 结构化（`mechanic` / `stageBuffs`）与 `#N[i]`→`param` 代入、按 icon 解析的家族短名与 `variantName`、subtitle 口径、远程失败返回 `null` |
+| `ElementIcon.test.ts` | 属性图标唯一渲染出口：七个属性都取到 `ELEMENT_ICON_SOURCES` 地址并带中文 `alt`/`title`、抗性百分比 `<small>` 与弱点无附注、`@error` 回落中文文字 chip、切换属性后重置回落态 |
+| `staticArchiveConfig.test.ts` | 远程静态快照推导与配置合并（`staticArchiveConfig.ts` + `staticBossSnapshot.ts`）：阶段 id 列表、HP/速度/韧性（含**单怪详情的 `*ModifyValue` 叠加**与韧性 ÷3，以及详情缺失时的降级路径）、**弱点取首领自身 `weak` 全集**、**抗性只留正值**、场地 buff 结构化（`mechanic` / `stageBuffs`）与 `#N[i]`→`param` 代入、按 icon 解析的家族短名与 `variantName`、subtitle 口径、远程失败返回 `null` |
 | `submissionUtils.test.ts` | 投稿 → 档案记录转换、光锥偏好统计、建议表优先级（专武覆盖统计、统计填空、过滤单位库外 id） |
 | `submissionValidation.test.ts` | 投稿字段校验顺序、步骤归属、视频域名白名单、查重命中挡住第一步、分类与模式/阶段匹配、`defaultResultFor` 的默认分类/分数合法、限定/常驻统计与预览取数 |
 | `archiveService.test.ts` | `submitRun` 的成功返回与服务端 `{ message, missing }` → 中文错误映射；`checkDuplicateVideo` 命中查询与失败/非 2xx/形状不合时一律放行；409 抛 `SubmissionDuplicateError` |
