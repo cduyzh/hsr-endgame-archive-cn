@@ -5,7 +5,9 @@
 <template>
   <main class="page-narrow">
     <div class="page-heading">
-      <p class="eyebrow">版本记录</p>
+      <p class="eyebrow">
+        版本记录
+      </p>
       <h1>更新记录</h1>
       <p>站点功能与数据的迭代历史，当前版本 v{{ appVersion }}。</p>
     </div>

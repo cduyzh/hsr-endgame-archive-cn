@@ -48,12 +48,12 @@ export const handler: Handler = async (event) => {
   }
 
   // 1) 校验 token 归属
-  const rows = await sql<{ownerToken: string | null; status: string}[]>`
+  const rows = (await sql`
     select owner_token as "ownerToken", status
     from submission_reviews
     where id = ${id}
     limit 1
-  `
+  `) as {ownerToken: string | null; status: string}[]
   const review = rows[0]
   if (!review) return jsonResponse({message: "未找到提交记录"}, 404)
   if (!review.ownerToken || review.ownerToken !== token) {

@@ -621,11 +621,13 @@
     <p
       v-if="acceptedId"
       class="submission-success"
-      role="status">
+      role="status"
+    >
       <span class="submission-success-mark">
         <CheckCircle2
           :size="24"
-          aria-hidden="true" />
+          aria-hidden="true"
+        />
       </span>
       <strong>已进入审核队列</strong>
       <small>
@@ -635,22 +637,26 @@
       </small>
       <small
         v-if="acceptedToken"
-        class="submission-success-token">
+        class="submission-success-token"
+      >
         你的投稿凭证
         <code>{{ acceptedToken }}</code>
         <button
           class="icon-button mini"
           type="button"
           :aria-label="copiedToken ? '已复制凭证' : '复制凭证'"
-          @click="copyOwnerToken">
+          @click="copyOwnerToken"
+        >
           <Check
             v-if="copiedToken"
             :size="14"
-            aria-hidden="true" />
+            aria-hidden="true"
+          />
           <Copy
             v-else
             :size="14"
-            aria-hidden="true" />
+            aria-hidden="true"
+          />
           {{ copiedToken ? "已复制" : "复制" }}
         </button>
         <span class="submission-success-hint">
@@ -661,28 +667,34 @@
         <button
           class="icon-button"
           type="button"
-          @click="submitAnother">
+          @click="submitAnother"
+        >
           <RotateCcw
             :size="16"
-            aria-hidden="true" />
+            aria-hidden="true"
+          />
           再提交一条
         </button>
         <button
           class="icon-button"
           type="button"
-          @click="gotoMySubmissions">
+          @click="gotoMySubmissions"
+        >
           <ClipboardList
             :size="16"
-            aria-hidden="true" />
+            aria-hidden="true"
+          />
           查看我的投稿
         </button>
         <button
           class="icon-button primary-action"
           type="button"
-          @click="emit('close')">
+          @click="emit('close')"
+        >
           <X
             :size="16"
-            aria-hidden="true" />
+            aria-hidden="true"
+          />
           完成
         </button>
       </span>
@@ -692,21 +704,23 @@
       v-else
       class="submit-form"
       novalidate
-      @submit.prevent="handleSubmit">
+      @submit.prevent="handleSubmit"
+    >
       <div
         v-if="draftSavedAt"
-        class="submission-draft-note">
-        <span
-          >已恢复上次未提交的草稿（{{
-            draftSavedAt
-          }}），提交成功后会自动清除。</span
-        >
+        class="submission-draft-note"
+      >
+        <span>已恢复上次未提交的草稿（{{
+          draftSavedAt
+        }}），提交成功后会自动清除。</span>
         <button
           type="button"
-          @click="handleDiscardDraft">
+          @click="handleDiscardDraft"
+        >
           <RotateCcw
             :size="14"
-            aria-hidden="true" />
+            aria-hidden="true"
+          />
           丢弃草稿
         </button>
       </div>
@@ -715,7 +729,8 @@
         <summary>
           <Info
             :size="14"
-            aria-hidden="true" />
+            aria-hidden="true"
+          />
           投稿须知
         </summary>
         <ul>
@@ -740,33 +755,39 @@
 
       <ol
         class="submission-steps"
-        aria-label="投稿步骤">
+        aria-label="投稿步骤"
+      >
         <li
           v-for="(entry, index) in steps"
-          :key="entry.id">
+          :key="entry.id"
+        >
           <button
             class="submission-step-tab"
             :class="{ active: stepIndex === index, passed: index < stepIndex }"
             type="button"
             :disabled="index > unlockedIndex"
             :aria-current="stepIndex === index ? 'step' : undefined"
-            @click="goTo(index)">
+            @click="goTo(index)"
+          >
             <span class="submission-step-index">
               <Check
                 v-if="index < stepIndex"
                 :size="13"
-                aria-hidden="true" />
+                aria-hidden="true"
+              />
               <template v-else>{{ index + 1 }}</template>
             </span>
             <component
               :is="entry.icon"
               :size="15"
-              aria-hidden="true" />
+              aria-hidden="true"
+            />
             <span>{{ entry.label }}</span>
             <Lock
               v-if="index > unlockedIndex"
               :size="13"
-              aria-hidden="true" />
+              aria-hidden="true"
+            />
           </button>
         </li>
       </ol>
@@ -774,21 +795,24 @@
       <p
         v-if="stepErrors.length > 0"
         class="submission-error"
-        role="alert">
+        role="alert"
+      >
         <AlertCircle
           :size="15"
-          aria-hidden="true" />
+          aria-hidden="true"
+        />
         {{ stepErrors[0].message }}
-        <span v-if="stepErrors.length > 1"
-          >（另有 {{ stepErrors.length - 1 }} 处待补全）</span
-        >
+        <span v-if="stepErrors.length > 1">（另有 {{ stepErrors.length - 1 }} 处待补全）</span>
       </p>
 
       <div
         v-if="currentStep === 'basic'"
-        class="submission-step-body">
+        class="submission-step-body"
+      >
         <div class="filter-section">
-          <p class="section-label">竞赛模式</p>
+          <p class="section-label">
+            竞赛模式
+          </p>
           <div class="mode-grid">
             <button
               v-for="mode in config.modes"
@@ -796,12 +820,12 @@
               class="mode-tab"
               :class="{ active: form.mode === mode.id }"
               type="button"
-              @click="patchMode(mode.id)">
+              @click="patchMode(mode.id)"
+            >
               <span
                 v-if="mode.badge"
                 class="mini-badge"
-                >{{ mode.badge }}</span
-              >
+              >{{ mode.badge }}</span>
               <strong>{{ mode.shortLabel }}</strong>
               <span>{{ mode.label }}</span>
             </button>
@@ -815,15 +839,15 @@
               <option
                 v-for="season in config.seasons"
                 :key="season.id"
-                :value="season.id">
+                :value="season.id"
+              >
                 {{ season.label }}
               </option>
             </select>
             <small
               v-if="fieldError('seasonId')"
               class="field-error"
-              >{{ fieldError("seasonId") }}</small
-            >
+            >{{ fieldError("seasonId") }}</small>
           </label>
           <label class="field">
             <span>敌方阶段</span>
@@ -831,31 +855,32 @@
               <option
                 v-for="boss in stages"
                 :key="boss.id"
-                :value="boss.id">
+                :value="boss.id"
+              >
                 {{ boss.name }} · {{ boss.subtitle }}
               </option>
             </select>
             <small
               v-if="fieldError('bossId')"
               class="field-error"
-              >{{ fieldError("bossId") }}</small
-            >
+            >{{ fieldError("bossId") }}</small>
           </label>
         </div>
 
         <p
           v-if="target.stageName !== '未选择'"
-          class="submission-stage-meta">
+          class="submission-stage-meta"
+        >
           <span>血量 {{ target.hp || "未公开" }}</span>
           <span>速度 {{ target.speed || "—" }}</span>
           <span>韧性 {{ target.toughness || "—" }}</span>
-          <span v-if="target.weakness.length"
-            >弱点 {{ target.weakness.join(" / ") }}</span
-          >
+          <span v-if="target.weakness.length">弱点 {{ target.weakness.join(" / ") }}</span>
         </p>
 
         <div class="filter-section">
-          <p class="section-label">记录分类</p>
+          <p class="section-label">
+            记录分类
+          </p>
           <div class="submission-category-grid">
             <button
               v-for="category in categoryOptions"
@@ -863,7 +888,8 @@
               class="wide-option compact"
               :class="{ active: form.category === category.id }"
               type="button"
-              @click="selectCategory(category.id)">
+              @click="selectCategory(category.id)"
+            >
               {{ category.label }}
             </button>
           </div>
@@ -873,8 +899,7 @@
           <small
             v-if="fieldError('category')"
             class="field-error"
-            >{{ fieldError("category") }}</small
-          >
+          >{{ fieldError("category") }}</small>
         </div>
 
         <div class="form-grid">
@@ -884,60 +909,67 @@
               v-model.trim="form.author"
               type="text"
               maxlength="32"
-              placeholder="展示名称，例如 夜航" />
+              placeholder="展示名称，例如 夜航"
+            >
             <small
               v-if="fieldError('author')"
               class="field-error"
-              >{{ fieldError("author") }}</small
-            >
+            >{{ fieldError("author") }}</small>
           </label>
           <label class="field">
             <span>视频链接</span>
             <input
               v-model.trim="form.videoUrl"
               type="url"
-              placeholder="B 站或 YouTube 原始录像链接" />
+              placeholder="B 站或 YouTube 原始录像链接"
+            >
             <small
               v-if="fieldError('videoUrl')"
               class="field-error"
-              >{{ fieldError("videoUrl") }}</small
-            >
+            >{{ fieldError("videoUrl") }}</small>
           </label>
         </div>
 
         <p
           v-if="duplicateChecking"
           class="submission-duplicate is-checking"
-          role="status">
+          role="status"
+        >
           <Loader2
             :size="15"
             class="spin"
-            aria-hidden="true" />
+            aria-hidden="true"
+          />
           正在核对这条录像在「{{ target.stageName }}」是否已收录…
         </p>
         <div
           v-else-if="hasDuplicateVideo"
           class="submission-duplicate"
-          role="alert">
+          role="alert"
+        >
           <p class="submission-duplicate-title">
             <AlertCircle
               :size="15"
-              aria-hidden="true" />
+              aria-hidden="true"
+            />
             <span>该视频链接在「{{ target.stageName }}」已有投稿记录</span>
             <button
               class="icon-button mini"
               type="button"
-              @click="runDuplicateCheck">
+              @click="runDuplicateCheck"
+            >
               <RotateCcw
                 :size="13"
-                aria-hidden="true" />
+                aria-hidden="true"
+              />
               重新检测
             </button>
           </p>
           <ul class="submission-duplicate-list">
             <li
               v-for="match in duplicateMatches"
-              :key="`${match.source}-${match.id}`">
+              :key="`${match.source}-${match.id}`"
+            >
               <b>{{ match.author || "匿名" }}</b>
               <span>{{ match.teamName || "未命名队伍" }}</span>
               <span>{{
@@ -950,8 +982,7 @@
                 :href="match.videoUrl"
                 target="_blank"
                 rel="noopener noreferrer"
-                >原视频</a
-              >
+              >原视频</a>
             </li>
           </ul>
           <p class="submission-field-hint">
@@ -960,7 +991,9 @@
         </div>
 
         <div class="filter-section">
-          <p class="section-label">标记</p>
+          <p class="section-label">
+            标记
+          </p>
           <div class="flag-grid">
             <button
               v-for="flag in flagOrder"
@@ -972,10 +1005,12 @@
               ]"
               type="button"
               :aria-pressed="form.flags.includes(flag)"
-              @click="toggleFormFlag(flag)">
+              @click="toggleFormFlag(flag)"
+            >
               <FlagIcon
                 :flag="flag"
-                :size="18" />
+                :size="18"
+              />
               <span>{{ flagLabels[flag] }}</span>
             </button>
           </div>
@@ -987,13 +1022,17 @@
 
       <div
         v-else-if="currentStep === 'team'"
-        class="submission-step-body">
+        class="submission-step-body"
+      >
         <div class="submission-roster-head">
-          <p class="section-label">队伍配置</p>
+          <p class="section-label">
+            队伍配置
+          </p>
           <span class="team-cost-chip">
             <Sparkles
               :size="13"
-              aria-hidden="true" />
+              aria-hidden="true"
+            />
             限定 {{ teamCost.limited }} · 常驻 {{ teamCost.standard }} · 成本
             {{ autoCost }}
           </span>
@@ -1005,35 +1044,38 @@
             v-model.trim="form.teamName"
             type="text"
             maxlength="40"
-            placeholder="例：大黑塔双同谐" />
+            placeholder="例：大黑塔双同谐"
+          >
           <small
             v-if="fieldError('teamName')"
             class="field-error"
-            >{{ fieldError("teamName") }}</small
-          >
+          >{{ fieldError("teamName") }}</small>
         </label>
 
         <section class="preset-toolbar">
           <header class="preset-toolbar-head">
-            <p class="section-label">配队预设</p>
-            <small
-              >{{ presetLimitHint }}，当前 {{ memory.presets.length }} 套</small
-            >
+            <p class="section-label">
+              配队预设
+            </p>
+            <small>{{ presetLimitHint }}，当前 {{ memory.presets.length }} 套</small>
           </header>
           <div class="preset-toolbar-row">
             <select
               v-model="activePresetId"
               :disabled="memory.presets.length === 0"
-              aria-label="选择已保存的配队预设">
+              aria-label="选择已保存的配队预设"
+            >
               <option
                 value=""
-                disabled>
+                disabled
+              >
                 请选择预设
               </option>
               <option
                 v-for="preset in memory.presets"
                 :key="preset.id"
-                :value="preset.id">
+                :value="preset.id"
+              >
                 {{ preset.name }}
               </option>
             </select>
@@ -1041,20 +1083,24 @@
               class="icon-button"
               type="button"
               :disabled="!activePresetId"
-              @click="handleApplyPreset">
+              @click="handleApplyPreset"
+            >
               <Download
                 :size="15"
-                aria-hidden="true" />
+                aria-hidden="true"
+              />
               载入到表单
             </button>
             <button
               class="icon-button"
               type="button"
               :disabled="!canSavePreset"
-              @click="handleSavePreset">
+              @click="handleSavePreset"
+            >
               <BookmarkPlus
                 :size="15"
-                aria-hidden="true" />
+                aria-hidden="true"
+              />
               另存为
             </button>
             <input
@@ -1062,30 +1108,36 @@
               type="text"
               maxlength="24"
               placeholder="配队名（如：白刻记鸟|红花凛缇|蝶风昔月  X|低|中 金）"
-              class="preset-name-input" />
+              class="preset-name-input"
+            >
           </div>
           <ul
             v-if="memory.presets.length"
-            class="preset-chip-list">
+            class="preset-chip-list"
+          >
             <li
               v-for="preset in memory.presets"
-              :key="preset.id">
+              :key="preset.id"
+            >
               <button
                 type="button"
                 class="preset-chip"
                 :class="{ active: activePresetId === preset.id }"
                 :title="`载入「${preset.name}」`"
-                @click="activePresetId = preset.id">
+                @click="activePresetId = preset.id"
+              >
                 {{ preset.name }}
               </button>
               <button
                 type="button"
                 class="preset-chip-remove"
                 :aria-label="`删除预设 ${preset.name}`"
-                @click="handleRemovePreset(preset.id)">
+                @click="handleRemovePreset(preset.id)"
+              >
                 <Trash2
                   :size="13"
-                  aria-hidden="true" />
+                  aria-hidden="true"
+                />
               </button>
             </li>
           </ul>
@@ -1110,7 +1162,8 @@
             @update-lightcone="updateLightcone(index, $event)"
             @update-superimposition="
               form.lightcones[index].superimposition = $event
-            " />
+            "
+          />
         </div>
 
         <p class="submission-field-hint">
@@ -1122,7 +1175,8 @@
 
       <div
         v-else
-        class="submission-step-body">
+        class="submission-step-body"
+      >
         <div class="form-grid">
           <label class="field">
             <span>轮次</span>
@@ -1130,12 +1184,12 @@
               v-model.number="form.cycle"
               type="number"
               min="0"
-              step="1" />
+              step="1"
+            >
             <small
               v-if="fieldError('cycle')"
               class="field-error"
-              >{{ fieldError("cycle") }}</small
-            >
+            >{{ fieldError("cycle") }}</small>
           </label>
           <label class="field">
             <span>分数</span>
@@ -1144,12 +1198,12 @@
               type="number"
               min="0"
               :max="form.mode === 'as' ? AS_MAX_SCORE : undefined"
-              step="1" />
+              step="1"
+            >
             <small
               v-if="fieldError('score')"
               class="field-error"
-              >{{ fieldError("score") }}</small
-            >
+            >{{ fieldError("score") }}</small>
           </label>
           <div class="field">
             <span>成本</span>
@@ -1160,36 +1214,40 @@
                 :min="COST_MIN"
                 :max="COST_MAX"
                 step="1"
-                @input="costTouched = true" />
+                @input="costTouched = true"
+              >
               <button
                 class="icon-button mini"
                 type="button"
                 :disabled="!costTouched && form.cost === autoCost"
                 :aria-label="`按队伍重算成本（当前合计 ${autoCost}）`"
-                @click="recalculateCost">
+                @click="recalculateCost"
+              >
                 <RotateCcw
                   :size="13"
-                  aria-hidden="true" />
+                  aria-hidden="true"
+                />
                 重算
               </button>
             </div>
             <small
               v-if="!costTouched"
-              class="submission-field-hint">
+              class="submission-field-hint"
+            >
               按队伍自动合计：限定 {{ teamCost.limited }} + 常驻
               {{ teamCost.standard }}
             </small>
             <small
               v-if="fieldError('cost')"
               class="field-error"
-              >{{ fieldError("cost") }}</small
-            >
+            >{{ fieldError("cost") }}</small>
           </div>
         </div>
 
         <p
           v-if="scoreHint"
-          class="submission-field-hint">
+          class="submission-field-hint"
+        >
           {{ scoreHint }}
         </p>
 
@@ -1198,7 +1256,8 @@
           <textarea
             v-model.trim="form.notes"
             rows="3"
-            placeholder="可填写轴、特殊限制、是否自动等审核信息。" />
+            placeholder="可填写轴、特殊限制、是否自动等审核信息。"
+          />
         </label>
 
         <section class="submission-preview">
@@ -1242,7 +1301,8 @@
           <ol class="submission-preview-team">
             <li
               v-for="line in roster"
-              :key="line.index">
+              :key="line.index"
+            >
               <b>{{ line.index + 1 }}</b>
               <span class="submission-preview-unit">
                 {{ line.characterName }}
@@ -1255,8 +1315,7 @@
               <span
                 class="submission-gold-tag"
                 :data-gold="line.gold"
-                >{{ goldKindLabels[line.gold] }}</span
-              >
+              >{{ goldKindLabels[line.gold] }}</span>
             </li>
           </ol>
           <p class="submission-preview-metrics">
@@ -1264,21 +1323,16 @@
             <span>分数 {{ form.score }}</span>
             <span>
               成本 {{ form.cost }}
-              <template v-if="costTouched"
-                >（自动合计 {{ autoCost }}）</template
-              >
+              <template v-if="costTouched">（自动合计 {{ autoCost }}）</template>
             </span>
-            <span
-              >限定 {{ teamCost.limited }} · 常驻 {{ teamCost.standard }}</span
-            >
+            <span>限定 {{ teamCost.limited }} · 常驻 {{ teamCost.standard }}</span>
           </p>
           <a
             class="submission-preview-video"
             :href="form.videoUrl.trim() || undefined"
             target="_blank"
             rel="noopener noreferrer"
-            >{{ form.videoUrl.trim() || "未填写视频链接" }}</a
-          >
+          >{{ form.videoUrl.trim() || "未填写视频链接" }}</a>
         </section>
       </div>
 
@@ -1287,10 +1341,12 @@
           v-if="stepIndex > 0"
           class="icon-button"
           type="button"
-          @click="previousStep">
+          @click="previousStep"
+        >
           <ChevronLeft
             :size="16"
-            aria-hidden="true" />
+            aria-hidden="true"
+          />
           上一步
         </button>
         <span v-else />
@@ -1298,20 +1354,24 @@
           v-if="stepIndex < steps.length - 1"
           class="icon-button primary-action"
           type="button"
-          @click="nextStep">
+          @click="nextStep"
+        >
           下一步
           <ChevronRight
             :size="16"
-            aria-hidden="true" />
+            aria-hidden="true"
+          />
         </button>
         <button
           v-else
           class="icon-button primary-action"
           type="submit"
-          :disabled="submitting">
+          :disabled="submitting"
+        >
           <Send
             :size="16"
-            aria-hidden="true" />
+            aria-hidden="true"
+          />
           {{ submitting ? "提交中" : "提交到审核队列" }}
         </button>
       </div>
@@ -1319,10 +1379,12 @@
       <p
         v-if="submitFailure"
         class="submission-error"
-        role="alert">
+        role="alert"
+      >
         <AlertCircle
           :size="15"
-          aria-hidden="true" />
+          aria-hidden="true"
+        />
         {{ submitFailure }}
       </p>
     </form>

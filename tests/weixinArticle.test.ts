@@ -118,8 +118,8 @@ describe("decodeEntities", () => {
 
 describe("fetchWeixinArticle", () => {
   it("不发送 Referer，并把页面文本交给解析器", async () => {
-    const calls = []
-    const stub = async (url, init) => {
+    const calls: {url: string; headers: Record<string, string>}[] = []
+    const stub = async (url: string, init?: {headers?: Record<string, string>}) => {
       calls.push({url, headers: init?.headers ?? {}})
       return {ok: true, status: 200, text: async () => fixtureHtml}
     }

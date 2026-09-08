@@ -39,6 +39,7 @@
       cost: 0,
       videoUrl: "",
       notes: "",
+      flags: [],
       units: [],
       lightcones: [],
     },
@@ -173,7 +174,9 @@
   <main class="page-narrow my-submissions-page">
     <div class="page-heading">
       <div>
-        <p class="eyebrow">我的投稿</p>
+        <p class="eyebrow">
+          我的投稿
+        </p>
         <h1>追踪、编辑或撤回本机已提交的记录</h1>
         <p>
           凭证只保存在你当前浏览器的
@@ -185,42 +188,50 @@
         class="icon-button"
         type="button"
         :disabled="loading"
-        @click="refresh">
+        @click="refresh"
+      >
         <RotateCcw
           v-if="!loading"
           :size="16"
-          aria-hidden="true" />
+          aria-hidden="true"
+        />
         <Loader2
           v-else
           :size="16"
           aria-hidden="true"
-          class="spin" />
+          class="spin"
+        />
         {{ loading ? "刷新中" : "刷新" }}
       </button>
     </div>
 
     <section
       v-if="tokensCount === 0"
-      class="my-submissions-empty">
+      class="my-submissions-empty"
+    >
       <KeyRound
         :size="32"
-        aria-hidden="true" />
+        aria-hidden="true"
+      />
       <h2>本机还没有投稿凭证</h2>
       <p>提交一条记录后，凭证会自动保存在这里，便于查询审核进度或撤回。</p>
       <button
         class="icon-button primary-action"
         type="button"
-        @click="gotoSubmit">
+        @click="gotoSubmit"
+      >
         前往投稿
         <ChevronRight
           :size="16"
-          aria-hidden="true" />
+          aria-hidden="true"
+        />
       </button>
     </section>
 
     <section
       v-else
-      class="my-submissions-toolbar">
+      class="my-submissions-toolbar"
+    >
       <p>
         已记录 <strong>{{ tokensCount }}</strong> 个凭证，最近更新：{{
           lastUpdatedLabel || "尚未拉取"
@@ -229,10 +240,12 @@
       <button
         class="icon-button subtle"
         type="button"
-        @click="handleClearAll">
+        @click="handleClearAll"
+      >
         <Eraser
           :size="14"
-          aria-hidden="true" />
+          aria-hidden="true"
+        />
         清空本机凭证
       </button>
     </section>
@@ -240,27 +253,32 @@
     <p
       v-if="errorMessage"
       class="submission-error"
-      role="alert">
+      role="alert"
+    >
       <AlertCircle
         :size="15"
-        aria-hidden="true" />
+        aria-hidden="true"
+      />
       {{ errorMessage }}
     </p>
 
     <p
       v-if="tokensCount > 0 && !loading && !hasAny && !errorMessage"
-      class="my-submissions-empty soft">
+      class="my-submissions-empty soft"
+    >
       凭证下暂时没有找到对应记录，可能还没审核或已被删除。
     </p>
 
     <ol
       v-if="reviews.length > 0"
-      class="my-submissions-list">
+      class="my-submissions-list"
+    >
       <li
         v-for="review in reviews"
         :key="review.id"
         class="my-submission-card"
-        :data-status="review.status">
+        :data-status="review.status"
+      >
         <header class="my-submission-card-head">
           <div>
             <p class="my-submission-team">
@@ -269,7 +287,7 @@
             <p class="my-submission-meta">
               <span>{{
                 modeLabels[review.payload?.mode as EndgameMode] ||
-                review.payload?.mode
+                  review.payload?.mode
               }}</span>
               <span>·</span>
               <span>{{ bossLabel(review.payload?.bossId || "") }}</span>
@@ -285,24 +303,29 @@
           </div>
           <span
             class="my-submission-status"
-            :data-status="review.status">
+            :data-status="review.status"
+          >
             <Loader2
               v-if="review.status === 'pending'"
               :size="14"
               aria-hidden="true"
-              class="spin" />
+              class="spin"
+            />
             <XCircle
               v-else-if="review.status === 'rejected'"
               :size="14"
-              aria-hidden="true" />
+              aria-hidden="true"
+            />
             <Eye
               v-else-if="review.status === 'approved'"
               :size="14"
-              aria-hidden="true" />
+              aria-hidden="true"
+            />
             <Trash2
               v-else
               :size="14"
-              aria-hidden="true" />
+              aria-hidden="true"
+            />
             {{ statusLabels[review.status] }}
           </span>
         </header>
@@ -330,7 +353,8 @@
           </div>
           <div
             v-if="review.reviewerNote"
-            class="span-2">
+            class="span-2"
+          >
             <dt>审核备注</dt>
             <dd>{{ review.reviewerNote }}</dd>
           </div>
@@ -345,8 +369,7 @@
                 :href="review.payload.videoUrl"
                 target="_blank"
                 rel="noopener noreferrer"
-                >{{ review.payload.videoUrl }}</a
-              >
+              >{{ review.payload.videoUrl }}</a>
             </dd>
           </div>
         </dl>
@@ -357,10 +380,12 @@
             type="button"
             class="icon-button subtle"
             :disabled="actingId === review.id"
-            @click="handleRemoveToken(review.ownerToken as string)">
+            @click="handleRemoveToken(review.ownerToken as string)"
+          >
             <Eraser
               :size="14"
-              aria-hidden="true" />
+              aria-hidden="true"
+            />
             忘记该凭证
           </button>
           <button
@@ -368,40 +393,42 @@
             type="button"
             class="icon-button danger"
             :disabled="actingId === review.id"
-            @click="handleWithdraw(review)">
+            @click="handleWithdraw(review)"
+          >
             <Loader2
               v-if="actingId === review.id"
               :size="14"
               aria-hidden="true"
-              class="spin" />
+              class="spin"
+            />
             <Trash2
               v-else
               :size="14"
-              aria-hidden="true" />
+              aria-hidden="true"
+            />
             {{ actingId === review.id ? "撤回中" : "撤回该记录" }}
           </button>
           <span
             v-else
             class="my-submission-card-foot-hint"
-            >该记录已撤回，不会再出现在档案中。</span
-          >
+          >该记录已撤回，不会再出现在档案中。</span>
         </footer>
       </li>
     </ol>
 
     <section
       v-if="runs.length > 0"
-      class="my-submissions-runs">
+      class="my-submissions-runs"
+    >
       <h2>已通过的投稿</h2>
       <ol>
         <li
           v-for="run in runs"
-          :key="run.id">
+          :key="run.id"
+        >
           <strong>{{ teamSummaryFromRun(run) }}</strong>
-          <span
-            >{{ modeLabels[run.mode as EndgameMode] || run.mode }} ·
-            {{ run.bossId }} · 轮次 {{ run.cycle }}</span
-          >
+          <span>{{ modeLabels[run.mode as EndgameMode] || run.mode }} ·
+            {{ run.bossId }} · 轮次 {{ run.cycle }}</span>
           <span class="my-submissions-runs-time">{{
             formatTime(run.submittedAt)
           }}</span>

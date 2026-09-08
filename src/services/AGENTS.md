@@ -10,12 +10,14 @@
 | ------------------------- | -------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
 | `dataSource.ts`           | 远程数据源配置（唯一入口）                                                                                                 | `DATA_SITE`、`dataSourceUrl()`、`IMAGE_BASES`、`monsterImageUrl()`                                                       |
 | `archiveService.ts`       | 前端 API 请求 + seed fallback + 静态快照合并 + 管理员会话                                                                  | `fetchArchiveConfig/Runs/MetaStats`、`submitRun`、`checkDuplicateVideo`、`SubmissionDuplicateError`、`createAdminSession`、`fetchSubmissionReviews`、`reviewSubmission`     |
-| `staticArchiveConfig.ts`  | 浏览器端入口：拉 `manifest` → 定位最新数据目录 → 委托 `staticBossSnapshot` 推导出敌方阶段并补齐配置缺口                    | `fetchStaticArchiveSnapshot()`、`mergeStaticArchiveConfig()`                                                             |
+| `staticArchiveConfig.ts`  | 静态快照入口：**优先 `GET /api/archive/stages`**（函数侧算一次 + 边缘长缓存），失败/为空/形状不合时**回落**浏览器直连 `static.nanoka.cc` 现算 | `fetchStaticArchiveSnapshot()`、`mergeStaticArchiveConfig()`                                                             |
+| `apiBase.ts`              | `VITE_API_BASE` 的唯一来源（`archiveService.ts` 与 `staticArchiveConfig.ts` 共用；从 archiveService 反向导出会循环依赖）        | `API_BASE`                                                                                                                |
 | `staticBossSnapshot.ts`   | 远程静态快照的纯计算层（不发起网络），被前端 `staticArchiveConfig.ts` 与服务端 `netlify/functions/_staticSnapshot.ts` 共用 | `buildSeasonBosses(seasonId, version, baseUrl)`、`pickDataDirectory()`、`STATIC_SEASON_IDS`、各类 build\*Stages 纯函数   |
 | `runUtils.ts`             | 记录筛选/排序/统计纯函数 + 分类/标记/阶段分组口径唯一来源                                                                    | `filterRuns`、`buildMetaStats`、`matchesRange`、`categoryLabels`、`categoryOptionsFor`、`categoryOfAsScore`、`defaultModeOf`、`stageKeyOf`、`flagOrder`/`flagLabels`/`isRunFlag`/`flagsOfRun`、`stageGroupOf`/`isStarwardStage` |
 | `unitCost.ts`             | 角色与光锥的“限定/常驻/不计成本”分类 + 成本与默认值口径（**无 `@/` 值导入，Functions 可相对引用**）                          | `COST_MIN`/`COST_MAX`、`getCharacterGoldKind`、`getLightconeGoldKind`、`getRunGoldCounts`、`getUnitGoldCounts`、`defaultEidolonFor`、`defaultSuperimpositionFor`、`goldKindLabels` |
 | `submissionUtils.ts`      | 投稿转换纯函数                                                                                                             | `submissionReviewToArchiveRun`、`buildPreferredLightconeByCharacter`、`buildSuggestedLightconeByCharacter`                |
 | `submissionValidation.ts` | 投稿表单的字段校验、步骤归属、新建默认成绩与预览取数（仅前端使用）                                                             | `validateSubmissionForm`、`errorsOfStep`、`stepOfField`、`defaultResultFor`、`buildSubmissionRoster`、`describeSubmissionTarget`             |
+| `runFlags.ts`             | 终局标记的判定原语（只做 `import type`，前后端都能相对引用；`runUtils.ts` 原样再导出，对外唯一来源仍是 runUtils） | `flagOrder`、`flagLabels`、`isRunFlag`、`flagsOfRun` |
 | `videoUrl.ts`             | 「同一支视频」的唯一口径：从链接提取 BV 号 / YouTube 视频 id，取不到退回规范化 URL；投稿预检与服务端入队拦截共用（**无 `@/` 值导入，Functions 相对引用**） | `videoIdentityOf`、`videoMatchPattern`、`matchesVideoIdentity`、`isSameVideo`、`DUPLICATE_VIDEO_MESSAGE`                 |
 
 ## 两条数据线（不要混用）
@@ -29,7 +31,7 @@
 
 ## 静态快照与合并（`staticBossSnapshot.ts` 计算 / `staticArchiveConfig.ts` 入口）
 
-- 入口 `fetchStaticArchiveSnapshot()`：读 `manifest.json` → `pickDataDirectory(manifest.hsr.available)` 选出**最新数据目录**（如 `4.5.51`），所有赛季共用它（上游只保留当前大版本目录，历史赛季详情在其下累积）→ 拉 `monster.json`/`monstervalue.json`/`HardLevelGroup.json`/`EliteGroup.json`/`InfiniteEliteGroup.json`（最后一个允许缺失）→ 直接按 id 拉四份模式详情。**不读** `maze.json / maze_extra.json / maze_boss.json / maze_peak.json` 索引，**不用** `hsr.latest`，远程也没有 `cache-plan.json`。`liveVersion` 取 `manifest.hsr.live`。manifest 请求失败或 available 为空返回 `null`；单个赛季构建失败只丢该赛季。
+- 入口 `fetchStaticArchiveSnapshot()` = `fetchStagesFromApi() ?? fetchStagesFromDataSource()`。前者只发一个 `GET /api/archive/stages`；非 2xx、抛错、`bosses` 缺失或为空数组都算未命中，落到后者（浏览器直连，见下）。**回落必须保留**：本地 dev 没有 API、函数或 CDN 故障时页面仍要有敌方阶段。直连路径：读 `manifest.json` → `pickDataDirectory(manifest.hsr.available)` 选出**最新数据目录**（如 `4.5.51`），所有赛季共用它（上游只保留当前大版本目录，历史赛季详情在其下累积）→ 拉 `monster.json`/`monstervalue.json`/`HardLevelGroup.json`/`EliteGroup.json`/`InfiniteEliteGroup.json`（最后一个允许缺失）→ 直接按 id 拉四份模式详情 → **四个模式并发构建**（`Promise.all`，各自内部还要按首领粒度拉单怪详情；串行会把这条瀑布切成 4 轮，`Promise.all` 保留数组顺序所以阶段 id 仍是 moc → pf → as → aa）。**不读** `maze.json / maze_extra.json / maze_boss.json / maze_peak.json` 索引，**不用** `hsr.latest`，远程也没有 `cache-plan.json`。`liveVersion` 取 `manifest.hsr.live`。manifest 请求失败或 available 为空返回 `null`；单个赛季构建失败只丢该赛季。
 - **赛季详情 id 是硬编码的**：`STATIC_SEASON_IDS = { "4.4": { moc:1034, fiction:2025, doom:3019, peak:8 }, "4.5": { moc:1035, fiction:2026, doom:3020, peak:9 } }`。上线新赛季必须在此新增条目，否则页面不会出现该赛季（见根 `AGENTS.md` 的「新赛季上线清单」）。
 - 模式映射（业务 → 静态 → 详情目录）：`moc→moc/maze`、`pf→fiction/story`、`as→doom/boss`、`aa→peak/peak`，locale 固定 `zh`。阶段副标题文案来自本文件的 `modeLabelByStaticMode`，与 seed `config.json` 的 `modes[].label` 一致（`aa` 统一为「异相仲裁」）——改任一处名称必须同时改另一处。
 - 阶段构建：`buildMocStages` / `buildPfStages` / `buildAsStages` / `buildAaStages` 各自从详情里挑终层与星启层；`aa` 遍历 `pre_level` 生成 `k1..kN`，再加 `checkmate`、`plight`。阶段首领由 `bossMonsterIdOf()` 在末波怪物里按 `rank`（`Elite`/`Minion`/`MinionLv2` 视为随从，未知 rank 视为主首领）+ 血量打分选出。上游偶发的 `"BOSS"` 占位名会退回阶段名。
@@ -39,7 +41,8 @@
 - `subtitle` 口径为 `"<模式> · <赛季名>"`（如「末日幻影 · 仙客天狼」），**不含阶段名**——阶段由徽标与 `runUtils.stageGroupOf()` 的分组标题表达。
 - 阶段 id：`${seasonId}-${业务模式}-${stageKey}`，是 seed/库里记录 `bossId` 引用的稳定值。
 - 数值口径：`HP = HPBase × child.HPModifyRatio × HardLevelGroup.HPRatio × (EliteGroup|InfiniteEliteGroup).HPRatio`，`MaxMonsterPhase > 1` 时展示值追加 ` x<阶段数>`（如 `800,000 x2`）；`PhaseList[].phase_max_hp_ratio` 互不相等时改走 `formatHp()` 按阶段列出（`400,000 / 500,000 / 400,000`），比例相等或没有 `PhaseList` 时仍是 `xN`。速度 = `SpeedBase × SpeedModifyRatio × HardLevelGroup.SpeedRatio` 保留 1 位小数；韧性 = `(StanceBase × StanceModifyRatio × HardLevelGroup.StanceRatio × 精英组.StanceRatio) ÷ 3`——**上游 stance 单位是游戏内展示韧性的 3 倍**（480 → 160）。两个 `*ModifyValue` 只在**单怪详情**里（`monstervalue.json` 的 child 只有 Ratio），所以 `buildStage` 会按首领粒度再拉一次 `hsr/<ver>/zh/monster/<基础id>.json`（`monsterDetailChildren()`，同基础 id 复用缓存、404 时只是不叠加修正值且抗性为空，不抛错）。`pf` 传 `skipHp`，血量不展示。`PhaseList` 与 `MaxMonsterPhase` 长度恒等，但 632 个怪物里 474 个不公开 `PhaseList`——**不能**把「没有 PhaseList」当成「单阶段」。
-- `mergeStaticArchiveConfig()`：只把 `config.bosses` 中**不存在 id** 的生成阶段追加进去，并为缺失赛季补 `{ id, label: "<seasonId> 归档", isCurrent: seasonId === liveVersion }`。已有条目（含 seed/库中的历史阶段与赛季 label）**一律不覆盖**。快照为空或 `bosses` 为空时原样返回。
+- `fetchJson()` 带 3 次重试与单次 15 秒超时（`AbortController`，`clearTimeout` 放在 `finally`，否则被 abort 时定时器会漏满 15 秒），**但只对网络错误与 5xx 退避**：`fetchJsonSafe` 走的四份模式详情、允许缺失的 `InfiniteEliteGroup.json` 与按首领粒度的单怪详情都**预期可能 404**，4xx 一律直接抛出（`PermanentFetchError`）——否则每一次正常缺失都要多付 3 个请求和 1+2+3 秒退避。`tests/staticArchiveConfig.test.ts` 用「1004010 的详情只被请求一次」守住这条。
+- `mergeStaticArchiveConfig()`：为缺失赛季补 `{ id, label: "<seasonId> 归档", isCurrent: seasonId === liveVersion }`，**不动任何赛季 label**。敌方阶段分两种：快照覆盖到的 id 由 `enrichWithSnapshot()` **整体以快照为准**（`stages` 表只是派生镜像，可能落后于上游的数值修正或新赛季），快照没覆盖到的 id（seed/库里的历史阶段）原值保留。唯一保留库值的是 `clears`——它是业务统计、不来自派生。旧语义是「一律不覆盖」，代价是库里旧的韧性/弱点会永久盖住修正且毫无报错，已废弃。快照为空或 `bosses` 为空时原样返回。
 - 文本：名称类走 `cleanText()`（去富文本标签与 `#n[i]` 占位、把空白折叠成单个空格）；buff 文案走 `cleanBuffText()` + `applyBuffParams()`——先把 `#N[i]` 用同条目的 `param[N-1]` 代入（**占位后紧跟 `%` 时 ×100**，`0.3` → `30%`；其余去浮点尾零），再把上游以两字符存的字面量 `\n` 转成真实换行，交给 CSS `white-space: pre-line`。多语言取 `zh → en → ja → ko`。
 
 ## 成本与统计口径（`unitCost.ts` / `runUtils.ts`）
@@ -94,6 +97,7 @@
 - 标记**投稿时手动勾选**，落库复用 `runs.tags`（开放 jsonb 数组，加取值不需要迁移）。读取用 `flagsOfRun(run)` 收窄——它顺带过滤掉历史上作为自由文本写进 tags 的中文值，并按 `flagOrder` 归一顺序。
 - 筛选是 **AND 语义**：勾选的标记全部命中才保留。前端 `filterRuns()` 与 `netlify/functions/_shared.ts` 的 `filterArchiveRuns()` 各有一份实现，改语义要两处同步。
 - URL 深链里的非法标记由 `useArchiveFilters` 的 `normalizeFlags()` 丢弃（标记不随模式/阶段变化，所以是丢弃而非回落）。
+- 判定原语在 `runFlags.ts`（`flagOrder` / `flagLabels` / `isRunFlag` / `flagsOfRun`），本文件只做再导出——`runUtils.ts` 带 `@/` 值导入、Functions 引不了，而服务端 `parseFilters` 要用同一套合法性判定。**不要**在 Functions 里另抄一份 flag 列表。
 - 标记图标不在本层：地址在 `src/data/flagIcons.ts`（`FLAG_ICON_SOURCES`），渲染统一走 `src/components/FlagIcon.vue`，远程图加载失败自动回落 lucide。筛选面板、投稿表单、记录徽标、审核台**四处都只用它**，组件不要再自己引 `lucide` 图标或抄一份映射。
 
 ## 阶段分组口径（`runUtils.ts`）

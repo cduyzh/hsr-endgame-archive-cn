@@ -76,8 +76,8 @@ export function getRunGoldCounts(run: ArchiveRun, units: ArchiveUnit[]): Charact
  * 常驻五星角色与光锥同样规则累加进 `standard`，其余不计。角色与光锥按下标配对。
  */
 export function getUnitGoldCounts(
-  entries: RunUnit[],
-  lightconeEntries: RunUnit[],
+  entries: readonly RunUnit[],
+  lightconeEntries: readonly RunUnit[],
   units: ArchiveUnit[],
 ): CharacterGoldCounts {
   const unitById = new Map(units.map((unit) => [unit.id, unit]))

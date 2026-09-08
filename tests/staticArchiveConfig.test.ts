@@ -335,7 +335,7 @@ afterEach(() => {
 
 describe("fetchStaticArchiveSnapshot", () => {
   it("所有赛季共用 manifest 里的最新数据目录生成敌方阶段", async () => {
-    stubFetch()
+    const fetchMock = stubFetch()
 
     const snapshot = await fetchStaticArchiveSnapshot()
 
@@ -439,6 +439,10 @@ describe("fetchStaticArchiveSnapshot", () => {
 
     // 单怪详情按首领粒度拉：缺详情时韧性退回不叠加修正值、抗性为空，阶段本身不受影响。
     expect(knight).toMatchObject({ toughness: "120", resist: {} })
+    // 1004010 的详情在夹具里有意缺失。404 是确定性答复，只允许请求一次——
+    // 一旦把它纳入重试退避，每次正常缺失都要多付 3 次请求 + 6 秒等待。
+    const detailCalls = fetchMock.mock.calls.filter(([input]) => String(input).endsWith("/zh/monster/1004010.json"))
+    expect(detailCalls).toHaveLength(1)
 
     // 有详情时修正值在全部比例乘完之后叠加，再除以 3：(720 + 60) / 3 = 260。
     expect(checkmate).toMatchObject({ toughness: "260", resist: { 火: "20%", 风: "20%" } })
@@ -488,10 +492,13 @@ describe("mergeStaticArchiveConfig", () => {
     expect(merged.seasons).toEqual(config.seasons)
   })
 
-  it("保留业务数据库中已存在的同 id 阶段，不重复生成", () => {
+  it("库里已有的同 id 阶段：派生字段以快照为准，clears 保留库值", () => {
     const config = cloneSeedConfig()
     const existing = makeGeneratedBoss("4.5-moc-top")
-    existing.name = "数据库中的名称"
+    existing.name = "数据库里的旧名称"
+    existing.toughness = "720" // 修正前的旧口径，必须被快照的 240 盖掉
+    existing.weakness = []
+    existing.clears = 12 // 业务统计值，不来自派生，不能被快照的 0 覆盖
     config.bosses = [existing]
 
     const snapshot: StaticArchiveSnapshot = {
@@ -501,8 +508,14 @@ describe("mergeStaticArchiveConfig", () => {
 
     const merged = mergeStaticArchiveConfig(config, snapshot)
 
+    // 同 id 不重复生成
     expect(merged.bosses).toHaveLength(2)
-    expect(merged.bosses.find((boss) => boss.id === "4.5-moc-top")?.name).toBe("数据库中的名称")
+    expect(merged.bosses.find((boss) => boss.id === "4.5-moc-top")).toMatchObject({
+      name: "步离战首·呼雷",
+      toughness: "240",
+      weakness: ["物理"],
+      clears: 12,
+    })
   })
 
   it("为快照中新出现的赛季补充赛季条目", () => {
@@ -522,5 +535,60 @@ describe("mergeStaticArchiveConfig", () => {
 
     expect(mergeStaticArchiveConfig(config, null)).toEqual(config)
     expect(mergeStaticArchiveConfig(config, { liveVersion: "4.5", bosses: [] })).toEqual(config)
+  })
+})
+
+describe("fetchStaticArchiveSnapshot 的端点优先与回落", () => {
+  it("命中 /api/archive/stages 时不再直连数据源", async () => {
+    const boss = makeGeneratedBoss("4.5-moc-top")
+    const fetchMock = vi.fn(async (input: RequestInfo | URL) => {
+      // 命中端点就不该再有别的请求，直接在源头钉住
+      expect(String(input)).toBe("/api/archive/stages")
+      return {
+        ok: true,
+        json: async () => ({ version: "4.5.51", liveVersion: "4.5", bosses: [boss] }),
+      } as unknown as Response
+    })
+    vi.stubGlobal("fetch", fetchMock)
+
+    const snapshot = await fetchStaticArchiveSnapshot()
+
+    expect(snapshot).toEqual({ liveVersion: "4.5", bosses: [boss] })
+    // 直连数据源要 38 个请求 / ~193KB，端点命中时一个都不该再发
+    expect(fetchMock.mock.calls.map(([input]) => String(input))).toEqual(["/api/archive/stages"])
+  })
+
+  it("端点为空、形状不合或非 2xx 时回落到浏览器直连计算", async () => {
+    const bodies: Record<string, unknown> = {
+      empty: { bosses: [] },
+      malformed: { version: "4.5.51" },
+    }
+    for (const [caseName, body] of Object.entries(bodies)) {
+      const fetchMock = vi.fn(async (input: RequestInfo | URL) => {
+        const url = String(input)
+        if (url === "/api/archive/stages") {
+          return { ok: true, json: async () => body } as unknown as Response
+        }
+        if (url in fixtureFiles) return { ok: true, json: async () => fixtureFiles[url] } as unknown as Response
+        return { ok: false, status: 404, json: async () => ({}) } as unknown as Response
+      })
+      vi.stubGlobal("fetch", fetchMock)
+
+      const snapshot = await fetchStaticArchiveSnapshot()
+
+      expect(snapshot?.bosses.length, caseName).toBeGreaterThan(0)
+      expect(fetchMock.mock.calls.some(([input]) => String(input).includes("manifest.json")), caseName).toBe(true)
+      vi.unstubAllGlobals()
+    }
+
+    const downMock = vi.fn(async (input: RequestInfo | URL) => {
+      const url = String(input)
+      if (url === "/api/archive/stages") return { ok: false, status: 502, json: async () => ({}) } as unknown as Response
+      if (url in fixtureFiles) return { ok: true, json: async () => fixtureFiles[url] } as unknown as Response
+      return { ok: false, status: 404, json: async () => ({}) } as unknown as Response
+    })
+    vi.stubGlobal("fetch", downMock)
+
+    expect((await fetchStaticArchiveSnapshot())?.bosses.length).toBeGreaterThan(0)
   })
 })

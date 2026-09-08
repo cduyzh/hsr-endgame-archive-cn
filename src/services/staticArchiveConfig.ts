@@ -5,6 +5,7 @@
  */
 
 import {dataSourceUrl} from "./dataSource"
+import {API_BASE} from "./apiBase"
 import {buildSeasonBosses, pickDataDirectory, STATIC_SEASON_IDS, type HsrManifest} from "./staticBossSnapshot"
 import type {ArchiveConfig, BossStage, Season} from "../types/archive"
 
@@ -13,13 +14,38 @@ export interface StaticArchiveSnapshot {
   bosses: BossStage[]
 }
 
+interface StagesEndpointResponse {
+  version?: string
+  liveVersion?: string | null
+  bosses?: BossStage[]
+}
+
 async function fetchJson<T>(url: string): Promise<T> {
   const response = await fetch(url)
   if (!response.ok) throw new Error(`HTTP ${response.status}`)
   return (await response.json()) as T
 }
 
-export async function fetchStaticArchiveSnapshot(): Promise<StaticArchiveSnapshot | null> {
+/**
+ * 优先走 `/api/archive/stages`：函数侧算一次快照并交给边缘长缓存复用。
+ * 浏览器直连数据源要付 38 个请求、约 193KB gzip，且上游 `cache-control` 只有
+ * `max-age=120`，等于每次访问都重走一遍。
+ */
+async function fetchStagesFromApi(): Promise<StaticArchiveSnapshot | null> {
+  try {
+    const response = await fetch(`${API_BASE}/api/archive/stages`)
+    if (!response.ok) return null
+    const body = (await response.json()) as StagesEndpointResponse
+    const bosses = body?.bosses
+    if (!Array.isArray(bosses) || bosses.length === 0) return null
+    return { liveVersion: body.liveVersion ?? undefined, bosses }
+  } catch {
+    return null
+  }
+}
+
+/** 回落路径：本地无 API、函数或 CDN 故障时，仍由浏览器直连 `static.nanoka.cc` 现算。 */
+async function fetchStagesFromDataSource(): Promise<StaticArchiveSnapshot | null> {
   try {
     const manifest = await fetchJson<HsrManifest>(dataSourceUrl("manifest.json"))
     const version = pickDataDirectory(manifest.hsr?.available ?? [])
@@ -43,6 +69,10 @@ export async function fetchStaticArchiveSnapshot(): Promise<StaticArchiveSnapsho
   } catch {
     return null
   }
+}
+
+export async function fetchStaticArchiveSnapshot(): Promise<StaticArchiveSnapshot | null> {
+  return (await fetchStagesFromApi()) ?? (await fetchStagesFromDataSource())
 }
 
 function mergeSeasons(seasons: Season[], generated: BossStage[], liveVersion: string | undefined): Season[] {
@@ -80,12 +110,12 @@ export function mergeStaticArchiveConfig(config: ArchiveConfig, snapshot: Static
   }
 }
 
+/**
+ * `stages` 表是快照的**纯派生镜像**，可能落后于上游（新赛季上线、数值口径修正），
+ * 所以快照覆盖到的 id 一律以快照为准——否则库里那行旧的韧性/弱点会一直盖住修正后的值，
+ * 且没有任何报错线索。只有 `clears` 是业务统计值、不来自派生，保留库里的。
+ */
 function enrichWithSnapshot(stage: BossStage, generated: BossStage | undefined): BossStage {
   if (!generated) return stage
-  const patch: Partial<BossStage> = {}
-  if (!stage.imageUrl && generated.imageUrl) patch.imageUrl = generated.imageUrl
-  if (!stage.imageAlt && generated.imageAlt) patch.imageAlt = generated.imageAlt
-  if ((!stage.monsters || stage.monsters.length === 0) && generated.monsters) patch.monsters = generated.monsters
-  if (Object.keys(patch).length === 0) return stage
-  return { ...stage, ...patch }
+  return stage.clears === generated.clears ? generated : { ...generated, clears: stage.clears }
 }

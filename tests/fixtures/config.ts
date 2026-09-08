@@ -44,6 +44,7 @@ export function fixtureSubmission(overrides: Partial<SubmissionPayload> = {}): S
     cost: 24,
     videoUrl: "https://www.bilibili.com/video/BV1xx411c7mD",
     notes: "",
+    flags: [],
     units: [
       { unitId: "the-herta", eidolon: 0 },
       { unitId: "ruan-mei", eidolon: 1 },

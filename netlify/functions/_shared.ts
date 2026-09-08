@@ -4,6 +4,7 @@ import { tmpdir } from "node:os"
 import { join } from "node:path"
 import configData from "../../src/data/seed/config.json"
 import runsData from "../../src/data/seed/runs.json"
+import { isRunFlag } from "../../src/services/runFlags"
 import { COST_MAX, getRunGoldCounts } from "../../src/services/unitCost"
 import { submissionReviewToArchiveRun } from "../../src/services/submissionUtils"
 import { matchesVideoIdentity, videoIdentityOf, videoMatchPattern } from "../../src/services/videoUrl"
@@ -21,12 +22,13 @@ import type {
 export const seedConfig = configData as ArchiveConfig
 export const seedRuns = runsData as ArchiveRun[]
 
-export function jsonResponse(body: unknown, statusCode = 200) {
+export function jsonResponse(body: unknown, statusCode = 200, headers?: Record<string, string>) {
   return {
     statusCode,
     headers: {
       "content-type": "application/json; charset=utf-8",
       "cache-control": "no-store",
+      ...headers,
     },
     body: JSON.stringify(body),
   }
@@ -162,7 +164,9 @@ export function parseFilters(params: URLSearchParams): ArchiveFilters {
     grouping: true,
     continuous: false,
     unitKind: "character",
-    flags: (params.get("flags") ?? "").split(",").filter(Boolean),
+    // 与前端 normalizeFlags 同口径：非法标记丢弃而不是留进筛选条件，否则带非法值的深链
+    // 在前端是「只看合法标记」、在服务端会变成空集。
+    flags: (params.get("flags") ?? "").split(",").filter(isRunFlag),
     selectedUnitIds: (params.get("selected") ?? "").split(",").filter(Boolean),
   }
 }
@@ -357,7 +361,7 @@ export async function findDuplicateVideoRecords(input: {
 
   const pattern = videoMatchPattern(identity)
   try {
-    const reviews = await sql<DuplicateRow[]>`
+    const reviews = (await sql`
       select
         id,
         status,
@@ -373,8 +377,8 @@ export async function findDuplicateVideoRecords(input: {
         and payload->>'videoUrl' ~* ${pattern}
       order by created_at desc
       limit ${DUPLICATE_MATCH_LIMIT}
-    `
-    const runs = await sql<DuplicateRow[]>`
+    `) as DuplicateRow[]
+    const runs = (await sql`
       select
         id,
         status,
@@ -390,7 +394,7 @@ export async function findDuplicateVideoRecords(input: {
         and video_url ~* ${pattern}
       order by submitted_at desc
       limit ${DUPLICATE_MATCH_LIMIT}
-    `
+    `) as DuplicateRow[]
     return dedupeMatches([
       ...reviews.map((row) => toDuplicateMatch(row, "submission")),
       ...runs.map((row) => toDuplicateMatch(row, "run")),

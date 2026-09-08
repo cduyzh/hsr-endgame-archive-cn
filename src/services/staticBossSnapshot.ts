@@ -874,21 +874,29 @@ function fullUrl(baseUrl: string, path: string): string {
 	return `${baseUrl}${path.startsWith("/") ? path : `/${path}`}`
 }
 
+/** 4xx：服务端明确答复「没有这个资源」，重试没有意义。 */
+class PermanentFetchError extends Error {}
+
 async function fetchJson<T>(baseUrl: string, path: string): Promise<T> {
 	const url = fullUrl(baseUrl, path)
 	let lastErr: unknown
-	for (let i = 0; i < 3; i++) {
+	for (let attempt = 0; attempt < 3; attempt += 1) {
+		const controller = new AbortController()
+		const timeout = setTimeout(() => controller.abort(), 15000)
 		try {
-			const controller = new AbortController()
-			const timeout = setTimeout(() => controller.abort(), 15000)
-			const response = await fetch(url, { signal: controller.signal })
-			clearTimeout(timeout)
-			if (!response.ok) throw new Error(`HTTP ${response.status}`)
-			return (await response.json()) as T
+			const response = await fetch(url, {signal: controller.signal})
+			if (response.ok) return (await response.json()) as T
+			// 模式详情、InfiniteEliteGroup 与单怪详情都允许 404，这类确定性失败直接抛出，
+			// 否则 fetchJsonSafe 的每一次正常缺失都要多付 3 次请求 + 6 秒退避。
+			if (response.status < 500) throw new PermanentFetchError(`HTTP ${response.status}`)
+			throw new Error(`HTTP ${response.status}`)
 		} catch (err) {
+			if (err instanceof PermanentFetchError) throw err
 			lastErr = err
-			console.warn(`  retrying ${url} (${i + 1}/3): ${err instanceof Error ? err.message : err}`)
-			await new Promise(resolve => setTimeout(resolve, 1000 * (i + 1)))
+			console.warn(`  retrying ${url} (${attempt + 1}/3): ${err instanceof Error ? err.message : String(err)}`)
+			await new Promise((resolve) => setTimeout(resolve, 1000 * (attempt + 1)))
+		} finally {
+			clearTimeout(timeout)
 		}
 	}
 	throw lastErr
@@ -939,12 +947,15 @@ export async function buildSeasonBosses(
 		fetchJsonSafe<AaDetail>(baseUrl, `hsr/${version}/${locale}/${detailDirByMode.peak}/${seasonIds.peak}.json`),
 	])
 
-	const bosses: BossStage[] = []
-	if (Array.isArray(mocDetail)) bosses.push(...(await buildMocStages(ctx, baseUrl, mocDetail)))
-	if (pfDetail) bosses.push(...(await buildPfStages(ctx, baseUrl, pfDetail)))
-	if (asDetail) bosses.push(...(await buildAsStages(ctx, baseUrl, asDetail)))
-	if (aaDetail) bosses.push(...(await buildAaStages(ctx, baseUrl, aaDetail)))
-	return bosses
+	// 四个模式并发构建：各自内部还要按首领粒度拉单怪详情，串行会把整条瀑布拉成 4 轮。
+	// Promise.all 保留数组顺序，阶段 id 仍然是 moc → pf → as → aa。
+	const stagesByMode = await Promise.all([
+		Array.isArray(mocDetail) ? buildMocStages(ctx, baseUrl, mocDetail) : [],
+		pfDetail ? buildPfStages(ctx, baseUrl, pfDetail) : [],
+		asDetail ? buildAsStages(ctx, baseUrl, asDetail) : [],
+		aaDetail ? buildAaStages(ctx, baseUrl, aaDetail) : [],
+	])
+	return stagesByMode.flat()
 }
 
 export interface HsrManifest {

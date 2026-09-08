@@ -214,10 +214,10 @@ export interface SubmissionPayload {
   cost: number
   videoUrl: string
   notes: string
-  /** 投稿时手动勾选的标记，审核通过后原样写入 `runs.tags`。 */
-  flags: RunFlag[]
-  units: RunUnit[]
-  lightcones: RunUnit[]
+  /** 投稿时手动勾选的标记，审核通过后原样写入 `runs.tags`。只读：审核台从只读 store 取值。 */
+  flags: readonly RunFlag[]
+  units: readonly RunUnit[]
+  lightcones: readonly RunUnit[]
 }
 
 export type SubmissionReviewStatus = "pending" | "approved" | "rejected" | "withdrawn"

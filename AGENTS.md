@@ -31,14 +31,14 @@
 - lucide-vue-next
 - Netlify Functions
 - Vitest + Vue Test Utils + jsdom
-- pnpm，Node >= 24
+- pnpm，Node >= 24（根目录 `.nvmrc` 已固定为 `24`；`sync:stages` 用 `node --experimental-strip-types`，在旧的默认 node 上会直接 `bad option` 失败）
 
 常用命令：
 
 ```bash
 pnpm install
 pnpm dev              # vite --host 127.0.0.1 --port 32200
-pnpm typecheck        # vue-tsc --noEmit
+pnpm typecheck        # vue-tsc --noEmit —— 单项目，覆盖 src + tests + netlify/functions + vite.config.ts
 pnpm lint             # eslint .
 pnpm test:unit        # vitest run
 pnpm build            # run-p typecheck test:unit lint build:only
@@ -73,7 +73,7 @@ pnpm seed:archive:dry    # 灌库空跑
 - `src/components/archive/`：档案业务组件，含投稿弹窗 `SubmitRunDialog.vue` 与其内部三步向导 `SubmitRunForm.vue`；`src/components/admin/`：审核台弹框与卡片；`src/components/PromoSlot.vue`：站务推广位；`src/components/FlagIcon.vue`：标记图标的唯一渲染出口（热链图标 + lucide 回落，四处共用）；`src/components/ElementIcon.vue`：属性（弱点/抗性）图标的唯一渲染出口（热链图标 + 中文属性名回落，弱点行、抗性行与敌方阵容三处共用）。
 - `src/composables/`：`useArchiveFilters.ts`（筛选状态 + 路由 query 双向同步）、`useRunsQuery.ts`、`useMetaStats.ts`、`useAdminSubmissions.ts`、`useSubmissionDialog.ts`（投稿弹窗全局开关）、`useSubmissionDraft.ts`（投稿草稿 localStorage 缓存）、`useSubmissionMemory.ts`（作者名 / 配队预设 / 投稿 token 三合一 localStorage 记忆）。
 - `src/types/archive.ts`：所有 `Archive*` 类型的唯一来源。
-- `src/services/`：`archiveService.ts`（API + seed fallback + 管理员会话 + `listMySubmissions`/`withdrawSubmission`）、`staticArchiveConfig.ts`（浏览器端静态快照入口）、`staticBossSnapshot.ts`（前后端共用的阶段推导纯计算层：`STATIC_SEASON_IDS`、HP/速度/韧性/弱点/抗性/场地 buff/首领取名口径）、`dataSource.ts`（远程地址与图片）、`runUtils.ts`、`unitCost.ts`、`submissionUtils.ts`、`submissionValidation.ts`（投稿校验与预览纯函数）、`videoUrl.ts`（视频身份归一与查重口径，前后端共用）。
+- `src/services/`：`archiveService.ts`（API + seed fallback + 管理员会话 + `listMySubmissions`/`withdrawSubmission`）、`staticArchiveConfig.ts`（静态快照入口：优先 `/api/archive/stages`，回落浏览器直连）、`apiBase.ts`（`VITE_API_BASE` 的唯一来源，被 `archiveService.ts` 与 `staticArchiveConfig.ts` 共用——从前者反向导出会循环依赖）、`staticBossSnapshot.ts`（前后端共用的阶段推导纯计算层：`STATIC_SEASON_IDS`、HP/速度/韧性/弱点/抗性/场地 buff/首领取名口径）、`dataSource.ts`（远程地址与图片）、`runUtils.ts`、`unitCost.ts`、`submissionUtils.ts`、`submissionValidation.ts`（投稿校验与预览纯函数）、`videoUrl.ts`（视频身份归一与查重口径，前后端共用）。
 - `src/data/`：`unitAssets.ts`（`sourceId` -> 远程图）、`unitPaths.ts`（命途图标）、`flagIcons.ts`（三个标记图标的**热链地址**）与 `elementIcons.ts`（七个属性图标的**热链地址**）——这两个是**唯一不走 `dataSource.ts`** 的图源、`signatureLightcones.ts`（角色 -> 专武映射的运行时入口）、`articles.ts`（文章模块唯一取数入口，读 `sync:articles` 产物 `articles.json`）、`changelog.ts`（更新记录数据，`appVersion` 供头部徽章）、`seed/`。
 - `src/stores/archiveStore.ts`：档案配置缓存 + 投稿自动搭配用的记录样本（`pairingRuns`）。
 - `src/data/seed/`：无数据库时的本地种子数据。当前 `config.json` 中 `bosses` 为空数组、`runs.json` 为空数组，敌方阶段完全由静态快照生成；`hsr-units.json` / `hsr-monsters.json` 只是同步脚本产物，运行时代码不 import（`seed/index.ts` 仅导出 `config.json` 与 `runs.json`）；`lightcone-pairs.json` 同样是 `sync:units` 产物，但**由 `signatureLightcones.ts` 在运行时 import**，为投稿表单提供专武映射。`config.json` 的 `articles` 与库里 `articles` 表**已不再驱动任何界面**，文章板块只读 `src/data/articles.ts`（见「已知不一致」）。
@@ -87,10 +87,10 @@ pnpm seed:archive:dry    # 灌库空跑
 1. 竞速档案业务数据  
    由 `src/services/archiveService.ts` 请求 `/api/archive/*`、`/api/submissions`、`/api/admin/submissions*`。Netlify Functions 有数据库 URL 时读取 Postgres；没有数据库 URL 时读取 `src/data/seed`。前端 `requestJson()` 在请求失败或非 2xx 时静默回退 seed。
 
-2. HSR 终局静态数据（远程直连）  
-   所有 JSON 数据和图片资源均直连 `https://static.nanoka.cc`（已开放 CORS），不落盘、不代理、不随构建发布。地址集中在 `src/services/dataSource.ts`；`src/services/staticArchiveConfig.ts` 在运行时生成“静态快照”，由 `archiveService.fetchArchiveConfig()` 合并进业务配置。任何一步静态读取失败都返回 `null`，业务配置原样保留。
+2. HSR 终局静态数据（远程直连，快照走函数侧缓存）  
+   所有 JSON 数据和图片资源均直连 `https://static.nanoka.cc`（已开放 CORS），不落盘、不代理、不随构建发布。地址集中在 `src/services/dataSource.ts`；`src/services/staticArchiveConfig.ts` 生成“静态快照”，由 `archiveService.fetchArchiveConfig()` 合并进业务配置。**唯一例外是这份快照本身**：浏览器直连要付 38 个请求、约 193KB gzip，且上游 `cache-control` 只有 `max-age=120`，等于每次访问都重走一遍，所以优先请求 `GET /api/archive/stages`（函数算一次 + 边缘长缓存）。两条路径都失败才返回 `null`，业务配置原样保留。
 
-合并语义（以代码为准）：`mergeStaticArchiveConfig()` **只补充 `config.bosses` 中不存在的阶段 id**，并为缺失的赛季追加 `{ id, label: "<seasonId> 归档", isCurrent: seasonId === manifest.hsr.live }`；**从不覆盖**业务配置里已有的赛季 label 或敌方阶段字段。因此当前赛季的展示字段完全来自远程快照，而 seed/库里已有的历史阶段保持原值。
+合并语义（以代码为准）：`mergeStaticArchiveConfig()` 为缺失的赛季追加 `{ id, label: "<seasonId> 归档", isCurrent: ... }`，**不改任何赛季 label**；对敌方阶段则分两种情况——快照**覆盖到**的 id，派生字段（名称/副标题/图/HP/速度/韧性/弱点/抗性/场地 buff/徽标色）一律以快照为准，因为 `stages` 表只是它的派生镜像、可能落后于上游；快照**没覆盖到**的 id（seed/库里的历史阶段）原值保留。唯一例外是 `clears`，它是业务统计值、不来自派生，永远保留库里的。这条规则替代了旧的「一律不覆盖」——旧语义下库里那行旧韧性/旧弱点会永久盖住修正且毫无报错。
 
 阶段 id 规则为 `${seasonId}-${mode}-${stageKey}`（`mode` 取业务模式 `moc/pf/as/aa`；`stageKey` 为 `top`/`bottom`/`starward`，`aa` 为 `k1..kN`/`checkmate`/`plight`），是业务筛选与投稿记录引用的稳定 id，不要改动格式。`starward` 的中文展示名统一为**星启**（阶段标签、徽标与样式类名都用这个词）。
 
@@ -104,7 +104,7 @@ pnpm seed:archive:dry    # 灌库空跑
 
 区间筛选口径：`ArchiveFilters` 的成本与分数都是**可空端点** `costMin` / `costMax` / `scoreMin` / `scoreMax`，`null` 表示该侧不限，判断统一走 `runUtils.ts` 的 `matchesRange(value, min, max)`（已取代旧的 `matchesCost` 与 `cost: "all" | "0-8" | …` 枚举桶）。面板上的 `不限 / 0-8 / 9-16 / 17-32 / 33-48` 只是写入端点的 UI 预设，不进筛选状态形状；`buildMetaStats()` 的 `costBuckets` 是统计分桶，与筛选无关、仍然保留。分数区间只在 `as` 出现（`score` 只有该模式有意义，上限 `AS_MAX_SCORE`）。端点解析在前后端各有一份同名实现（`useArchiveFilters.ts` 与 `_shared.ts` 的 `readBound` / `readLegacyCostBucket`），**改规则要两处同步**；旧的 `?cost=17-32` 深链只在读取侧兼容，映射成对应端点。
 
-标记（`flags`）口径：`RunFlag = revive | firewall | bpWeapon`（复活 / 火墙 / 大月卡武器），唯一来源是 `src/services/runUtils.ts` 的 `flagOrder` / `flagLabels` / `isRunFlag`，组件与 Functions 都不要另抄一份；图标统一走 `src/components/FlagIcon.vue`（地址在 `src/data/flagIcons.ts`），组件不要再自己写 `flagIcons` 映射。标记**必须在投稿时手动勾选**，落库复用 `runs.tags`（开放 jsonb 数组，无需迁移）；读取用 `flagsOfRun()` 收窄掉历史遗留的自由文本。筛选是 **AND 语义**（勾选的标记全部命中才保留），前端 `filterRuns()` 与服务端 `filterArchiveRuns()` 一致；URL 深链里的非法值由 `useArchiveFilters` 的 `normalizeFlags()` 丢弃。
+标记（`flags`）口径：`RunFlag = revive | firewall | bpWeapon`（复活 / 火墙 / 大月卡武器），唯一来源仍是 `src/services/runUtils.ts` 的 `flagOrder` / `flagLabels` / `isRunFlag`，组件与 Functions 都不要另抄一份。但**判定原语住在 `src/services/runFlags.ts`**，由 runUtils 原样再导出——因为 runUtils 有 `@/services/unitCost` 的值导入、Functions 打包不解析 Vite 别名而引不了它，而服务端 `parseFilters` 需要同一套合法性判定；图标统一走 `src/components/FlagIcon.vue`（地址在 `src/data/flagIcons.ts`），组件不要再自己写 `flagIcons` 映射。标记**必须在投稿时手动勾选**，落库复用 `runs.tags`（开放 jsonb 数组，无需迁移）；读取用 `flagsOfRun()` 收窄掉历史遗留的自由文本。筛选是 **AND 语义**（勾选的标记全部命中才保留），前端 `filterRuns()` 与服务端 `filterArchiveRuns()` 一致；URL 深链里的非法值由 `useArchiveFilters` 的 `normalizeFlags()` 丢弃。
 
 敌方阶段分组口径：`stageGroupOf(boss)` 把阶段分成 `boss`（首领关）/ `knight`（骑士关）/ `checkmate`（将杀关），规则是 `aa` 且阶段键以 `k` 开头 → 骑士关，`aa` 且为 `checkmate`/`plight` → 将杀关（绝境与将杀同组），其余一律首领关。`ModeSeasonFilter` 按 `stageGroupOrder` 渲染分组标题，空组不出标题。第 3 阶段用 `isStarwardStage(boss)` 判定并加金色星启徽标——星启血量约为普通半区的 2–5 倍（4.5 实测 3000 万 vs 上半 1355 万）。
 
@@ -113,6 +113,7 @@ pnpm seed:archive:dry    # 灌库空跑
 `netlify.toml` 中配置了以下 API：
 
 - `/api/archive/config` -> `netlify/functions/archive-config.ts`
+- `/api/archive/stages` -> `netlify/functions/archive-stages.ts`（GET，无需鉴权。返回 `{version, liveVersion, bosses}`，即函数侧算好的敌方阶段快照。响应带 `Netlify-CDN-Cache-Control: public, durable, max-age=3600, stale-while-revalidate=604800` 与 `Netlify-Cache-Tag: stages-<数据目录>`；上游拉取失败返回 `502` 且保持 `no-store`，不会把错误缓存住。前端拿不到就回落浏览器直连计算）
 - `/api/archive/runs` -> `netlify/functions/archive-runs.ts`
 - `/api/archive/stats` -> `netlify/functions/archive-stats.ts`
 - `/api/submissions` -> `netlify/functions/submissions.ts`（POST 投稿；**响应体返回 `ownerToken`（`own_<48 hex>`），前端写本地记忆**；按「视频 + 敌方阶段」查重命中返回 `409 {message, duplicate:{matches}}`）

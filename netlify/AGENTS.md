@@ -9,7 +9,8 @@
 | 文件                      | 路由                            | 说明                                                                                                                                              |
 | ------------------------- | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `_shared.ts`              | —（非 function）                | 公共工具：seed、DB 连接、鉴权、筛选/统计、无库文件 fallback。**被所有 function 复用**                                                             |
-| `_staticSnapshot.ts`      | —（非 function）                | 服务端远程静态快照包装：调 `getStaticBossMap()` 在 cold start 内 fetch 一次 `static.nanoka.cc` 并缓存，供审核通过时按 `bossId` 查完整 `BossStage` |
+| `_staticSnapshot.ts`      | —（非 function）                | 服务端远程静态快照包装：`getStaticSnapshot()` 在 cold start 内 fetch 一次 `static.nanoka.cc` 并缓存，供审核通过时按 `bossId` 查完整 `BossStage` |
+| `archive-stages.ts`       | `/api/archive/stages`           | GET 函数侧算好的敌方阶段快照 `{version, liveVersion, bosses}`；**本站唯一带长缓存的接口**（`Netlify-CDN-Cache-Control: public, durable, max-age=3600, stale-while-revalidate=604800` + `Netlify-Cache-Tag: stages-<数据目录>`），无需鉴权；上游失败返回 `502` 且保持 `no-store`，前端会回落到浏览器直连计算 |
 | `archive-config.ts`       | `/api/archive/config`           | 返回配置（赛季/阶段/单位/文章），空表回退 seed                                                                                                    |
 | `archive-runs.ts`         | `/api/archive/runs`             | 已审核记录（`status='approved'`），带筛选，`limit 200`                                                                                            |
 | `archive-stats.ts`        | `/api/archive/stats`            | 统计，`limit 500` 聚合后 `buildStats`                                                                                                             |
@@ -25,11 +26,12 @@
 ## `_shared.ts` 关键约定
 
 - **DB URL 读取顺序**：`NETLIFY_DATABASE_URL ?? DATABASE_URL ?? POSTGRES_URL`；`getSql()` 无 URL 时返回 `null`，各 handler 自行走 fallback。
-- **`jsonResponse(body, status)`**：统一返回 `application/json` + `cache-control: no-store`。
+- **`jsonResponse(body, status, headers?)`**：统一返回 `application/json` + `cache-control: no-store`；第三个参数按 key 覆盖默认头，目前只有 `archive-stages.ts` 用它开长缓存。**给别的接口加缓存前要确认返回内容确实与请求者/数据库状态无关**——`archive-config` 会随审核结果变化，绝不能缓存。
 - **`requireAdmin(event)`**：支持两种认证：`Bearer <管理员密码>` 与 Basic auth（`ADMIN_REVIEW_USERNAME` 默认 `admin`，密码 `ADMIN_REVIEW_PASSWORD`，旧部署可退回 `ADMIN_REVIEW_TOKEN`）。**未配置任何密码环境变量时返回 `null`（= 无密码则不拦截）**——生产务必配置 `ADMIN_REVIEW_PASSWORD`。
 - **无库投稿存储**：`addFallbackSubmissionReview` 等把审核队列写到 `SUBMISSION_REVIEW_FALLBACK_FILE`（默认 `os.tmpdir()` 下 JSON），用「写临时文件 + rename」保证原子性。注意临时目录在 Netlify 冷启动间不持久，仅用于本地/演示。
 - **筛选/统计纯函数** `filterArchiveRuns` / `buildStats` / `matchesRange`：与前端 `src/services/runUtils.ts` **语义重复但独立实现**（因 Functions 打包不能依赖前端别名）。改口径时两处必须同步。`matchesRange(value, min, max)` 由成本与分数共用，`null` 表示该侧不限。
 - **投稿查重 `findDuplicateVideoRecords({videoUrl, bossId})`**：判重键是「视频链接 + 敌方阶段」，只有 `pending` / `approved` 算已存在（驳回、撤回允许重提）。有库走两条 SQL——`submission_reviews`（`payload->>'bossId'` + `payload->>'videoUrl'`）与 `runs`（`boss_id` + `video_url`，覆盖不经投稿直接灌库的记录），按 id 去重保留投稿侧、最多 3 条；无库用 `isSameVideo()` 过滤 `listFallbackSubmissionReviews("all")` + `listFallbackArchiveRuns()` + `seedRuns`。链接同一性由 `src/services/videoUrl.ts` 决定（BV 号 / YouTube id / 规范化 URL），SQL 用 `~*` 配 `videoMatchPattern()` 生成的**带字母数字边界断言**的正则，避免 `BVxxxx2` 误配 `BVxxxx23`；查重读失败返回 `[]` 放行，不把投稿接口带崩。
+- **`parseFilters()` 的 `flags` 走 `isRunFlag` 收窄**（从 `../../src/services/runFlags` 相对引用，不能引 `runUtils`——它带 `@/` 值导入、esbuild 不解析别名）。与前端 `useArchiveFilters.normalizeFlags()` 同口径：非法标记**丢弃**而不是留在筛选条件里，否则 `?flags=revive,bogus` 这类深链在前端是「只看复活」、在服务端会变成空集。
 - **`parseFilters()` 默认值完全来自 seed，无硬编码赛季**：`season` 缺省依次为 `params.season` → `seedConfig.seasons` 中 `isCurrent` 的赛季 → 首个赛季 → `""`（不再写死某个版本号，避免 seed 换季后兜底值失效）；`bossId` 缺省取 `seedConfig.bosses[0]?.id`，而 seed 的 `bosses` 现为空数组，因此缺省会得到 `""`。
 - **区间筛选参数** `costMin` / `costMax` / `scoreMin` / `scoreMax`：由本文件的 `readBound()` 宽松解析，空值 / 非数字 / 负数都视为「该侧不限」，成本另钳到 `COST_MAX`。旧的 `?cost=17-32` 桶深链仍读得懂（`readLegacyCostBucket()` 映射成对应端点）。这两个函数与前端 `useArchiveFilters.ts` 里的同名实现是**同一套规则的两份拷贝**，改一处要改两处，否则深链在服务端与浏览器端会解出不同结果。
 

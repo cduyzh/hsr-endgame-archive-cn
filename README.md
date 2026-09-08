@@ -28,6 +28,7 @@
 ## 本地运行
 
 ```bash
+nvm use        # 或直接 nvm install 24：仓库 .nvmrc 已固定 Node 24，sync:stages 依赖 --experimental-strip-types
 pnpm install
 pnpm dev
 ```
@@ -81,7 +82,7 @@ Netlify 构建环境固定使用 Node 24；业务 API redirects、Functions 目�
    前端通过 `src/services/archiveService.ts` 请求 `/api/archive/config`、`/api/archive/runs`、`/api/archive/stats`、`/api/submissions`（含 `/check` 查重预检、`/me` 凭证反查、`/:id/withdraw` 撤回）以及 `/api/admin/submissions*`。Netlify Functions 若配置了 `NETLIFY_DATABASE_URL`、`DATABASE_URL` 或 `POSTGRES_URL`，会读取 Postgres；否则使用 `src/data/seed/` 中的种子数据。读取类请求失败时前端静默回退 seed，保证无数据库环境不白屏；投稿与管理端请求失败则直接报错（审核台会提示）。
 
 2. **HSR 终局静态数据（远程直连）**  
-   所有游戏 JSON 与图片均直连 `https://static.nanoka.cc`（已开放 CORS），仓库不落盘、不随构建发布。地址与图片路径集中在 `src/services/dataSource.ts`；`src/services/staticArchiveConfig.ts`（浏览器端入口）在运行时读取 `manifest.json`，把推导工作交给前后端共用的纯计算层 `src/services/staticBossSnapshot.ts`：按硬编码的 `STATIC_SEASON_IDS` 拉取 `monster.json`、`monstervalue.json`、`HardLevelGroup.json`、`EliteGroup.json`、`InfiniteEliteGroup.json` 与各模式单期详情，生成敌方阶段（血量/速度/韧性/弱点/场地 buff 与赛季机制/敌方图），再合并进 `/api/archive/config`（或 seed）的结果。静态读取失败时保留业务配置，不会白屏。
+   所有游戏 JSON 与图片均直连 `https://static.nanoka.cc`（已开放 CORS），仓库不落盘、不随构建发布。地址与图片路径集中在 `src/services/dataSource.ts`；`src/services/staticArchiveConfig.ts`（浏览器端入口）在运行时读取 `manifest.json`，把推导工作交给前后端共用的纯计算层 `src/services/staticBossSnapshot.ts`：按硬编码的 `STATIC_SEASON_IDS` 拉取 `monster.json`、`monstervalue.json`、`HardLevelGroup.json`、`EliteGroup.json`、`InfiniteEliteGroup.json` 与各模式单期详情，生成敌方阶段（血量/速度/韧性/弱点/场地 buff 与赛季机制/敌方图），再合并进 `/api/archive/config`（或 seed）的结果。静态读取失败时保留业务配置，不会白屏。**快照本身优先走 `GET /api/archive/stages`**：浏览器直连要付 38 个请求、约 193KB gzip，而上游 `cache-control` 只有 `max-age=120`，等于每次访问都重走一遍；改由函数算一次并交给边缘长缓存后，浏览器只发一个请求。端点非 2xx、返回空或形状不合时自动回落到上面的浏览器直连路径，所以本地开发与函数故障时页面照常。
 
 数据库表结构见 `netlify/schema.sql`。访问 `/admin/submissions` 会先显示管理员登录弹框，生产环境建议配置：
 
@@ -110,6 +111,7 @@ pnpm sync:stages -- --season=4.5  # 只同步指定赛季
 
 | 前端路径                     | Function               | 说明                                         |
 | ---------------------------- | ---------------------- | -------------------------------------------- |
+| `/api/archive/stages`        | `archive-stages`       | 函数侧算好的敌方阶段快照，**全站唯一带 CDN 长缓存的接口**（边缘 1h 新鲜 + 7 天后台回源）；前端拿不到时自动回落浏览器直连 |
 | `/api/archive/config`        | `archive-config`       | 赛季、模式、敌方阶段、角色、光锥、文章配置   |
 | `/api/archive/runs`          | `archive-runs`         | 已审核竞速记录，支持筛选                     |
 | `/api/archive/stats`         | `archive-stats`        | 使用率、组合、成本区间统计                   |

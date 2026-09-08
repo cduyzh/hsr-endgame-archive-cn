@@ -7,10 +7,17 @@ import type {
   MetaStats,
   ModeOption,
   RunCategory,
-  RunFlag,
   SpecificRunCategory,
 } from "@/types/archive"
 import { getRunGoldCounts } from "@/services/unitCost"
+import {
+  flagLabels,
+  flagOrder,
+  flagsOfRun,
+  isRunFlag,
+} from "@/services/runFlags"
+// 标记口径的唯一来源仍是本文件：判定原语住在无别名依赖的 runFlags.ts（Functions 引不了带 @/ 的本文件）。
+export { flagLabels, flagOrder, flagsOfRun, isRunFlag }
 
 export function matchesCategory(run: ArchiveRun, category: RunCategory): boolean {
   return category === "all" || run.category === category
@@ -25,28 +32,6 @@ export const categoryLabels: Record<SpecificRunCategory, string> = {
   asScore3650: "3650-3850",
   asScore3850: "3850-3899",
   asScore4000: "4000 满分",
-}
-
-/** 标记的展示顺序：筛选面板、投稿表单与记录徽标都按此排列。 */
-export const flagOrder: RunFlag[] = ["revive", "firewall", "bpWeapon"]
-
-/** 标记中文文案的唯一来源，不要在组件里另写一份。 */
-export const flagLabels: Record<RunFlag, string> = {
-  revive: "复活",
-  firewall: "火墙",
-  bpWeapon: "大月卡武器",
-}
-
-const flagValues = new Set<string>(flagOrder)
-
-export function isRunFlag(value: unknown): value is RunFlag {
-  return typeof value === "string" && flagValues.has(value)
-}
-
-/** `runs.tags` 是开放 text，这里只保留仍是合法标记的值，并按 `flagOrder` 归一顺序。 */
-export function flagsOfRun(run: ArchiveRun): RunFlag[] {
-  const tags = new Set(run.tags.filter(isRunFlag))
-  return flagOrder.filter((flag) => tags.has(flag))
 }
 
 /** 末日幻影按剩余行动值计分，满分 4000。 */

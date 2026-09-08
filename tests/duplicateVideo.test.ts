@@ -4,6 +4,7 @@ import { tmpdir } from "node:os"
 import { join } from "node:path"
 import type { SubmissionPayload, SubmissionReview } from "@/types/archive"
 import { fixtureSubmission } from "./fixtures/config"
+import { asResponse } from "./fixtures/netlifyResponse"
 
 /**
  * 无库 fallback 路径下的投稿查重（有库分支走 SQL，本地无库无法覆盖）。
@@ -154,29 +155,29 @@ describe("投稿接口端到端（无库 fallback）", () => {
   it("入队后同链接同阶段被 409 拦住，换阶段仍可提交", async () => {
     const videoUrl = "https://www.bilibili.com/video/BV1e2eonly01?vd_source=abc"
 
-    const first = await runPost(submissionOf({ videoUrl }))
+    const first = asResponse(await runPost(submissionOf({ videoUrl })))
     expect(first.statusCode).toBe(202)
     const created = json(first) as {id: string; ownerToken: string}
     expect(created.ownerToken).toMatch(/^own_/)
 
     // 换一种粘贴形式（去 www、带 p 参数、m. 子域）仍能查到同一条
-    const check = await runCheck({
+    const check = asResponse(await runCheck({
       videoUrl: "https://m.bilibili.com/video/BV1e2eonly01?p=2",
       bossId: "4.5-moc-top",
-    })
+    }))
     expect(check.statusCode).toBe(200)
     expect(json(check)).toMatchObject({ duplicate: true, matches: [{ id: created.id, status: "pending" }] })
 
-    const again = await runPost(submissionOf({ videoUrl: "https://bilibili.com/video/BV1e2eonly01/" }))
+    const again = asResponse(await runPost(submissionOf({ videoUrl: "https://bilibili.com/video/BV1e2eonly01/" })))
     expect(again.statusCode).toBe(409)
     expect(json(again)).toMatchObject({ duplicate: { matches: [{ id: created.id }] } })
 
-    const otherStage = await runPost(
+    const otherStage = asResponse(await runPost(
       submissionOf({ videoUrl: "https://www.bilibili.com/video/BV1e2eonly01", bossId: "4.5-moc-bottom" }),
-    )
+    ))
     expect(otherStage.statusCode).toBe(202)
 
     // 字段缺失仍先返回 400，不会被查重抢先
-    expect((await runPost(submissionOf({ videoUrl: "   " }))).statusCode).toBe(400)
+    expect(asResponse(await runPost(submissionOf({ videoUrl: "   " }))).statusCode).toBe(400)
   })
 })

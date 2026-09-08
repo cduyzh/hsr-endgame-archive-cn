@@ -6,12 +6,13 @@ const MAX_PRESETS = 3
 
 export interface SubmissionPresetSlot {
   unitId: string
-  eidolon: number
+  /** 未填时留空，载入后交给表单默认值逻辑，不要压成 0（会显示成 E0）。 */
+  eidolon?: number
 }
 
 export interface SubmissionPresetLightcone {
   unitId: string
-  superimposition: number
+  superimposition?: number
 }
 
 export interface SubmissionTeamPreset {

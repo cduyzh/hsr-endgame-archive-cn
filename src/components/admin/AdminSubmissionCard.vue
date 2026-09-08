@@ -75,7 +75,8 @@ function formatDate(value?: string | null) {
           >
             <FlagIcon
               :flag="flag"
-              :size="13" />
+              :size="13"
+            />
             {{ flagLabels[flag] }}
           </span>
         </p>

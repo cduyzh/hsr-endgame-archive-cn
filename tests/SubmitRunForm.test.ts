@@ -125,8 +125,18 @@ async function settleDuplicateCheck() {
   await flushPromises()
 }
 
-function submitCalls(fetchMock: ReturnType<typeof stubFetch>) {
-  return fetchMock.mock.calls.filter(([input]) => !String(input).startsWith("/api/submissions/check"))
+/** VTU 的 `element` 只保证是 `Element`，取输入框当前值要收窄一次。 */
+function inputValue(node: {element: Element}) {
+  return (node.element as HTMLInputElement).value
+}
+
+/** 只留真正的投稿 POST 调用（预检请求排除在外），直接给出各自的请求体文本。 */
+function submitBodies(fetchMock: ReturnType<typeof stubFetch>) {
+  // stubFetch 的 mock 只声明了 input 一个入参（比真实 fetch 窄），但 POST 调用确实带 RequestInit，
+  // 所以在这里按真实签名放宽一次，避免给 mock 加一个用不到的参数。
+  return (fetchMock.mock.calls as unknown as Array<[RequestInfo | URL, RequestInit | undefined]>)
+    .filter(([input]) => !String(input).startsWith("/api/submissions/check"))
+    .map(([, init]) => String(init?.body ?? ""))
 }
 
 beforeEach(() => {
@@ -161,10 +171,10 @@ describe("SubmitRunForm 分步向导", () => {
 
     await wrapper.get(".submission-nav button").trigger("click")
     expect(activeStepLabel(wrapper)).toContain("队伍配置")
-    expect(wrapper.get('input[placeholder="例：大黑塔双同谐"]').element.value).toBe("大黑塔双同谐")
+    expect(inputValue(wrapper.get('input[placeholder="例：大黑塔双同谐"]'))).toBe("大黑塔双同谐")
 
     await wrapper.findAll(".submission-step-tab")[0].trigger("click")
-    expect(wrapper.get('input[placeholder="展示名称，例如 夜航"]').element.value).toBe("夜航")
+    expect(inputValue(wrapper.get('input[placeholder="展示名称，例如 夜航"]'))).toBe("夜航")
     wrapper.unmount()
   })
 
@@ -185,13 +195,13 @@ describe("SubmitRunForm 分步向导", () => {
     const activeMode = wrapper.get(".mode-grid .mode-tab.active")
     expect(activeMode.text()).toContain("末日幻影")
     expect(activeMode.get(".mini-badge").text()).toBe("NEW")
-    expect(wrapper.findAll(".split-fields select")[1].element.value).toBe("4.5-as-top")
+    expect(inputValue(wrapper.findAll(".split-fields select")[1])).toBe("4.5-as-top")
     expect(wrapper.get(".submission-category-grid button.active").text()).toBe("4000 满分")
 
     // 默认分数必须落在默认档位里，否则走不到第三步就会被「分数最高 4000」挡住
     await toResultStep(wrapper)
     expect(activeStepLabel(wrapper)).toContain("成绩与预览")
-    expect(wrapper.findAll('input[type="number"]')[1].element.value).toBe("4000")
+    expect(inputValue(wrapper.findAll('input[type="number"]')[1])).toBe("4000")
     wrapper.unmount()
   })
 
@@ -284,19 +294,19 @@ describe("SubmitRunForm 分步向导", () => {
     await pickCharacter(wrapper, 3, "阮", "ruan-mei")
     await goNext(wrapper)
 
-    expect(costInput().element.value).toBe("6")
+    expect(inputValue(costInput())).toBe("6")
 
     await costInput().setValue("9")
     await wrapper.findAll(".submission-step-tab")[1].trigger("click")
     await pickLightcone(wrapper, 0, "星海", "cruising")
     await wrapper.findAll(".submission-step-tab")[2].trigger("click")
 
-    expect(costInput().element.value).toBe("9")
+    expect(inputValue(costInput())).toBe("9")
     expect(wrapper.get(".submission-preview-metrics").text()).toContain("成本 9")
     expect(wrapper.get(".submission-preview-metrics").text()).toContain("自动合计 5")
 
     await wrapper.get('button[aria-label^="按队伍重算成本"]').trigger("click")
-    expect(costInput().element.value).toBe("5")
+    expect(inputValue(costInput())).toBe("5")
     wrapper.unmount()
   })
 
@@ -361,8 +371,8 @@ describe("SubmitRunForm 分步向导", () => {
     await wrapper.get("form").trigger("submit")
     await flushPromises()
 
-    expect(submitCalls(fetchMock)).toHaveLength(1)
-    expect(JSON.parse(submitCalls(fetchMock)[0][1].body)).toMatchObject({
+    expect(submitBodies(fetchMock)).toHaveLength(1)
+    expect(JSON.parse(submitBodies(fetchMock)[0] ?? "{}")).toMatchObject({
       author: "夜航",
       bossId: "4.5-moc-top",
       teamName: "大黑塔双同谐",
@@ -371,7 +381,7 @@ describe("SubmitRunForm 分步向导", () => {
     expect(wrapper.get(".submission-success").text()).toContain("sub_test_1")
 
     await wrapper.get(".submission-success-actions button").trigger("click")
-    expect(wrapper.get('input[placeholder="展示名称，例如 夜航"]').element.value).toBe("")
+    expect(inputValue(wrapper.get('input[placeholder="展示名称，例如 夜航"]'))).toBe("")
     expect(activeStepLabel(wrapper)).toContain("基础信息")
     wrapper.unmount()
   })
@@ -557,11 +567,11 @@ describe("SubmitRunForm 分步向导", () => {
 
     const reopened = mountForm()
     expect(reopened.get(".submission-draft-note").text()).toContain("已恢复上次未提交的草稿")
-    expect(reopened.get('input[placeholder="展示名称，例如 夜航"]').element.value).toBe("夜航")
+    expect(inputValue(reopened.get('input[placeholder="展示名称，例如 夜航"]'))).toBe("夜航")
 
     await reopened.get(".submission-draft-note button").trigger("click")
     expect(reopened.find(".submission-draft-note").exists()).toBe(false)
-    expect(reopened.get('input[placeholder="展示名称，例如 夜航"]').element.value).toBe("")
+    expect(inputValue(reopened.get('input[placeholder="展示名称，例如 夜航"]'))).toBe("")
 
     // 重置后的空表单不该被防抖写回成幽灵草稿
     await new Promise((resolve) => setTimeout(resolve, 500))

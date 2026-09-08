@@ -34,12 +34,12 @@
     <header class="app-header">
       <RouterLink
         class="brand-lockup"
-        to="/">
+        to="/"
+      >
         <span
           class="brand-mark"
           aria-hidden="true"
-          >档</span
-        >
+        >档</span>
         <span>
           <span class="brand-title-line">
             <strong>竞速档案站</strong>
@@ -48,8 +48,7 @@
               class="brand-version brand-appver"
               to="/changelog"
               title="查看更新记录"
-              >v{{ appVersion }}</RouterLink
-            >
+            >v{{ appVersion }}</RouterLink>
           </span>
           <small>终局样本 · 战斗记录研究组</small>
         </span>
@@ -58,25 +57,30 @@
       <div class="header-actions">
         <nav
           class="app-nav"
-          aria-label="主导航">
+          aria-label="主导航"
+        >
           <RouterLink
             v-for="item in navItems"
             :key="item.to"
-            :to="item.to">
+            :to="item.to"
+          >
             <component
               :is="item.icon"
               :size="15"
-              aria-hidden="true" />
+              aria-hidden="true"
+            />
             {{ item.label }}
           </RouterLink>
         </nav>
         <button
           class="header-submit"
           type="button"
-          @click="openSubmitDialog">
+          @click="openSubmitDialog"
+        >
           <Send
             :size="15"
-            aria-hidden="true" />
+            aria-hidden="true"
+          />
           提交记录
         </button>
       </div>
@@ -88,6 +92,7 @@
 
     <SubmitRunDialog
       :open="submitOpen"
-      @close="closeSubmitDialog" />
+      @close="closeSubmitDialog"
+    />
   </div>
 </template>

@@ -281,7 +281,8 @@ function platformIcon(source: VideoSource) {
               >
                 <FlagIcon
                   :flag="flag"
-                  :size="13" />
+                  :size="13"
+                />
                 {{ flagLabels[flag] }}
               </span>
             </header>

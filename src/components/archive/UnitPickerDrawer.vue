@@ -67,27 +67,33 @@
   <aside
     class="unit-drawer"
     :class="{ open }"
-    aria-label="角色与光锥选择器">
+    aria-label="角色与光锥选择器"
+  >
     <div
       class="drawer-rail"
-      aria-hidden="true">
+      aria-hidden="true"
+    >
       <span>选择器</span>
       <span>{{ unitKind === "character" ? "角色" : "光锥" }}</span>
     </div>
     <div class="drawer-panel">
       <div class="drawer-header">
         <div>
-          <p class="eyebrow">快速限定</p>
+          <p class="eyebrow">
+            快速限定
+          </p>
           <h2>{{ unitKind === "character" ? "角色" : "光锥" }}选择</h2>
         </div>
         <button
           class="square-button"
           type="button"
           aria-label="关闭选择器"
-          @click="emit('close')">
+          @click="emit('close')"
+        >
           <X
             :size="18"
-            aria-hidden="true" />
+            aria-hidden="true"
+          />
         </button>
       </div>
 
@@ -95,25 +101,29 @@
         <button
           type="button"
           :class="{ active: unitKind === 'character' }"
-          @click="emit('patchFilter', { unitKind: 'character' })">
+          @click="emit('patchFilter', { unitKind: 'character' })"
+        >
           角色
         </button>
         <button
           type="button"
           :class="{ active: unitKind === 'lightcone' }"
-          @click="emit('patchFilter', { unitKind: 'lightcone' })">
+          @click="emit('patchFilter', { unitKind: 'lightcone' })"
+        >
           光锥
         </button>
       </div>
 
       <div
         class="path-grid"
-        aria-label="命途筛选">
+        aria-label="命途筛选"
+      >
         <button
           class="path-filter"
           type="button"
           :class="{ active: selectedPath === 'all' }"
-          @click="selectedPath = 'all'">
+          @click="selectedPath = 'all'"
+        >
           <span class="path-label">全部</span>
         </button>
         <button
@@ -122,11 +132,13 @@
           class="path-filter"
           type="button"
           :class="{ active: selectedPath === path.label }"
-          @click="selectedPath = path.label">
+          @click="selectedPath = path.label"
+        >
           <img
             :src="path.iconSrc"
             :alt="path.label"
-            loading="lazy" />
+            loading="lazy"
+          >
           <span class="path-label">{{ path.label }}</span>
         </button>
       </div>
@@ -134,23 +146,27 @@
       <label class="search-box">
         <Search
           :size="15"
-          aria-hidden="true" />
+          aria-hidden="true"
+        />
         <input
           v-model="query"
           type="search"
-          placeholder="搜索角色、光锥或命途" />
+          placeholder="搜索角色、光锥或命途"
+        >
       </label>
 
       <div class="unit-groups">
         <section
           v-for="group in groupedUnits.reverse()"
           :key="group.label"
-          class="unit-path-group">
+          class="unit-path-group"
+        >
           <h3>
             <img
               :src="group.iconSrc"
               :alt="group.label"
-              loading="lazy" />
+              loading="lazy"
+            >
             <span>{{ group.label }}</span>
             <small>{{ group.units.length }}</small>
           </h3>
@@ -162,19 +178,23 @@
               :class="{ active: selectedUnitIds.includes(unit.id) }"
               type="button"
               :aria-label="unit.name"
-              @click="emit('toggleUnit', unit.id)">
+              @click="emit('toggleUnit', unit.id)"
+            >
               <span
                 class="unit-avatar"
-                :class="unit.kind">
+                :class="unit.kind"
+              >
                 <img
                   v-if="unit.imageSrc"
                   :src="unit.imageSrc"
                   :alt="unit.name"
-                  loading="lazy" />
+                  loading="lazy"
+                >
                 <span
                   v-else
                   class="unit-placeholder"
-                  aria-hidden="true" />
+                  aria-hidden="true"
+                />
               </span>
               <span class="unit-name">{{ unit.name }}</span>
               <small>{{ unit.rarity }} 星</small>

@@ -14,8 +14,7 @@ import {buildMetaStats, filterRuns} from "@/services/runUtils"
 import {submissionFieldLabels, type SubmissionField} from "@/services/submissionValidation"
 import {DUPLICATE_VIDEO_MESSAGE} from "@/services/videoUrl"
 import {fetchStaticArchiveSnapshot, mergeStaticArchiveConfig} from "@/services/staticArchiveConfig"
-
-const API_BASE = import.meta.env.VITE_API_BASE ?? ""
+import {API_BASE} from "@/services/apiBase"
 
 async function requestJson<T>(path: string, fallback: () => T): Promise<T> {
   try {

@@ -6,12 +6,18 @@
 [build.environment]
   NODE_VERSION = "24"
 
-# 数据与图片均由前端直连数据源（static.nanoka.cc），本站不再代理或落盘，
-# 以降低 Netlify 带宽与存储占用。
+# 游戏数据与图片仍由前端直连数据源（static.nanoka.cc），本站不代理、不落盘；
+# 唯一例外是敌方阶段静态快照（/api/archive/stages）——它需要 38 个上游请求，
+# 改由函数算一次并交给边缘缓存复用，前端拿不到时仍回落浏览器直连。
 
 [[redirects]]
   from = "/api/archive/config"
   to = "/.netlify/functions/archive-config"
+  status = 200
+
+[[redirects]]
+  from = "/api/archive/stages"
+  to = "/.netlify/functions/archive-stages"
   status = 200
 
 [[redirects]]

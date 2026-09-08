@@ -153,18 +153,22 @@
 <template>
   <aside
     class="filter-panel"
-    aria-label="筛选条件">
+    aria-label="筛选条件"
+  >
     <div class="panel-heading">
       <Filter
         :size="15"
-        aria-hidden="true" />
+        aria-hidden="true"
+      />
       <span>检索控制台</span>
       <small>FILTER</small>
     </div>
 
     <div class="filter-section">
       <div class="label-row">
-        <p class="section-label">模式</p>
+        <p class="section-label">
+          模式
+        </p>
         <select
           class="season-select"
           aria-label="赛季"
@@ -173,11 +177,13 @@
             emit('patchFilter', {
               seasonId: ($event.target as HTMLSelectElement).value,
             })
-          ">
+          "
+        >
           <option
             v-for="season in seasons"
             :key="season.id"
-            :value="season.id">
+            :value="season.id"
+          >
             {{ season.label }}
           </option>
         </select>
@@ -189,12 +195,12 @@
           class="mode-tab"
           :class="{ active: filters.mode === mode.id }"
           type="button"
-          @click="emit('patchFilter', { mode: mode.id })">
+          @click="emit('patchFilter', { mode: mode.id })"
+        >
           <span
             v-if="mode.badge"
             class="mini-badge"
-            >{{ mode.badge }}</span
-          >
+          >{{ mode.badge }}</span>
           <strong>{{ mode.shortLabel }}</strong>
           <span>{{ mode.label }}</span>
         </button>
@@ -204,8 +210,11 @@
     <div
       v-for="section in groupedStages"
       :key="section.group"
-      class="filter-section">
-      <p class="section-label">{{ section.label }}</p>
+      class="filter-section"
+    >
+      <p class="section-label">
+        {{ section.label }}
+      </p>
       <div class="stage-grid">
         <button
           v-for="boss in section.bosses"
@@ -214,7 +223,8 @@
           :class="{ active: filters.bossId === boss.id, starward: isStarwardStage(boss) }"
           type="button"
           :title="boss.variantName ? `${boss.subtitle} / ${boss.variantName}` : boss.subtitle"
-          @click="emit('patchFilter', { bossId: boss.id })">
+          @click="emit('patchFilter', { bossId: boss.id })"
+        >
           <img
             v-if="showStageThumb(boss)"
             class="stage-thumb"
@@ -222,21 +232,20 @@
             :alt="boss.imageAlt ?? `${boss.name} 敌方图片`"
             loading="lazy"
             decoding="async"
-            @error="markStageThumbFailed(boss)" />
+            @error="markStageThumbFailed(boss)"
+          >
           <span
             v-else
             class="stage-sigil"
             aria-hidden="true"
-            >{{ boss.name.slice(0, 1) }}</span
-          >
+          >{{ boss.name.slice(0, 1) }}</span>
           <span class="stage-copy">
             <span class="stage-title">
               <em
                 v-if="stageBadge(boss)"
                 class="stage-badge"
                 :class="{ starward: isStarwardStage(boss) }"
-                >{{ stageBadge(boss) }}</em
-              >
+              >{{ stageBadge(boss) }}</em>
               {{ stageName(boss) }}
             </span>
             <small v-if="stageHint(boss)">{{ stageHint(boss) }}</small>
@@ -247,14 +256,17 @@
 
     <div class="split-fields">
       <div class="filter-section">
-        <p class="section-label">分类</p>
+        <p class="section-label">
+          分类
+        </p>
         <button
           v-for="category in categoryOptions"
           :key="category.id"
           class="wide-option compact"
           :class="{ active: filters.category === category.id }"
           type="button"
-          @click="emit('patchFilter', { category: category.id })">
+          @click="emit('patchFilter', { category: category.id })"
+        >
           {{ category.label }}
         </button>
       </div>
@@ -271,7 +283,8 @@
                     ? 'all'
                     : Number(($event.target as HTMLSelectElement).value),
               })
-            ">
+            "
+          >
             <option value="all">任意人数</option>
             <option value="4">4 人</option>
             <option value="3">3 人</option>
@@ -283,7 +296,9 @@
     </div>
 
     <div class="filter-section">
-      <p class="section-label">成本</p>
+      <p class="section-label">
+        成本
+      </p>
       <div class="segmented cost-presets">
         <button
           v-for="preset in costPresets"
@@ -291,7 +306,8 @@
           type="button"
           :class="{ active: costPresetActive(preset) }"
           :aria-pressed="costPresetActive(preset)"
-          @click="emit('patchFilter', { costMin: preset.min, costMax: preset.max })">
+          @click="emit('patchFilter', { costMin: preset.min, costMax: preset.max })"
+        >
           {{ preset.label }}
         </button>
       </div>
@@ -303,7 +319,8 @@
           :min="COST_MIN"
           :max="COST_MAX"
           placeholder="不限"
-          @input="patchRange('costMin', ($event.target as HTMLInputElement).value)">
+          @input="patchRange('costMin', ($event.target as HTMLInputElement).value)"
+        >
         <span class="range-sep">–</span>
         <input
           type="number"
@@ -312,14 +329,18 @@
           :min="COST_MIN"
           :max="COST_MAX"
           placeholder="不限"
-          @input="patchRange('costMax', ($event.target as HTMLInputElement).value)">
+          @input="patchRange('costMax', ($event.target as HTMLInputElement).value)"
+        >
       </div>
     </div>
 
     <div
       v-if="filters.mode === 'as'"
-      class="filter-section">
-      <p class="section-label">分数</p>
+      class="filter-section"
+    >
+      <p class="section-label">
+        分数
+      </p>
       <div class="range-inputs">
         <input
           type="number"
@@ -328,7 +349,8 @@
           :min="0"
           :max="AS_MAX_SCORE"
           placeholder="不限"
-          @input="patchRange('scoreMin', ($event.target as HTMLInputElement).value)">
+          @input="patchRange('scoreMin', ($event.target as HTMLInputElement).value)"
+        >
         <span class="range-sep">–</span>
         <input
           type="number"
@@ -337,12 +359,15 @@
           :min="0"
           :max="AS_MAX_SCORE"
           placeholder="不限"
-          @input="patchRange('scoreMax', ($event.target as HTMLInputElement).value)">
+          @input="patchRange('scoreMax', ($event.target as HTMLInputElement).value)"
+        >
       </div>
     </div>
 
     <div class="filter-section">
-      <p class="section-label">标记</p>
+      <p class="section-label">
+        标记
+      </p>
       <div class="flag-grid">
         <button
           v-for="flag in flagOrder"
@@ -350,17 +375,21 @@
           :class="[`flag-card-${flag}`, { active: filters.flags.includes(flag) }]"
           type="button"
           :aria-pressed="filters.flags.includes(flag)"
-          @click="emit('toggleFlag', flag)">
+          @click="emit('toggleFlag', flag)"
+        >
           <FlagIcon
             :flag="flag"
-            :size="24" />
+            :size="24"
+          />
           <span>{{ flagLabels[flag] }}</span>
         </button>
       </div>
     </div>
 
     <div class="filter-section">
-      <p class="section-label">排序</p>
+      <p class="section-label">
+        排序
+      </p>
       <div class="sort-row">
         <div class="segmented">
           <button
@@ -368,7 +397,8 @@
             :key="sort.id"
             :class="{ active: filters.sort === sort.id }"
             type="button"
-            @click="emit('patchFilter', { sort: sort.id })">
+            @click="emit('patchFilter', { sort: sort.id })"
+          >
             {{ sort.label }}
           </button>
         </div>
@@ -377,10 +407,12 @@
           type="button"
           role="switch"
           :aria-checked="filters.grouping"
-          @click="emit('patchFilter', { grouping: !filters.grouping })">
+          @click="emit('patchFilter', { grouping: !filters.grouping })"
+        >
           <span
             class="switch-track"
-            aria-hidden="true"><span class="switch-knob" /></span>
+            aria-hidden="true"
+          ><span class="switch-knob" /></span>
           按队伍分组
         </button>
         <button
@@ -388,28 +420,35 @@
           type="button"
           role="switch"
           :aria-checked="filters.continuous"
-          @click="emit('patchFilter', { continuous: !filters.continuous })">
+          @click="emit('patchFilter', { continuous: !filters.continuous })"
+        >
           <span
             class="switch-track"
-            aria-hidden="true"><span class="switch-knob" /></span>
+            aria-hidden="true"
+          ><span class="switch-knob" /></span>
           紧凑连续列表
         </button>
       </div>
     </div>
 
     <div class="filter-section">
-      <p class="section-label">角色 / 光锥</p>
+      <p class="section-label">
+        角色 / 光锥
+      </p>
       <button
         class="search-trigger"
         type="button"
-        @click="emit('openPicker')">
+        @click="emit('openPicker')"
+      >
         <Search
           :size="15"
-          aria-hidden="true" />
+          aria-hidden="true"
+        />
         <span>{{ selectedLabel }}</span>
         <SlidersHorizontal
           :size="14"
-          aria-hidden="true" />
+          aria-hidden="true"
+        />
       </button>
     </div>
   </aside>

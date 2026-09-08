@@ -64,8 +64,8 @@ export function submissionReviewToArchiveRun(review: SubmissionReview, units: Ar
     submittedAt: review.createdAt,
     tags: [...(review.payload.flags ?? [])],
     videoUrl: review.payload.videoUrl,
-    units: review.payload.units,
-    lightcones: review.payload.lightcones,
+    units: [...review.payload.units],
+    lightcones: [...review.payload.lightcones],
   }
   const goldCounts = getRunGoldCounts(run, units)
   return {...run, limitedCount: goldCounts.limited, standardCount: goldCounts.standard}

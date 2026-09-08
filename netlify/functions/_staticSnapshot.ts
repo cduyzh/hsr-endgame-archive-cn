@@ -14,6 +14,10 @@ const STATIC_BASE_URL = "https://static.nanoka.cc"
 
 interface CachedSnapshot {
   bosses: Map<string, BossStage>
+  /** 上游数据目录（如 `4.5.52`），用作 CDN 缓存标签与「数据是否变了」的判据。 */
+  dataVersion: string
+  /** `manifest.hsr.live`，前端据此判定当前赛季。 */
+  liveVersion?: string
 }
 
 let cachePromise: Promise<CachedSnapshot | null> | null = null
@@ -46,18 +50,24 @@ async function loadSnapshot(): Promise<CachedSnapshot | null> {
 
     const bosses = new Map<string, BossStage>()
     for (const stage of results.flat()) bosses.set(stage.id, stage)
-    return { bosses }
+    return { bosses, dataVersion: version, liveVersion: manifest.hsr?.live }
   } catch {
     return null
   }
 }
 
 /**
- * 拉取并缓存一次远程静态快照,返回按 `bossId` 索引的 `BossStage` 字典。
- * 当次冷启动内多次调用复用同一份数据;失败时返回 `null`,调用方需走降级逻辑。
+ * 拉取并缓存一次远程静态快照（冷启动内复用），返回按 `bossId` 索引的阶段、上游数据目录版本
+ * 与 live 版本。失败时返回 `null`，调用方需走降级逻辑。
+ */
+export async function getStaticSnapshot(): Promise<CachedSnapshot | null> {
+  if (!cachePromise) cachePromise = loadSnapshot()
+  return await cachePromise
+}
+
+/**
+ * 按 `bossId` 查完整 `BossStage` 的便捷入口，数据与 `getStaticSnapshot()` 同一份。
  */
 export async function getStaticBossMap(): Promise<Map<string, BossStage> | null> {
-  if (!cachePromise) cachePromise = loadSnapshot()
-  const snapshot = await cachePromise
-  return snapshot?.bosses ?? null
+  return (await getStaticSnapshot())?.bosses ?? null
 }

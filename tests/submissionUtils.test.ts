@@ -92,7 +92,8 @@ describe("submissionUtils", () => {
         notes: "",
         units: source.units,
         lightcones: source.lightcones,
-      } as SubmissionReview["payload"],
+      // 故意不给 flags：模拟 flags 上线之前入库的旧投稿行，验证 tags 回落空数组。
+      } as unknown as SubmissionReview["payload"],
     }
 
     expect(submissionReviewToArchiveRun(review, seedConfig.units).tags).toEqual([])

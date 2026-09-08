@@ -12,7 +12,8 @@
 | `unitCost.test.ts` | 成本口径唯一守卫：光锥限定/常驻/不计成本分档、`defaultEidolonFor`/`defaultSuperimpositionFor`、角色 `命座+1` 与光锥 `叠影` 累加、四人满配 48、越界钳位与未知 id 兜底 |
 | `signatureLightcones.test.ts` | 专武映射防表腐化：键必须是五星限定角色、值必须是同命途五星光锥、覆盖率必须等于五星限定角色集合（新角色未跑 `pnpm sync:units` 会失败）、专武不被两个角色共用 |
 | `ElementIcon.test.ts` | 属性图标唯一渲染出口：七个属性都取到 `ELEMENT_ICON_SOURCES` 地址并带中文 `alt`/`title`、抗性百分比 `<small>` 与弱点无附注、`@error` 回落中文文字 chip、切换属性后重置回落态 |
-| `staticArchiveConfig.test.ts` | 远程静态快照推导与配置合并（`staticArchiveConfig.ts` + `staticBossSnapshot.ts`）：阶段 id 列表、HP/速度/韧性（含**单怪详情的 `*ModifyValue` 叠加**与韧性 ÷3，以及详情缺失时的降级路径）、**弱点取首领自身 `weak` 全集**、**抗性只留正值**、场地 buff 结构化（`mechanic` / `stageBuffs`）与 `#N[i]`→`param` 代入、按 icon 解析的家族短名与 `variantName`、subtitle 口径、远程失败返回 `null` |
+| `archiveStagesEndpoint.test.ts` | `netlify/functions/archive-stages.ts` 的响应契约（整模块 mock 掉 `_staticSnapshot`，只守端点自身）：200 时返回 `{version, liveVersion, bosses}` 且带 `cache-control: public, max-age=300` + `Netlify-CDN-Cache-Control: public, durable, max-age=3600, stale-while-revalidate=604800` + `Netlify-Cache-Tag: stages-<数据目录>`；快照为 `null` 或 `bosses` 为空时返回 502 且**保持 `no-store`、不带任何 CDN 缓存头**，避免把错误钉在边缘 |
+| `staticArchiveConfig.test.ts` | 远程静态快照推导与配置合并（`staticArchiveConfig.ts` + `staticBossSnapshot.ts`）：**快照端点优先**（命中 `/api/archive/stages` 时不得再发第二个请求）与**三级回落**（空数组 / 形状不合 / 非 2xx 都回落到浏览器直连）、**合并新语义**（快照覆盖到的 id 派生字段以快照为准、`clears` 保留库值）、阶段 id 列表、HP/速度/韧性（含**单怪详情的 `*ModifyValue` 叠加**与韧性 ÷3，以及详情缺失时的降级路径）、**弱点取首领自身 `weak` 全集**、**抗性只留正值**、场地 buff 结构化（`mechanic` / `stageBuffs`）与 `#N[i]`→`param` 代入、按 icon 解析的家族短名与 `variantName`、subtitle 口径、远程失败返回 `null` |
 | `submissionUtils.test.ts` | 投稿 → 档案记录转换、光锥偏好统计、建议表优先级（专武覆盖统计、统计填空、过滤单位库外 id） |
 | `submissionValidation.test.ts` | 投稿字段校验顺序、步骤归属、视频域名白名单、查重命中挡住第一步、分类与模式/阶段匹配、`defaultResultFor` 的默认分类/分数合法、限定/常驻统计与预览取数 |
 | `archiveService.test.ts` | `submitRun` 的成功返回与服务端 `{ message, missing }` → 中文错误映射；`checkDuplicateVideo` 命中查询与失败/非 2xx/形状不合时一律放行；409 抛 `SubmissionDuplicateError` |
@@ -33,6 +34,8 @@
 - 组件测试用 `@vue/test-utils` 的 `mount`，传真实 `seedConfig.units` 与 `fixtureRuns`，断言渲染文本/元素而非实现细节。
 - 涉及环境变量的用例（如 `adminAuth.test.ts`）要在 `afterEach` 里**还原/删除** `process.env`，避免污染其他用例。
 - 远程依赖用 `vi.mock`/stub 隔离，测试不应真实请求 `static.nanoka.cc`。
+- 断言 Netlify handler 的响应一律走 `fixtures/netlifyResponse.ts` 的 `asResponse()`：`Handler` 的返回类型是 `void | HandlerResponse`，直接取 `.statusCode` / `.headers` / `.body` 在类型上不成立。
+- 同步脚本保持纯 JS（不进构建），测试直接 import 的 `.mjs` 需要在同名 `.d.mts` 里声明形状（目前有 `scripts/lib/parse-weixin-article.d.mts`），否则 typecheck 会报 TS7016 并把测试里的回调参数推成隐式 any。
 - 路径别名：测试里用 `@/` 引用 `src/`（Vite 已配置），但引用 `netlify/functions/*` 时用相对路径。
 
 ## 何时必须补测试

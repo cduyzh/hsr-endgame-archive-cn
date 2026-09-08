@@ -40,15 +40,7 @@ export const handler: Handler = async (event) => {
     return jsonResponse({ reviews: owned, runs: [] })
   }
 
-  const reviews = await sql<{
-    id: string
-    ownerToken: string
-    status: string
-    payload: unknown
-    reviewerNote: string | null
-    createdAt: string
-    reviewedAt: string | null
-  }[]>`
+  const reviews = (await sql`
     select
       id,
       owner_token as "ownerToken",
@@ -61,27 +53,17 @@ export const handler: Handler = async (event) => {
     where owner_token = any(${tokens}::text[])
     order by created_at desc
     limit 200
-  `
-
-  const runs = await sql<{
+  `) as {
     id: string
     ownerToken: string
     status: string
-    seasonId: string
-    mode: string
-    bossId: string
-    category: string
-    teamName: string
-    author: string
-    cycle: number
-    score: number
-    cost: number
-    limitedCount: number
-    standardCount: number
-    submittedAt: string
-    tags: unknown
-    videoUrl: string | null
-  }[]>`
+    payload: unknown
+    reviewerNote: string | null
+    createdAt: string
+    reviewedAt: string | null
+  }[]
+
+  const runs = (await sql`
     select
       id,
       owner_token as "ownerToken",
@@ -104,7 +86,25 @@ export const handler: Handler = async (event) => {
     where owner_token = any(${tokens}::text[])
     order by submitted_at desc
     limit 200
-  `
+  `) as {
+    id: string
+    ownerToken: string
+    status: string
+    seasonId: string
+    mode: string
+    bossId: string
+    category: string
+    teamName: string
+    author: string
+    cycle: number
+    score: number
+    cost: number
+    limitedCount: number
+    standardCount: number
+    submittedAt: string
+    tags: unknown
+    videoUrl: string | null
+  }[]
 
   return jsonResponse({ reviews, runs })
 }
