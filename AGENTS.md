@@ -364,3 +364,5 @@ pnpm build
 - [`tests/AGENTS.md`](tests/AGENTS.md)：Vitest 约定、覆盖范围、何时补测试。
 
 面向用户的说明在 [`README.md`](README.md)：技术选型、命令、部署、数据层与 API 表；它与上述文档受同一套同步契约约束。
+
+另有一层 [`docs/wiki/`](docs/wiki/Home.md)：**审计与现状记录**（缺陷清单、风险、门禁实测结论），与上面这套规范性文档分工不同——`AGENTS.md` 写「应该怎样」，`docs/wiki/` 写「实际查出来是什么、证据在哪」。新增页面请同时在 `docs/wiki/Home.md` 与 `README.md` 的「工程文档」表里登记；页内跨页链接只指到文件、不带 `#锚点`，以免 GitHub / GitLab / 本地渲染器对含中文标题的锚点规则不一致导致断链。

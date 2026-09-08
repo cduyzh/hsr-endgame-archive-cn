@@ -17,7 +17,3 @@ export function asResponse(result: unknown): HandlerResponseResult {
   }
   return result as HandlerResponseResult
 }
-
-export function bodyOf<T = Record<string, unknown>>(result: unknown): T {
-  return JSON.parse(asResponse(result).body) as T
-}

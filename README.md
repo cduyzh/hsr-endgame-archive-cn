@@ -268,4 +268,14 @@ src/
 
 例外有三条。**其一是三个终局标记的图标**：`src/data/flagIcons.ts` 热链 `theherta.com/skill_icons/` 上的游戏内图标，只热链、不落盘、不代理，加载失败由 `src/components/FlagIcon.vue` 回落 lucide。**其二是文章模块的微信配图**：`src/data/articles.json` 里的封面与正文图全部热链 `mmbiz.qpic.cn`，由 `pnpm sync:articles` 从文章页提取；该图床按 Referer 防盗链（带外域 Referer 会拿到一张 140x140 占位图），因此渲染必须走 `src/components/ArticleImage.vue`，它内部固定 `referrerpolicy="no-referrer"` 并自检是否取到了原图。**其三是七个属性（弱点 / 抗性）图标**：`src/data/elementIcons.ts` 热链 `theherta.com/elements/`，同样只热链、不落盘，加载失败由 `src/components/ElementIcon.vue` 回落成中文属性名。三者的来源判断与脆弱点都登记在 [`AGENTS.md`](AGENTS.md)「资源与授权」。
 
+## 工程文档
+
+审计与现状记录放在 [`docs/wiki/`](./docs/wiki/Home.md)，与规范性的 `AGENTS.md` 分层文档分开维护：
+
+| 页面 | 内容 |
+| --- | --- |
+| [Home](./docs/wiki/Home.md) | 文档索引 |
+| [01-类型检查与CI](./docs/wiki/01-类型检查与CI.md) | 类型检查的真实覆盖范围、CI 门禁构成，以及 `pnpm typecheck` 曾长期空转的根因 |
+| [02-类型错误审计](./docs/wiki/02-类型错误审计.md) | 门禁生效后暴露的 43 个历史类型错误，按严重度排序并给出 `file:line` 证据 |
+
 更多协作约定见 [AGENTS.md](./AGENTS.md)。其中「文档同步契约」给出了**代码改动点 → 必改文档**的映射表和提交前检查清单：改完代码必须在同一次提交里同步本文档与对应模块的 `AGENTS.md`。
