@@ -7,7 +7,7 @@
 ## 功能范围
 
 - **档案工作台**：按赛季、终局模式、敌方阶段、记录分类、队伍人数、成本与分数精确区间、角色/光锥和标记筛选竞速记录。进入站点时默认选中带 `NEW` 徽标的那个模式（当期主推，当前是末日幻影），链接里带了 `?mode=` 时以链接为准。记录分类随模式与阶段变化：末日幻影按剩余行动值分数分四档（3400-3650 / 3650-3850 / 3850-3899 / 4000 满分），异相仲裁的绝境阶段单独归档为绝境 0 轮与绝境满星。
-- **记录展示**：按队伍组合分组展示作者、角色命座、轮次、分数、成本和视频链接。
+- **记录展示**：按队伍组合分组展示作者、角色命座、轮次、分数、成本和视频链接。光锥默认收起，点整条队伍头像才展开对应光锥（与角色逐列对齐）。
 - **环境统计**：统计角色使用率、光锥使用率、常见组合与成本分布。
 - **投稿审核**：右上角「提交记录」打开站内弹窗，按「基础信息 → 队伍配置 → 成绩与预览」三步填写，字段级校验与限定/常驻成本实时反馈；弹窗打开时模式默认落在带 `NEW` 徽标的那个并自动选中该模式当期首个敌方阶段，分类与分数给该模式合法的默认档（末日幻影按满分 4000 起稿，不会是别的模式那种超上限的占位分数）；选角色会自动带出专武（默认 S1，低星光锥默认 S5、低星角色默认满命），成本按队伍自动合计（限定五星角色算「命座 + 1」、限定五星光锥算叠影，低星与无名勋礼光锥不计）且可手动改写。提交到 `/api/submissions` 进入待审核队列；`/submit` 深链仍会打开同一弹窗。草稿缓存在浏览器 `localStorage`，误关弹窗可恢复，提交成功或手动丢弃后才清除；视频只接受 B 站与 YouTube 的链接；链接填完会立即按「视频 + 敌方阶段」自动查重，命中已有待审或已通过的投稿时就地拦下，不必填完三步才被服务端退回。
 - **文章与规则页**：展示站内说明、规则和文章摘要。
@@ -80,7 +80,7 @@ Netlify 构建环境固定使用 Node 24；业务 API redirects、Functions 目�
 项目目前有两条数据线，需要分开理解：
 
 1. **竞速档案业务数据**  
-   前端通过 `src/services/archiveService.ts` 请求 `/api/archive/config`、`/api/archive/runs`、`/api/archive/stats`、`/api/submissions`（含 `/check` 查重预检、`/me` 凭证反查、`/:id/withdraw` 撤回）以及 `/api/admin/submissions*`。Netlify Functions 若配置了 `NETLIFY_DATABASE_URL`、`DATABASE_URL` 或 `POSTGRES_URL`，会读取 Postgres；否则使用 `src/data/seed/` 中的种子数据。读取类请求失败时前端静默回退 seed，保证无数据库环境不白屏；投稿与管理端请求失败则直接报错（审核台会提示）。
+   前端通过 `src/services/archiveService.ts` 请求 `/api/archive/config`、`/api/archive/runs`、`/api/archive/stats`、`/api/submissions`（含 `/check` 查重预检、`/me` 凭证反查、`/:id/withdraw` 撤回、`/:id/visibility` 隐藏、`/:id/delete` 删除、`/:id/revisions` 编辑并重新提交）以及 `/api/admin/submissions*`。Netlify Functions 若配置了 `NETLIFY_DATABASE_URL`、`DATABASE_URL` 或 `POSTGRES_URL`，会读取 Postgres；否则使用 `src/data/seed/` 中的种子数据。读取类请求失败时前端静默回退 seed，保证无数据库环境不白屏；投稿与管理端请求失败则直接报错（审核台会提示）。
 
 2. **HSR 终局静态数据（远程直连）**  
    所有游戏 JSON 与图片均直连 `https://static.nanoka.cc`（已开放 CORS），仓库不落盘、不随构建发布。地址与图片路径集中在 `src/services/dataSource.ts`；`src/services/staticArchiveConfig.ts`（浏览器端入口）在运行时读取 `manifest.json`，把推导工作交给前后端共用的纯计算层 `src/services/staticBossSnapshot.ts`：按硬编码的 `STATIC_SEASON_IDS` 拉取 `monster.json`、`monstervalue.json`、`HardLevelGroup.json`、`EliteGroup.json`、`InfiniteEliteGroup.json` 与各模式单期详情，生成敌方阶段（血量/速度/韧性/弱点/场地 buff 与赛季机制/敌方图），再合并进 `/api/archive/config`（或 seed）的结果。静态读取失败时保留业务配置，不会白屏。**快照本身优先走 `GET /api/archive/stages`**：浏览器直连要付 38 个请求、约 193KB gzip，而上游 `cache-control` 只有 `max-age=120`，等于每次访问都重走一遍；改由函数算一次并交给边缘长缓存后，浏览器只发一个请求。端点非 2xx、返回空或形状不合时自动回落到上面的浏览器直连路径，所以本地开发与函数故障时页面照常。
@@ -117,9 +117,12 @@ pnpm sync:stages -- --season=4.5  # 只同步指定赛季
 | `/api/archive/runs`          | `archive-runs`         | 已审核竞速记录，支持筛选                     |
 | `/api/archive/stats`         | `archive-stats`        | 使用率、组合、成本区间统计                   |
 | `/api/submissions`           | `submissions`          | 投稿入口（视频链接 + 敌方阶段重复时返回 409） |
-| `/api/submissions/check`     | `submissions-check`    | 投稿前按「视频链接 + 敌方阶段」查重           |
-| `/api/submissions/me`        | `submissions-me`       | 按本机投稿凭证反查自己的投稿与记录            |
+| `/api/submissions/check`     | `submissions-check`    | 投稿前按「视频链接 + 敌方阶段」查重，可带 `excludeIds` 排除自己这一族 |
+| `/api/submissions/me`        | `submissions-me`       | 按本机投稿凭证反查自己的投稿与记录（默认不含已隐藏的） |
 | `/api/submissions/:id/withdraw` | `submissions-withdraw` | 凭投稿凭证撤回自己的投稿                    |
+| `/api/submissions/:id/visibility` | `submissions-visibility` | 隐藏 / 取消隐藏自己的投稿（服务端状态、跨设备生效；只允许已驳回与已撤回） |
+| `/api/submissions/:id/delete` | `submissions-delete`   | 硬删自己被驳回的投稿（不可恢复，不经审核）  |
+| `/api/submissions/:id/revisions` | `submissions-revision` | 编辑并重新提交：已通过产生待审修订、已驳回就地重提 |
 | `/api/admin/submissions`     | `admin-submissions`    | 管理员读取投稿审核列表                       |
 | `/api/admin/submissions/:id` | `admin-submissions-id` | 审核入口                                     |
 | `/api/admin/sync-stages`     | `admin-sync-stages`    | 管理员触发批量同步 `stages` 表（从远程快照） |

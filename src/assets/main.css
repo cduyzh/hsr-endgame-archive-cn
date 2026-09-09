@@ -18,6 +18,7 @@
   --focus: #f0ca82;
   --radius: 8px;
   --shadow: 0 24px 70px rgba(0, 0, 0, 0.5);
+  --run-slot: 52px;
   font-family:
     "Noto Sans SC",
     "Microsoft YaHei",
@@ -1008,10 +1009,10 @@ a {
 
 .run-row {
   display: grid;
-  grid-template-columns: minmax(248px, 300px) minmax(0, 1fr) auto;
+  grid-template-columns: max-content minmax(0, 1fr) auto;
   gap: 18px;
   align-items: center;
-  min-height: 116px;
+  min-height: 104px;
   border: 1px solid rgba(220, 206, 176, 0.14);
   border-radius: var(--radius);
   background: rgba(255, 255, 255, 0.028);
@@ -1030,22 +1031,54 @@ a {
   margin-top: 10px;
 }
 
+/* 整条队伍头像就是「展开光锥」的开关，轨道宽度必须由它自己决定（见 .run-row 的 max-content）。 */
 .run-row-loadout {
+  appearance: none;
   display: grid;
-  gap: 8px;
+  gap: 6px;
   min-width: 0;
+  justify-items: start;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  padding: 3px;
+  text-align: left;
+  transition: background-color 180ms ease;
 }
 
+.run-row-loadout:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* 两条都用 flex 且槽位同宽：光锥才能逐列对齐在角色正下方，
+   而提示胶囊跟着最后一枚头像走，两人队不会空出两格。 */
 .team-icons,
 .lightcone-icons {
-  display: grid;
-  grid-template-columns: repeat(4, 58px);
+  display: flex;
+  align-items: center;
   gap: 6px;
 }
 
-.lightcone-icons {
-  grid-template-columns: repeat(4, 42px);
-  padding-left: 8px;
+.loadout-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  border: 1px dashed rgba(160, 177, 220, 0.34);
+  border-radius: 999px;
+  padding: 1px 5px;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  transition:
+    border-color 180ms ease,
+    color 180ms ease;
+}
+
+.run-row-loadout:hover .loadout-hint {
+  border-color: rgba(218, 178, 105, 0.55);
+  color: #ead3a3;
 }
 
 .unit-chip {
@@ -1062,6 +1095,7 @@ a {
 }
 
 .character-slot {
+  flex: 0 0 var(--run-slot);
   min-height: 58px;
 }
 
@@ -1077,7 +1111,8 @@ a {
 }
 
 .lightcone-slot {
-  min-height: 42px;
+  flex: 0 0 var(--run-slot);
+  min-height: 58px;
   background: rgba(255, 255, 255, 0.035);
 }
 
@@ -1597,6 +1632,30 @@ body.is-modal-open {
 .submission-wizard {
   display: grid;
   gap: 14px;
+}
+
+.submission-edit-note {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid rgba(240, 201, 122, 0.34);
+  border-radius: var(--radius);
+  background: rgba(240, 201, 122, 0.08);
+  color: var(--muted);
+  padding: 9px 11px;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.submission-edit-note code {
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 11px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 1px 4px;
+  background: rgba(0, 0, 0, 0.25);
+  word-break: break-all;
 }
 
 .submission-draft-note {
@@ -3294,13 +3353,8 @@ body.is-modal-open {
     padding: 8px;
   }
 
-  .team-icons {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-
-  .lightcone-icons {
-    grid-template-columns: repeat(4, minmax(0, 42px));
-    padding-left: 0;
+  :root {
+    --run-slot: 46px;
   }
 
   .run-metrics {
@@ -3589,6 +3643,99 @@ body.is-modal-open {
 .my-submissions-runs li span {
   color: var(--muted);
   font-size: 12px;
+}
+
+.my-submissions-toolbar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.my-submission-card[data-hidden="true"] {
+  border-style: dashed;
+  opacity: 0.66;
+}
+
+.my-submission-status em {
+  font-style: normal;
+  opacity: 0.8;
+}
+
+.my-submission-revision {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+  margin: 0;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: rgba(255, 255, 255, 0.02);
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.my-submission-revision code {
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 11px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 1px 4px;
+  background: rgba(0, 0, 0, 0.25);
+  word-break: break-all;
+}
+
+.my-submission-chip {
+  flex: 0 0 auto;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--muted);
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.my-submission-revision[data-tone="pending"] .my-submission-chip {
+  color: #f0c97a;
+  border-color: rgba(240, 201, 122, 0.4);
+  background: rgba(240, 201, 122, 0.08);
+}
+
+.my-submission-revision[data-tone="approved"] .my-submission-chip {
+  color: #6fdc9a;
+  border-color: rgba(111, 220, 154, 0.4);
+  background: rgba(111, 220, 154, 0.08);
+}
+
+.my-submission-revision[data-tone="rejected"] .my-submission-chip {
+  color: #f3a8a8;
+  border-color: rgba(214, 95, 95, 0.4);
+  background: rgba(214, 95, 95, 0.08);
+}
+
+.my-submission-revision-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.my-submission-confirm {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  color: #f3a8a8;
+  font-size: 12px;
+}
+
+.my-submission-confirm-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
 }
 
 .my-submissions-runs-time {

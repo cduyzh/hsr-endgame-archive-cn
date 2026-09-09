@@ -130,6 +130,36 @@ describe("findDuplicateVideoRecords 无库 fallback", () => {
       [],
     )
   })
+
+  it("excludeIds 排除同家族记录（修订沿用原视频与阶段时不自己撞自己）", async () => {
+    const withoutExclude = await shared.findDuplicateVideoRecords({ videoUrl: TARGET, bossId: "4.5-moc-top" })
+    expect(withoutExclude.map((match) => match.id)).toEqual(["sub_top_4", "sub_top_3", "sub_top_2"])
+
+    const family = ["sub_top_2", "sub_top_3", "sub_top_4"]
+    const excluded = await shared.findDuplicateVideoRecords({
+      videoUrl: TARGET,
+      bossId: "4.5-moc-top",
+      excludeIds: family,
+    })
+    expect(excluded.filter((match) => family.includes(match.id))).toEqual([])
+
+    // 只排除自己这一族，别人的同一条录像照样命中；被排除的名额会由更早的命中补上（上限 3 条）
+    const partial = await shared.findDuplicateVideoRecords({
+      videoUrl: TARGET,
+      bossId: "4.5-moc-top",
+      excludeIds: ["sub_top_4"],
+    })
+    expect(partial.filter((match) => match.source === "submission").map((match) => match.id)).toEqual([
+      "sub_top_3",
+      "sub_top_2",
+      "sub_top_1",
+    ])
+
+    // 空数组与不传完全等价
+    await expect(
+      shared.findDuplicateVideoRecords({ videoUrl: TARGET, bossId: "4.5-moc-top", excludeIds: [] }),
+    ).resolves.toEqual(withoutExclude)
+  })
 })
 
 describe("投稿接口端到端（无库 fallback）", () => {

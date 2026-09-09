@@ -84,6 +84,8 @@ create table if not exists submission_reviews (
   status text not null default 'pending',
   reviewer_note text,
   owner_token text,
+  hidden boolean not null default false,
+  revises_id text,
   created_at timestamptz not null default now(),
   reviewed_at timestamptz
 );
@@ -99,3 +101,11 @@ alter table stages add column if not exists variant_name text;
 alter table stages add column if not exists mechanic jsonb;
 alter table stages add column if not exists stage_buffs jsonb not null default '[]';
 alter table stages drop column if exists memory_buff;
+
+-- 投稿自助管理：hidden 是作者自己的收纳开关（跨设备生效，/me 默认不展示），revises_id 指向被修订的原投稿。
+alter table submission_reviews add column if not exists hidden boolean not null default false;
+alter table submission_reviews add column if not exists revises_id text;
+
+-- 必须排在上面的 add column 之后：已部署库上这两列在执行到本文件末尾才存在，索引提前引用会直接报错。
+create index if not exists submission_reviews_revises_idx on submission_reviews (revises_id) where revises_id is not null;
+create index if not exists submission_reviews_hidden_idx on submission_reviews (owner_token, hidden) where owner_token is not null;

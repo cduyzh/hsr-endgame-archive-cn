@@ -4,11 +4,12 @@ import SubmitRunForm from "@/components/archive/SubmitRunForm.vue"
 import { loadSubmissionDraft } from "@/composables/useSubmissionDraft"
 import { buildSuggestedLightconeByCharacter } from "@/services/submissionUtils"
 import { DUPLICATE_VIDEO_MESSAGE } from "@/services/videoUrl"
-import type { DuplicateVideoMatch } from "@/types/archive"
+import type { DuplicateVideoMatch, SubmissionEditTarget } from "@/types/archive"
 import { fixtureConfig, fixtureSubmission } from "./fixtures/config"
 import { fixtureRuns } from "./fixtures/runs"
 
 const DRAFT_KEY = "hsr-archive.submission-draft.v2"
+const MEMORY_KEY = "hsr-archive.submission-memory.v1"
 const preferredLightconeByCharacter = buildSuggestedLightconeByCharacter(fixtureRuns, fixtureConfig.units)
 
 const roster = [
@@ -596,6 +597,97 @@ describe("SubmitRunForm 分步向导", () => {
     expect(wrapper.get(".submission-success").text()).toContain("sub_draft_1")
     await new Promise((resolve) => setTimeout(resolve, 500))
     expect(loadSubmissionDraft()).toBeNull()
+    wrapper.unmount()
+  })
+})
+
+describe("SubmitRunForm 编辑并重新提交", () => {
+  const editTargetOf = (overrides: Partial<SubmissionEditTarget> = {}): SubmissionEditTarget => ({
+    parentId: "sub_target",
+    token: "own_target",
+    origin: "approved",
+    excludeIds: ["sub_target", "sub_rev_1"],
+    payload: fixtureSubmission({ author: "原作者", teamName: "原队伍", cost: 41 }),
+    ...overrides,
+  })
+
+  function mountEditForm(target = editTargetOf()) {
+    return mount(SubmitRunForm, {
+      props: { config: fixtureConfig, preferredLightconeByCharacter, editTarget: target },
+      attachTo: document.body,
+    })
+  }
+
+  it("编辑目标压过全局草稿作为初值，且编辑态不读也不写草稿键", async () => {
+    const savedDraft = {
+      payload: fixtureSubmission({ author: "草稿作者", teamName: "草稿队伍" }),
+      stepIndex: 1,
+      unlockedIndex: 1,
+      savedAt: new Date().toISOString(),
+    }
+    window.localStorage.setItem(DRAFT_KEY, JSON.stringify(savedDraft))
+
+    const wrapper = mountEditForm()
+    await flushPromises()
+
+    // 初值来自编辑目标而不是草稿，也不恢复到草稿记录的步骤
+    expect(inputValue(wrapper.get('input[placeholder="展示名称，例如 夜航"]'))).toBe("原作者")
+    expect(activeStepLabel(wrapper)).toContain("基础信息")
+    expect(wrapper.find(".submission-draft-note").exists()).toBe(false)
+    expect(wrapper.get(".submission-edit-note").text()).toContain("已通过的投稿")
+
+    await wrapper.get('input[placeholder="展示名称，例如 夜航"]').setValue("改过的作者")
+    await new Promise((resolve) => setTimeout(resolve, 500))
+    expect(loadSubmissionDraft()?.payload.author).toBe("草稿作者")
+
+    wrapper.unmount()
+  })
+
+  it("审核确认过的成本不被自动合计覆盖", async () => {
+    const wrapper = mountEditForm()
+    await flushPromises()
+
+    await goNext(wrapper)
+    await goNext(wrapper)
+    expect(wrapper.get(".submission-preview-metrics").text()).toContain("成本 41")
+    wrapper.unmount()
+  })
+
+  it("提交打到修订端点，成功页不再展示凭证与「再提交一条」", async () => {
+    const fetchMock = stubFetch(respondWith(202, { id: "sub_rev_2", status: "pending", revisesId: "sub_target" }))
+    const wrapper = mountEditForm()
+    await flushPromises()
+
+    await wrapper.get("form").trigger("submit")
+    await flushPromises()
+
+    const submitCall = fetchMock.mock.calls.find(([input]) => !String(input).startsWith("/api/submissions/check"))
+    expect(submitCall).toBeTruthy()
+    const [url, init] = submitCall as unknown as [string, RequestInit]
+    expect(url).toBe("/api/submissions/sub_target/revisions")
+    expect(init.method).toBe("POST")
+    expect(JSON.parse(String(init.body))).toMatchObject({
+      token: "own_target",
+      payload: expect.objectContaining({ teamName: "原队伍" }),
+    })
+
+    const success = wrapper.get(".submission-success")
+    expect(success.text()).toContain("已重新提交，等待审核")
+    expect(success.text()).toContain("sub_rev_2")
+    expect(success.find(".submission-success-token").exists()).toBe(false)
+    expect(success.text()).not.toContain("再提交一条")
+    // 修订复用父凭证，本机记忆不该多出凭证
+    expect(window.localStorage.getItem(MEMORY_KEY) ?? "").not.toContain("own_target")
+    wrapper.unmount()
+  })
+
+  it("查重请求带上同家族 excludeIds，避免修订自己撞自己", async () => {
+    const fetchMock = stubFetch(respondWith(200, { duplicate: false, matches: [] }))
+    const wrapper = mountEditForm()
+    await settleDuplicateCheck()
+
+    const checkUrl = String(fetchMock.mock.calls.find(([input]) => String(input).startsWith("/api/submissions/check"))?.[0])
+    expect(decodeURIComponent(checkUrl)).toContain("excludeIds=sub_target,sub_rev_1")
     wrapper.unmount()
   })
 })

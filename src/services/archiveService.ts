@@ -96,16 +96,19 @@ export async function submitRun(payload: SubmissionPayload): Promise<{id: string
     body: JSON.stringify(payload),
   })
 
-  if (!response.ok) {
-    const body = (await response.json().catch(() => null)) as SubmissionFailureBody | null
-    if (response.status === 409 && body?.duplicate) {
-      const matches = Array.isArray(body.duplicate.matches) ? (body.duplicate.matches as DuplicateVideoMatch[]) : []
-      throw new SubmissionDuplicateError(body.message || DUPLICATE_VIDEO_MESSAGE, matches)
-    }
-    throw new Error(describeSubmissionFailure(body))
-  }
+  if (!response.ok) throw await buildSubmissionFailure(response)
 
   return (await response.json()) as {id: string; status: string; ownerToken: string}
+}
+
+/** 投稿与「编辑并重新提交」共用的失败构造：409 还原成查重异常，其余翻成中文。 */
+async function buildSubmissionFailure(response: Response): Promise<Error> {
+  const body = (await response.json().catch(() => null)) as SubmissionFailureBody | null
+  if (response.status === 409 && body?.duplicate) {
+    const matches = Array.isArray(body.duplicate.matches) ? (body.duplicate.matches as DuplicateVideoMatch[]) : []
+    return new SubmissionDuplicateError(body.message || DUPLICATE_VIDEO_MESSAGE, matches)
+  }
+  return new Error(describeSubmissionFailure(body))
 }
 
 function describeSubmissionFailure(body: SubmissionFailureBody | null) {
@@ -121,11 +124,17 @@ function describeSubmissionFailure(body: SubmissionFailureBody | null) {
  * 投稿前的视频链接查重（表单填完链接即调用），按「视频 + 敌方阶段」比对已有待审/已通过投稿。
  * 任何失败都返回空数组放行：入队时服务端还会再查一次并返回 409，不该因一次预检抖动挡住正常投稿。
  */
-export async function checkDuplicateVideo(input: {videoUrl: string; bossId: string}): Promise<DuplicateVideoMatch[]> {
+export async function checkDuplicateVideo(input: {
+  videoUrl: string
+  bossId: string
+  /** 二次编辑时排除自己这一族（原投稿 + 已有修订），否则修订必然撞自己。 */
+  excludeIds?: string[]
+}): Promise<DuplicateVideoMatch[]> {
   const videoUrl = input.videoUrl.trim()
   if (!videoUrl || !input.bossId) return []
 
   const params = new URLSearchParams({videoUrl, bossId: input.bossId})
+  if (input.excludeIds?.length) params.set("excludeIds", input.excludeIds.join(","))
   try {
     const response = await fetch(`${API_BASE}/api/submissions/check?${params.toString()}`)
     if (!response.ok) return []
@@ -215,23 +224,38 @@ export interface MySubmissionRun {
 export interface MySubmissionsPayload {
   reviews: SubmissionReview[]
   runs: MySubmissionRun[]
+  /** 被作者隐藏的记录条数（按家族计），页面用它渲染「已隐藏 N 条」入口。 */
+  hiddenCount: number
 }
 
-export async function listMySubmissions(tokens: string[]): Promise<MySubmissionsPayload> {
-  if (tokens.length === 0) return {reviews: [], runs: []}
+export async function listMySubmissions(
+  tokens: string[],
+  options: {includeHidden?: boolean} = {},
+): Promise<MySubmissionsPayload> {
+  if (tokens.length === 0) return {reviews: [], runs: [], hiddenCount: 0}
   const response = await fetch(`${API_BASE}/api/submissions/me`, {
     method: "POST",
     headers: {"Content-Type": "application/json"},
-    body: JSON.stringify({tokens}),
+    body: JSON.stringify({tokens, includeHidden: options.includeHidden === true}),
   })
   if (!response.ok) {
     throw new Error("读取我的投稿失败。")
   }
-  return (await response.json()) as MySubmissionsPayload
+  const body = (await response.json()) as Partial<MySubmissionsPayload>
+  return {
+    reviews: Array.isArray(body.reviews) ? body.reviews : [],
+    runs: Array.isArray(body.runs) ? body.runs : [],
+    hiddenCount: Number.isFinite(body.hiddenCount) ? Number(body.hiddenCount) : 0,
+  }
+}
+
+/** 投稿自助端点（撤回 / 隐藏 / 删除 / 修订）共用的 id 段拼接。 */
+function submissionPath(id: string, action: string) {
+  return `${API_BASE}/api/submissions/${encodeURIComponent(id)}/${action}`
 }
 
 export async function withdrawSubmission(id: string, token: string) {
-  const response = await fetch(`${API_BASE}/api/submissions/${encodeURIComponent(id)}/withdraw`, {
+  const response = await fetch(submissionPath(id, "withdraw"), {
     method: "PATCH",
     headers: {"Content-Type": "application/json"},
     body: JSON.stringify({token}),
@@ -241,4 +265,51 @@ export async function withdrawSubmission(id: string, token: string) {
     throw new Error(body?.message || "撤回失败，请稍后重试。")
   }
   return (await response.json()) as {id: string; status: SubmissionReviewStatus}
+}
+
+/** 服务端隐藏开关，跨设备生效；只有已驳回与已撤回的记录允许，其余状态服务端返回 400。 */
+export async function setSubmissionHidden(id: string, token: string, hidden: boolean) {
+  const response = await fetch(submissionPath(id, "visibility"), {
+    method: "PATCH",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({token, hidden}),
+  })
+  if (!response.ok) {
+    const body = (await response.json().catch(() => null)) as {message?: string} | null
+    throw new Error(body?.message || "更新可见性失败，请稍后重试。")
+  }
+  return (await response.json()) as {id: string; hidden: boolean}
+}
+
+/** 硬删已驳回的投稿：不可恢复，服务端只接受 rejected 状态。 */
+export async function deleteSubmission(id: string, token: string) {
+  const response = await fetch(submissionPath(id, "delete"), {
+    method: "DELETE",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({token}),
+  })
+  if (!response.ok) {
+    const body = (await response.json().catch(() => null)) as {message?: string} | null
+    throw new Error(body?.message || "删除失败，请稍后重试。")
+  }
+  return (await response.json()) as {id: string; deleted: boolean; removedRun: boolean}
+}
+
+/**
+ * 编辑并重新提交：已驳回就地重提、已通过产生一条待审修订（`revisesId` 指回原投稿）。
+ * 修订复用父凭证，因此返回值里的 ownerToken 与传入的 token 相同。
+ * 查重要排除哪些 id 由服务端按 `revises_id` 自己算，不接受客户端传值。
+ */
+export async function submitRevision(
+  parentId: string,
+  token: string,
+  payload: SubmissionPayload,
+): Promise<{id: string; status: string; ownerToken: string; revisesId?: string; updated?: boolean}> {
+  const response = await fetch(submissionPath(parentId, "revisions"), {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({token, payload}),
+  })
+  if (!response.ok) throw await buildSubmissionFailure(response)
+  return (await response.json()) as {id: string; status: string; ownerToken: string}
 }

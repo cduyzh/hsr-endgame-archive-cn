@@ -13,11 +13,11 @@
 主要功能：
 
 - 档案工作台：筛选赛季、模式、敌方阶段、记录分类（随模式与阶段变化）、队伍人数、成本与分数**精确区间**、角色/光锥和标记。进入站点时默认落在带 `NEW` 徽标（`modes[].badge`）的模式上，口径在 `runUtils.defaultModeOf()`，当前是末日幻影；URL 显式带了 `?mode=` 时以 URL 为准。
-- 记录列表：按队伍组合分组，展示作者、角色命座、轮次、分数、成本和视频链接。
+- 记录列表：按队伍组合分组，展示作者、角色命座、轮次、分数、成本和视频链接。**光锥默认收起**——整条队伍头像是一个 `<button>`，点击才展开该记录的光锥条（与角色逐列对齐，末尾一枚「光锥」提示胶囊），展开态按记录 id 记在组件本地、换筛选即重置。
 - 环境统计：角色使用率、光锥使用率、常见队伍组合和成本区间。
 - 投稿入口：右上角「提交记录」打开站内弹窗，按「基础信息 → 队伍配置 → 成绩与预览」三步提交到审核队列；新建投稿默认落在带 `NEW` 徽标的模式上（同工作台，走 `defaultModeOf()`）并自动选中该模式当期首个敌方阶段，分类与分数的默认值走 `submissionValidation.defaultResultFor()`——取该模式与阶段的最后一档（满星 / 绝境满星 / `4000` 满分），末日幻影按满分 `4000` 起稿，其余模式沿用 `40000`，避免初始表单就带着校验错误；选角色会自动带出专武（默认 S1，低星光锥默认 S5、低星角色默认满命），成本按队伍自动合计（限定五星角色算 `命座 + 1`、限定五星光锥算叠影，低星与无名勋礼光锥不计）且可手改；草稿存在本地直到提交成功，视频只接受 B 站与 YouTube 链接。**投稿查重**：链接填完即按「视频 + 敌方阶段」调 `GET /api/submissions/check` 预检（400ms 防抖，链接或阶段一变就重查），命中已有待审 / 已通过的投稿时在第一步展示已有记录摘要并挡住「下一步 / 提交」；`POST /api/submissions` 入队前用同一个 `findDuplicateVideoRecords()` 再拦一次返回 409。驳回与撤回的记录不拦重提；`b23.tv` 短链取不到 BV 号，只能按规范化后的短链自身比对。
-- 配队预设：本机 localStorage 记忆作者名 + 最多 3 套队伍配置，提交时可一键载入。
-- 投稿凭证：投稿成功后服务端下发 `ownerToken`（`own_<48 hex>`），写回本机 localStorage，**`/me` 页面**可按 token 反查该用户提过的所有 `submission_reviews` + `runs`，查看审核进度（pending/approved/rejected/withdrawn）、撤回已通过的记录、忘记某条凭证或一键清空。
+- 配队预设：本机 localStorage 记忆作者名 + 最多 10 套队伍配置，提交时可一键载入。
+- 投稿凭证：投稿成功后服务端下发 `ownerToken`（`own_<48 hex>`），写回本机 localStorage，**`/me` 页面**可按 token 反查该用户提过的所有 `submission_reviews` + `runs`，查看审核进度（pending/approved/rejected/withdrawn）、忘记某条凭证或一键清空。按状态给不同动作：待审 / 已通过可**撤回**；已通过可**编辑并重新提交**（产生一条带 `revises_id` 的待审**修订**，管理员通过之前公开档案仍展示上一次通过的记录，通过后原地更新那条 `runs`、不新增记录）；已驳回可**编辑并重新提交**（就地重提同一条记录）、**隐藏展示**、**删除记录**（硬删，`runs` + `submission_reviews` 一起移除、不可恢复，页内两步确认）；已撤回可**隐藏展示**。隐藏是写在 `submission_reviews.hidden` 上的**服务端状态、跨设备生效**，`/me` 默认过滤掉已隐藏的整条家族并回 `hiddenCount`，页顶「已隐藏 N 条 · 查看」可展开并取消隐藏——所以隐藏可逆；删除则严格只开放给 `rejected`（已通过记录不允许作者自行抹掉公开档案）。
 - 更新记录：`/changelog` 页展示版本迭代历史，版本号由 `src/data/changelog.ts` 的 `changelogEntries` 唯一维护，头部徽章读取 `appVersion`。
 - 文章模块：首页「档案速报」与 `/articles`、`/articles/:id` 由 `src/data/articles.ts` 独立供数，强敌机制类内容取自《崩坏：星穹铁道》官方公众号的「强敌侦察笔记」系列，由 `pnpm sync:articles` 建立索引；正文与配图热链微信图床，本站不落盘。收录判据是**标题含「强敌…侦察」**（「强敌」与「侦察」之间可能插字，如「强敌泰坦侦察笔记」）——该系列不按赛季节奏更新、栏目名改过（「强敌侦察狸记」）、早期标题带《崩坏：星穹铁道》前缀，因此不按版本或前缀筛。标题里的首领名提取为 `subject`，`matchBossIds()` 可拿它撞站内敌方阶段，但**只出候选**：人工确认的关联仍只认清单里的 `bossIds`。`/articles` 在「强敌机制」组内再按版本分段（`version` 未标注时退回发布年份），条目用紧凑行；速报在无人工 `featured` 时默认置顶最新一篇强敌笔记。详情页顺序渲染原文配图并给出「查看微信原文」外链。**链接清单是唯一的维护入口**（`pnpm sync:articles -- --add <url>` 或直接在 `scripts/article-sources.json` 加一行），站内与同步脚本都不做自动发现——公众号侧没有可用的批量枚举通路，已逐条试尽（见 `scripts/AGENTS.md`）。**范围已定：清单里现有的 21 篇即视为全系列基线**，1.x～3.x 早期首领有意不补，后续只跟进新发布的笔记，不要再追求历史枚举与补全。
 - 规则页：`/faq` 展示站内说明。
@@ -70,11 +70,11 @@ pnpm seed:archive:dry    # 灌库空跑
 
 - `src/App.vue`：主壳和导航（档案 / 文章 / 规则 / **联系** / 更新 / 我的投稿 / 审核 + 「提交记录」按钮、头部版本徽章与全局 `SubmitRunDialog` + `PromoSlot`）。
 - `src/router/index.ts`：9 条路由 `/`、`/submit`、`/me`（按本机 token 列出 / 撤回自己的投稿）、`/admin/submissions`、`/articles`、`/articles/:id`（文章详情）、`/faq`、`/changelog`（更新记录）、`/contact`（联系站主）；仅首页同步引入。
-- `src/views/`：`ArchiveView.vue`（只组合 `ArchiveWorkbench`）、`SubmitView.vue`（`/submit` 深链转发：打开投稿弹窗后回到首页）、`MySubmissionsView.vue`（`/me`，本机凭证反查 + 撤回 + 清理）、`AdminSubmissionsView.vue`、`ArticlesView.vue`（文章列表，按分类分组；强敌机制组内再按版本分段、条目走紧凑行）、`ArticleDetailView.vue`（`/articles/:id`，顺序渲染原文配图 + 微信原文外链）、`FaqView.vue`、`ChangelogView.vue`（`/changelog`，渲染 `src/data/changelog.ts` 的版本记录）、`ContactView.vue`（`/contact`，微信号与邮箱两张卡片，是 `views/` 里唯一带交互的静态页）。
+- `src/views/`：`ArchiveView.vue`（只组合 `ArchiveWorkbench`）、`SubmitView.vue`（`/submit` 深链转发：打开投稿弹窗后回到首页）、`MySubmissionsView.vue`（`/me`，本机凭证反查 + 撤回 / 隐藏 / 硬删 / 编辑并重新提交，修订折叠进父卡片、破坏性动作走卡片内两步确认）、`AdminSubmissionsView.vue`、`ArticlesView.vue`（文章列表，按分类分组；强敌机制组内再按版本分段、条目走紧凑行）、`ArticleDetailView.vue`（`/articles/:id`，顺序渲染原文配图 + 微信原文外链）、`FaqView.vue`、`ChangelogView.vue`（`/changelog`，渲染 `src/data/changelog.ts` 的版本记录）、`ContactView.vue`（`/contact`，微信号与邮箱两张卡片，是 `views/` 里唯一带交互的静态页）。
 - `src/components/archive/`：档案业务组件，含投稿弹窗 `SubmitRunDialog.vue` 与其内部三步向导 `SubmitRunForm.vue`；`src/components/admin/`：审核台弹框与卡片；`src/components/PromoSlot.vue`：站务推广位；`src/components/FlagIcon.vue`：标记图标的唯一渲染出口（热链图标 + lucide 回落，四处共用）；`src/components/ElementIcon.vue`：属性（弱点/抗性）图标的唯一渲染出口（热链图标 + 中文属性名回落，弱点行、抗性行与敌方阵容三处共用）。
-- `src/composables/`：`useArchiveFilters.ts`（筛选状态 + 路由 query 双向同步）、`useRunsQuery.ts`、`useMetaStats.ts`、`useAdminSubmissions.ts`、`useSubmissionDialog.ts`（投稿弹窗全局开关）、`useSubmissionDraft.ts`（投稿草稿 localStorage 缓存）、`useSubmissionMemory.ts`（作者名 / 配队预设 / 投稿 token 三合一 localStorage 记忆）。
+- `src/composables/`：`useArchiveFilters.ts`（筛选状态 + 路由 query 双向同步）、`useRunsQuery.ts`、`useMetaStats.ts`、`useAdminSubmissions.ts`、`useSubmissionDialog.ts`（投稿弹窗全局开关 + `openEdit()` 携带 `SubmissionEditTarget` 进入「编辑并重新提交」态，`close()` 会清掉编辑目标）、`useSubmissionDraft.ts`（投稿草稿 localStorage 缓存，编辑态传 `enabled:false` 不读也不写全局草稿键）、`useSubmissionMemory.ts`（作者名 / 配队预设 / 投稿 token 三合一 localStorage 记忆）。
 - `src/types/archive.ts`：所有 `Archive*` 类型的唯一来源。
-- `src/services/`：`archiveService.ts`（API + seed fallback + 管理员会话 + `listMySubmissions`/`withdrawSubmission`）、`staticArchiveConfig.ts`（静态快照入口：优先 `/api/archive/stages`，回落浏览器直连）、`apiBase.ts`（`VITE_API_BASE` 的唯一来源，被 `archiveService.ts` 与 `staticArchiveConfig.ts` 共用——从前者反向导出会循环依赖）、`staticBossSnapshot.ts`（前后端共用的阶段推导纯计算层：`STATIC_SEASON_IDS`、HP/速度/韧性/弱点/抗性/场地 buff/首领取名口径）、`dataSource.ts`（远程地址与图片）、`runUtils.ts`、`unitCost.ts`、`submissionUtils.ts`、`submissionValidation.ts`（投稿校验与预览纯函数）、`videoUrl.ts`（视频身份归一与查重口径，前后端共用）、`clipboard.ts`（`copyTextToClipboard()`：剪贴板写入的唯一出口，HTTPS 走 `navigator.clipboard`、非安全上下文回落临时 `textarea` + `execCommand`，失败返回 `false` 交由调用方提示，被 `/contact` 与投稿成功页的凭证复制共用）。
+- `src/services/`：`archiveService.ts`（API + seed fallback + 管理员会话 + `listMySubmissions`/`withdrawSubmission`/`setSubmissionHidden`/`deleteSubmission`/`submitRevision`，这一族投稿自助接口**都不回退 seed**、失败即抛中文错误）、`staticArchiveConfig.ts`（静态快照入口：优先 `/api/archive/stages`，回落浏览器直连）、`apiBase.ts`（`VITE_API_BASE` 的唯一来源，被 `archiveService.ts` 与 `staticArchiveConfig.ts` 共用——从前者反向导出会循环依赖）、`staticBossSnapshot.ts`（前后端共用的阶段推导纯计算层：`STATIC_SEASON_IDS`、HP/速度/韧性/弱点/抗性/场地 buff/首领取名口径）、`dataSource.ts`（远程地址与图片）、`runUtils.ts`、`unitCost.ts`、`submissionUtils.ts`、`submissionValidation.ts`（投稿校验与预览纯函数）、`videoUrl.ts`（视频身份归一与查重口径，前后端共用）、`clipboard.ts`（`copyTextToClipboard()`：剪贴板写入的唯一出口，HTTPS 走 `navigator.clipboard`、非安全上下文回落临时 `textarea` + `execCommand`，失败返回 `false` 交由调用方提示，被 `/contact` 与投稿成功页的凭证复制共用）。
 - `src/data/`：`unitAssets.ts`（`sourceId` -> 远程图）、`unitPaths.ts`（命途图标）、`flagIcons.ts`（三个标记图标的**热链地址**）与 `elementIcons.ts`（七个属性图标的**热链地址**）——这两个是**唯一不走 `dataSource.ts`** 的图源、`signatureLightcones.ts`（角色 -> 专武映射的运行时入口）、`articles.ts`（文章模块唯一取数入口，读 `sync:articles` 产物 `articles.json`）、`changelog.ts`（更新记录数据，`appVersion` 供头部徽章）、`seed/`。
 - `src/stores/archiveStore.ts`：档案配置缓存 + 投稿自动搭配用的记录样本（`pairingRuns`）。
 - `src/data/seed/`：无数据库时的本地种子数据。当前 `config.json` 中 `bosses` 为空数组、`runs.json` 为空数组，敌方阶段完全由静态快照生成；`hsr-units.json` / `hsr-monsters.json` 只是同步脚本产物，运行时代码不 import（`seed/index.ts` 仅导出 `config.json` 与 `runs.json`）；`lightcone-pairs.json` 同样是 `sync:units` 产物，但**由 `signatureLightcones.ts` 在运行时 import**，为投稿表单提供专武映射。`config.json` 的 `articles` 与库里 `articles` 表**已不再驱动任何界面**，文章板块只读 `src/data/articles.ts`（见「已知不一致」）。
@@ -118,11 +118,14 @@ pnpm seed:archive:dry    # 灌库空跑
 - `/api/archive/runs` -> `netlify/functions/archive-runs.ts`
 - `/api/archive/stats` -> `netlify/functions/archive-stats.ts`
 - `/api/submissions` -> `netlify/functions/submissions.ts`（POST 投稿；**响应体返回 `ownerToken`（`own_<48 hex>`），前端写本地记忆**；按「视频 + 敌方阶段」查重命中返回 `409 {message, duplicate:{matches}}`）
-- `/api/submissions/check` -> `netlify/functions/submissions-check.ts`（GET `?videoUrl=&bossId=`，投稿向导填完链接即预检，返回 `{duplicate, matches}`，最多 3 条；链接非法或阶段缺失时返回 `duplicate:false` 不报错）
-- `/api/submissions/me` -> `netlify/functions/submissions-me.ts`（POST `{tokens:string[]}`，按本机凭证反查 `submission_reviews` + `runs`，最多 50 token / 200 条）
-- `/api/submissions/:id/withdraw` -> `netlify/functions/submissions-withdraw.ts`（PATCH `{token}`，校验 `owner_token` 后把对应 `submission_reviews.status` 与同名 token 的 `runs.status` 一起改 `withdrawn`）
-- `/api/admin/submissions` -> `netlify/functions/admin-submissions.ts`
-- `/api/admin/submissions/:id` -> `netlify/functions/admin-submissions-id.ts`（`netlify.toml` 中目标写作 `/.netlify/functions/admin-submissions-id/:id`；**通过时把 `owner_token` 一并写入 `runs`**，让用户能通过 token 找到自己已通过的作品）
+- `/api/submissions/check` -> `netlify/functions/submissions-check.ts`（GET `?videoUrl=&bossId=&excludeIds=a,b`，投稿向导填完链接即预检，返回 `{duplicate, matches}`，最多 3 条；链接非法或阶段缺失时返回 `duplicate:false` 不报错。`excludeIds` 只服务二次编辑——修订沿用原投稿的视频与阶段，不排除会自己撞自己；最多 8 条、越界项静默丢弃）
+- `/api/submissions/me` -> `netlify/functions/submissions-me.ts`（POST `{tokens:string[], includeHidden?}`，按本机凭证反查 `submission_reviews` + `runs`，最多 50 token / 200 条；默认过滤掉已隐藏的**整条家族**（修订随父一起收纳）并回 `hiddenCount`，`includeHidden:true` 才全给）
+- `/api/submissions/:id/withdraw` -> `netlify/functions/submissions-withdraw.ts`（PATCH `{token}`，校验 `owner_token` 后把 `submission_reviews.status` 改 `withdrawn`，并按 **`runs.id = 投稿 id`** 精确改那一条公开记录（不再按 owner_token 全量，否则撤回一条修订会连父记录的档案一起撤），同时把该投稿名下还在待审的修订一并置 `withdrawn`）
+- `/api/submissions/:id/visibility` -> `netlify/functions/submissions-visibility.ts`（PATCH `{token, hidden:boolean}`，服务端隐藏开关，跨设备生效；**只允许 `rejected` / `withdrawn`**，其余状态 400；幂等，返回 `{id, hidden}`）
+- `/api/submissions/:id/delete` -> `netlify/functions/submissions-delete.ts`（DELETE `{token}`，**只允许 `rejected`**；先 `delete from runs where id=`（`run_units` 靠 `on delete cascade`）再删同家族修订与投稿本身，返回 `{id, deleted, removedRun}`。被驳回过的记录可能在 `runs` 里留有一行，只删审核行会留下幽灵条目，所以两张表都要清）
+- `/api/submissions/:id/revisions` -> `netlify/functions/submissions-revision.ts`（POST `{token, payload}`，父为 `approved` 时新建一条带 `revises_id` 的待审修订并**复用父凭证**（不签发新 token），同一父最多一条活跃修订、再次编辑就地覆盖；父为 `rejected` 时**就地覆盖**同一条审核行回到 `pending` 并清掉驳回备注。`200 {id, updated:true}` / `202 {id, revisesId, ownerToken}`；查重命中 `409`，排除的 id 由服务端按 `revises_id` 自己算，不接受客户端传值）
+- `/api/admin/submissions` -> `netlify/functions/admin-submissions.ts`（带 `revisesId` 供审核台认出修订；不带 `hidden` 与 `owner_token`）
+- `/api/admin/submissions/:id` -> `netlify/functions/admin-submissions-id.ts`（`netlify.toml` 中目标写作 `/.netlify/functions/admin-submissions-id/:id`；**通过时把 `owner_token` 一并写入 `runs`**，让用户能通过 token 找到自己已通过的作品；写入的目标行是 `revisesId ?? 投稿 id`，所以修订通过后原地更新原公开记录、不新增一条。驳回 / 退回分支保持按投稿 id 原样更新——修订自己没有 `runs` 行，因此驳回一条修订不会碰到父记录的公开档案）
 - `/api/admin/sync-stages` -> `netlify/functions/admin-sync-stages.ts`（POST，管理员手动批量同步 `stages` 表）
 
 数据库 URL 读取顺序：
@@ -137,7 +140,9 @@ POSTGRES_URL
 
 `stages` 表存的是**纯派生数据**（远程静态快照的服务端镜像，供统计/导出与 `runs.boss_id` 外键引用），随时可整表重建：`pnpm sync:stages` 或 `POST /api/admin/sync-stages` 走的都是同一份 `staticBossSnapshot.ts`。场地 buff 结构化后该表用 `variant_name text` / `mechanic jsonb` / `stage_buffs jsonb` 三列取代了旧的 `memory_buff text`；`schema.sql` 末尾附有幂等的 `add column if not exists` + `drop column if exists` 迁移，已部署库重新执行 `schema.sql` 即可原地升级，随后跑一次 `sync:stages` 回填。
 
-投稿审核页位于 `/admin/submissions`。生产环境优先通过 `ADMIN_REVIEW_USERNAME` 和 `ADMIN_REVIEW_PASSWORD` 配置管理员账号；为兼容旧部署，`ADMIN_REVIEW_TOKEN` 仍可作为密码 fallback。审核通过会把投稿同步为公开 `runs` 记录，改为驳回或退回待审会从公开列表隐藏。
+`submission_reviews` 为投稿自助管理另加两列：`hidden boolean not null default false`（作者自己的收纳状态，跨设备生效，只作用父行）与 `revises_id text`（二次编辑产生的修订指向的原投稿 id）。`runs` **不加列**——两表靠同一个 id 值 1:1 关联，修订通过时写的就是原投稿那行 `runs`。幂等迁移在 `schema.sql` 末尾（索引必须排在 `add column` 之后，否则已部署库上会因列尚不存在而失败），单独立在 `netlify/migrations/2026-09-09_submission_hidden_and_revision.sql` 留痕。**部署顺序：先在生产库执行迁移，再发布函数**——新列缺失时 `/me` 的 select 会直接失败。
+
+投稿审核页位于 `/admin/submissions`。生产环境优先通过 `ADMIN_REVIEW_USERNAME` 和 `ADMIN_REVIEW_PASSWORD` 配置管理员账号；为兼容旧部署，`ADMIN_REVIEW_TOKEN` 仍可作为密码 fallback。审核通过会把投稿同步为公开 `runs` 记录，改为驳回或退回待审会从公开列表隐藏。修订（`revises_id` 非空）通过时原地更新**原投稿**那行 `runs`，不会新增公开记录；审核卡片会显示「这条是二次编辑的修订」。**已知限制**：库里不保留上一版 payload，所以修订一旦通过后再把那条修订改判为驳回 / 退回，**不会回滚**已合并的 `runs` 内容——要否掉一次修订应在它还是待审时直接驳回。
 
 > ⚠️ 未配置任何管理员密码环境变量时，服务端 `requireAdmin` 直接返回“通过”，**不拦截**。生产务必设置 `ADMIN_REVIEW_PASSWORD`。
 > 管理端接口（`fetchSubmissionReviews` / `reviewSubmission`）失败时**不回退 seed**，而是抛错由审核台提示，这是与业务读取接口的有意区别。

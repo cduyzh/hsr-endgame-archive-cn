@@ -34,7 +34,7 @@
 
 `ContactView.vue` 是 `views/` 里唯一带交互的静态页（微信号与邮箱各一枚一键复制按钮），版式仍沿用静态页骨架：`page-narrow` + `page-heading` + `faq-list contact-list` 两张 `article` 卡片，卡片外观与主题覆写都复用 `.faq-list` 那套既有规则，只有 `.contact-*` 四条新规则写进 `main.css`；剪贴板写入不自己实现，走 `services/clipboard.ts`。
 
-投稿面板不是独立页面：`SubmitRunDialog.vue` 由 `App.vue` 常驻渲染，头部「提交记录」按钮和工作台工具栏按钮都调用 `useSubmissionDialog().open()`；`/submit` 深链保留，`SubmitView.vue` 只负责打开同一弹窗后 `router.replace("/")`，因此路由结构未变。`/me` 直接是页面，没有弹窗化。
+投稿面板不是独立页面：`SubmitRunDialog.vue` 由 `App.vue` 常驻渲染，头部「提交记录」按钮和工作台工具栏按钮都调用 `useSubmissionDialog().open()`；`/submit` 深链保留，`SubmitView.vue` 只负责打开同一弹窗后 `router.replace("/")`，因此路由结构未变。`/me` 的「编辑并重新提交」走 `useSubmissionDialog().openEdit(target)`——编辑目标与开关同属一个模块级单例，所以不必逐层传 props，弹窗只把它透传给 `SubmitRunForm` 的 `edit-target`。`/me` 直接是页面，没有弹窗化。
 
 ## 类型与数据流约定
 
@@ -54,9 +54,9 @@
   - `useRunsQuery(filters)`：记录请求、加载态、按 `teamName` 分组；每次成功拉取都会把结果登记进 `archiveStore.pairingRuns`。
   - `useMetaStats(filters)`：环境统计。
   - `useAdminSubmissions()`：审核台会话（`sessionStorage` 持久化）、列表与审核动作。
-  - `useSubmissionDialog()`：投稿弹窗开关，状态是模块级 `shallowRef` 单例，供 `App.vue`、`ArchiveWorkbench.vue` 与 `SubmitView.vue` 共享。
-  - `useSubmissionDraft()`：投稿草稿写入 `localStorage`（键 `hsr-archive.submission-draft.v2`，含表单与步骤位置），变更后 400ms 防抖、空表单不写；只有提交成功或用户点「丢弃草稿」才清除，payload 形状变化时换键名而不是写迁移。
-  - `useSubmissionMemory()`：作者名 + 配队预设 + 投稿 token 的本机记忆（`localStorage` 键 `hsr-archive.submission-memory.v1`），同键存 `author / presets(最多 3 套) / tokens(最多 50 个 own_xxx)`。配队预设是手动「另存为」+「载入」；token 由 `SubmitRunForm` 提交成功后写入，被 `/me` 页面用做反查与撤回的身份凭证。
+  - `useSubmissionDialog()`：投稿弹窗开关，状态是模块级 `shallowRef` 单例，供 `App.vue`、`ArchiveWorkbench.vue`、`SubmitView.vue` 与 `MySubmissionsView.vue` 共享。`open()` 是新建投稿，`openEdit(target)` 带着 `SubmissionEditTarget`（原投稿 id / 复用的凭证 / 原 payload / 同家族 `excludeIds`）进入编辑态；**`close()` 会清掉编辑目标**，否则下次点「提交记录」还带着上次的编辑目标。
+  - `useSubmissionDraft()`：投稿草稿写入 `localStorage`（键 `hsr-archive.submission-draft.v2`，含表单与步骤位置），变更后 400ms 防抖、空表单不写；只有提交成功或用户点「丢弃草稿」才清除，payload 形状变化时换键名而不是写迁移。**编辑已有投稿时传 `enabled:false`**——草稿键是新建流程的单键暂存区，编辑态既不能读它（会把上次没提交的内容灌进修订）也不能写/清它（会污染或误删用户下一次新建投稿）。
+  - `useSubmissionMemory()`：作者名 + 配队预设 + 投稿 token 的本机记忆（`localStorage` 键 `hsr-archive.submission-memory.v1`），同键存 `author / presets(最多 10 套) / tokens(最多 50 个 own_xxx)`。配队预设是手动「另存为」+「载入」；token 由 `SubmitRunForm` 提交成功后写入，被 `/me` 页面用做反查与撤回的身份凭证。
 - 大对象优先 `shallowRef`，避免深层响应式开销（现有代码已如此，保持一致）。
 
 ## 组件实现约定

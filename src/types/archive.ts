@@ -228,8 +228,26 @@ export interface SubmissionReview {
   status: SubmissionReviewStatus
   reviewerNote?: string | null
   ownerToken?: string | null
+  /** 作者在本机之外也生效的收纳开关：`/me` 默认不展示已隐藏的记录，可通过「已隐藏 N 条」入口取消隐藏。 */
+  hidden?: boolean
+  /** 二次编辑产生的修订指向被修订的原投稿 id；公开档案始终落在原投稿的 `runs` 行上，修订通过前不改动它。 */
+  revisesId?: string | null
   createdAt: string
   reviewedAt?: string | null
+}
+
+/**
+ * 从「我的投稿」带着已有内容重新编辑一条投稿时的入参。
+ * 服务端按 `origin` 分流：`approved` 产生一条带 `revisesId` 的待审修订，`rejected` 就地重提同一条记录。
+ */
+export interface SubmissionEditTarget {
+  parentId: string
+  /** 原投稿的凭证：修订复用它，不签发新 token。 */
+  token: string
+  payload: SubmissionPayload
+  origin: Extract<SubmissionReviewStatus, "approved" | "rejected">
+  /** 同家族 id（原投稿 + 它已有的修订）。只服务表单的实时查重预检——那是只读接口，拿不到 revises_id；写入时的排除由服务端自己算。 */
+  excludeIds: string[]
 }
 
 /**

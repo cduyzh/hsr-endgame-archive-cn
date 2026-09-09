@@ -1,24 +1,22 @@
 import type {Handler} from "@netlify/functions"
-import {getSql, jsonResponse, listFallbackSubmissionReviews, updateFallbackSubmissionReview} from "./_shared"
+import {
+  getSql,
+  jsonResponse,
+  listFallbackSubmissionReviews,
+  readSubmissionId,
+  sanitizeOwnerToken,
+  updateFallbackSubmissionReview,
+} from "./_shared"
 import type {SubmissionReviewStatus} from "../../src/types/archive"
 
 interface WithdrawRequest {
   token: unknown
 }
 
-function sanitizeToken(value: unknown): string | null {
-  if (typeof value !== "string") return null
-  const trimmed = value.trim()
-  if (!trimmed) return null
-  if (trimmed.length > 200) return null
-  return trimmed
-}
-
 export const handler: Handler = async (event) => {
   if (event.httpMethod !== "PATCH") return jsonResponse({message: "Method Not Allowed"}, 405)
 
-  const idFromPath = event.path.split("/").filter(Boolean).pop()
-  const id = event.queryStringParameters?.id ?? idFromPath
+  const id = readSubmissionId(event)
   if (!id) return jsonResponse({message: "缺少提交 ID"}, 400)
 
   let body: WithdrawRequest
@@ -28,7 +26,7 @@ export const handler: Handler = async (event) => {
     return jsonResponse({message: "请求体不是合法 JSON"}, 400)
   }
 
-  const token = sanitizeToken(body.token)
+  const token = sanitizeOwnerToken(body.token)
   if (!token) return jsonResponse({message: "缺少或非法的凭证"}, 400)
 
   const sql = getSql()
@@ -44,6 +42,9 @@ export const handler: Handler = async (event) => {
     }
     const next = await updateFallbackSubmissionReview(id, "withdrawn" as SubmissionReviewStatus)
     if (!next) return jsonResponse({message: "未找到提交记录"}, 404)
+    for (const child of reviews.filter((review) => review.revisesId === id && review.status === "pending")) {
+      await updateFallbackSubmissionReview(child.id, "withdrawn" as SubmissionReviewStatus)
+    }
     return jsonResponse({id, status: "withdrawn"})
   }
 
@@ -72,12 +73,20 @@ export const handler: Handler = async (event) => {
     where id = ${id}
   `
 
-  // 3) 同步 runs 表（所有 owner_token 匹配且关联到本 submission_reviews id 的 runs）
-  // runs 表没有 submission_review_id 列，所以这里按 owner_token 全量撤回。
+  // 3) 同步 runs 表：`runs.id === submission_reviews.id`，按 id 精确定位。
+  //    不能按 owner_token 全量改——修订复用父凭证，那样「撤回一条修订」会把父记录那行公开档案一起撤掉。
+  //    修订自己没有 runs 行（通过时写的是原投稿那行），所以这条 UPDATE 对修订天然是 no-op，正是想要的语义。
   await sql`
     update runs
     set status = ${nextStatus}
-    where owner_token = ${token}
+    where id = ${id}
+  `
+
+  // 4) 父记录撤回后，它名下还在待审的修订一并收掉。
+  await sql`
+    update submission_reviews
+    set status = ${nextStatus}, reviewed_at = now()
+    where revises_id = ${id} and status = 'pending'
   `
 
   return jsonResponse({id, status: nextStatus})

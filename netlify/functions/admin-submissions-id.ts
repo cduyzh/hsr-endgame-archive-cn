@@ -35,6 +35,7 @@ export const handler: Handler = async (event) => {
         status,
         reviewer_note as "reviewerNote",
         owner_token as "ownerToken",
+        revises_id as "revisesId",
         created_at as "createdAt",
         reviewed_at as "reviewedAt"
       from submission_reviews
@@ -118,21 +119,24 @@ export const handler: Handler = async (event) => {
           status = 'pending',
           owner_token = excluded.owner_token
       `
-      await sql`delete from run_units where run_id = ${id}`
+      // 修订的公开记录写在**原投稿**那行（run.id = revisesId ?? 投稿 id），
+      // 所以下面一律用 run.id，不能再混用路径参数 id。
+      await sql`delete from run_units where run_id = ${run.id}`
       for (const [index, unit] of run.units.entries()) {
         await sql`
           insert into run_units (run_id, unit_id, kind, slot_index, eidolon)
-          values (${id}, ${unit.unitId}, 'character', ${index}, ${unit.eidolon ?? 0})
+          values (${run.id}, ${unit.unitId}, 'character', ${index}, ${unit.eidolon ?? 0})
         `
       }
       for (const [index, unit] of run.lightcones.entries()) {
         await sql`
           insert into run_units (run_id, unit_id, kind, slot_index, superimposition)
-          values (${id}, ${unit.unitId}, 'lightcone', ${index}, ${unit.superimposition ?? 1})
+          values (${run.id}, ${unit.unitId}, 'lightcone', ${index}, ${unit.superimposition ?? 1})
         `
       }
-      await sql`update runs set status = 'approved' where id = ${id}`
+      await sql`update runs set status = 'approved' where id = ${run.id}`
     } else {
+      // 按投稿 id 原样更新：修订自己没有 runs 行，驳回 / 退回一条修订因此不会碰到父记录那行公开档案。
       await sql`update runs set status = ${body.status} where id = ${id}`
     }
 

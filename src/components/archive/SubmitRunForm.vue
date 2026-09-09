@@ -39,6 +39,7 @@
   import { useSubmissionMemory } from "@/composables/useSubmissionMemory";
   import {
     checkDuplicateVideo,
+    submitRevision,
     submitRun,
     SubmissionDuplicateError,
   } from "@/services/archiveService";
@@ -81,17 +82,23 @@
     EndgameMode,
     RunFlag,
     SpecificRunCategory,
+    SubmissionEditTarget,
     SubmissionPayload,
   } from "@/types/archive";
 
   const props = defineProps<{
     config: ArchiveConfig;
     preferredLightconeByCharacter: Record<string, string>;
+    /** 非空即「编辑并重新提交」态：表单初值取自它，提交时打到修订端点。 */
+    editTarget?: SubmissionEditTarget | null;
   }>();
 
   const emit = defineEmits<{
     close: [];
   }>();
+
+  /** 编辑目标在组件实例生命周期内不变（弹窗关闭即卸载重建），所以按普通常量取用。 */
+  const editing = props.editTarget ?? null;
 
   const steps: Array<{
     id: SubmissionStepId;
@@ -148,9 +155,16 @@
     if (!saved) return base;
 
     const restored: SubmissionPayload = { ...base, ...saved };
-    if (restored.units.length !== TEAM_SLOT_COUNT) restored.units = base.units;
-    if (restored.lightcones.length !== TEAM_SLOT_COUNT)
-      restored.lightcones = base.lightcones;
+    // 槽位数组连元素一起拷一份：编辑态的初值来自「我的投稿」列表里的那条 payload，
+    // 共用引用会让逐槽写值直接改掉列表展示的内容。
+    restored.units =
+      saved?.units?.length === TEAM_SLOT_COUNT
+        ? saved.units.map((slot) => ({ ...slot }))
+        : base.units;
+    restored.lightcones =
+      saved?.lightcones?.length === TEAM_SLOT_COUNT
+        ? saved.lightcones.map((slot) => ({ ...slot }))
+        : base.lightcones;
     restored.flags = Array.isArray(saved.flags)
       ? flagOrder.filter((flag) => saved.flags?.includes(flag))
       : base.flags;
@@ -168,12 +182,13 @@
     });
   }
 
-  const draft = loadSubmissionDraft();
+  /** 编辑态不读也不写全局草稿键：那是「新建投稿」的暂存区，混用会双向污染。 */
+  const draft = editing ? null : loadSubmissionDraft();
   const lastStep = steps.length - 1;
   const restoredStep = Math.min(Math.max(draft?.stepIndex ?? 0, 0), lastStep);
 
   const form = reactive<SubmissionPayload>(
-    restoreForm(props.config, draft?.payload),
+    restoreForm(props.config, editing?.payload ?? draft?.payload),
   );
   const stepIndex = shallowRef(restoredStep);
   const unlockedIndex = shallowRef(
@@ -216,6 +231,7 @@
     baseline: createForm(props.config),
     stepIndex,
     unlockedIndex,
+    enabled: !editing,
   });
 
   const currentStep = computed<SubmissionStepId>(
@@ -262,6 +278,7 @@
     const matches = await checkDuplicateVideo({
       videoUrl,
       bossId: form.bossId,
+      excludeIds: editing?.excludeIds,
     });
     if (seq !== duplicateSeq) return;
     duplicateChecking.value = false;
@@ -358,8 +375,10 @@
   );
   /** 用户手改过成本后停止自动覆盖，「按队伍重算」可重新接管。 */
   const costTouched = shallowRef(
-    draft?.payload?.cost !== undefined &&
-      Number(draft.payload.cost) !== autoCost.value,
+    editing
+      ? true
+      : draft?.payload?.cost !== undefined &&
+        Number(draft.payload.cost) !== autoCost.value,
   );
 
   watch(
@@ -555,16 +574,20 @@
     submitting.value = true;
     submitFailure.value = "";
     try {
-      const result = await submitRun({
+      const payload = {
         ...form,
         author: form.author.trim(),
         teamName: form.teamName.trim(),
         videoUrl: form.videoUrl.trim(),
         notes: form.notes.trim(),
-      });
+      };
+      const result = editing
+        ? await submitRevision(editing.parentId, editing.token, payload)
+        : await submitRun(payload);
       acceptedId.value = result.id;
       // 拿到后端下发的 ownerToken，写入本地记忆用于"我的投稿"页查询。
-      if (result.ownerToken) {
+      // 编辑态复用原投稿的凭证（服务端不签发新 token），本机已经有了，不再重复写也不展示。
+      if (!editing && result.ownerToken) {
         acceptedToken.value = result.ownerToken;
         addToken(result.ownerToken);
       }
@@ -633,11 +656,16 @@
           aria-hidden="true"
         />
       </span>
-      <strong>已进入审核队列</strong>
+      <strong>{{ editing ? "已重新提交，等待审核" : "已进入审核队列" }}</strong>
       <small>
-        投稿编号
+        {{ editing ? "修订编号" : "投稿编号" }}
         <code>{{ acceptedId }}</code>
-        ，审核通过后会出现在档案列表；未通过可在审核台查看原因。
+        <template v-if="editing">
+          ，管理员通过最新修改之前，档案里仍展示上一次通过的记录。
+        </template>
+        <template v-else>
+          ，审核通过后会出现在档案列表；未通过可在审核台查看原因。
+        </template>
       </small>
       <small
         v-if="acceptedToken"
@@ -669,6 +697,7 @@
       </small>
       <span class="submission-success-actions">
         <button
+          v-if="!editing"
           class="icon-button"
           type="button"
           @click="submitAnother"
@@ -710,6 +739,18 @@
       novalidate
       @submit.prevent="handleSubmit"
     >
+      <div
+        v-if="editing"
+        class="submission-edit-note"
+      >
+        {{
+          editing.origin === "approved"
+            ? "正在修改一条已通过的投稿：提交后产生一条待审修订，管理员通过之前档案里仍展示当前记录。"
+            : "正在修改一条被驳回的投稿：提交后重新进入审核队列。"
+        }}
+        <code>{{ editing.parentId }}</code>
+      </div>
+
       <div
         v-if="draftSavedAt"
         class="submission-draft-note"
@@ -1376,7 +1417,7 @@
             :size="16"
             aria-hidden="true"
           />
-          {{ submitting ? "提交中" : "提交到审核队列" }}
+          {{ submitting ? "提交中" : editing ? "提交修订并重新审核" : "提交到审核队列" }}
         </button>
       </div>
 

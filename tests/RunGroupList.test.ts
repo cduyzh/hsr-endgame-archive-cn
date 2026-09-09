@@ -22,6 +22,7 @@ describe("RunGroupList", () => {
     expect(wrapper.text()).toContain("档案员K")
     expect(wrapper.text()).toContain("视频")
     // 队伍槽位：4 角色 + 4 光锥；标记徽标另各带一枚图标，不混在一个计数里。
+    // 光锥条是 v-show 收起，节点仍在 DOM 里，所以图片总数不随展开态变化。
     expect(wrapper.findAll(".unit-chip img").length).toBe(8)
     expect(wrapper.findAll(".run-flag")).toHaveLength(2)
     expect(wrapper.findAll(".run-flag .flag-icon").length).toBe(2)
@@ -29,6 +30,34 @@ describe("RunGroupList", () => {
     expect(wrapper.text()).toContain("火墙")
     expect(wrapper.text()).toContain("限定")
     expect(wrapper.text()).toContain("常驻")
+  })
+
+  it("光锥默认收起，点击队伍条才展开", async () => {
+    const wrapper = mount(RunGroupList, {
+      props: {
+        groups: [{ key: "g1", label: "大黑塔双同谐", runs: [fixtureRuns[0]!] }],
+        units: seedConfig.units,
+        loading: false,
+        error: null,
+        continuous: true,
+        mode: "moc",
+      },
+    })
+
+    const toggle = wrapper.get("button.run-row-loadout")
+    const lightcones = wrapper.get(".lightcone-icons")
+    expect(toggle.attributes("aria-expanded")).toBe("false")
+    expect(lightcones.attributes("style")).toContain("display: none")
+    expect(wrapper.find(".loadout-hint").exists()).toBe(true)
+
+    await toggle.trigger("click")
+    expect(toggle.attributes("aria-expanded")).toBe("true")
+    expect(lightcones.attributes("style") ?? "").not.toContain("display: none")
+    expect(lightcones.attributes("id")).toBe(toggle.attributes("aria-controls"))
+
+    await toggle.trigger("click")
+    expect(toggle.attributes("aria-expanded")).toBe("false")
+    expect(lightcones.attributes("style")).toContain("display: none")
   })
 
   it("空列表展示明确空状态", () => {

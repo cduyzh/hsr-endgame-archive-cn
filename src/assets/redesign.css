@@ -1272,9 +1272,9 @@ body {
 }
 
 .run-row {
-  grid-template-columns: minmax(220px, 270px) minmax(150px, 1fr) minmax(220px, auto);
+  grid-template-columns: max-content minmax(0, 1fr) auto;
   gap: 14px;
-  min-height: 104px;
+  min-height: 96px;
   border-color: rgba(160, 177, 220, 0.12);
   background: rgba(255, 255, 255, 0.018);
   padding: 12px 14px;
@@ -1327,6 +1327,23 @@ body {
   flex-wrap: wrap;
   gap: 5px;
   margin-top: 6px;
+}
+
+.review-revision-note {
+  margin: 6px 0 0;
+  padding: 5px 8px;
+  border: 1px solid rgba(240, 201, 122, 0.34);
+  border-radius: 6px;
+  background: rgba(240, 201, 122, 0.08);
+  color: #f0c97a;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.review-revision-note code {
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 11px;
+  word-break: break-all;
 }
 
 .run-metrics span,
@@ -1464,7 +1481,7 @@ body {
   }
 
   .run-row {
-    grid-template-columns: 220px minmax(0, 1fr);
+    grid-template-columns: max-content minmax(0, 1fr);
   }
 
   .run-metrics {

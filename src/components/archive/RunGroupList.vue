@@ -18,6 +18,8 @@ const props = defineProps<{
 }>()
 
 const expandedGroups = shallowRef<Set<string>>(new Set())
+/** 光锥条按记录粒度收起：默认只显示队伍头像，点击头像条才展开对应光锥。 */
+const expandedRuns = shallowRef<Set<string>>(new Set())
 
 const unitById = computed(() => new Map(props.units.map((unit) => [unit.id, unit])))
 const totalRuns = computed(() => props.groups.reduce((sum, group) => sum + group.runs.length, 0))
@@ -48,6 +50,7 @@ watch(
   () => [props.continuous, displayGroups.value.map((group) => group.key).join("|")],
   () => {
     const keys = displayGroups.value.map((group) => group.key)
+    expandedRuns.value = new Set()
     if (props.continuous) {
       expandedGroups.value = new Set(keys)
       return
@@ -63,6 +66,17 @@ function toggleGroup(key: string) {
   if (next.has(key)) next.delete(key)
   else next.add(key)
   expandedGroups.value = next
+}
+
+function toggleRun(id: string) {
+  const next = new Set(expandedRuns.value)
+  if (next.has(id)) next.delete(id)
+  else next.add(id)
+  expandedRuns.value = next
+}
+
+function isRunOpen(id: string) {
+  return expandedRuns.value.has(id)
 }
 
 function toDisplayUnit(entry: RunUnit) {
@@ -198,11 +212,15 @@ function platformIcon(source: VideoSource) {
           :key="run.id"
           class="run-row"
         >
-          <div
+          <button
             class="run-row-loadout"
-            aria-label="队伍角色与光锥"
+            type="button"
+            :aria-expanded="isRunOpen(run.id)"
+            :aria-controls="`lightcones-${run.id}`"
+            :title="isRunOpen(run.id) ? '收起光锥' : '展开光锥'"
+            @click="toggleRun(run.id)"
           >
-            <div
+            <span
               class="team-icons"
               aria-label="队伍角色"
             >
@@ -224,8 +242,21 @@ function platformIcon(source: VideoSource) {
                 />
                 <b>E{{ entry.eidolon ?? 0 }}</b>
               </span>
-            </div>
-            <div
+              <span
+                class="loadout-hint"
+                aria-hidden="true"
+              >
+                <ChevronDown
+                  class="chevron"
+                  :class="{ open: isRunOpen(run.id) }"
+                  :size="12"
+                />
+                光锥
+              </span>
+            </span>
+            <span
+              v-show="isRunOpen(run.id)"
+              :id="`lightcones-${run.id}`"
               class="lightcone-icons"
               aria-label="队伍光锥"
             >
@@ -247,8 +278,8 @@ function platformIcon(source: VideoSource) {
                 />
                 <b>S{{ entry.superimposition ?? 1 }}</b>
               </span>
-            </div>
-          </div>
+            </span>
+          </button>
 
           <div class="run-row-main">
             <header class="run-row-headline">

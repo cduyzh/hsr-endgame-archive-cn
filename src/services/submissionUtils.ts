@@ -47,9 +47,17 @@ export function buildPreferredLightconeByCharacter(runs: ArchiveRun[], units: Ar
   ) as Record<string, string>
 }
 
+/**
+ * 投稿对应的公开记录 id：`runs` 与 `submission_reviews` 靠同一个 id 值 1:1 关联，
+ * 二次编辑的修订带 `revisesId` 指回原投稿，因此它落进的是**原**那条 runs 行（原地更新，不产生第二条公开记录）。
+ */
+export function archiveRunIdOf(review: Pick<SubmissionReview, "id" | "revisesId">) {
+  return review.revisesId ?? review.id
+}
+
 export function submissionReviewToArchiveRun(review: SubmissionReview, units: ArchiveUnit[]): ArchiveRun {
   const run: ArchiveRun = {
-    id: review.id,
+    id: archiveRunIdOf(review),
     seasonId: review.payload.seasonId,
     mode: review.payload.mode,
     bossId: review.payload.bossId,

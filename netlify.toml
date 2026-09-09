@@ -51,6 +51,21 @@
   status = 200
 
 [[redirects]]
+  from = "/api/submissions/:id/visibility"
+  to = "/.netlify/functions/submissions-visibility/:id"
+  status = 200
+
+[[redirects]]
+  from = "/api/submissions/:id/delete"
+  to = "/.netlify/functions/submissions-delete/:id"
+  status = 200
+
+[[redirects]]
+  from = "/api/submissions/:id/revisions"
+  to = "/.netlify/functions/submissions-revision/:id"
+  status = 200
+
+[[redirects]]
   from = "/api/admin/submissions"
   to = "/.netlify/functions/admin-submissions"
   status = 200

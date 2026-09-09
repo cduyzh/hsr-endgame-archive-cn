@@ -84,7 +84,12 @@ async function writeFallbackReviews(reviews: SubmissionReview[]) {
   await rename(draftFile, fallbackReviewFile)
 }
 
-export async function addFallbackSubmissionReview(id: string, payload: SubmissionPayload, ownerToken?: string) {
+export async function addFallbackSubmissionReview(
+  id: string,
+  payload: SubmissionPayload,
+  ownerToken?: string,
+  revisesId: string | null = null,
+) {
   const reviews = await readFallbackReviews()
   reviews.unshift({
     id,
@@ -92,6 +97,8 @@ export async function addFallbackSubmissionReview(id: string, payload: Submissio
     status: "pending",
     reviewerNote: null,
     ownerToken: ownerToken ?? null,
+    hidden: false,
+    revisesId,
     createdAt: new Date().toISOString(),
     reviewedAt: null,
   })
@@ -105,9 +112,14 @@ export async function listFallbackSubmissionReviews(status: SubmissionReviewStat
 
 export async function listFallbackArchiveRuns() {
   const reviews = await readFallbackReviews()
-  return reviews
-    .filter((review) => review.status === "approved")
-    .map((review) => submissionReviewToArchiveRun(review, seedConfig.units))
+  // 一条原稿和它已通过的修订会映射到同一个 runs id（修订指回原投稿），队列按新到旧存，
+  // 所以保留先出现的那条就是最新内容；否则无库环境下公开列表会出现两条同 id 记录。
+  const byRunId = new Map<string, ArchiveRun>()
+  for (const review of reviews.filter((entry) => entry.status === "approved")) {
+    const run = submissionReviewToArchiveRun(review, seedConfig.units)
+    if (!byRunId.has(run.id)) byRunId.set(run.id, run)
+  }
+  return [...byRunId.values()]
 }
 
 export async function updateFallbackSubmissionReview(
@@ -128,6 +140,32 @@ export async function updateFallbackSubmissionReview(
   reviews[index] = nextReview
   await writeFallbackReviews(reviews)
   return nextReview
+}
+
+/** 按字段补丁改一条审核行；隐藏开关、就地重提与修订覆盖都走它，避免为每个字段再加一个函数。 */
+export async function patchFallbackSubmissionReview(
+  id: string,
+  patch: Partial<
+    Pick<SubmissionReview, "payload" | "status" | "reviewerNote" | "reviewedAt" | "hidden" | "revisesId" | "ownerToken">
+  >,
+) {
+  const reviews = await readFallbackReviews()
+  const index = reviews.findIndex((review) => review.id === id)
+  if (index < 0) return null
+
+  const nextReview: SubmissionReview = {...reviews[index], ...patch}
+  reviews[index] = nextReview
+  await writeFallbackReviews(reviews)
+  return nextReview
+}
+
+/** 硬删一条投稿：整条修订链一起删（父行没了，仍指向它的修订就是无主记录），返回是否真的删到东西。 */
+export async function deleteFallbackSubmissionReview(id: string) {
+  const reviews = await readFallbackReviews()
+  const next = reviews.filter((review) => review.id !== id && review.revisesId !== id)
+  if (next.length === reviews.length) return false
+  await writeFallbackReviews(next)
+  return true
 }
 
 /** 区间端点宽松解析，与前端 `useArchiveFilters` 的 `readBound` 同一口径：非法值一律视为「该侧不限」。 */
@@ -272,6 +310,24 @@ export function validateSubmission(payload: Partial<SubmissionPayload>) {
   return missing
 }
 
+/** 投稿自助接口（撤回 / 隐藏 / 删除 / 修订）共用的凭证校验口径：非字符串、空、超长一律视为非法。 */
+export function sanitizeOwnerToken(value: unknown): string | null {
+  if (typeof value !== "string") return null
+  const trimmed = value.trim()
+  if (!trimmed) return null
+  if (trimmed.length > 200) return null
+  return trimmed
+}
+
+/** 投稿自助端点的投稿 id：`netlify.toml` 把 `/api/submissions/:id/xxx` 重写成 `/.netlify/functions/<name>/:id`，取末段；`?id=` 优先，便于本地与测试直连。 */
+export function readSubmissionId(event: {
+  path: string
+  queryStringParameters?: Record<string, string | undefined> | null
+}) {
+  const fromPath = event.path.split("/").filter(Boolean).pop()
+  return event.queryStringParameters?.id ?? fromPath ?? ""
+}
+
 /** 查重最多回显几条命中记录，够用户判断是不是自己提重了。 */
 export const DUPLICATE_MATCH_LIMIT = 3
 
@@ -312,13 +368,19 @@ function dedupeMatches(matches: DuplicateVideoMatch[]): DuplicateVideoMatch[] {
 /**
  * 按「视频链接 + 敌方阶段」找已存在的投稿：待审与已通过都算重复，驳回 / 撤回允许改完信息再重提。
  * 同时查 `runs`，覆盖不经投稿直接灌库与种子记录。
+ * `excludeIds` 用于二次编辑：修订沿用原投稿的视频与阶段，不排除就会自己撞自己（传同一家族的原 id + 已有修订 id）。
  */
 export async function findDuplicateVideoRecords(input: {
   videoUrl: string
   bossId: string
+  excludeIds?: string[]
 }): Promise<DuplicateVideoMatch[]> {
   const identity = videoIdentityOf(input.videoUrl)
   if (!identity || !input.bossId) return []
+  const excludeIds = input.excludeIds ?? []
+  // 空数组时给 SQL 塞一个 ""：新建投稿这条路径永远传空，而 neon 对空数组的元素类型推断
+  // 在无库的本地环境里验证不了；"" 不等于任何投稿 id，与「不排除」完全等价。
+  const excludeIdsForSql = excludeIds.length > 0 ? excludeIds : [""]
 
   const sql = getSql()
   if (!sql) {
@@ -328,6 +390,7 @@ export async function findDuplicateVideoRecords(input: {
       .filter(
         (review) =>
           (review.status === "pending" || review.status === "approved") &&
+          !excludeIds.includes(review.id) &&
           review.payload?.bossId === input.bossId &&
           matchesVideoIdentity(identity, review.payload?.videoUrl),
       )
@@ -344,7 +407,7 @@ export async function findDuplicateVideoRecords(input: {
         submittedAt: review.createdAt,
       }))
     const runs = [...approvedRuns, ...seedRuns]
-      .filter((run) => run.bossId === input.bossId && matchesVideoIdentity(identity, run.videoUrl))
+      .filter((run) => !excludeIds.includes(run.id) && run.bossId === input.bossId && matchesVideoIdentity(identity, run.videoUrl))
       .map((run) => ({
         id: run.id,
         source: "run" as const,
@@ -373,6 +436,7 @@ export async function findDuplicateVideoRecords(input: {
         created_at as "submittedAt"
       from submission_reviews
       where status in ('pending', 'approved')
+        and not (id = any(${excludeIdsForSql}::text[]))
         and payload->>'bossId' = ${input.bossId}
         and payload->>'videoUrl' ~* ${pattern}
       order by created_at desc
@@ -390,6 +454,7 @@ export async function findDuplicateVideoRecords(input: {
         submitted_at as "submittedAt"
       from runs
       where status = 'approved'
+        and not (id = any(${excludeIdsForSql}::text[]))
         and boss_id = ${input.bossId}
         and video_url ~* ${pattern}
       order by submitted_at desc

@@ -64,6 +64,14 @@ function formatDate(value?: string | null) {
           {{ bossNameById.get(review.payload.bossId) ?? review.payload.bossId }}
         </p>
         <p
+          v-if="review.revisesId"
+          class="review-revision-note"
+        >
+          这条是二次编辑的<strong>修订</strong>：通过后会覆盖原投稿
+          <code>{{ review.revisesId }}</code>
+          对应的公开记录，不会新增一条。
+        </p>
+        <p
           v-if="reviewFlags.length"
           class="review-flags"
         >

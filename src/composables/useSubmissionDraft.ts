@@ -68,9 +68,20 @@ export function useSubmissionDraft(options: {
   baseline: SubmissionPayload
   stepIndex: Ref<number>
   unlockedIndex: Ref<number>
+  /** 编辑已有投稿时传 false：草稿键是「新建投稿」的单键暂存区，编辑态既不能写也不能顺手清掉它。 */
+  enabled?: boolean
 }) {
-  const { payload, baseline, stepIndex, unlockedIndex } = options
+  const { payload, baseline, stepIndex, unlockedIndex, enabled = true } = options
   let timer: number | undefined
+
+  onScopeDispose(() => window.clearTimeout(timer))
+
+  const discard = () => {
+    window.clearTimeout(timer)
+    if (enabled) clearSubmissionDraft()
+  }
+
+  if (!enabled) return { discard }
 
   watch([payload, stepIndex, unlockedIndex], () => {
     window.clearTimeout(timer)
@@ -85,12 +96,5 @@ export function useSubmissionDraft(options: {
     }, SAVE_DEBOUNCE_MS)
   })
 
-  onScopeDispose(() => window.clearTimeout(timer))
-
-  return {
-    discard: () => {
-      window.clearTimeout(timer)
-      clearSubmissionDraft()
-    },
-  }
+  return { discard }
 }

@@ -4,6 +4,7 @@ import { Send, X } from "lucide-vue-next"
 import SubmitRunForm from "@/components/archive/SubmitRunForm.vue"
 import { buildSuggestedLightconeByCharacter } from "@/services/submissionUtils"
 import { useArchiveStore } from "@/stores/archiveStore"
+import { useSubmissionDialog } from "@/composables/useSubmissionDialog"
 
 const props = defineProps<{
   open: boolean
@@ -14,6 +15,8 @@ const emit = defineEmits<{
 }>()
 
 const archiveStore = useArchiveStore()
+// 编辑目标与弹窗开关同属一个模块级单例，由「我的投稿」页写入；这里只负责透传。
+const { editTarget } = useSubmissionDialog()
 const closeButton = useTemplateRef<HTMLButtonElement>("closeButton")
 const previouslyFocused = shallowRef<HTMLElement | null>(null)
 
@@ -75,13 +78,13 @@ onBeforeUnmount(() => {
           </div>
           <div class="submit-dialog-heading">
             <p class="eyebrow">
-              // 投稿到竞速档案
+              {{ editTarget ? "// 编辑并重新提交" : "// 投稿到竞速档案" }}
             </p>
             <h2 id="submit-dialog-title">
-              提交一条竞速记录
+              {{ editTarget ? "修改这条竞速记录" : "提交一条竞速记录" }}
             </h2>
           </div>
-          <span class="submission-state-chip">投稿开放中</span>
+          <span class="submission-state-chip">{{ editTarget ? "需再次审核" : "投稿开放中" }}</span>
           <button
             ref="closeButton"
             class="submit-dialog-close"
@@ -110,6 +113,7 @@ onBeforeUnmount(() => {
             v-else-if="archiveStore.config"
             :config="archiveStore.config"
             :preferred-lightcone-by-character="preferredLightconeByCharacter"
+            :edit-target="editTarget"
             @close="emit('close')"
           />
         </div>

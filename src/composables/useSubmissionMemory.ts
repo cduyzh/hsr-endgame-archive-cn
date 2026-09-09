@@ -2,7 +2,7 @@ import {onScopeDispose, shallowRef, watch} from "vue"
 import type {SubmissionPayload} from "@/types/archive"
 
 const MEMORY_KEY = "hsr-archive.submission-memory.v1"
-const MAX_PRESETS = 3
+const MAX_PRESETS = 10
 
 export interface SubmissionPresetSlot {
   unitId: string

@@ -9,13 +9,13 @@
 | 文件                      | 角色                                                                                                                       | 关键导出                                                                                                                 |
 | ------------------------- | -------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
 | `dataSource.ts`           | 远程数据源配置（唯一入口）                                                                                                 | `DATA_SITE`、`dataSourceUrl()`、`IMAGE_BASES`、`monsterImageUrl()`                                                       |
-| `archiveService.ts`       | 前端 API 请求 + seed fallback + 静态快照合并 + 管理员会话                                                                  | `fetchArchiveConfig/Runs/MetaStats`、`submitRun`、`checkDuplicateVideo`、`SubmissionDuplicateError`、`createAdminSession`、`fetchSubmissionReviews`、`reviewSubmission`     |
+| `archiveService.ts`       | 前端 API 请求 + seed fallback + 静态快照合并 + 管理员会话                                                                  | `fetchArchiveConfig/Runs/MetaStats`、`submitRun`、`submitRevision`、`checkDuplicateVideo`、`SubmissionDuplicateError`、`createAdminSession`、`fetchSubmissionReviews`、`reviewSubmission`、`listMySubmissions`、`withdrawSubmission`、`setSubmissionHidden`、`deleteSubmission`     |
 | `staticArchiveConfig.ts`  | 静态快照入口：**优先 `GET /api/archive/stages`**（函数侧算一次 + 边缘长缓存），失败/为空/形状不合时**回落**浏览器直连 `static.nanoka.cc` 现算 | `fetchStaticArchiveSnapshot()`、`mergeStaticArchiveConfig()`                                                             |
 | `apiBase.ts`              | `VITE_API_BASE` 的唯一来源（`archiveService.ts` 与 `staticArchiveConfig.ts` 共用；从 archiveService 反向导出会循环依赖）        | `API_BASE`                                                                                                                |
 | `staticBossSnapshot.ts`   | 远程静态快照的纯计算层（不发起网络），被前端 `staticArchiveConfig.ts` 与服务端 `netlify/functions/_staticSnapshot.ts` 共用 | `buildSeasonBosses(seasonId, version, baseUrl)`、`pickDataDirectory()`、`STATIC_SEASON_IDS`、各类 build\*Stages 纯函数   |
 | `runUtils.ts`             | 记录筛选/排序/统计纯函数 + 分类/标记/阶段分组口径唯一来源                                                                    | `filterRuns`、`buildMetaStats`、`matchesRange`、`categoryLabels`、`categoryOptionsFor`、`categoryOfAsScore`、`defaultModeOf`、`stageKeyOf`、`flagOrder`/`flagLabels`/`isRunFlag`/`flagsOfRun`、`stageGroupOf`/`isStarwardStage` |
 | `unitCost.ts`             | 角色与光锥的“限定/常驻/不计成本”分类 + 成本与默认值口径（**无 `@/` 值导入，Functions 可相对引用**）                          | `COST_MIN`/`COST_MAX`、`getCharacterGoldKind`、`getLightconeGoldKind`、`getRunGoldCounts`、`getUnitGoldCounts`、`defaultEidolonFor`、`defaultSuperimpositionFor`、`goldKindLabels` |
-| `submissionUtils.ts`      | 投稿转换纯函数                                                                                                             | `submissionReviewToArchiveRun`、`buildPreferredLightconeByCharacter`、`buildSuggestedLightconeByCharacter`                |
+| `submissionUtils.ts`      | 投稿转换纯函数                                                                                                             | `archiveRunIdOf`、`submissionReviewToArchiveRun`、`buildPreferredLightconeByCharacter`、`buildSuggestedLightconeByCharacter`                |
 | `submissionValidation.ts` | 投稿表单的字段校验、步骤归属、新建默认成绩与预览取数（仅前端使用）                                                             | `validateSubmissionForm`、`errorsOfStep`、`stepOfField`、`defaultResultFor`、`buildSubmissionRoster`、`describeSubmissionTarget`             |
 | `runFlags.ts`             | 终局标记的判定原语（只做 `import type`，前后端都能相对引用；`runUtils.ts` 原样再导出，对外唯一来源仍是 runUtils） | `flagOrder`、`flagLabels`、`isRunFlag`、`flagsOfRun` |
 | `videoUrl.ts`             | 「同一支视频」的唯一口径：从链接提取 BV 号 / YouTube 视频 id，取不到退回规范化 URL；投稿预检与服务端入队拦截共用（**无 `@/` 值导入，Functions 相对引用**） | `videoIdentityOf`、`videoMatchPattern`、`matchesVideoIdentity`、`isSameVideo`、`DUPLICATE_VIDEO_MESSAGE`                 |
@@ -23,7 +23,7 @@
 
 ## 两条数据线（不要混用）
 
-1. **业务数据**：`archiveService.ts` 请求 `/api/archive/*`、`/api/submissions`（含 `/check` 查重预检、`/me` 凭证反查、`/:id/withdraw` 撤回）、`/api/admin/submissions*`。API 基础前缀读 `VITE_API_BASE`（默认空）。
+1. **业务数据**：`archiveService.ts` 请求 `/api/archive/*`、`/api/submissions`（含 `/check` 查重预检、`/me` 凭证反查、`/:id/withdraw` 撤回、`/:id/visibility` 隐藏、`/:id/delete` 硬删、`/:id/revisions` 编辑并重新提交）、`/api/admin/submissions*`。API 基础前缀读 `VITE_API_BASE`（默认空）。
 2. **静态游戏数据**：`dataSource.ts` 直连 `https://static.nanoka.cc`（已开 CORS），不落盘、不代理。
 
 ### 统一请求回退约定（重要）
@@ -74,7 +74,7 @@
 - 新建投稿的默认落点：模式取 `runUtils.defaultModeOf(config.modes)`（带 `NEW` 徽标的那个，与工作台同一口径），成绩取 `defaultResultFor(mode, bossId)`——该模式与阶段的最后一档（满星 / 绝境满星 / `4000` 满分），末日幻影以满分 `AS_MAX_SCORE` 起稿，否则默认分数 `40000` 会撞上「末日幻影分数最高 4000」。`SubmitRunForm.vue` 的 `createForm()` 只用这两个函数，不要再抄默认值。
 - 数值用 `toInteger()` 宽松解析（`v-model.number` 在清空时会留下 `""`）；`COST_MIN/COST_MAX`（0–48）现在定义在 `unitCost.ts`（服务端 `parseFilters` 也要它来钳筛选区间），与 `buildMetaStats()` 的 `33-48` 桶对齐，改上限要同时改分桶口径。
 - 视频链接必须是 B 站或 YouTube（`isUsableVideoUrl()` 用域名白名单 `bilibili.com`/`b23.tv`/`youtube.com`/`youtube-nocookie.com`/`youtu.be`，按 `host === 域名 || host.endsWith("." + 域名)` 匹配子域，能挡 `bilibili.com.evil.com` 这类伪装后缀）；命途与角色不匹配**不是错误**，只在槽位上给「命途不同」提示。
-- 「同一支视频」的口径只在 `videoUrl.ts` 里定义（BV 号 / YouTube id / 规范化 URL），服务端 `findDuplicateVideoRecords` 与表单预检共用，本文件不重复实现。
+- 「同一支视频」的口径只在 `videoUrl.ts` 里定义（BV 号 / YouTube id / 规范化 URL），服务端 `findDuplicateVideoRecords` 与表单预检共用，本文件不重复实现。服务端另收一个 `excludeIds`，只服务二次编辑（修订沿用原投稿的视频与阶段，不排除会自己撞自己）：写入时的排除由服务端按 `revises_id` 自己查同家族算出，**不接受客户端传值**；只有只读的预检 `checkDuplicateVideo()` 需要调用方带上（它拿不到 `revises_id`）。
 - 分类必须是当前模式与阶段的合法取值（`validateSubmissionForm` 直接取 `categoryOptionsFor(form.mode, form.bossId)`），否则报「当前模式与敌方阶段没有该分类」；`zeroCycle`/`plightZeroCycle` 还要求 `cycle === 0`，`as` 模式额外限制 `score <= AS_MAX_SCORE`(4000)。
 - 预览取数：`describeSubmissionTarget()` 把 season/mode/stage/category 的 id 翻成配置里的 label，`buildSubmissionRoster()` 输出每槽角色命座、光锥叠影、金币分类与命途是否错位，单位缺失时用「未选择 / 未搭配」占位。
 - 成本默认由表单按 `getUnitGoldCounts()` 自动合计回填，用户手改后表单记 `costTouched` 不再覆盖（可点「按队伍重算」交还）；校验仍只做 `COST_MIN–COST_MAX` 的范围检查，**不**要求等于自动值，服务端 `validateSubmission()` 也不校验成本与队伍是否一致——特殊阵容允许人工修正。
@@ -110,7 +110,7 @@
 
 `fetchArchiveConfig()` = `requestJson("/api/archive/config", () => seedConfig)` 再 `mergeStaticArchiveConfig(config, await fetchStaticArchiveSnapshot())`。也就是说**服务端返回的配置还会被前端二次补全**，`archive-config.ts` 里没有远程静态数据逻辑。排查“页面少了某个赛季/阶段”时先看这里，而不是先查 DB。
 
-`fetchRuns` / `fetchMetaStats` 只走业务数据；`submitRun` 与两个管理端接口**不回退 seed**，失败直接抛错由调用方提示。`submitRun` 会读取失败响应的 `{ message, missing }`，用 `submissionFieldLabels` 把 `missing` 里的字段名翻成中文后抛错（响应体不是 JSON 时退回通用文案），投稿向导据此显示行内提示。
+`fetchRuns` / `fetchMetaStats` 只走业务数据；`submitRun`、投稿自助一族（`withdrawSubmission` / `setSubmissionHidden` / `deleteSubmission` / `submitRevision`）与两个管理端接口**都不回退 seed**，失败直接抛错由调用方提示——把「删除失败」静默回退成成功是会骗人的。服务端返回的中文 `message` 原样抛出（页面直接展示，不再翻一遍），只有新建投稿与修订这两条走 `buildSubmissionFailure()`：409 还原成 `SubmissionDuplicateError`（带命中记录），`missing` 用 `submissionFieldLabels` 翻成中文。
 
 ## 图片寻址（`dataSource.ts`）
 
