@@ -21,6 +21,17 @@ export const changelogTagLabels: Record<ChangelogTag, string> = {
 
 export const changelogEntries: ChangelogEntry[] = [
 	{
+		version: "0.8.0",
+		date: "2026-09-08",
+		title: "联系站主",
+		items: [
+			{tag: "feature", text: "新增 /contact 联系站主页与顶部导航「联系」入口：只开放微信号 cduyzh 与邮箱 cduyzh@gmail.com 两种联系方式，页内同时说明站内没有留言板、私信和投稿表单，投稿仍走首页的「提交记录」"},
+			{tag: "feature", text: "微信号与邮箱都带一键复制按钮，并给出「在微信『添加朋友 → 微信号』里搜索添加」的提示——微信没有按号加好友的跳转链接，所以这里只提供号、不做二维码"},
+			{tag: "improve", text: "剪贴板写入下沉为共享函数 src/services/clipboard.ts：HTTPS 下走 navigator.clipboard，非安全上下文（本地 http）回落到临时 textarea + execCommand；投稿成功页的凭证复制改用它，并补上此前被静默吞掉的复制失败反馈"},
+			{tag: "improve", text: "「我的投稿」的凭证找回提示与投稿失败的兜底文案不再只写「联系管理员」，改为指向 /contact 说明具体联系方式"},
+		],
+	},
+	{
 		version: "0.7.0",
 		date: "2026-09-04",
 		title: "敌方数值口径修正与属性图标",

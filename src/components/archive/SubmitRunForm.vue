@@ -42,6 +42,7 @@
     submitRun,
     SubmissionDuplicateError,
   } from "@/services/archiveService";
+  import { copyTextToClipboard } from "@/services/clipboard";
   import {
     AS_MAX_SCORE,
     categoryLabels,
@@ -187,7 +188,7 @@
   const submitFailure = shallowRef("");
   const acceptedId = shallowRef("");
   const acceptedToken = shallowRef("");
-  const copiedToken = shallowRef(false);
+  const tokenCopyState = shallowRef<"idle" | "done" | "failed">("idle");
   const categoryTouched = shallowRef(false);
   const router = useRouter();
 
@@ -593,21 +594,24 @@
   function submitAnother() {
     acceptedId.value = "";
     acceptedToken.value = "";
-    copiedToken.value = false;
+    tokenCopyState.value = "idle";
     submitFailure.value = "";
   }
 
+  const TOKEN_COPY_LABELS = {
+    idle: { aria: "复制凭证", text: "复制" },
+    done: { aria: "已复制凭证", text: "已复制" },
+    failed: { aria: "凭证复制失败，请手动选中", text: "复制失败" },
+  } as const;
+
   async function copyOwnerToken() {
-    if (!acceptedToken.value || typeof navigator === "undefined") return;
-    try {
-      await navigator.clipboard.writeText(acceptedToken.value);
-      copiedToken.value = true;
-      setTimeout(() => {
-        copiedToken.value = false;
-      }, 1800);
-    } catch {
-      /* 剪贴板被拒时静默：用户可手动选中复制 */
-    }
+    if (!acceptedToken.value) return;
+    tokenCopyState.value = (await copyTextToClipboard(acceptedToken.value))
+      ? "done"
+      : "failed";
+    setTimeout(() => {
+      tokenCopyState.value = "idle";
+    }, 1800);
   }
 
   function gotoMySubmissions() {
@@ -644,11 +648,11 @@
         <button
           class="icon-button mini"
           type="button"
-          :aria-label="copiedToken ? '已复制凭证' : '复制凭证'"
+          :aria-label="TOKEN_COPY_LABELS[tokenCopyState].aria"
           @click="copyOwnerToken"
         >
           <Check
-            v-if="copiedToken"
+            v-if="tokenCopyState === 'done'"
             :size="14"
             aria-hidden="true"
           />
@@ -657,7 +661,7 @@
             :size="14"
             aria-hidden="true"
           />
-          {{ copiedToken ? "已复制" : "复制" }}
+          {{ TOKEN_COPY_LABELS[tokenCopyState].text }}
         </button>
         <span class="submission-success-hint">
           本凭证只保存在本机浏览器，用于查询与撤回自己的投稿。

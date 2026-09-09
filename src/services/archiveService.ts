@@ -114,7 +114,7 @@ function describeSubmissionFailure(body: SubmissionFailureBody | null) {
     : []
 
   if (missing.length > 0) return `缺少必要字段：${missing.join("、")}。`
-  return body?.message || "提交失败，请稍后重试或联系管理员。"
+  return body?.message || "提交失败，请稍后重试；反复失败请在顶部导航的「联系」页找到站主。"
 }
 
 /**

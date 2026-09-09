@@ -180,7 +180,15 @@
         <h1>追踪、编辑或撤回本机已提交的记录</h1>
         <p>
           凭证只保存在你当前浏览器的
-          localStorage，换浏览器或清缓存会丢失；想找回请联系管理员通过投稿编号定位。
+          localStorage，换浏览器或清缓存会丢失；想找回请把投稿编号发给站主。
+        </p>
+        <p>
+          <RouterLink
+            class="contact-link"
+            to="/contact"
+          >
+            查看联系方式
+          </RouterLink>
         </p>
       </div>
       <button

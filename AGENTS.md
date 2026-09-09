@@ -21,6 +21,7 @@
 - 更新记录：`/changelog` 页展示版本迭代历史，版本号由 `src/data/changelog.ts` 的 `changelogEntries` 唯一维护，头部徽章读取 `appVersion`。
 - 文章模块：首页「档案速报」与 `/articles`、`/articles/:id` 由 `src/data/articles.ts` 独立供数，强敌机制类内容取自《崩坏：星穹铁道》官方公众号的「强敌侦察笔记」系列，由 `pnpm sync:articles` 建立索引；正文与配图热链微信图床，本站不落盘。收录判据是**标题含「强敌…侦察」**（「强敌」与「侦察」之间可能插字，如「强敌泰坦侦察笔记」）——该系列不按赛季节奏更新、栏目名改过（「强敌侦察狸记」）、早期标题带《崩坏：星穹铁道》前缀，因此不按版本或前缀筛。标题里的首领名提取为 `subject`，`matchBossIds()` 可拿它撞站内敌方阶段，但**只出候选**：人工确认的关联仍只认清单里的 `bossIds`。`/articles` 在「强敌机制」组内再按版本分段（`version` 未标注时退回发布年份），条目用紧凑行；速报在无人工 `featured` 时默认置顶最新一篇强敌笔记。详情页顺序渲染原文配图并给出「查看微信原文」外链。**链接清单是唯一的维护入口**（`pnpm sync:articles -- --add <url>` 或直接在 `scripts/article-sources.json` 加一行），站内与同步脚本都不做自动发现——公众号侧没有可用的批量枚举通路，已逐条试尽（见 `scripts/AGENTS.md`）。**范围已定：清单里现有的 21 篇即视为全系列基线**，1.x～3.x 早期首领有意不补，后续只跟进新发布的笔记，不要再追求历史枚举与补全。
 - 规则页：`/faq` 展示站内说明。
+- 联系站主：`/contact` 只开放两种联系方式——微信号 `cduyzh`（一键复制 + 「在微信『添加朋友 → 微信号』里搜索」提示，微信没有按号加好友的跳转链接所以不做二维码）与邮箱 `cduyzh@gmail.com`（`mailto:` + 一键复制）。页内明确站内没有留言板、私信和投稿表单，投稿只走首页右上角「提交记录」；`/me` 的凭证找回提示与投稿失败兜底文案都指向这一页。
 
 ## 技术栈与命令
 
@@ -67,13 +68,13 @@ pnpm seed:archive:dry    # 灌库空跑
 
 ## 代码结构
 
-- `src/App.vue`：主壳和导航（档案 / 文章 / 规则 / **更新** / 我的投稿 / 审核 + 「提交记录」按钮、头部版本徽章与全局 `SubmitRunDialog` + `PromoSlot`）。
-- `src/router/index.ts`：8 条路由 `/`、`/submit`、`/me`（按本机 token 列出 / 撤回自己的投稿）、`/admin/submissions`、`/articles`、`/articles/:id`（文章详情）、`/faq`、`/changelog`（更新记录）；仅首页同步引入。
-- `src/views/`：`ArchiveView.vue`（只组合 `ArchiveWorkbench`）、`SubmitView.vue`（`/submit` 深链转发：打开投稿弹窗后回到首页）、`MySubmissionsView.vue`（`/me`，本机凭证反查 + 撤回 + 清理）、`AdminSubmissionsView.vue`、`ArticlesView.vue`（文章列表，按分类分组；强敌机制组内再按版本分段、条目走紧凑行）、`ArticleDetailView.vue`（`/articles/:id`，顺序渲染原文配图 + 微信原文外链）、`FaqView.vue`、`ChangelogView.vue`（`/changelog`，渲染 `src/data/changelog.ts` 的版本记录）。
+- `src/App.vue`：主壳和导航（档案 / 文章 / 规则 / **联系** / 更新 / 我的投稿 / 审核 + 「提交记录」按钮、头部版本徽章与全局 `SubmitRunDialog` + `PromoSlot`）。
+- `src/router/index.ts`：9 条路由 `/`、`/submit`、`/me`（按本机 token 列出 / 撤回自己的投稿）、`/admin/submissions`、`/articles`、`/articles/:id`（文章详情）、`/faq`、`/changelog`（更新记录）、`/contact`（联系站主）；仅首页同步引入。
+- `src/views/`：`ArchiveView.vue`（只组合 `ArchiveWorkbench`）、`SubmitView.vue`（`/submit` 深链转发：打开投稿弹窗后回到首页）、`MySubmissionsView.vue`（`/me`，本机凭证反查 + 撤回 + 清理）、`AdminSubmissionsView.vue`、`ArticlesView.vue`（文章列表，按分类分组；强敌机制组内再按版本分段、条目走紧凑行）、`ArticleDetailView.vue`（`/articles/:id`，顺序渲染原文配图 + 微信原文外链）、`FaqView.vue`、`ChangelogView.vue`（`/changelog`，渲染 `src/data/changelog.ts` 的版本记录）、`ContactView.vue`（`/contact`，微信号与邮箱两张卡片，是 `views/` 里唯一带交互的静态页）。
 - `src/components/archive/`：档案业务组件，含投稿弹窗 `SubmitRunDialog.vue` 与其内部三步向导 `SubmitRunForm.vue`；`src/components/admin/`：审核台弹框与卡片；`src/components/PromoSlot.vue`：站务推广位；`src/components/FlagIcon.vue`：标记图标的唯一渲染出口（热链图标 + lucide 回落，四处共用）；`src/components/ElementIcon.vue`：属性（弱点/抗性）图标的唯一渲染出口（热链图标 + 中文属性名回落，弱点行、抗性行与敌方阵容三处共用）。
 - `src/composables/`：`useArchiveFilters.ts`（筛选状态 + 路由 query 双向同步）、`useRunsQuery.ts`、`useMetaStats.ts`、`useAdminSubmissions.ts`、`useSubmissionDialog.ts`（投稿弹窗全局开关）、`useSubmissionDraft.ts`（投稿草稿 localStorage 缓存）、`useSubmissionMemory.ts`（作者名 / 配队预设 / 投稿 token 三合一 localStorage 记忆）。
 - `src/types/archive.ts`：所有 `Archive*` 类型的唯一来源。
-- `src/services/`：`archiveService.ts`（API + seed fallback + 管理员会话 + `listMySubmissions`/`withdrawSubmission`）、`staticArchiveConfig.ts`（静态快照入口：优先 `/api/archive/stages`，回落浏览器直连）、`apiBase.ts`（`VITE_API_BASE` 的唯一来源，被 `archiveService.ts` 与 `staticArchiveConfig.ts` 共用——从前者反向导出会循环依赖）、`staticBossSnapshot.ts`（前后端共用的阶段推导纯计算层：`STATIC_SEASON_IDS`、HP/速度/韧性/弱点/抗性/场地 buff/首领取名口径）、`dataSource.ts`（远程地址与图片）、`runUtils.ts`、`unitCost.ts`、`submissionUtils.ts`、`submissionValidation.ts`（投稿校验与预览纯函数）、`videoUrl.ts`（视频身份归一与查重口径，前后端共用）。
+- `src/services/`：`archiveService.ts`（API + seed fallback + 管理员会话 + `listMySubmissions`/`withdrawSubmission`）、`staticArchiveConfig.ts`（静态快照入口：优先 `/api/archive/stages`，回落浏览器直连）、`apiBase.ts`（`VITE_API_BASE` 的唯一来源，被 `archiveService.ts` 与 `staticArchiveConfig.ts` 共用——从前者反向导出会循环依赖）、`staticBossSnapshot.ts`（前后端共用的阶段推导纯计算层：`STATIC_SEASON_IDS`、HP/速度/韧性/弱点/抗性/场地 buff/首领取名口径）、`dataSource.ts`（远程地址与图片）、`runUtils.ts`、`unitCost.ts`、`submissionUtils.ts`、`submissionValidation.ts`（投稿校验与预览纯函数）、`videoUrl.ts`（视频身份归一与查重口径，前后端共用）、`clipboard.ts`（`copyTextToClipboard()`：剪贴板写入的唯一出口，HTTPS 走 `navigator.clipboard`、非安全上下文回落临时 `textarea` + `execCommand`，失败返回 `false` 交由调用方提示，被 `/contact` 与投稿成功页的凭证复制共用）。
 - `src/data/`：`unitAssets.ts`（`sourceId` -> 远程图）、`unitPaths.ts`（命途图标）、`flagIcons.ts`（三个标记图标的**热链地址**）与 `elementIcons.ts`（七个属性图标的**热链地址**）——这两个是**唯一不走 `dataSource.ts`** 的图源、`signatureLightcones.ts`（角色 -> 专武映射的运行时入口）、`articles.ts`（文章模块唯一取数入口，读 `sync:articles` 产物 `articles.json`）、`changelog.ts`（更新记录数据，`appVersion` 供头部徽章）、`seed/`。
 - `src/stores/archiveStore.ts`：档案配置缓存 + 投稿自动搭配用的记录样本（`pairingRuns`）。
 - `src/data/seed/`：无数据库时的本地种子数据。当前 `config.json` 中 `bosses` 为空数组、`runs.json` 为空数组，敌方阶段完全由静态快照生成；`hsr-units.json` / `hsr-monsters.json` 只是同步脚本产物，运行时代码不 import（`seed/index.ts` 仅导出 `config.json` 与 `runs.json`）；`lightcone-pairs.json` 同样是 `sync:units` 产物，但**由 `signatureLightcones.ts` 在运行时 import**，为投稿表单提供专武映射。`config.json` 的 `articles` 与库里 `articles` 表**已不再驱动任何界面**，文章板块只读 `src/data/articles.ts`（见「已知不一致」）。

@@ -30,7 +30,9 @@
 
 ## 路由与视图
 
-`router/index.ts` 当前注册 8 条路由：`/`(archive)、`/submit`、`/me`（我的投稿，按本机 token 反查）、`/admin/submissions`、`/articles`、`/articles/:id`（文章详情）、`/faq`、`/changelog`（更新记录）。首页 `ArchiveView` 同步引入，其余懒加载。`views/` 与这 8 条路由一一对应，没有额外未注册的视图文件。导航在 `App.vue` 注册："档案 / 文章 / 规则 / **更新** / 我的投稿 / 审核"，头部 `brand-appver` 徽章显示 `src/data/changelog.ts` 的 `appVersion` 并链接到更新记录页。
+`router/index.ts` 当前注册 9 条路由：`/`(archive)、`/submit`、`/me`（我的投稿，按本机 token 反查）、`/admin/submissions`、`/articles`、`/articles/:id`（文章详情）、`/faq`、`/changelog`（更新记录）、`/contact`（联系站主）。首页 `ArchiveView` 同步引入，其余懒加载。`views/` 与这 9 条路由一一对应，没有额外未注册的视图文件。导航在 `App.vue` 注册："档案 / 文章 / 规则 / **联系** / 更新 / 我的投稿 / 审核"，头部 `brand-appver` 徽章显示 `src/data/changelog.ts` 的 `appVersion` 并链接到更新记录页。
+
+`ContactView.vue` 是 `views/` 里唯一带交互的静态页（微信号与邮箱各一枚一键复制按钮），版式仍沿用静态页骨架：`page-narrow` + `page-heading` + `faq-list contact-list` 两张 `article` 卡片，卡片外观与主题覆写都复用 `.faq-list` 那套既有规则，只有 `.contact-*` 四条新规则写进 `main.css`；剪贴板写入不自己实现，走 `services/clipboard.ts`。
 
 投稿面板不是独立页面：`SubmitRunDialog.vue` 由 `App.vue` 常驻渲染，头部「提交记录」按钮和工作台工具栏按钮都调用 `useSubmissionDialog().open()`；`/submit` 深链保留，`SubmitView.vue` 只负责打开同一弹窗后 `router.replace("/")`，因此路由结构未变。`/me` 直接是页面，没有弹窗化。
 

@@ -19,6 +19,7 @@
 | `submissionValidation.ts` | 投稿表单的字段校验、步骤归属、新建默认成绩与预览取数（仅前端使用）                                                             | `validateSubmissionForm`、`errorsOfStep`、`stepOfField`、`defaultResultFor`、`buildSubmissionRoster`、`describeSubmissionTarget`             |
 | `runFlags.ts`             | 终局标记的判定原语（只做 `import type`，前后端都能相对引用；`runUtils.ts` 原样再导出，对外唯一来源仍是 runUtils） | `flagOrder`、`flagLabels`、`isRunFlag`、`flagsOfRun` |
 | `videoUrl.ts`             | 「同一支视频」的唯一口径：从链接提取 BV 号 / YouTube 视频 id，取不到退回规范化 URL；投稿预检与服务端入队拦截共用（**无 `@/` 值导入，Functions 相对引用**） | `videoIdentityOf`、`videoMatchPattern`、`matchesVideoIdentity`、`isSameVideo`、`DUPLICATE_VIDEO_MESSAGE`                 |
+| `clipboard.ts`            | 剪贴板写入的唯一出口（**不是数据访问层**，只服务前端）：HTTPS 走 `navigator.clipboard.writeText`，非安全上下文（本地 `http://localhost`）或权限被拒时回落临时 `textarea` + `execCommand("copy")`；**失败一律返回 `false` 而不抛错**，由调用方给提示文案，不要像旧实现那样静默吞掉 | `copyTextToClipboard()`；被 `/contact` 的微信号与邮箱、`SubmitRunForm.vue` 的投稿凭证复制共用 |
 
 ## 两条数据线（不要混用）
 

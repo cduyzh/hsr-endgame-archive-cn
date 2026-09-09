@@ -35,7 +35,7 @@ describe("submitRun", () => {
     await expect(submitRun(fixtureSubmission())).rejects.toThrow("缺少必要字段：weirdField。")
 
     vi.stubGlobal("fetch", vi.fn().mockResolvedValue(respondWith(502, "<html>bad gateway</html>")))
-    await expect(submitRun(fixtureSubmission())).rejects.toThrow("提交失败，请稍后重试或联系管理员。")
+    await expect(submitRun(fixtureSubmission())).rejects.toThrow("提交失败，请稍后重试；反复失败请在顶部导航的「联系」页找到站主。")
   })
 })
 

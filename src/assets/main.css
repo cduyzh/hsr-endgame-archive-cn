@@ -2890,6 +2890,62 @@ body.is-modal-open {
   line-height: 1.7;
 }
 
+.contact-list h2 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.contact-list h2 svg {
+  flex-shrink: 0;
+  color: var(--accent);
+}
+
+.contact-value-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.contact-value {
+  padding: 4px 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: rgba(255, 255, 255, 0.04);
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 14px;
+  color: var(--text);
+  user-select: all;
+}
+
+.contact-link {
+  color: var(--primary-strong);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.contact-mail {
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+
+/* 公共的 .icon-button.mini 在投稿成功页另有尺寸，这里只放大联系页的命中区 */
+.contact-value-row .icon-button.mini {
+  min-height: 32px;
+}
+
+.contact-hint {
+  margin: 10px 0 0;
+  font-size: 13px;
+}
+
+.contact-hint strong {
+  color: var(--text);
+  font-family: "SFMono-Regular", Consolas, monospace;
+}
+
 .changelog-list {
   display: grid;
   gap: 12px;
