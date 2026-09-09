@@ -103,17 +103,38 @@ async function loadHandler(module: SelfServiceModule) {
   }
 }
 
+/** 各端点在 `netlify.toml` 里的动作段，用于拼出线上真实的入口路径。 */
+const API_ACTION_BY_MODULE: Partial<Record<SelfServiceModule, string>> = {
+  "submissions-withdraw": "withdraw",
+  "submissions-visibility": "visibility",
+  "submissions-delete": "delete",
+  "submissions-revision": "revisions",
+}
+
 async function call(
   module: SelfServiceModule,
-  options: { method: string; id?: string; body?: unknown },
+  options: { method: string; id?: string; body?: unknown; via?: "functions" | "api" },
 ) {
   const handler = await loadHandler(module)
   const event = {
     httpMethod: options.method,
-    path: options.id ? `/.netlify/functions/${module}/${options.id}` : `/.netlify/functions/${module}`,
+    path: pathOf(module, options),
     body: JSON.stringify(options.body ?? {}),
   } as unknown as HandlerEvent
   return asResponse(await handler(event, {} as never))
+}
+
+/**
+ * `via: "api"` 是线上形状：Netlify 的 proxy redirect **不改写 `event.path`**，
+ * handler 拿到的仍是浏览器请求的那条 `/api/submissions/<id>/<action>`，末段是动作名。
+ * 默认的 `functions` 形状对应直连 `/.netlify/functions/<name>/<id>`，末段就是 id。
+ */
+function pathOf(module: SelfServiceModule, options: { id?: string; via?: "functions" | "api" }) {
+  if (options.via === "api") {
+    if (!options.id) throw new Error("via:api 需要 id")
+    return `/api/submissions/${options.id}/${API_ACTION_BY_MODULE[module]}`
+  }
+  return options.id ? `/.netlify/functions/${module}/${options.id}` : `/.netlify/functions/${module}`
 }
 
 const jsonOf = (response: { body: string }) => JSON.parse(response.body) as Record<string, unknown>
@@ -438,5 +459,76 @@ describe("撤回只作用单条记录", () => {
     await expect(shared.listFallbackArchiveRuns()).resolves.toMatchObject([
       { id: "sub_approved", cycle: 3 },
     ])
+  })
+})
+
+describe("线上入口路径形状（Netlify 不改写 event.path）", () => {
+  /**
+   * 回归用：`netlify.toml` 的 proxy redirect 重写的是转发目标，handler 里的 `event.path`
+   * 仍是浏览器那条 `/api/submissions/<id>/<action>`。早期实现一律取末段，于是拿
+   * `"revisions"` / `"withdraw"` 当投稿 id 去查，四个端点在线上全部 404 未找到提交记录，
+   * 而测试只喂过直连形状（末段就是 id）所以全绿。
+   */
+  it("四个自助端点都能从动作段前一段取到投稿 id", async () => {
+    const hide = await call("submissions-visibility", {
+      method: "PATCH",
+      id: "sub_rejected",
+      via: "api",
+      body: { token: "own_rejected", hidden: true },
+    })
+    expect(jsonOf(hide)).toEqual({ id: "sub_rejected", hidden: true })
+
+    const withdraw = await call("submissions-withdraw", {
+      method: "PATCH",
+      id: "sub_pending",
+      via: "api",
+      body: { token: "own_pending" },
+    })
+    expect(withdraw.statusCode, withdraw.body).toBe(200)
+
+    const revision = await call("submissions-revision", {
+      method: "POST",
+      id: "sub_approved",
+      via: "api",
+      body: {
+        token: "own_approved",
+        payload: payloadOf({ videoUrl: "https://www.bilibili.com/video/BV1approved01", cycle: 1 }),
+      },
+    })
+    expect(revision.statusCode, revision.body).toBe(202)
+    expect(jsonOf(revision).revisesId).toBe("sub_approved")
+
+    const remove = await call("submissions-delete", {
+      method: "DELETE",
+      id: "sub_rejected",
+      via: "api",
+      body: { token: "own_rejected" },
+    })
+    expect(remove.statusCode, remove.body).toBe(200)
+    await expect(readFallbackReviews()).resolves.toEqual(
+      expect.not.arrayContaining([expect.objectContaining({ id: "sub_rejected" })]),
+    )
+  })
+
+  it("readSubmissionId 认两种路径形状，?id= 仍然优先", () => {
+    const cases: [string, string][] = [
+      ["/api/submissions/sub_1/revisions", "sub_1"],
+      ["/api/submissions/sub_1/withdraw", "sub_1"],
+      ["/api/submissions/sub_1/visibility", "sub_1"],
+      ["/api/submissions/sub_1/delete", "sub_1"],
+      ["/.netlify/functions/submissions-revision/sub_1", "sub_1"],
+      // 未知后缀不是动作段，末段就是 id
+      ["/.netlify/functions/submissions-me/sub_1", "sub_1"],
+    ]
+    for (const [path, expected] of cases) {
+      expect(shared.readSubmissionId({ path }), path).toBe(expected)
+    }
+    expect(
+      shared.readSubmissionId({
+        path: "/api/submissions/nope/revisions",
+        queryStringParameters: { id: "sub_1" },
+      }),
+    ).toBe("sub_1")
+    expect(shared.readSubmissionId({ path: "/api/submissions/sub_1/withdraw/" })).toBe("sub_1")
   })
 })

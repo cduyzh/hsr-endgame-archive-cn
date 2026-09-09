@@ -319,13 +319,28 @@ export function sanitizeOwnerToken(value: unknown): string | null {
   return trimmed
 }
 
-/** 投稿自助端点的投稿 id：`netlify.toml` 把 `/api/submissions/:id/xxx` 重写成 `/.netlify/functions/<name>/:id`，取末段；`?id=` 优先，便于本地与测试直连。 */
+/**
+ * 自助端点 `netlify.toml` 里的动作段。
+ * 单独维护一份是因为 Netlify 的 proxy redirect **不改写 `event.path`**：
+ * 线上 handler 拿到的仍是原始入口路径 `/api/submissions/<id>/withdraw`，末段是动作名，
+ * 直接 `pop()` 会把 `"withdraw"` 当成投稿 id 去查库、四端点一律 404。
+ */
+const SUBMISSION_ACTION_SEGMENTS = new Set(["withdraw", "visibility", "delete", "revisions"])
+
+/**
+ * 投稿自助端点（撤回 / 隐藏 / 删除 / 修订）的投稿 id。
+ * 线上走 `/api/submissions/:id/<action>`（id 在动作段前一段），本地与测试直连
+ * `/.netlify/functions/<name>/:id`（id 就是末段），两种形状都要认；`?id=` 优先级最高。
+ */
 export function readSubmissionId(event: {
   path: string
   queryStringParameters?: Record<string, string | undefined> | null
 }) {
-  const fromPath = event.path.split("/").filter(Boolean).pop()
-  return event.queryStringParameters?.id ?? fromPath ?? ""
+  const segments = event.path.split("/").filter(Boolean)
+  const last = segments[segments.length - 1] ?? ""
+  const fromPath =
+    segments.length >= 2 && SUBMISSION_ACTION_SEGMENTS.has(last) ? segments[segments.length - 2] : last
+  return event.queryStringParameters?.id ?? fromPath
 }
 
 /** 查重最多回显几条命中记录，够用户判断是不是自己提重了。 */
