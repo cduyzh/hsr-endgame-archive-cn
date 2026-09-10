@@ -1222,12 +1222,38 @@ a {
   color: #d4f1ff;
 }
 
+/* 两行式收在最右：横排的三枚徽标一旦换行就白吃一行高度，三行竖排又比队伍条高。
+   这里让轮次（末日幻影还有分数）各占一整行、两枚成本徽标并成第二行，整块高度落到队伍条以下。 */
 .run-metrics {
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: flex-end;
+  display: grid;
+  grid-template-columns: repeat(2, auto);
+  gap: 5px;
+  justify-content: end;
+  align-content: center;
+}
+
+.run-metrics .cycle-badge,
+.run-metrics .score-badge {
+  grid-column: 1 / -1;
+  justify-self: end;
+}
+
+/* 两行式并排的两枚成本徽标会把这一列从 58px 撑到 116px。只有正文列窄到放不下「作者名 + 视频链接」
+   一行（实测 < 200px）时才因小失大——即工作台仍是三列、记录列表最窄的这一段；≤1180 选择器收成
+   浮层后列表变宽，两行式反而更省高度，所以不要把窄屏一起退回竖排。 */
+@media (min-width: 1181px) and (max-width: 1380px) {
+  .run-metrics {
+    grid-template-columns: auto;
+  }
+
+  .run-metrics .gold-badge {
+    grid-column: 1;
+  }
+}
+
+.run-metrics span {
+  line-height: 1.2;
+  padding: 3px 8px;
 }
 
 .run-metrics--no-score {
@@ -1246,7 +1272,7 @@ a {
 
 .run-metrics .cycle-badge b {
   color: var(--text);
-  font-size: 18px;
+  font-size: 16px;
 }
 
 .run-metrics .score-badge {
@@ -3216,7 +3242,7 @@ body.is-modal-open {
   }
 
   .run-metrics {
-    justify-content: flex-start;
+    justify-content: start;
   }
 
   .form-grid,
@@ -3355,15 +3381,6 @@ body.is-modal-open {
 
   :root {
     --run-slot: 46px;
-  }
-
-  .run-metrics {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .run-metrics span {
-    text-align: center;
   }
 }
 
@@ -3628,12 +3645,20 @@ body.is-modal-open {
 
 .my-submissions-runs li {
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: minmax(0, 1fr) auto;
   gap: 4px 12px;
+  align-items: center;
   font-size: 13px;
   color: var(--text);
   padding-bottom: 6px;
   border-bottom: 1px dashed var(--line);
+}
+
+/* 摘要与时间同属一个右对齐块，右边缘才会落在同一条线上。 */
+.my-submissions-runs-meta {
+  display: grid;
+  gap: 2px;
+  justify-items: end;
 }
 
 .my-submissions-runs li:last-child {
@@ -3739,7 +3764,6 @@ body.is-modal-open {
 }
 
 .my-submissions-runs-time {
-  text-align: right;
   white-space: nowrap;
 }
 

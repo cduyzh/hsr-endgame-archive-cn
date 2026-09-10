@@ -55,6 +55,30 @@ export function stageKeyOf(bossId: string): string {
   return bossId.split("-").pop() ?? ""
 }
 
+/**
+ * 阶段键的展示词，`k1..kN` 保持玩家通用叫法不另译。
+ * 唯一来源：`ModeSeasonFilter` 的徽标与 `/me`、审核台的阶段回显都取它，组件不要再抄一份。
+ */
+export const stageKeyLabels: Record<string, string> = {
+  top: "上半",
+  bottom: "下半",
+  starward: "星启",
+  k1: "K1",
+  k2: "K2",
+  k3: "K3",
+  checkmate: "将杀",
+  plight: "绝境",
+}
+
+/**
+ * 把阶段 id 翻成展示词。只有 id、拿不到 `BossStage` 的场合（`/me` 的投稿回显）用它；
+ * 认不出的阶段键退回原键而不是整条 id，至少比 `4.5-aa-k3` 好读。
+ */
+export function stageLabelOf(bossId: string): string {
+  const key = stageKeyOf(bossId)
+  return stageKeyLabels[key] ?? key ?? ""
+}
+
 /** 敌方阶段的检索分组：异相仲裁的骑士关与将杀关（含绝境）在业务上是两类不同的挑战。 */
 export type StageGroup = "boss" | "knight" | "checkmate"
 

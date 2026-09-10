@@ -17,6 +17,7 @@
   } from "lucide-vue-next";
   import { useSubmissionDialog } from "@/composables/useSubmissionDialog";
   import { useSubmissionMemory } from "@/composables/useSubmissionMemory";
+  import { useArchiveStore } from "@/stores/archiveStore";
   import {
     deleteSubmission,
     listMySubmissions,
@@ -24,15 +25,15 @@
     withdrawSubmission,
     type MySubmissionRun,
   } from "@/services/archiveService";
-  import { categoryLabels } from "@/services/runUtils";
+  import { categoryLabels, stageLabelOf } from "@/services/runUtils";
   import type {
-    EndgameMode,
     SubmissionEditTarget,
     SubmissionReview,
     SubmissionReviewStatus,
   } from "@/types/archive";
 
   const router = useRouter();
+  const archive = useArchiveStore();
   const { openEdit: openSubmitDialog, isOpen: submitDialogOpen } =
     useSubmissionDialog();
   const { memory, removeToken, clearTokens } = useSubmissionMemory({
@@ -67,12 +68,10 @@
   /** 破坏性动作的就地二次确认：删除不可恢复，撤回会让记录从档案消失，都不该一次点击就走。 */
   const confirming = shallowRef<{ id: string; kind: "withdraw" | "delete" } | null>(null);
 
-  const modeLabels: Record<EndgameMode, string> = {
-    moc: "忘却之庭",
-    pf: "虚构叙事",
-    as: "末日幻影",
-    aa: "异相仲裁",
-  };
+  /** 模式名唯一来源是档案配置的 `modes[].label`（`moc` 站内叫「混沌回忆」，不要在这页另抄一份）。 */
+  function modeLabel(mode: string): string {
+    return archive.modes.find((item) => item.id === mode)?.label ?? mode;
+  }
 
   const statusLabels: Record<SubmissionReviewStatus, string> = {
     pending: "待审核",
@@ -166,19 +165,33 @@
     });
   }
 
+  const unitNameById = computed(
+    () => new Map(archive.units.map((unit) => [unit.id, unit.name])),
+  );
+
   function teamSummary(review: SubmissionReview): string {
     const units = (review.payload?.units ?? [])
       .map((slot) => slot.unitId)
       .filter(Boolean);
-    return units.length === 0 ? "未提供阵容" : units.join(" / ");
+    return units.length === 0
+      ? "未提供阵容"
+      : units.map((id) => unitNameById.value.get(id) ?? id).join(" / ");
   }
 
   function teamSummaryFromRun(run: MySubmissionRun): string {
     return run.teamName?.trim() || `${run.author} 的投稿`;
   }
 
-  function bossLabel(bossId: string): string {
-    return bossId || "—";
+  /** 阶段首领名只在配置里查得到；查不到就不给 title，避免悬浮提示是空的。 */
+  function stageHint(bossId: string): string {
+    return archive.bosses.find((boss) => boss.id === bossId)?.name ?? "";
+  }
+
+  /** `4.5-aa-k3` 直接印出来没人看得懂，翻成「4.5 · K3」，完整阶段名走 title。 */
+  function stageLabel(seasonId: string, bossId: string): string {
+    if (!bossId) return seasonId || "—";
+    const label = stageLabelOf(bossId);
+    return seasonId ? `${seasonId} · ${label}` : label;
   }
 
   function familyIds(group: SubmissionGroup): string[] {
@@ -322,6 +335,8 @@
   });
 
   onMounted(() => {
+    // 模式 / 阶段 / 角色的中文名都只在档案配置里；缺了它这页会退回显示原始 id。
+    void archive.loadConfig();
     void refresh();
   });
 </script>
@@ -476,12 +491,16 @@
               {{ group.parent.payload?.teamName || "未命名队伍" }}
             </p>
             <p class="my-submission-meta">
-              <span>{{
-                modeLabels[group.parent.payload?.mode as EndgameMode] ||
-                  group.parent.payload?.mode
-              }}</span>
+              <span>{{ modeLabel(group.parent.payload?.mode || "") }}</span>
               <span>·</span>
-              <span>{{ bossLabel(group.parent.payload?.bossId || "") }}</span>
+              <span
+                :title="stageHint(group.parent.payload?.bossId || '')"
+              >{{
+                stageLabel(
+                  group.parent.payload?.seasonId || "",
+                  group.parent.payload?.bossId || "",
+                )
+              }}</span>
               <span>·</span>
               <span>{{
                 categoryLabels[
@@ -773,11 +792,16 @@
           :key="run.id"
         >
           <strong>{{ teamSummaryFromRun(run) }}</strong>
-          <span>{{ modeLabels[run.mode as EndgameMode] || run.mode }} ·
-            {{ run.bossId }} · 轮次 {{ run.cycle }}</span>
-          <span class="my-submissions-runs-time">{{
-            formatTime(run.submittedAt)
-          }}</span>
+          <span class="my-submissions-runs-meta">
+            <span>{{ modeLabel(run.mode) }} ·
+              <span :title="stageHint(run.bossId)">{{
+                stageLabel(run.seasonId, run.bossId)
+              }}</span>
+              · 轮次 {{ run.cycle }}</span>
+            <span class="my-submissions-runs-time">{{
+              formatTime(run.submittedAt)
+            }}</span>
+          </span>
         </li>
       </ol>
       <p class="my-submissions-hint">

@@ -12,6 +12,8 @@
     stageGroupLabels,
     stageGroupOrder,
     stageGroupOf,
+    stageKeyLabels,
+    stageKeyOf,
     type StageGroup,
   } from "@/services/runUtils";
   import { COST_MAX, COST_MIN } from "@/services/unitCost";
@@ -115,20 +117,8 @@
     failedThumbs.value = new Set(failedThumbs.value).add(boss.imageUrl);
   }
 
-  const stageBadgeLabels: Record<string, string> = {
-    top: "上半",
-    bottom: "下半",
-    starward: "星启",
-    k1: "K1",
-    k2: "K2",
-    k3: "K3",
-    checkmate: "将杀",
-    plight: "绝境",
-  };
-
   function stageBadge(boss: BossStage): string | undefined {
-    const key = boss.id.split("-").pop() ?? "";
-    const label = stageBadgeLabels[key];
+    const label = stageKeyLabels[stageKeyOf(boss.id)];
     // 上游未定名时阶段名会退回标签本身，避免徽标与标题重复
     return label && label !== boss.name ? label : undefined;
   }

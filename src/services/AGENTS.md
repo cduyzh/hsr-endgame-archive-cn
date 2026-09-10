@@ -13,7 +13,7 @@
 | `staticArchiveConfig.ts`  | 静态快照入口：**优先 `GET /api/archive/stages`**（函数侧算一次 + 边缘长缓存），失败/为空/形状不合时**回落**浏览器直连 `static.nanoka.cc` 现算 | `fetchStaticArchiveSnapshot()`、`mergeStaticArchiveConfig()`                                                             |
 | `apiBase.ts`              | `VITE_API_BASE` 的唯一来源（`archiveService.ts` 与 `staticArchiveConfig.ts` 共用；从 archiveService 反向导出会循环依赖）        | `API_BASE`                                                                                                                |
 | `staticBossSnapshot.ts`   | 远程静态快照的纯计算层（不发起网络），被前端 `staticArchiveConfig.ts` 与服务端 `netlify/functions/_staticSnapshot.ts` 共用 | `buildSeasonBosses(seasonId, version, baseUrl)`、`pickDataDirectory()`、`STATIC_SEASON_IDS`、各类 build\*Stages 纯函数   |
-| `runUtils.ts`             | 记录筛选/排序/统计纯函数 + 分类/标记/阶段分组口径唯一来源                                                                    | `filterRuns`、`buildMetaStats`、`matchesRange`、`categoryLabels`、`categoryOptionsFor`、`categoryOfAsScore`、`defaultModeOf`、`stageKeyOf`、`flagOrder`/`flagLabels`/`isRunFlag`/`flagsOfRun`、`stageGroupOf`/`isStarwardStage` |
+| `runUtils.ts`             | 记录筛选/排序/统计纯函数 + 分类/标记/阶段分组与展示词口径唯一来源                                                              | `filterRuns`、`buildMetaStats`、`matchesRange`、`categoryLabels`、`categoryOptionsFor`、`categoryOfAsScore`、`defaultModeOf`、`stageKeyOf`、`stageKeyLabels`/`stageLabelOf`、`flagOrder`/`flagLabels`/`isRunFlag`/`flagsOfRun`、`stageGroupOf`/`isStarwardStage` |
 | `unitCost.ts`             | 角色与光锥的“限定/常驻/不计成本”分类 + 成本与默认值口径（**无 `@/` 值导入，Functions 可相对引用**）                          | `COST_MIN`/`COST_MAX`、`getCharacterGoldKind`、`getLightconeGoldKind`、`getRunGoldCounts`、`getUnitGoldCounts`、`defaultEidolonFor`、`defaultSuperimpositionFor`、`goldKindLabels` |
 | `submissionUtils.ts`      | 投稿转换纯函数                                                                                                             | `archiveRunIdOf`、`submissionReviewToArchiveRun`、`buildPreferredLightconeByCharacter`、`buildSuggestedLightconeByCharacter`                |
 | `submissionValidation.ts` | 投稿表单的字段校验、步骤归属、新建默认成绩与预览取数（仅前端使用）                                                             | `validateSubmissionForm`、`errorsOfStep`、`stepOfField`、`defaultResultFor`、`buildSubmissionRoster`、`describeSubmissionTarget`             |
@@ -105,6 +105,7 @@
 
 - `stageGroupOf(boss)` → `boss`（首领关）/ `knight`（骑士关）/ `checkmate`（将杀关）：`aa` 且阶段键以 `k` 开头归骑士关，`aa` 且为 `checkmate`/`plight` 归将杀关（绝境与将杀同组），其余一律首领关。`stageGroupOrder` / `stageGroupLabels` 给渲染顺序与中文标题。
 - `isStarwardStage(boss)` 判定第 3 阶段（星启）：它的血量约为普通半区的 2–5 倍，UI 用独立的金色徽标而不是普通阶段徽标样式。
+- `stageKeyLabels` 与 `stageLabelOf(bossId)` 是**阶段键展示词**的唯一来源（上半 / 下半 / 星启 / K1…K3 / 将杀 / 绝境），从 `ModeSeasonFilter` 提上来：徽标与 `/me` 的阶段回显共用。`/me` 只拿得到 payload 里的 id、没有 `BossStage`，靠 `stageLabelOf` 把 `4.5-aa-k3` 翻成「K3」；认不出的阶段键退回原键而不是整条 id。组件不要再抄这份映射，也不要自己 `split("-").pop()`。
 
 ## 配置读取链路（`archiveService.fetchArchiveConfig`）
 

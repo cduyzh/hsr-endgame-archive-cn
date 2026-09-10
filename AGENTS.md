@@ -13,7 +13,7 @@
 主要功能：
 
 - 档案工作台：筛选赛季、模式、敌方阶段、记录分类（随模式与阶段变化）、队伍人数、成本与分数**精确区间**、角色/光锥和标记。进入站点时默认落在带 `NEW` 徽标（`modes[].badge`）的模式上，口径在 `runUtils.defaultModeOf()`，当前是末日幻影；URL 显式带了 `?mode=` 时以 URL 为准。
-- 记录列表：按队伍组合分组，展示作者、角色命座、轮次、分数、成本和视频链接。**光锥默认收起**——整条队伍头像是一个 `<button>`，点击才展开该记录的光锥条（与角色逐列对齐，末尾一枚「光锥」提示胶囊），展开态按记录 id 记在组件本地、换筛选即重置。
+- 记录列表：按队伍组合分组，展示作者、角色命座、轮次、分数、成本和视频链接。**光锥默认收起**——整条队伍头像是一个 `<button>`，点击才展开该记录的光锥条（与角色逐列对齐，末尾一枚「光锥」提示胶囊），展开态按记录 id 记在组件本地、换筛选即重置。**轮次 / 分数 / 限定 / 常驻收在每行最右，取两行式**：轮次（末日幻影还有分数）各占一整行、两枚成本徽标并成第二行，整块比队伍条矮，因此不会另起一行。只有 `1181–1380px` 退回单列竖排——并排多花的 58px 会让那一档的正文列放不下「作者名 + 视频链接」一行，横排反而更高，别顺手删掉这个媒体查询。`≤820px` 整行堆叠。队伍条轨道取 `max-content`，不要回到固定像素，否则窄视口下最后一枚头像会压到作者名上。
 - 环境统计：角色使用率、光锥使用率、常见队伍组合和成本区间。
 - 投稿入口：右上角「提交记录」打开站内弹窗，按「基础信息 → 队伍配置 → 成绩与预览」三步提交到审核队列；新建投稿默认落在带 `NEW` 徽标的模式上（同工作台，走 `defaultModeOf()`）并自动选中该模式当期首个敌方阶段，分类与分数的默认值走 `submissionValidation.defaultResultFor()`——取该模式与阶段的最后一档（满星 / 绝境满星 / `4000` 满分），末日幻影按满分 `4000` 起稿，其余模式沿用 `40000`，避免初始表单就带着校验错误；选角色会自动带出专武（默认 S1，低星光锥默认 S5、低星角色默认满命），成本按队伍自动合计（限定五星角色算 `命座 + 1`、限定五星光锥算叠影，低星与无名勋礼光锥不计）且可手改；草稿存在本地直到提交成功，视频只接受 B 站与 YouTube 链接。**投稿查重**：链接填完即按「视频 + 敌方阶段」调 `GET /api/submissions/check` 预检（400ms 防抖，链接或阶段一变就重查），命中已有待审 / 已通过的投稿时在第一步展示已有记录摘要并挡住「下一步 / 提交」；`POST /api/submissions` 入队前用同一个 `findDuplicateVideoRecords()` 再拦一次返回 409。驳回与撤回的记录不拦重提；`b23.tv` 短链取不到 BV 号，只能按规范化后的短链自身比对。
 - 配队预设：本机 localStorage 记忆作者名 + 最多 10 套队伍配置，提交时可一键载入。
@@ -108,6 +108,8 @@ pnpm seed:archive:dry    # 灌库空跑
 标记（`flags`）口径：`RunFlag = revive | firewall | bpWeapon`（复活 / 火墙 / 大月卡武器），唯一来源仍是 `src/services/runUtils.ts` 的 `flagOrder` / `flagLabels` / `isRunFlag`，组件与 Functions 都不要另抄一份。但**判定原语住在 `src/services/runFlags.ts`**，由 runUtils 原样再导出——因为 runUtils 有 `@/services/unitCost` 的值导入、Functions 打包不解析 Vite 别名而引不了它，而服务端 `parseFilters` 需要同一套合法性判定；图标统一走 `src/components/FlagIcon.vue`（地址在 `src/data/flagIcons.ts`），组件不要再自己写 `flagIcons` 映射。标记**必须在投稿时手动勾选**，落库复用 `runs.tags`（开放 jsonb 数组，无需迁移）；读取用 `flagsOfRun()` 收窄掉历史遗留的自由文本。筛选是 **AND 语义**（勾选的标记全部命中才保留），前端 `filterRuns()` 与服务端 `filterArchiveRuns()` 一致；URL 深链里的非法值由 `useArchiveFilters` 的 `normalizeFlags()` 丢弃。
 
 敌方阶段分组口径：`stageGroupOf(boss)` 把阶段分成 `boss`（首领关）/ `knight`（骑士关）/ `checkmate`（将杀关），规则是 `aa` 且阶段键以 `k` 开头 → 骑士关，`aa` 且为 `checkmate`/`plight` → 将杀关（绝境与将杀同组），其余一律首领关。`ModeSeasonFilter` 按 `stageGroupOrder` 渲染分组标题，空组不出标题。第 3 阶段用 `isStarwardStage(boss)` 判定并加金色星启徽标——星启血量约为普通半区的 2–5 倍（4.5 实测 3000 万 vs 上半 1355 万）。
+
+阶段展示词口径：`stageKeyLabels`（`top`→上半 / `bottom`→下半 / `starward`→星启 / `k1..k3`→K1…K3 / `checkmate`→将杀 / `plight`→绝境）与 `stageLabelOf(bossId)` 是 `runUtils.ts` 的唯一来源，`ModeSeasonFilter` 的徽标与 `/me` 的阶段回显都取它，组件不要再抄映射表或自己 `split("-").pop()`。**不要把整条阶段 id 印给用户**（`4.5-aa-k3` 这种值只出现在数据层与深链里）；`/me` 展示成「`<赛季> · <展示词>`」（`4.5 · K3`），完整阶段首领名放 `title`。模式名与角色名同理：一律查 `config.modes[].label` 与 `config.units[].name`，不要在页面里另立一份 `modeLabels` 常量（曾经出现过 `moc: "忘却之庭"` 与站内正式名「混沌回忆」互相打脸）。
 
 ## API 与数据库
 

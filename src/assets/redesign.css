@@ -1479,15 +1479,6 @@ body {
   .workbench-grid.picker-open {
     grid-template-columns: minmax(238px, 260px) minmax(0, 1fr) minmax(286px, 314px);
   }
-
-  .run-row {
-    grid-template-columns: max-content minmax(0, 1fr);
-  }
-
-  .run-metrics {
-    grid-column: 1 / -1;
-    justify-content: flex-start;
-  }
 }
 
 @media (max-width: 1180px) {
@@ -1711,10 +1702,6 @@ body {
 
   .run-row {
     grid-template-columns: 1fr;
-  }
-
-  .run-metrics {
-    grid-column: auto;
   }
 
   .unit-drawer {

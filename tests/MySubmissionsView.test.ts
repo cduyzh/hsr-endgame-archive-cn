@@ -1,8 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from "vitest"
 import { flushPromises, mount } from "@vue/test-utils"
+import { createPinia } from "pinia"
 import { createMemoryHistory, createRouter } from "vue-router"
 import MySubmissionsView from "@/views/MySubmissionsView.vue"
 import { useSubmissionDialog } from "@/composables/useSubmissionDialog"
+import { seedConfig } from "@/data/seed"
 import { fixtureSubmission } from "./fixtures/config"
 import type { SubmissionReview, SubmissionReviewStatus } from "@/types/archive"
 
@@ -52,6 +54,10 @@ function fetchMock() {
       )
       return Response.json({ reviews, runs: [], hiddenCount: hiddenRoots.size })
     }
+    // 页面挂载即拉档案配置：模式名 / 角色名都从这份 seed 里查，缺了就会退回显示原始 id。
+    if (url.includes("/api/archive/config")) return Response.json(seedConfig)
+    // 空 bosses 按未命中处理，别让回落路径去请求真实数据源。
+    if (url.includes("/api/archive/stages")) return Response.json({ version: "t", liveVersion: "4.5", bosses: [] })
     return Response.json({ id: "ok", status: "withdrawn", hidden: true, deleted: true })
   })
 }
@@ -59,7 +65,9 @@ function fetchMock() {
 function mountView() {
   return mount(MySubmissionsView, {
     attachTo: document.body,
-    global: { plugins: [createRouter({ history: createMemoryHistory(), routes })] },
+    global: {
+      plugins: [createPinia(), createRouter({ history: createMemoryHistory(), routes })],
+    },
   })
 }
 
@@ -219,5 +227,85 @@ describe("隐藏收纳与修订折叠", () => {
       excludeIds: ["sub_rejected"],
     })
     expect(editTarget.value?.payload.teamName).toBe("队伍 sub_rejected")
+  })
+})
+
+describe("投稿回显的中文映射", () => {
+  it("模式、阶段与阵容都展示中文名而不是原始 id", async () => {
+    localStorage.setItem(
+      MEMORY_KEY,
+      JSON.stringify({ author: "", presets: [], tokens: ["own_sub_map"] }),
+    )
+    reviewRows = [
+      reviewOf("sub_map", "approved", {
+        payload: fixtureSubmission({ bossId: "4.5-aa-k3", mode: "aa" }),
+      }),
+    ]
+    vi.stubGlobal("fetch", fetchMock())
+    const wrapper = mountView()
+    await flushPromises()
+
+    const meta = wrapper.find(".my-submission-meta").text()
+    // 「异相仲裁」来自 config.modes[].label，「4.5 · K3」是阶段 id 的展示词
+    expect(meta).toContain("异相仲裁")
+    expect(meta).toContain("4.5 · K3")
+    expect(meta).not.toContain("4.5-aa-k3")
+
+    const roster = wrapper.find(".my-submission-meta-grid").text()
+    expect(roster).toContain("大黑塔")
+    expect(roster).toContain("阮•梅")
+    expect(roster).not.toContain("the-herta")
+  })
+
+  it("已通过的投稿把摘要与时间收在同一个右对齐块里", async () => {
+    localStorage.setItem(
+      MEMORY_KEY,
+      JSON.stringify({ author: "", presets: [], tokens: ["own_sub_run"] }),
+    )
+    reviewRows = []
+    vi.stubGlobal("fetch", async (input: unknown) => {
+      const url = String(input)
+      if (url.includes("/api/submissions/me")) {
+        return Response.json({
+          reviews: [],
+          hiddenCount: 0,
+          runs: [
+            {
+              id: "run_map",
+              ownerToken: "own_sub_run",
+              status: "approved",
+              seasonId: "4.5",
+              mode: "aa",
+              bossId: "4.5-aa-k3",
+              category: "fullStars",
+              teamName: "红花凛缇 双舞拉条",
+              author: "鹿汉电玩",
+              cycle: 0,
+              score: 0,
+              cost: 10,
+              limitedCount: 10,
+              standardCount: 0,
+              submittedAt: "2026-09-09T05:59:00.000Z",
+            },
+          ],
+        })
+      }
+      if (url.includes("/api/archive/config")) return Response.json(seedConfig)
+      if (url.includes("/api/archive/stages")) {
+        return Response.json({ version: "t", liveVersion: "4.5", bosses: [] })
+      }
+      return Response.json({})
+    })
+    const wrapper = mountView()
+    await flushPromises()
+
+    const row = wrapper.find(".my-submissions-runs li")
+    expect(row.find("strong").text()).toBe("红花凛缇 双舞拉条")
+    // 摘要与时间必须同属一个块，否则两者各自右对齐会错开一条线
+    const block = row.find(".my-submissions-runs-meta")
+    expect(block.element.querySelectorAll(":scope > span")).toHaveLength(2)
+    expect(block.text()).toContain("异相仲裁")
+    expect(block.text()).toContain("4.5 · K3")
+    expect(block.text()).not.toContain("4.5-aa-k3")
   })
 })

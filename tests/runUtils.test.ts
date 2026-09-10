@@ -16,6 +16,7 @@ import {
   stageGroupLabels,
   stageGroupOf,
   stageKeyOf,
+  stageLabelOf,
 } from "@/services/runUtils"
 import { getRunGoldCounts } from "@/services/unitCost"
 import {
@@ -191,6 +192,12 @@ describe("runUtils", () => {
     expect(categoryLabels.asScore3850).toBe("3850-3899")
     expect(stageKeyOf("4.5-aa-plight")).toBe("plight")
     expect(stageKeyOf("")).toBe("")
+    expect(stageLabelOf("4.5-aa-k3")).toBe("K3")
+    expect(stageLabelOf("4.5-moc-starward")).toBe("星启")
+    expect(stageLabelOf("4.5-pf-top")).toBe("上半")
+    // 认不出的阶段键退回原键：比整条 id 好读，也不编造一个不存在的中文名
+    expect(stageLabelOf("4.5-aa-k9")).toBe("k9")
+    expect(stageLabelOf("")).toBe("")
   })
 
   it("标记筛选按 AND 语义命中，且每个标记都有中文文案", () => {

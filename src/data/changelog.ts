@@ -21,6 +21,18 @@ export const changelogTagLabels: Record<ChangelogTag, string> = {
 
 export const changelogEntries: ChangelogEntry[] = [
 	{
+		version: "0.9.1",
+		date: "2026-09-09",
+		title: "档案页与「我的投稿」排版修订",
+		items: [
+			{tag: "improve", text: "收录记录的光锥默认收起：点整条队伍头像才展开该记录的光锥，光锥与角色逐列对齐；列表一屏能容纳的记录更多了"},
+			{tag: "improve", text: "轮次 / 分数 / 限定 / 常驻收进每行最右的两行块（轮次一行、限定与常驻并排一行），始终与队伍头像同一行，不再在中等宽度下另起一行"},
+			{tag: "improve", text: "「我的投稿」不再出现原始 id：阶段按「4.5 · K3」这样的展示词回显（悬浮可看阶段首领名）、阵容按角色名回显，模式名统一用站内正式名"},
+			{tag: "fix", text: "修复窄一档视口（≤1320px）下最后一枚角色头像压住作者名与标记徽标的溢出"},
+			{tag: "fix", text: "「我的投稿」底部「已通过的投稿」里时间与其上的摘要右边缘对齐"},
+		],
+	},
+	{
 		version: "0.9.0",
 		date: "2026-09-09",
 		title: "投稿自助管理：改、藏、删",
