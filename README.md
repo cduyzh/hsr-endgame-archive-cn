@@ -75,6 +75,8 @@ NETLIFY_SITE_NAME=your-site-name pnpm deploy:netlify
 
 Netlify 构建环境固定使用 Node 24；业务 API redirects、Functions 目录和 SPA fallback 继续由 `netlify.toml` 管理。
 
+自定义域名 `hsr-archive.cduyzh.top` 是站点主域名，`netlify.toml` 的第一条 redirect 会把旧子域名 `hsr-endgame-archive-cn.netlify.app` 以 301 收口到它并保留路径。这条规则要发布一次才生效；它必须排在 `/*` SPA 兜底之前，改顺序会让兜底先命中、重定向失效。
+
 ## 数据层
 
 项目目前有两条数据线，需要分开理解：
@@ -283,5 +285,7 @@ src/
 | [Home](./docs/wiki/Home.md) | 文档索引 |
 | [01-类型检查与CI](./docs/wiki/01-类型检查与CI.md) | 类型检查的真实覆盖范围、CI 门禁构成，以及 `pnpm typecheck` 曾长期空转的根因 |
 | [02-类型错误审计](./docs/wiki/02-类型错误审计.md) | 门禁生效后暴露的 43 个历史类型错误，按严重度排序并给出 `file:line` 证据 |
+| [03-生产接口与投稿审核验证](./docs/wiki/03-生产接口与投稿审核验证.md) | 生产环境实跑的 14 端点全链路验证记录：取证方法、用例矩阵、逐条断言与复跑方法 |
+| [04-生产验证缺陷清单](./docs/wiki/04-生产验证缺陷清单.md) | 该轮实跑查出的缺陷与观察项，含线上复现证据、修法与一条待人工执行的清库 SQL |
 
 更多协作约定见 [AGENTS.md](./AGENTS.md)。其中「文档同步契约」给出了**代码改动点 → 必改文档**的映射表和提交前检查清单：改完代码必须在同一次提交里同步本文档与对应模块的 `AGENTS.md`。

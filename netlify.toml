@@ -6,6 +6,14 @@
 [build.environment]
   NODE_VERSION = "24"
 
+# 域名级重定向：旧 netlify.app 子域名收口到自定义域名。
+# 必须排在 /* SPA 兜底规则之前——Netlify 按顺序匹配，兜底规则会先命中同域请求。
+[[redirects]]
+  from = "https://hsr-endgame-archive-cn.netlify.app/*"
+  to = "https://hsr-archive.cduyzh.top/:splat"
+  status = 301
+  force = true
+
 # 游戏数据与图片仍由前端直连数据源（static.nanoka.cc），本站不代理、不落盘；
 # 唯一例外是敌方阶段静态快照（/api/archive/stages）——它需要 38 个上游请求，
 # 改由函数算一次并交给边缘缓存复用，前端拿不到时仍回落浏览器直连。

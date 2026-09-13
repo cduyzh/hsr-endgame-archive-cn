@@ -1,6 +1,6 @@
 # AGENTS.md — `netlify/`（Functions 与数据库）
 
-服务端为 Netlify Functions（TypeScript），数据库为 Neon/Postgres（`@neondatabase/serverless`）。`netlify.toml` 负责把 `/api/*` 重写到 `/.netlify/functions/*`。核心原则：**有数据库走 SQL，没有数据库走文件/seed fallback，任何情况下都不能 500 或白屏。**
+服务端为 Netlify Functions（TypeScript），数据库为 Neon/Postgres（`@neondatabase/serverless`）。`netlify.toml` 负责把 `/api/*` 重写到 `/.netlify/functions/*`，并负责一条域名级 301：`https://hsr-endgame-archive-cn.netlify.app/*` → `https://hsr-archive.cduyzh.top/:splat`（`force = true`，必须排在 `/*` SPA 兜底之前，否则兜底先命中）。核心原则：**有数据库走 SQL，没有数据库走文件/seed fallback，任何情况下都不能 500 或白屏。**
 
 > 改动本目录（含 `netlify.toml`、`schema.sql`）后，按根 [`../AGENTS.md`](../AGENTS.md) 的「文档同步契约」同步更新本文件（文件职责表、路由、环境变量）与根 `AGENTS.md` 的「API 与数据库」、`README.md` 的 API 清单，**同一提交内完成**。
 

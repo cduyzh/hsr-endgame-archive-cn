@@ -113,6 +113,8 @@ pnpm seed:archive:dry    # 灌库空跑
 
 ## API 与数据库
 
+域名级重定向：`netlify.toml` 第一条规则把旧子域名 `https://hsr-endgame-archive-cn.netlify.app/*` 以 **301 + `force = true`** 收到自定义主域名 `https://hsr-archive.cduyzh.top/:splat`。`from` 带完整 scheme+host 时规则只在该 host 上生效；它**必须排在 `/*` SPA 兜底之前**（Netlify 按顺序匹配，否则兜底先命中、重定向失效）。旧子域名本身已由 Netlify 强制 HTTPS，所以不需要 `http://` 变体规则。
+
 `netlify.toml` 中配置了以下 API：
 
 - `/api/archive/config` -> `netlify/functions/archive-config.ts`
