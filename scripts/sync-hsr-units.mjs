@@ -7,20 +7,54 @@ import { promisify } from "node:util"
 
 const execFileAsync = promisify(execFile)
 
-const DATA_VERSION = process.env.HSR_DATA_VERSION ?? "4.5"
+const FALLBACK_DATA_VERSION = "4.5"
+const MANIFEST_URL = "https://static.nanoka.cc/manifest.json"
+
+let DATA_VERSION = process.env.HSR_DATA_VERSION ?? FALLBACK_DATA_VERSION
 const ROOT = new URL("../", import.meta.url)
 const CONFIG_PATH = new URL("../src/data/seed/config.json", import.meta.url)
 const UNITS_PATH = new URL("../src/data/seed/hsr-units.json", import.meta.url)
 const PAIRS_PATH = new URL("../src/data/seed/lightcone-pairs.json", import.meta.url)
 
-const SOURCE = {
-  characterPage: "https://hsr.nanoka.cc/character",
-  lightconePage: "https://hsr.nanoka.cc/lightcone",
-  characterData: `https://static.nanoka.cc/hsr/${DATA_VERSION}/character.json`,
-  lightconeData: `https://static.nanoka.cc/hsr/${DATA_VERSION}/lightcone.json`,
-  characterDetail: `https://static.nanoka.cc/hsr/${DATA_VERSION}/zh/character`,
-  characterImageBase: "https://static.nanoka.cc/assets/hsr/avatarshopicon",
-  lightconeImageBase: "https://static.nanoka.cc/assets/hsr/lightconemediumicon",
+function sourceFor(dataVersion) {
+  return {
+    characterPage: "https://hsr.nanoka.cc/character",
+    lightconePage: "https://hsr.nanoka.cc/lightcone",
+    characterData: `https://static.nanoka.cc/hsr/${dataVersion}/character.json`,
+    lightconeData: `https://static.nanoka.cc/hsr/${dataVersion}/lightcone.json`,
+    characterDetail: `https://static.nanoka.cc/hsr/${dataVersion}/zh/character`,
+    characterImageBase: "https://static.nanoka.cc/assets/hsr/avatarshopicon",
+    lightconeImageBase: "https://static.nanoka.cc/assets/hsr/lightconemediumicon",
+  }
+}
+
+let SOURCE = sourceFor(DATA_VERSION)
+
+/**
+ * 上游只保留当前大版本目录，新单位累积在最新目录里（`4.5` 这种赛季目录会缺当期角色），
+ * 所以未显式传 HSR_DATA_VERSION 时跟随 manifest 的最新 available，与运行时
+ * `pickDataDirectory()` 口径一致；manifest 取不到才退回 FALLBACK_DATA_VERSION。
+ */
+async function resolveDataVersion() {
+  if (process.env.HSR_DATA_VERSION) return process.env.HSR_DATA_VERSION
+  try {
+    const manifest = await fetchJson(MANIFEST_URL)
+    const available = manifest?.hsr?.available ?? []
+    if (available.length === 0) return FALLBACK_DATA_VERSION
+    return [...available].sort(compareDataVersions)[available.length - 1]
+  } catch {
+    return FALLBACK_DATA_VERSION
+  }
+}
+
+function compareDataVersions(a, b) {
+  const partsA = String(a).split(".").map((part) => Number(part) || 0)
+  const partsB = String(b).split(".").map((part) => Number(part) || 0)
+  for (let index = 0; index < 3; index += 1) {
+    const diff = (partsA[index] ?? 0) - (partsB[index] ?? 0)
+    if (diff !== 0) return diff
+  }
+  return 0
 }
 
 const PATH_LABELS = {
@@ -99,6 +133,9 @@ const STANDARD_FIVE_STAR_CHARACTER_SOURCE_IDS = new Set([
 ])
 
 async function main() {
+  DATA_VERSION = await resolveDataVersion()
+  SOURCE = sourceFor(DATA_VERSION)
+
   const [characterData, lightconeData, config] = await Promise.all([
     fetchJson(SOURCE.characterData),
     fetchJson(SOURCE.lightconeData),
@@ -192,7 +229,7 @@ async function writeJson(url, data) {
 function normalizeCharacter(sourceId, source, usedIds) {
   const id = unitId(sourceId, TRAILBLAZER_SLUGS[sourceId] ?? source.en ?? source.zh, usedIds)
   const rarity = parseRarity(source.rank)
-  const name = TRAILBLAZER_NAMES[sourceId] ?? source.zh
+  const name = TRAILBLAZER_NAMES[sourceId] ?? cleanUnitName(source.zh)
   const pathLabel = PATH_LABELS[source.baseType]
   const element = ELEMENT_LABELS[source.damageType]
   if (!pathLabel || !element) throw new Error(`Unknown character mapping for ${sourceId}`)
@@ -237,7 +274,7 @@ function normalizeLightcone(sourceId, source, usedIds) {
     id,
     sourceId,
     kind: "lightcone",
-    name: source.zh,
+    name: cleanUnitName(source.zh),
     path: pathLabel,
     rarity,
     limited: sourceId.startsWith("23"),
@@ -245,6 +282,13 @@ function normalizeLightcone(sourceId, source, usedIds) {
     image,
     source,
   }
+}
+
+/** 上游 zh 名会带排版标记（银狼LV.<unbreak>999</unbreak>），只清洗展示名；id 仍由 en 派生，保持 runs 引用键稳定。 */
+function cleanUnitName(value) {
+  return String(value ?? "")
+    .replace(/<unbreak>|<\/unbreak>/g, "")
+    .trim()
 }
 
 function toArchiveUnit(unit) {

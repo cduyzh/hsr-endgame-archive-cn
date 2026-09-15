@@ -45,8 +45,11 @@ export const handler: Handler = async (event) => {
 
   const payload = body.payload
   if (!payload) return jsonResponse({message: "缺少投稿内容", missing: ["payload"]}, 400)
-  const missing = validateSubmission(payload)
+  const { missing, violations } = validateSubmission(payload)
   if (missing.length > 0) return jsonResponse({message: "缺少必要字段", missing}, 400)
+  if (violations.length > 0) {
+    return jsonResponse({message: violations[0].message, missing: [], violations}, 400)
+  }
 
   const sql = getSql()
 

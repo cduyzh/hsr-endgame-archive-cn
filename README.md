@@ -61,7 +61,7 @@ pnpm netlify:login
 pnpm deploy:netlify
 ```
 
-`scripts/deploy-netlify.sh` 会先运行完整的 `pnpm build`，再将 `dist/` 和 `netlify/functions/` 发布到默认站点 `hsr-endgame-archive-cn`。可以传入发布说明：
+`scripts/deploy-netlify.sh` 会先运行完整的 `pnpm build`，再将 `dist/` 和 `netlify/functions/` 发布到默认站点 `hsr-endgame-archive-cn`。netlify-cli 由 `scripts/lib/netlify-cli.sh` 统一管理：已装就复用仓库内已忽略的 `.netlify-cli/`，没装才从 `registry.npmjs.org` 装进去（不再用 `pnpm dlx` 现装——本机全局 registry 指向 npmmirror，镜像缺 `@netlify/serverless-functions-api` 的新版本时那条路必然失败）。脚本结束会打印 `deploy exit=<码>`；**判发布是否生效要看这个码加线上包哈希与版本徽章**，不要用 `pnpm deploy:netlify … | tail` 的退出码（那是 `tail` 的）。可以传入发布说明：
 
 ```bash
 pnpm deploy:netlify -- "update archive data"
@@ -118,15 +118,15 @@ pnpm sync:stages -- --season=4.5  # 只同步指定赛季
 | `/api/archive/config`        | `archive-config`       | 赛季、模式、敌方阶段、角色、光锥、文章配置   |
 | `/api/archive/runs`          | `archive-runs`         | 已审核竞速记录，支持筛选                     |
 | `/api/archive/stats`         | `archive-stats`        | 使用率、组合、成本区间统计                   |
-| `/api/submissions`           | `submissions`          | 投稿入口（视频链接 + 敌方阶段重复时返回 409） |
+| `/api/submissions`           | `submissions`          | 投稿入口（服务端按与表单相同的规则校验值域，违规返回 400 + 中文原因；视频链接 + 敌方阶段重复时返回 409） |
 | `/api/submissions/check`     | `submissions-check`    | 投稿前按「视频链接 + 敌方阶段」查重，可带 `excludeIds` 排除自己这一族 |
 | `/api/submissions/me`        | `submissions-me`       | 按本机投稿凭证反查自己的投稿与记录（默认不含已隐藏的） |
 | `/api/submissions/:id/withdraw` | `submissions-withdraw` | 凭投稿凭证撤回自己的投稿                    |
 | `/api/submissions/:id/visibility` | `submissions-visibility` | 隐藏 / 取消隐藏自己的投稿（服务端状态、跨设备生效；只允许已驳回与已撤回） |
 | `/api/submissions/:id/delete` | `submissions-delete`   | 硬删自己被驳回的投稿（不可恢复，不经审核）  |
 | `/api/submissions/:id/revisions` | `submissions-revision` | 编辑并重新提交：已通过产生待审修订、已驳回就地重提 |
-| `/api/admin/submissions`     | `admin-submissions`    | 管理员读取投稿审核列表                       |
-| `/api/admin/submissions/:id` | `admin-submissions-id` | 审核入口                                     |
+| `/api/admin/submissions`     | `admin-submissions`    | 管理员读取投稿审核列表（`status` 支持 `pending`/`approved`/`rejected`/`withdrawn`/`all`） |
+| `/api/admin/submissions/:id` | `admin-submissions-id` | 审核入口（通过前复校投稿值域，敌方阶段既不在库里也不在数据快照中时拒绝通过；整串写入在一笔事务里，失败整体回滚） |
 | `/api/admin/sync-stages`     | `admin-sync-stages`    | 管理员触发批量同步 `stages` 表（从远程快照） |
 
 ## 静态数据源（远程直连）

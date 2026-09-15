@@ -1,7 +1,7 @@
 {
-  "version": "4.5",
-  "fetchedAt": "2026-09-03T03:41:25.911Z",
-  "source": "https://static.nanoka.cc/hsr/4.5/zh/character/<sourceId>.json -> lightcones[0]",
+  "version": "4.5.54",
+  "fetchedAt": "2026-09-15T01:51:09.564Z",
+  "source": "https://static.nanoka.cc/hsr/4.5.54/zh/character/<sourceId>.json -> lightcones[0]",
   "pairs": {
     "kafka": "patience-is-all-you-need",
     "silver-wolf": "incessant-rain",
@@ -51,6 +51,7 @@
     "cyrene": "this-love-forever",
     "sparxie": "dazzled-by-a-flowery-world",
     "yao-guang": "when-she-decided-to-see",
+    "pearl": "colors-for-tomorrow",
     "ashveil": "the-finale-of-a-lie",
     "evanescia": "until-the-flowers-bloom-again",
     "silver-wolf-lv-unbreak-999-unbreak": "welcome-to-the-cosmic-city",

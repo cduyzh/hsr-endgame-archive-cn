@@ -973,6 +973,18 @@
       "icon": "yaoguang"
     },
     {
+      "id": "pearl",
+      "sourceId": "1503",
+      "kind": "character",
+      "name": "真珠",
+      "path": "欢愉",
+      "element": "冰",
+      "rarity": 5,
+      "limited": true,
+      "release": null,
+      "icon": "pearl"
+    },
+    {
       "id": "ashveil",
       "sourceId": "1504",
       "kind": "character",
@@ -1000,7 +1012,7 @@
       "id": "silver-wolf-lv-unbreak-999-unbreak",
       "sourceId": "1506",
       "kind": "character",
-      "name": "银狼LV.<unbreak>999</unbreak>",
+      "name": "银狼LV.999",
       "path": "欢愉",
       "element": "虚数",
       "rarity": 5,
@@ -2729,6 +2741,16 @@
       "rarity": 5,
       "limited": true,
       "atk": 529
+    },
+    {
+      "id": "colors-for-tomorrow",
+      "sourceId": "23055",
+      "kind": "lightcone",
+      "name": "献给明日的色彩",
+      "path": "欢愉",
+      "rarity": 5,
+      "limited": true,
+      "atk": 476
     },
     {
       "id": "the-finale-of-a-lie",

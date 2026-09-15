@@ -8,6 +8,7 @@ dist-ssr
 .hsr-cache
 .netlify
 .netlify-config
+.netlify-cli
 .pnpm-store
 
 # 工具链状态文件

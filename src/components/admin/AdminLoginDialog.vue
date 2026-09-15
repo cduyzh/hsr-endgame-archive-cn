@@ -12,7 +12,7 @@ const emit = defineEmits<{
   submit: [credentials: { username: string; password: string }]
 }>()
 
-const form = reactive({ username: "admin", password: "" })
+const form = reactive({ username: "", password: "" })
 const usernameInput = useTemplateRef<HTMLInputElement>("usernameInput")
 
 watch(
@@ -65,7 +65,7 @@ function submit() {
             v-model.trim="form.username"
             type="text"
             autocomplete="username"
-            placeholder="admin"
+            placeholder="部署环境配置的管理员账号"
           >
         </label>
         <label class="field">

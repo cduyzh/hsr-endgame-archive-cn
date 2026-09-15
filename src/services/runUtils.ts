@@ -16,8 +16,11 @@ import {
   flagsOfRun,
   isRunFlag,
 } from "@/services/runFlags"
+import { AS_MAX_SCORE, categoryOptionsFor, stageKeyOf } from "@/services/submissionRules"
 // 标记口径的唯一来源仍是本文件：判定原语住在无别名依赖的 runFlags.ts（Functions 引不了带 @/ 的本文件）。
 export { flagLabels, flagOrder, flagsOfRun, isRunFlag }
+// 分类与阶段键口径同理：原语住在 submissionRules.ts（服务端 `checkSubmissionRules` 要用），本文件再导出。
+export { AS_MAX_SCORE, categoryOptionsFor, stageKeyOf }
 
 export function matchesCategory(run: ArchiveRun, category: RunCategory): boolean {
   return category === "all" || run.category === category
@@ -34,9 +37,6 @@ export const categoryLabels: Record<SpecificRunCategory, string> = {
   asScore4000: "4000 满分",
 }
 
-/** 末日幻影按剩余行动值计分，满分 4000。 */
-export const AS_MAX_SCORE = 4000
-
 /** 分数区间取「归入更高一档」的口径，3899–4000 之间的分数不属于任何档。 */
 const asScoreBands: Array<{ category: SpecificRunCategory; min: number; max: number }> = [
   { category: "asScore4000", min: 4000, max: 4000 },
@@ -48,11 +48,6 @@ const asScoreBands: Array<{ category: SpecificRunCategory; min: number; max: num
 export function categoryOfAsScore(score: number): SpecificRunCategory | null {
   if (!Number.isInteger(score)) return null
   return asScoreBands.find((band) => score >= band.min && score <= band.max)?.category ?? null
-}
-
-/** 阶段 id 规则为 `${seasonId}-${mode}-${stageKey}`，末段即阶段键。 */
-export function stageKeyOf(bossId: string): string {
-  return bossId.split("-").pop() ?? ""
 }
 
 /**
@@ -100,12 +95,6 @@ export function stageGroupOf(boss: Pick<BossStage, "id" | "mode">): StageGroup {
 /** 第 3 阶段（星启）血量与难度显著高于上下半，需要单独醒目标识。 */
 export function isStarwardStage(boss: Pick<BossStage, "id">): boolean {
   return stageKeyOf(boss.id) === "starward"
-}
-
-export function categoryOptionsFor(mode: EndgameMode, bossId: string): SpecificRunCategory[] {
-  if (mode === "as") return ["asScore3400", "asScore3650", "asScore3850", "asScore4000"]
-  if (mode === "aa" && stageKeyOf(bossId) === "plight") return ["plightZeroCycle", "plightFullStars"]
-  return ["zeroCycle", "fullStars"]
 }
 
 /**

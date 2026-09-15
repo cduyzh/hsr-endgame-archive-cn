@@ -11,7 +11,7 @@
     "typecheck": "vue-tsc --noEmit",
     "lint": "eslint .",
     "test:unit": "vitest run",
-    "netlify:login": "mkdir -p .netlify-config && XDG_CONFIG_HOME=\"$PWD/.netlify-config\" pnpm --package=netlify-cli dlx netlify login",
+    "netlify:login": "sh ./scripts/netlify-login.sh",
     "deploy:netlify": "sh ./scripts/deploy-netlify.sh",
     "sync:units": "node scripts/sync-hsr-units.mjs",
     "sync:monsters": "node scripts/sync-hsr-monsters.mjs",

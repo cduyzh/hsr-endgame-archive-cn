@@ -6,6 +6,12 @@ import {
   type CharacterGoldKind,
 } from "@/services/unitCost"
 import { DUPLICATE_VIDEO_MESSAGE } from "@/services/videoUrl"
+import {
+  TEAM_SLOT_COUNT,
+  isUsableVideoUrl,
+  toInteger,
+  zeroCycleCategories,
+} from "@/services/submissionRules"
 import type {
   ArchiveConfig,
   ArchiveUnit,
@@ -17,8 +23,8 @@ import type {
   UnitPath,
 } from "@/types/archive"
 
-/** 投稿固定按 4 人队伍录入，与档案侧 `teamSize` 的最大值一致 */
-export const TEAM_SLOT_COUNT = 4
+// 槽位数与视频链接合法性的原语住在 submissionRules.ts（服务端 `checkSubmissionRules` 共用），本文件再导出。
+export { TEAM_SLOT_COUNT, isUsableVideoUrl }
 
 export type SubmissionField =
   | "seasonId"
@@ -61,9 +67,6 @@ export const submissionStepFields: Record<SubmissionStepId, SubmissionField[]> =
   team: ["teamName", "units", "lightcones"],
   result: ["cycle", "score", "cost"],
 }
-
-/** 0 轮类分类（含异相仲裁的绝境变体）要求轮次为 0。 */
-const zeroCycleCategories = new Set<SpecificRunCategory>(["zeroCycle", "plightZeroCycle"])
 
 /** 非末日幻影模式的默认分数：这些模式的分数没有上限，只是记录值。 */
 const DEFAULT_RESULT_SCORE = 40000
@@ -108,37 +111,6 @@ export interface SubmissionTarget {
   hp: string
   speed: string
   toughness: string
-}
-
-function toInteger(value: unknown): number | null {
-  if (typeof value === "number") return Number.isInteger(value) ? value : null
-  const text = String(value ?? "").trim()
-  if (!text) return null
-  const parsed = Number(text)
-  return Number.isInteger(parsed) ? parsed : null
-}
-
-/** 审核只认这两个平台的录像地址；子域任意，短链域名单独列出。 */
-const VIDEO_DOMAINS = ["bilibili.com", "b23.tv", "youtube.com", "youtube-nocookie.com"]
-const VIDEO_SHORT_DOMAINS = ["youtu.be"]
-
-function isAllowedVideoHost(hostname: string): boolean {
-  const host = hostname.toLowerCase().replace(/^www\./, "")
-  return (
-    VIDEO_SHORT_DOMAINS.includes(host) ||
-    VIDEO_DOMAINS.some((domain) => host === domain || host.endsWith(`.${domain}`))
-  )
-}
-
-export function isUsableVideoUrl(value: string): boolean {
-  const trimmed = value.trim()
-  if (!trimmed) return false
-  try {
-    const url = new URL(trimmed)
-    return (url.protocol === "https:" || url.protocol === "http:") && isAllowedVideoHost(url.hostname)
-  } catch {
-    return false
-  }
 }
 
 /** 根据视频 URL 域名返回平台来源，用于在 UI 上显示对应平台图标与文案。 */

@@ -4,7 +4,7 @@ import { ArchiveRestore, Check, ExternalLink, ShieldCheck, X } from "lucide-vue-
 import FlagIcon from "@/components/FlagIcon.vue"
 import { getUnitImageSrc } from "@/data/unitAssets"
 import { seedConfig } from "@/data/seed"
-import { categoryLabels, flagLabels, flagOrder } from "@/services/runUtils"
+import { categoryLabels, flagLabels, flagOrder, stageLabelOf } from "@/services/runUtils"
 import type { SubmissionReview, SubmissionReviewStatus } from "@/types/archive"
 
 const props = defineProps<{
@@ -18,10 +18,18 @@ const emit = defineEmits<{
   review: [status: SubmissionReviewStatus]
 }>()
 
-const bossNameById = new Map(seedConfig.bosses.map((boss) => [boss.id, boss.name]))
 const modeNameById = new Map(seedConfig.modes.map((mode) => [mode.id, mode.label]))
 const unitNameById = new Map(seedConfig.units.map((unit) => [unit.id, unit.name]))
 const unitById = new Map(seedConfig.units.map((unit) => [unit.id, unit]))
+
+const statusLabels: Record<SubmissionReviewStatus, string> = {
+  pending: "待审核",
+  approved: "已通过",
+  rejected: "已驳回",
+  withdrawn: "已撤回",
+}
+
+const stageLabel = computed(() => stageLabelOf(props.review.payload.bossId))
 
 const reviewFlags = computed(() =>
   flagOrder.filter((flag) => (props.review.payload.flags ?? []).includes(flag)),
@@ -35,10 +43,6 @@ const slots = computed(() =>
     lightconeUnit: unitById.get(props.review.payload.lightcones[index]?.unitId),
   })),
 )
-
-function statusLabel(status: SubmissionReviewStatus) {
-  return status === "pending" ? "待审核" : status === "approved" ? "已通过" : "已驳回"
-}
 
 function formatDate(value?: string | null) {
   if (!value) return "-"
@@ -61,7 +65,7 @@ function formatDate(value?: string | null) {
         <h3>{{ review.payload.teamName }}</h3>
         <p>
           {{ review.payload.author }} · {{ modeNameById.get(review.payload.mode) ?? review.payload.mode }} ·
-          {{ bossNameById.get(review.payload.bossId) ?? review.payload.bossId }}
+          <span :title="review.payload.bossId">{{ review.payload.seasonId }} · {{ stageLabel }}</span>
         </p>
         <p
           v-if="review.revisesId"
@@ -89,7 +93,7 @@ function formatDate(value?: string | null) {
           </span>
         </p>
       </div>
-      <span :class="['review-status', review.status]">{{ statusLabel(review.status) }}</span>
+      <span :class="['review-status', review.status]">{{ statusLabels[review.status] }}</span>
     </div>
 
     <dl class="review-metrics">
@@ -166,7 +170,7 @@ function formatDate(value?: string | null) {
     <div class="form-actions">
       <div class="review-actions">
         <button
-          v-if="review.status !== 'approved'"
+          v-if="review.status !== 'approved' && review.status !== 'withdrawn'"
           class="icon-button primary-action"
           type="button"
           :disabled="acting"
@@ -179,7 +183,7 @@ function formatDate(value?: string | null) {
           {{ acting ? "处理中" : review.status === "rejected" ? "重新通过" : "通过并发布" }}
         </button>
         <button
-          v-if="review.status !== 'rejected'"
+          v-if="review.status !== 'rejected' && review.status !== 'withdrawn'"
           class="icon-button danger-action"
           type="button"
           :disabled="acting"

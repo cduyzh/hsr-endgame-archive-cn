@@ -5,6 +5,7 @@ import { join } from "node:path"
 import configData from "../../src/data/seed/config.json"
 import runsData from "../../src/data/seed/runs.json"
 import { isRunFlag } from "../../src/services/runFlags"
+import { checkSubmissionRules } from "../../src/services/submissionRules"
 import { COST_MAX, getRunGoldCounts } from "../../src/services/unitCost"
 import { submissionReviewToArchiveRun } from "../../src/services/submissionUtils"
 import { matchesVideoIdentity, videoIdentityOf, videoMatchPattern } from "../../src/services/videoUrl"
@@ -307,7 +308,7 @@ export function validateSubmission(payload: Partial<SubmissionPayload>) {
   if (!payload.bossId) missing.push("bossId")
   if (!payload.units?.length || payload.units.some((unit) => !unit.unitId)) missing.push("units")
   if (!payload.lightcones?.length || payload.lightcones.some((unit) => !unit.unitId)) missing.push("lightcones")
-  return missing
+  return { missing, violations: checkSubmissionRules(payload) }
 }
 
 /** 投稿自助接口（撤回 / 隐藏 / 删除 / 修订）共用的凭证校验口径：非字符串、空、超长一律视为非法。 */

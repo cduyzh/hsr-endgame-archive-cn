@@ -2381,6 +2381,11 @@ body.is-modal-open {
   color: var(--danger);
 }
 
+.review-status.withdrawn {
+  border-color: rgba(170, 166, 197, 0.46);
+  color: #aaa6c5;
+}
+
 .review-metrics {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));

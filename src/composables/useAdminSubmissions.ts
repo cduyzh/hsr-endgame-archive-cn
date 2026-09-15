@@ -28,6 +28,15 @@ export function useAdminSubmissions() {
   const loginError = shallowRef("")
   const reviews = ref<SubmissionReview[]>([])
   const notes = ref<Record<string, string>>({})
+  /** 服务端原有的审核备注。备注框是拉取时水合的，靠它才能分辨「管理员没动过」与「管理员新写了」。 */
+  const serverNotes = shallowRef<Record<string, string>>({})
+
+  function hydrateNotes(rows: SubmissionReview[]) {
+    const hydrated = Object.fromEntries(rows.map((review) => [review.id, review.reviewerNote ?? ""]))
+    notes.value = hydrated
+    // 必须是拷贝：notes 会被输入框改写，基线跟着变就分辨不出「管理员新写过」了。
+    serverNotes.value = { ...hydrated }
+  }
 
   async function loadReviews(options: { silent?: boolean } = {}) {
     if (!session.value) return
@@ -38,7 +47,7 @@ export function useAdminSubmissions() {
     }
     try {
       reviews.value = await fetchSubmissionReviews(session.value, statusFilter.value)
-      notes.value = Object.fromEntries(reviews.value.map((review) => [review.id, review.reviewerNote ?? ""]))
+      hydrateNotes(reviews.value)
     } catch (err) {
       const nextError = err instanceof Error ? err.message : "审核列表读取失败。"
       error.value = nextError
@@ -59,7 +68,7 @@ export function useAdminSubmissions() {
       const nextReviews = await fetchSubmissionReviews(nextSession, statusFilter.value)
       session.value = nextSession
       reviews.value = nextReviews
-      notes.value = Object.fromEntries(nextReviews.map((review) => [review.id, review.reviewerNote ?? ""]))
+      hydrateNotes(nextReviews)
       sessionStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(nextSession))
     } catch (err) {
       loginError.value = err instanceof Error ? err.message : "登录失败。"
@@ -72,6 +81,7 @@ export function useAdminSubmissions() {
     session.value = null
     reviews.value = []
     notes.value = {}
+    serverNotes.value = {}
     sessionStorage.removeItem(SESSION_STORAGE_KEY)
   }
 
@@ -87,7 +97,11 @@ export function useAdminSubmissions() {
     message.value = ""
     error.value = ""
     try {
-      await reviewSubmission(id, status, notes.value[id] ?? "", session.value)
+      const typed = notes.value[id] ?? ""
+      const previous = serverNotes.value[id] ?? ""
+      // 通过时不带回未改动的旧备注：那句话是上一次驳回的结论，不是这次通过的管理备注。
+      const note = status === "approved" && typed.trim() === previous.trim() ? "" : typed
+      await reviewSubmission(id, status, note, session.value)
       await loadReviews({ silent: true })
       message.value =
         status === "approved" ? "已通过投稿并发布到档案。" : status === "rejected" ? "已驳回投稿。" : "已退回待审核。"

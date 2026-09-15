@@ -72,7 +72,7 @@
 
 - `data/seed/`：`index.ts` 只导出 `seedConfig`（`config.json`）与 `seedRuns`（`runs.json`）。当前 `config.json` 的 `bosses` 与 `runs.json` 都是空数组——敌方阶段全部来自 `services/staticArchiveConfig.ts` 的远程快照，公开记录依赖数据库或审核 fallback 文件。
 - `data/seed/hsr-units.json`、`hsr-monsters.json`：`pnpm sync:units` / `pnpm sync:monsters` 的产物，**运行时不 import**，仅供人工比对与后续同步。
-- `data/seed/lightcone-pairs.json`：同样是 `pnpm sync:units` 的产物（角色 id -> 专武 id），但**会被 `data/signatureLightcones.ts` 运行时 import**——投稿表单要在选角色时同步查表。
+- `data/seed/lightcone-pairs.json`：同样是 `pnpm sync:units` 的产物（角色 id -> 专武 id，2026-09-14 起 58 条：补上了「真珠 → 献给明日的色彩」），但**会被 `data/signatureLightcones.ts` 运行时 import**——投稿表单要在选角色时同步查表。`sync:units` 未显式传 `HSR_DATA_VERSION` 时跟随 manifest 的最新数据目录（赛季目录会缺当期新角色），并会剥掉上游 zh 名里的 `<unbreak>` 排版标记（否则「银狼LV.999」会带着尖括号印到界面上）。
 - `data/unitAssets.ts`：用 `config.json` 的 `sourceId` 把本地 slug id 映射为远程图片 `sourceId`。
 - `data/unitPaths.ts`：命途图标选项（`IMAGE_BASES.path`，9 个命途）。
 - `data/elementIcons.ts`：七个属性（弱点 / 抗性）图标的**热链地址**（`ELEMENT_ICON_SOURCES`），只能经 `components/ElementIcon.vue` 渲染；`BossPanel` 的 WEAK 行、RESIST 行与敌方阵容三处共用它。

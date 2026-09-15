@@ -2,7 +2,7 @@ import type { Handler } from "@netlify/functions"
 import { getSql, jsonResponse, listFallbackSubmissionReviews, requireAdmin } from "./_shared"
 import type { SubmissionReviewStatus } from "../../src/types/archive"
 
-const allowedStatuses = new Set(["pending", "approved", "rejected", "all"])
+const allowedStatuses = new Set(["pending", "approved", "rejected", "withdrawn", "all"])
 
 export const handler: Handler = async (event) => {
   if (event.httpMethod !== "GET") return jsonResponse({ message: "Method Not Allowed" }, 405)

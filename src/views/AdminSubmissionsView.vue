@@ -9,6 +9,7 @@ const statusOptions: Array<{ value: SubmissionReviewStatus | "all"; label: strin
   { value: "pending", label: "待审核" },
   { value: "approved", label: "已通过" },
   { value: "rejected", label: "已驳回" },
+  { value: "withdrawn", label: "已撤回" },
   { value: "all", label: "全部记录" },
 ]
 

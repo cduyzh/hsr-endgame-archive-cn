@@ -69,6 +69,9 @@ describe("GET /api/archive/stages", () => {
 
     expect(response.headers["content-type"]).toBe("application/json; charset=utf-8")
     expect(response.headers["cache-control"]).toBe("public, max-age=300")
+    // 下面两个头是**给平台看的**：Netlify 会消费掉它们、不再回给客户端，所以这两条断言只在
+    // 直连 handler 时成立。线上探针要改看 `cache-status: "Netlify Durable"; hit; ttl≈3600`，
+    // 按头名断言必然误判成「长缓存没生效」（见 docs/wiki/04-生产验证缺陷清单 D6）。
     expect(response.headers["netlify-cdn-cache-control"]).toBe(
       "public, durable, max-age=3600, stale-while-revalidate=604800",
     )

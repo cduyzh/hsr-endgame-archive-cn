@@ -13,14 +13,17 @@
 | `sync-articles.mjs`             | `pnpm sync:articles`  | 抓取文章清单里的微信公众号文章，生成文章模块产物                               | `scripts/article-sources.json` + 远程 `mp.weixin.qq.com/s/<id>` → `src/data/articles.json`（解析器在 `scripts/lib/parse-weixin-article.mjs`） |
 | `seed-archive-tables.mjs`       | `pnpm seed:archive`   | 把 `src/data/seed/config.json` upsert 进 Neon                                  | `config.json` → Postgres（`seasons/stages/characters/lightcones/articles`）                                                            |
 | `sync-stages-from-snapshot.mjs` | `pnpm sync:stages`    | 从远程 `static.nanoka.cc` 拉所有赛季的 `BossStage`，批量 upsert 进 `stages` 表 | 远程 `manifest.json` + 各模式详情 → Postgres（`stages`）                                                                               |
-| `deploy-netlify.sh`             | `pnpm deploy:netlify` | 先 `pnpm build` 再发布 `dist/` + `netlify/functions/` 到 Netlify               | —                                                                                                                                      |
+| `deploy-netlify.sh`             | `pnpm deploy:netlify` | 先 `pnpm build` 再发布 `dist/` + `netlify/functions/` 到 Netlify；末尾显式打印 `deploy exit=<码>` | 本地 `dist/` → Netlify                                                                                                                                     |
+| `netlify-login.sh`              | `pnpm netlify:login`  | 用复用的 netlify-cli 登录，登录态写进已忽略的 `.netlify-config/`                       | —                                                                                                                                      |
+| `lib/netlify-cli.sh`            | （被 source）         | 定位/安装 netlify-cli 的共用片段：`. "$ROOT_DIR/scripts/lib/netlify-cli.sh"` 后调 `ensure_netlify_cli "$ROOT_DIR"`，成功后 CLI 路径在 `$NETLIFY_CLI_BIN` | `registry.npmjs.org` → 仓库内已忽略的 `.netlify-cli/`                                                                                    |
 | `reference-inventory.mjs`       | （手动）              | 仅生成参考站观察清单，不下载/不复制/不作为运行时依赖                           | —                                                                                                                                      |
 
 ## 关键注意点
 
-- **数据版本**由环境变量 `HSR_DATA_VERSION` 控制，默认 `4.5`。同步不同版本时显式传入。
+- **数据版本**由环境变量 `HSR_DATA_VERSION` 控制。`sync:units` **未显式传入时跟随 `manifest.json` 的最新 `available` 数据目录**（与运行时 `pickDataDirectory()` 同口径），manifest 取不到才退回 `4.5`；`sync:monsters` 仍是默认 `4.5`。原因：上游把新单位累积在最新数据目录里，赛季目录 `hsr/4.5/` 会缺当期角色——2026-09-14 实测 `4.5` 只有 97 角色 / 169 光锥，`4.5.54` 是 98 / 170，缺的正是「真珠」与《献给明日的色彩》，直接后果是投稿表单里选不到当期新角色。同步指定版本时显式传入。
 - `sync:monsters` 与 `sync:units` 均直连 `static.nanoka.cc` 抓取，可独立运行；抓取失败会抛出带数据地址的错误。两者都只写 `src/data/seed/*.json`，不落盘图片。
-- **`sync:units` 会为每个五星限定角色额外抓一次 `zh/character/<sourceId>.json`** 来生成专武映射（约 57 次请求，串行执行）；单个角色抓取失败或命途对不上时只跳过该条目并在末尾 `console.warn`，不影响 units 落库。`lightcone-pairs.json` 与 `articles.json` 是被前端运行时 import 的两个脚本产物（分别见 `src/data/signatureLightcones.ts` 与 `src/data/articles.ts`）。
+- **`sync:units` 会为每个五星限定角色额外抓一次 `zh/character/<sourceId>.json`** 来生成专武映射（2026-09-14 起 58 条，串行执行）；单个角色抓取失败或命途对不上时只跳过该条目并在末尾 `console.warn`，不影响 units 落库。`lightcone-pairs.json` 与 `articles.json` 是被前端运行时 import 的两个脚本产物（分别见 `src/data/signatureLightcones.ts` 与 `src/data/articles.ts`）。
+- **`sync:units` 用 `cleanUnitName()` 剥掉上游 zh 名里的 `<unbreak>` 排版标记**（`银狼LV.<unbreak>999</unbreak>` → `银狼LV.999`），口径与 `sync-hsr-monsters.mjs` 一致；**只清洗展示名，id 仍由 `en` 名派生**，因为 id 是 `runs` / `run_units` 的引用键，改了会断历史记录。此前这层清洗只有怪物脚本有，导致脏名字一路进了 seed 与线上 `characters` 表（角色名会原样印在记录列表、环境统计与投稿预览里）。
 - **同步脚本只更新 seed 数据，不下载图片**；图片由前端经 `dataSource.ts` 直连，勿把图片落盘。
 - `seed:archive` 连接顺序与 `netlify/functions/_shared.ts` 一致：`NETLIFY_DATABASE_URL ?? DATABASE_URL ?? POSTGRES_URL`。支持 `-- --dry-run`、`-- --table=seasons,stages`、`-- --id=<id>`。
 - **`stages` 表来自 `config.json` 的 `bosses`**（不是独立的 `stages` 字段）。当前 seed 的 `bosses` 为空数组，敌方阶段由前端 `staticArchiveConfig.ts` 从远程快照合并生成，因此 `seed:archive` 实际只会写入 `seasons / characters / lightcones / articles`。若要让 DB 里也有 `stages`，需先往 `bosses` 补条目（见根 `AGENTS.md`「数据架构」）。
@@ -31,5 +34,7 @@
 ## 部署
 
 - `deploy-netlify.sh`：`set -eu`，站点名默认 `NETLIFY_SITE_NAME=hsr-endgame-archive-cn`，登录态在已忽略的 `.netlify-config/`（先 `pnpm netlify:login`）。
+- **netlify-cli 不再走 `pnpm dlx` 现装**：`deploy-netlify.sh` 与 `netlify-login.sh` 都 source `lib/netlify-cli.sh` 的 `ensure_netlify_cli`——已装就复用 `.netlify-cli/node_modules/.bin/netlify`，没装才从 `registry.npmjs.org` 装进这个仓库内已忽略的隔离前缀。原因是本机 pnpm/npm 的全局 registry 指向 npmmirror，而镜像上 `@netlify/serverless-functions-api` 缺新版本，`pnpm --package=netlify-cli dlx` **必然**失败（2026-09-12 实测），而且每次发布都要重装一遍。可用 `NETLIFY_CLI_VERSION` / `NETLIFY_CLI_REGISTRY` / `NETLIFY_CLI_PREFIX` 覆盖。
+- **判发布成功只看脚本自己打印的 `deploy exit=0`，再核线上包哈希与版本徽章**；不要写 `pnpm deploy:netlify … | tail -40` 然后按退出码判断——管道的退出码是 `tail` 的，2026-09-12 就这样把一次**已失败**的发布读成了 exit 0（构建全绿、`dist` 有新哈希，线上包纹丝不动）。
 - 发布前脚本会自动完整跑 `pnpm build`（`run-p` **并行**执行 typecheck / test:unit / lint / vite build）。Netlify 构建环境固定 Node 24（见 `netlify.toml`）。
 - 不要为了发布而把数据源 JSON/图片拷进 `dist` 或 `public`；直连改造的目的就是省带宽。

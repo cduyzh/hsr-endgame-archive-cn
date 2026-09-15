@@ -13,10 +13,11 @@
 | `staticArchiveConfig.ts`  | 静态快照入口：**优先 `GET /api/archive/stages`**（函数侧算一次 + 边缘长缓存），失败/为空/形状不合时**回落**浏览器直连 `static.nanoka.cc` 现算 | `fetchStaticArchiveSnapshot()`、`mergeStaticArchiveConfig()`                                                             |
 | `apiBase.ts`              | `VITE_API_BASE` 的唯一来源（`archiveService.ts` 与 `staticArchiveConfig.ts` 共用；从 archiveService 反向导出会循环依赖）        | `API_BASE`                                                                                                                |
 | `staticBossSnapshot.ts`   | 远程静态快照的纯计算层（不发起网络），被前端 `staticArchiveConfig.ts` 与服务端 `netlify/functions/_staticSnapshot.ts` 共用 | `buildSeasonBosses(seasonId, version, baseUrl)`、`pickDataDirectory()`、`STATIC_SEASON_IDS`、各类 build\*Stages 纯函数   |
-| `runUtils.ts`             | 记录筛选/排序/统计纯函数 + 分类/标记/阶段分组与展示词口径唯一来源                                                              | `filterRuns`、`buildMetaStats`、`matchesRange`、`categoryLabels`、`categoryOptionsFor`、`categoryOfAsScore`、`defaultModeOf`、`stageKeyOf`、`stageKeyLabels`/`stageLabelOf`、`flagOrder`/`flagLabels`/`isRunFlag`/`flagsOfRun`、`stageGroupOf`/`isStarwardStage` |
+| `runUtils.ts`             | 记录筛选/排序/统计纯函数 + 分类/标记/阶段分组与展示词口径唯一来源（分类与阶段键的原语已下沉到 `submissionRules.ts`，本文件再导出）                                                              | `filterRuns`、`buildMetaStats`、`matchesRange`、`categoryLabels`、`categoryOptionsFor`、`categoryOfAsScore`、`defaultModeOf`、`stageKeyOf`、`stageKeyLabels`/`stageLabelOf`、`flagOrder`/`flagLabels`/`isRunFlag`/`flagsOfRun`、`stageGroupOf`/`isStarwardStage` |
+| `submissionRules.ts`      | **投稿规则的前后端共用判定层**：模式枚举、分类可选项、阶段键解析、槽位数、视频域名白名单、`toInteger`，以及服务端用的 `checkSubmissionRules()`（**只做 `import type` + 相对路径值导入，Functions 可引用**；`runUtils.ts` 与 `submissionValidation.ts` 原样再导出） | `ENDGAME_MODES`/`isEndgameMode`、`AS_MAX_SCORE`、`TEAM_SLOT_COUNT`、`stageKeyOf`、`categoryOptionsFor`、`zeroCycleCategories`、`toInteger`、`isUsableVideoUrl`、`checkSubmissionRules` |
 | `unitCost.ts`             | 角色与光锥的“限定/常驻/不计成本”分类 + 成本与默认值口径（**无 `@/` 值导入，Functions 可相对引用**）                          | `COST_MIN`/`COST_MAX`、`getCharacterGoldKind`、`getLightconeGoldKind`、`getRunGoldCounts`、`getUnitGoldCounts`、`defaultEidolonFor`、`defaultSuperimpositionFor`、`goldKindLabels` |
 | `submissionUtils.ts`      | 投稿转换纯函数                                                                                                             | `archiveRunIdOf`、`submissionReviewToArchiveRun`、`buildPreferredLightconeByCharacter`、`buildSuggestedLightconeByCharacter`                |
-| `submissionValidation.ts` | 投稿表单的字段校验、步骤归属、新建默认成绩与预览取数（仅前端使用）                                                             | `validateSubmissionForm`、`errorsOfStep`、`stepOfField`、`defaultResultFor`、`buildSubmissionRoster`、`describeSubmissionTarget`             |
+| `submissionValidation.ts` | 投稿表单的字段校验、步骤归属、新建默认成绩与预览取数（值域原语住在 `submissionRules.ts`，本文件再导出，服务端共用同一套规则）                                                             | `validateSubmissionForm`、`errorsOfStep`、`stepOfField`、`defaultResultFor`、`buildSubmissionRoster`、`describeSubmissionTarget`、`getVideoSource`             |
 | `runFlags.ts`             | 终局标记的判定原语（只做 `import type`，前后端都能相对引用；`runUtils.ts` 原样再导出，对外唯一来源仍是 runUtils） | `flagOrder`、`flagLabels`、`isRunFlag`、`flagsOfRun` |
 | `videoUrl.ts`             | 「同一支视频」的唯一口径：从链接提取 BV 号 / YouTube 视频 id，取不到退回规范化 URL；投稿预检与服务端入队拦截共用（**无 `@/` 值导入，Functions 相对引用**） | `videoIdentityOf`、`videoMatchPattern`、`matchesVideoIdentity`、`isSameVideo`、`DUPLICATE_VIDEO_MESSAGE`                 |
 | `clipboard.ts`            | 剪贴板写入的唯一出口（**不是数据访问层**，只服务前端）：HTTPS 走 `navigator.clipboard.writeText`，非安全上下文（本地 `http://localhost`）或权限被拒时回落临时 `textarea` + `execCommand("copy")`；**失败一律返回 `false` 而不抛错**，由调用方给提示文案，不要像旧实现那样静默吞掉 | `copyTextToClipboard()`；被 `/contact` 的微信号与邮箱、`SubmitRunForm.vue` 的投稿凭证复制共用 |
@@ -68,7 +69,8 @@
 
 ## 投稿校验与预览（`submissionValidation.ts`）
 
-- 只服务前端向导（`SubmitRunForm.vue` / `SubmitRunDialog.vue`），**不被 Netlify Function 引用**，因此可以用 `@/` 别名。服务端字段级校验仍看 `netlify/functions/_shared.ts` 的 `validateSubmission()`。
+- 只服务前端向导（`SubmitRunForm.vue` / `SubmitRunDialog.vue`），**不被 Netlify Function 引用**，因此可以用 `@/` 别名。**值域原语已抽到 `submissionRules.ts`**（模式枚举、`categoryOptionsFor`、`stageKeyOf`、`TEAM_SLOT_COUNT`、`isUsableVideoUrl`、`toInteger`、`zeroCycleCategories`），本文件再导出，所以改规则只需改一处。
+- **服务端共用同一套规则**：`netlify/functions/_shared.ts` 的 `validateSubmission()` 返回 `{missing, violations}`（存在性 + 值域），`admin-submissions-id.ts` 在发布前再调一次 `checkSubmissionRules()` 复校存量记录。服务端拦的是**不依赖配置数据就能判定**的规则（模式枚举、分类是否属于当前模式与阶段、阶段 id 与赛季/模式是否一致、成本 `0–48`、`4 角色 + 4 光锥`、视频域名、标记取值、0 轮分类要求轮次 0、`as` 分数上限）；**单位 id 是否真的存在于单位库仍由审核台把关**——那需要读配置，服务端不做。有 `tests/submissionServerValidation.test.ts` 守着。
 - `validateSubmissionForm(form, config, options?)` 返回**有序** `{ field, message }` 列表：列表顺序就是错误汇总条与字段提示的展示顺序，新增规则时按「赛季/模式/阶段/分类 → 作者/视频 → 队伍 → 数值」插到对应位置。`options.duplicateVideoUrl` 是唯一的**外部判定**：表单先调 `checkDuplicateVideo()`，命中后把 `videoUrl.ts` 的 `DUPLICATE_VIDEO_MESSAGE` 落到 `videoUrl` 字段上，于是「挡住下一步」「提交前跳回出错步骤」沿用既有的步骤归属机制，不必新增分支。
 - 步骤归属由 `submissionStepFields` 决定（`basic` / `team` / `result`），`errorsOfStep()` 判断能否进入下一步、`stepOfField()` 在提交失败时把用户跳回第一步出错的那个环节；新增字段必须同时登记归属，否则该字段的错误不会被任何步骤拦下。
 - 新建投稿的默认落点：模式取 `runUtils.defaultModeOf(config.modes)`（带 `NEW` 徽标的那个，与工作台同一口径），成绩取 `defaultResultFor(mode, bossId)`——该模式与阶段的最后一档（满星 / 绝境满星 / `4000` 满分），末日幻影以满分 `AS_MAX_SCORE` 起稿，否则默认分数 `40000` 会撞上「末日幻影分数最高 4000」。`SubmitRunForm.vue` 的 `createForm()` 只用这两个函数，不要再抄默认值。
@@ -88,7 +90,7 @@
 
 ## 分类口径（`runUtils.ts`）
 
-- `categoryLabels` 与 `categoryOptionsFor(mode, bossId)` 是全站唯一来源：主页分类筛选、投稿向导、审核台回显都用它，不要再抄一份常量。
+- `categoryLabels` 与 `categoryOptionsFor(mode, bossId)` 是全站唯一来源：主页分类筛选、投稿向导、审核台回显都用它，不要再抄一份常量。**`categoryOptionsFor` 与 `stageKeyOf` 的实现住在 `submissionRules.ts`**（服务端 `checkSubmissionRules` 要用同一套判定），`runUtils.ts` 原样再导出，所以「唯一来源」指的是这条口径链，不是文件位置。
 - `categoryOptionsFor`：`as` → 四档 `asScore*`；`aa` 且 `stageKeyOf(bossId) === "plight"` → `plightZeroCycle` / `plightFullStars`；其余 → `zeroCycle` / `fullStars`。阶段键从 id 末段解析（`stageKeyOf`），与阶段 id 规则同源。
 - `categoryOfAsScore(score)`：只在 `[min,max]` 命中时返回档位，**边界归高一档**（3650 → `asScore3650`），3900-3999 与 3400 以下返回 `null` 表示不单独归档；投稿里用它自动带入分类，用户手选过后（`categoryTouched`）不再覆盖。
 

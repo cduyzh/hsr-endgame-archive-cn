@@ -109,3 +109,14 @@ alter table submission_reviews add column if not exists revises_id text;
 -- 必须排在上面的 add column 之后：已部署库上这两列在执行到本文件末尾才存在，索引提前引用会直接报错。
 create index if not exists submission_reviews_revises_idx on submission_reviews (revises_id) where revises_id is not null;
 create index if not exists submission_reviews_hidden_idx on submission_reviews (owner_token, hidden) where owner_token is not null;
+
+-- runs.status / runs.mode 此前是无约束 text：脏值既不展示也不报错，只能人工清库。
+-- 取值集合按代码实际写入核对（status 含作者撤回产生的 withdrawn）；category 有意不加约束——
+-- 它是随模式与阶段变化的开放枚举，值域由 src/services/submissionRules.ts 在入队与发布前把关。
+alter table runs drop constraint if exists runs_status_check;
+alter table runs add constraint runs_status_check
+  check (status in ('pending', 'approved', 'rejected', 'withdrawn'));
+
+alter table runs drop constraint if exists runs_mode_check;
+alter table runs add constraint runs_mode_check
+  check (mode in ('moc', 'pf', 'as', 'aa'));
