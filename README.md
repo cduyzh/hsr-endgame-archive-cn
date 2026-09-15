@@ -1,292 +1,66 @@
-# 竞速档案站
+# 终局竞速档案站
 
-中文《崩坏：星穹铁道》终局竞速档案 SPA。项目以 Vue 3、Vite、TypeScript、Pinia 和 Netlify Functions 为基础，用于收录、筛选和展示不同终局模式下的竞速记录、队伍配置、成本、轮次、分数与环境统计。
+中文《崩坏：星穹铁道》终局玩法的**竞速档案站**：收录、筛选并展示混沌回忆 / 虚构叙事 / 末日幻影 / 异相仲裁四个模式的竞速记录，并开放玩家自助投稿。
 
-项目参考 The Genius Archive 的信息架构，但不复制其代码、样式或未确认授权的资源。
+- 站点地址：<https://hsr-archive.cduyzh.top>
+- 更新日志：[CHANGELOG.md](./CHANGELOG.md)，或站内「更新记录」页 <https://hsr-archive.cduyzh.top/changelog>
 
-## 功能范围
+## 能做什么
 
-- **档案工作台**：按赛季、终局模式、敌方阶段、记录分类、队伍人数、成本与分数精确区间、角色/光锥和标记筛选竞速记录。进入站点时默认选中带 `NEW` 徽标的那个模式（当期主推，当前是末日幻影），链接里带了 `?mode=` 时以链接为准。记录分类随模式与阶段变化：末日幻影按剩余行动值分数分四档（3400-3650 / 3650-3850 / 3850-3899 / 4000 满分），异相仲裁的绝境阶段单独归档为绝境 0 轮与绝境满星。
-- **记录展示**：按队伍组合分组展示作者、角色命座、轮次、分数、成本和视频链接。光锥默认收起，点整条队伍头像才展开对应光锥（与角色逐列对齐）。
-- **环境统计**：统计角色使用率、光锥使用率、常见组合与成本分布。
-- **投稿审核**：右上角「提交记录」打开站内弹窗，按「基础信息 → 队伍配置 → 成绩与预览」三步填写，字段级校验与限定/常驻成本实时反馈；弹窗打开时模式默认落在带 `NEW` 徽标的那个并自动选中该模式当期首个敌方阶段，分类与分数给该模式合法的默认档（末日幻影按满分 4000 起稿，不会是别的模式那种超上限的占位分数）；选角色会自动带出专武（默认 S1，低星光锥默认 S5、低星角色默认满命），成本按队伍自动合计（限定五星角色算「命座 + 1」、限定五星光锥算叠影，低星与无名勋礼光锥不计）且可手动改写。提交到 `/api/submissions` 进入待审核队列；`/submit` 深链仍会打开同一弹窗。草稿缓存在浏览器 `localStorage`，误关弹窗可恢复，提交成功或手动丢弃后才清除；视频只接受 B 站与 YouTube 的链接；链接填完会立即按「视频 + 敌方阶段」自动查重，命中已有待审或已通过的投稿时就地拦下，不必填完三步才被服务端退回。
-- **文章与规则页**：展示站内说明、规则和文章摘要。
-- **联系站主**：`/contact` 只开放两种联系方式——微信号 `cduyzh`（一键复制，并提示在微信「添加朋友 → 微信号」里搜索添加；微信没有按号加好友的跳转链接，所以不提供二维码）与邮箱 `cduyzh@gmail.com`（`mailto:` 加一键复制）。站内没有留言板、私信和投稿表单，投稿一律走首页右上角的「提交记录」。
+### 档案工作台
 
-## 技术栈
+按赛季、模式、敌方阶段、记录分类、队伍人数、成本区间、分数区间、角色 / 光锥与标记组合筛选记录。进入站点默认落在当期主推模式（带 `NEW` 徽标的那个），筛选条件会同步进地址栏，**可以把筛好的结果链接直接发给别人**。
 
-| 类别      | 选型                                  |
-| --------- | ------------------------------------- |
-| 前端      | Vue 3 + `<script setup>` + TypeScript |
-| 路由/状态 | Vue Router 4 + Pinia                  |
-| 构建      | Vite                                  |
-| 图标      | lucide-vue-next                       |
-| 单测      | Vitest + Vue Test Utils + jsdom       |
-| 服务端    | Netlify Functions                     |
-| 数据库    | Neon/Postgres，可回退到本地 seed      |
-| 包管理    | pnpm，Node >= 24                      |
+- 记录分类随模式与阶段变化：0 轮竞速 / 满星记录、异相仲裁的绝境单独归档，末日幻影按剩余行动值分成四档分数区间。
+- 成本是「限定五星角色算命座 + 1、限定五星光锥算叠影，低星与无名勋礼光锥不计」的口径，四人满配为 48。
+- 标记（复活 / 火墙 / 大月卡武器）是投稿时手动勾选的，筛选是「勾选的全部命中」语义。
 
-## 本地运行
+### 记录列表
 
-```bash
-nvm use        # 或直接 nvm install 24：仓库 .nvmrc 已固定 Node 24，sync:stages 依赖 --experimental-strip-types
-pnpm install
-pnpm dev
-```
+按队伍组合分组展示作者、角色命座、轮次、分数、成本与视频链接。**光锥默认收起**——点整条队伍头像才展开，与角色逐列对齐。
 
-默认开发地址为 `http://localhost:32200/`。`vite.config.ts` 中也固定了 `server.port = 32200`。
+### 敌方情报
 
-## 验证命令
+每个阶段展示血量、速度、韧性、弱点与抗性，以及当期赛季机制和该阶段的增益 / 词缀列表。数值由社区整理的公开数据推导，多阶段首领的血量会按阶段分别列出，方便和游戏内每一管血对上。
 
-```bash
-pnpm typecheck
-pnpm lint
-pnpm test:unit
-pnpm build
-```
+### 环境统计
 
-`pnpm build` 通过 `npm-run-all2` 的 `run-p` **并行**执行 `typecheck`、`test:unit`、`lint` 和 `vite build`（任一失败即整体失败）。只想产出 `dist/` 用 `pnpm build:only`，本地预览构建产物用 `pnpm preview`（`http://localhost:39201/`）。
+角色使用率、光锥使用率、常见队伍组合与成本区间，帮你判断一支队伍在当前环境里算不算主流。
 
-## Netlify 部署
+### 投稿
 
-首次在本机发布时，先登录 Netlify：
+右上角「提交记录」打开站内弹窗，三步填完：**基础信息 → 队伍配置 → 成绩与预览**。
 
-```bash
-pnpm netlify:login
-```
+- 选角色会自动带出她的专武（默认 S1，低星光锥默认 S5、低星角色默认满命），成本按队伍自动合计，也可以手改。
+- 视频只接受 **B 站与 YouTube** 的链接。填完链接会立刻查重，如果这支录像在这个阶段已经有人投过，会在第一步就提示，不必填完三步才被退回。
+- 表单会存在本机草稿里，误关弹窗可以接着填；作者名和最多 10 套配队预设可以保存下来一键载入。
+- 提交后进入人工审核队列，通过才会出现在公开档案里。
 
-登录态会保存在已忽略的 `.netlify-config/` 目录。随后执行生产发布：
+### 我的投稿
 
-```bash
-pnpm deploy:netlify
-```
+投稿成功后会拿到一条**投稿凭证**（`own_` 开头的一串字符）。请保存它——站内没有账号体系，凭这条凭证才能在「我的投稿」页 <https://hsr-archive.cduyzh.top/me> 找到并管理自己的记录：
 
-`scripts/deploy-netlify.sh` 会先运行完整的 `pnpm build`，再将 `dist/` 和 `netlify/functions/` 发布到默认站点 `hsr-endgame-archive-cn`。netlify-cli 由 `scripts/lib/netlify-cli.sh` 统一管理：已装就复用仓库内已忽略的 `.netlify-cli/`，没装才从 `registry.npmjs.org` 装进去（不再用 `pnpm dlx` 现装——本机全局 registry 指向 npmmirror，镜像缺 `@netlify/serverless-functions-api` 的新版本时那条路必然失败）。脚本结束会打印 `deploy exit=<码>`；**判发布是否生效要看这个码加线上包哈希与版本徽章**，不要用 `pnpm deploy:netlify … | tail` 的退出码（那是 `tail` 的）。可以传入发布说明：
-
-```bash
-pnpm deploy:netlify -- "update archive data"
-```
-
-如果 Netlify 中的实际站点名不同，可在命令前覆盖：
-
-```bash
-NETLIFY_SITE_NAME=your-site-name pnpm deploy:netlify
-```
-
-Netlify 构建环境固定使用 Node 24；业务 API redirects、Functions 目录和 SPA fallback 继续由 `netlify.toml` 管理。
-
-自定义域名 `hsr-archive.cduyzh.top` 是站点主域名，`netlify.toml` 的第一条 redirect 会把旧子域名 `hsr-endgame-archive-cn.netlify.app` 以 301 收口到它并保留路径。这条规则要发布一次才生效；它必须排在 `/*` SPA 兜底之前，改顺序会让兜底先命中、重定向失效。
-
-## 数据层
-
-项目目前有两条数据线，需要分开理解：
-
-1. **竞速档案业务数据**  
-   前端通过 `src/services/archiveService.ts` 请求 `/api/archive/config`、`/api/archive/runs`、`/api/archive/stats`、`/api/submissions`（含 `/check` 查重预检、`/me` 凭证反查、`/:id/withdraw` 撤回、`/:id/visibility` 隐藏、`/:id/delete` 删除、`/:id/revisions` 编辑并重新提交）以及 `/api/admin/submissions*`。Netlify Functions 若配置了 `NETLIFY_DATABASE_URL`、`DATABASE_URL` 或 `POSTGRES_URL`，会读取 Postgres；否则使用 `src/data/seed/` 中的种子数据。读取类请求失败时前端静默回退 seed，保证无数据库环境不白屏；投稿与管理端请求失败则直接报错（审核台会提示）。
-
-2. **HSR 终局静态数据（远程直连）**  
-   所有游戏 JSON 与图片均直连 `https://static.nanoka.cc`（已开放 CORS），仓库不落盘、不随构建发布。地址与图片路径集中在 `src/services/dataSource.ts`；`src/services/staticArchiveConfig.ts`（浏览器端入口）在运行时读取 `manifest.json`，把推导工作交给前后端共用的纯计算层 `src/services/staticBossSnapshot.ts`：按硬编码的 `STATIC_SEASON_IDS` 拉取 `monster.json`、`monstervalue.json`、`HardLevelGroup.json`、`EliteGroup.json`、`InfiniteEliteGroup.json` 与各模式单期详情，生成敌方阶段（血量/速度/韧性/弱点/场地 buff 与赛季机制/敌方图），再合并进 `/api/archive/config`（或 seed）的结果。静态读取失败时保留业务配置，不会白屏。**快照本身优先走 `GET /api/archive/stages`**：浏览器直连要付 38 个请求、约 193KB gzip，而上游 `cache-control` 只有 `max-age=120`，等于每次访问都重走一遍；改由函数算一次并交给边缘长缓存后，浏览器只发一个请求。端点非 2xx、返回空或形状不合时自动回落到上面的浏览器直连路径，所以本地开发与函数故障时页面照常。
-
-数据库表结构见 `netlify/schema.sql`。访问 `/admin/submissions` 会先显示管理员登录弹框，生产环境建议配置：
-
-```bash
-ADMIN_REVIEW_USERNAME=admin
-ADMIN_REVIEW_PASSWORD=请替换为强密码
-```
-
-为兼容旧部署，未配置 `ADMIN_REVIEW_PASSWORD` 时仍会把 `ADMIN_REVIEW_TOKEN` 当作管理员密码；未配置 `ADMIN_REVIEW_USERNAME` 时账号默认为 `admin`。审核台支持待审核、已通过、已驳回和全部记录筛选。投稿通过后会写入公开档案，之后改为驳回或退回待审会从公开档案隐藏。
-
-> ⚠️ 未配置任何管理员密码环境变量时，服务端 `requireAdmin` 不会拦截。生产务必设置 `ADMIN_REVIEW_PASSWORD`。
-
-如果需要从远程静态快照一次性把全部 BossStage upsert 到 `stages` 表（不依赖 Netlify Function 端点），本地可直连 Neon 跑：
-
-```bash
-NETLIFY_DATABASE_URL=postgres://... pnpm sync:stages
-pnpm sync:stages:dry    # 只打印 upsert 计划
-pnpm sync:stages -- --season=4.5  # 只同步指定赛季
-```
-
-底层与 Netlify `admin-sync-stages` Function 共用 `staticBossSnapshot.ts` 的纯计算模块，输出等价。适合在端点部署异常、新赛季上线或远程数值更新时使用。
-
-## API 路由
-
-`netlify.toml` 将业务 API 转发到 Netlify Functions：
-
-| 前端路径                     | Function               | 说明                                         |
-| ---------------------------- | ---------------------- | -------------------------------------------- |
-| `/api/archive/stages`        | `archive-stages`       | 函数侧算好的敌方阶段快照，**全站唯一带 CDN 长缓存的接口**（边缘 1h 新鲜 + 7 天后台回源）；前端拿不到时自动回落浏览器直连 |
-| `/api/archive/config`        | `archive-config`       | 赛季、模式、敌方阶段、角色、光锥、文章配置   |
-| `/api/archive/runs`          | `archive-runs`         | 已审核竞速记录，支持筛选                     |
-| `/api/archive/stats`         | `archive-stats`        | 使用率、组合、成本区间统计                   |
-| `/api/submissions`           | `submissions`          | 投稿入口（服务端按与表单相同的规则校验值域，违规返回 400 + 中文原因；视频链接 + 敌方阶段重复时返回 409） |
-| `/api/submissions/check`     | `submissions-check`    | 投稿前按「视频链接 + 敌方阶段」查重，可带 `excludeIds` 排除自己这一族 |
-| `/api/submissions/me`        | `submissions-me`       | 按本机投稿凭证反查自己的投稿与记录（默认不含已隐藏的） |
-| `/api/submissions/:id/withdraw` | `submissions-withdraw` | 凭投稿凭证撤回自己的投稿                    |
-| `/api/submissions/:id/visibility` | `submissions-visibility` | 隐藏 / 取消隐藏自己的投稿（服务端状态、跨设备生效；只允许已驳回与已撤回） |
-| `/api/submissions/:id/delete` | `submissions-delete`   | 硬删自己被驳回的投稿（不可恢复，不经审核）  |
-| `/api/submissions/:id/revisions` | `submissions-revision` | 编辑并重新提交：已通过产生待审修订、已驳回就地重提 |
-| `/api/admin/submissions`     | `admin-submissions`    | 管理员读取投稿审核列表（`status` 支持 `pending`/`approved`/`rejected`/`withdrawn`/`all`） |
-| `/api/admin/submissions/:id` | `admin-submissions-id` | 审核入口（通过前复校投稿值域，敌方阶段既不在库里也不在数据快照中时拒绝通过；整串写入在一笔事务里，失败整体回滚） |
-| `/api/admin/sync-stages`     | `admin-sync-stages`    | 管理员触发批量同步 `stages` 表（从远程快照） |
-
-## 静态数据源（远程直连）
-
-统一数据源 `https://static.nanoka.cc`（已开放跨域）。所有数据与图片直连读取，仓库不保留本地副本，也不随构建发布。前端访问的都是数据源绝对地址（无 `/local-cache` 前缀）。
-
-```text
-https://static.nanoka.cc/
-├── manifest.json                               # hsr.{latest,live,available,new}
-├── assets/hsr/
-│   ├── avatarshopicon/{sourceId}.webp          # 角色头像
-│   ├── lightconemediumicon/{sourceId}.webp     # 光锥图片
-│   ├── monstermiddleicon/Monster_{id}.webp     # 怪物中图
-│   └── pathicon/{id}.webp                      # 命途图标
-└── hsr/<ver>/
-    ├── monster.json
-    ├── monstervalue.json
-    ├── HardLevelGroup.json
-    ├── EliteGroup.json
-    ├── InfiniteEliteGroup.json
-    ├── character.json / lightcone.json         # 仅同步脚本读取
-    └── <locale>/
-        ├── monster/<基础id>.json               # 单怪详情：*ModifyValue 与属性抗性的唯一来源
-        └── {maze,story,boss,peak}/<id>.json      # 各模式单期详情（locale 固定 zh）
-```
-
-业务终局模式 `EndgameMode` 为 `moc / pf / as / aa`（混沌回忆 / 虚构叙事 / 末日幻影 / 异相仲裁），与静态数据源的模式映射如下：
-
-| 业务模式 | 静态模式  | 单期详情目录               | 阶段 `stageKey`                   |
-| -------- | --------- | -------------------------- | --------------------------------- |
-| `moc`    | `moc`     | `<locale>/maze/<id>.json`  | `top` / `bottom` / `starward`     |
-| `pf`     | `fiction` | `<locale>/story/<id>.json` | `top` / `bottom` / `starward`     |
-| `as`     | `doom`    | `<locale>/boss/<id>.json`  | `top` / `bottom` / `starward`     |
-| `aa`     | `peak`    | `<locale>/peak/<id>.json`  | `k1..kN` / `checkmate` / `plight` |
-
-赛季与版本的解析方式：`src/services/staticBossSnapshot.ts` 里的 `STATIC_SEASON_IDS` 为每个赛季（当前 `4.4`、`4.5`）硬编码四个模式的详情 id；运行时用 `manifest.hsr.available` 选出**最新数据目录**（如 `4.5.51`）供所有赛季共用——上游只保留当前大版本目录，历史赛季的详情文件仍在其中累积；再用 `manifest.hsr.live` 判定当前赛季。**不读取**上游 `maze.json / maze_extra.json / maze_boss.json / maze_peak.json` 索引，也不依赖 `cache-plan.json`。因此新赛季上线需要先在 `STATIC_SEASON_IDS` 补一条（步骤见 [AGENTS.md](./AGENTS.md) 的「新赛季上线清单」）。
-
-合并语义：远程快照**只补充业务配置里没有的敌方阶段 id**，并为缺失赛季追加 `<seasonId> 归档` 条目，不会覆盖 seed 或数据库中已有的赛季 label 与阶段字段。记录筛选用的 `seasonId`、`bossId` 始终是稳定 id。
-
-敌方阶段的展示字段同样来自这些详情 JSON：`HP/速度/韧性` 由 `monstervalue` × `HardLevelGroup` × 精英组系数算出，其中**韧性还要除以 3** 才是游戏内展示值，且速度与韧性都要在比例乘完后叠加单怪详情（`<locale>/monster/<基础id>.json`）里的 `*ModifyValue`；**弱点**取首领怪物自身的 `weak` 全集（阶段上的 `damage_type` 只是子集，不用于弱点），**抗性**取同一份单怪详情里非弱点属性的 `damage_type_resistance`；**场地 buff** 取各模式的 `buff` / `buff_list1~3` / `option` / `sub_option` / `tag_list`，文案里的 `#N[i]` 占位用同条目的 `param` 代入真实数值（占位后跟 `%` 时 ×100，如 `0.3` → `30%`）；首领名优先取怪物 `icon` 指向的基础模型名（更短的家族名，如「丰饶玄鹿」），当期变体名（「弗有垂暮的不老仙」）保留为副行。
-
-主页筛选的**标记**（复活 / 火墙 / 大月卡武器）需要投稿时手动勾选才会写入记录，勾选后按 AND 语义筛选；三个标记在筛选面板、投稿表单、记录徽标与审核台都用同一批游戏内图标，由 `src/components/FlagIcon.vue` 热链渲染、加载失败自动回落 lucide。成本与分数都支持**精确区间**检索（`costMin` / `costMax` / `scoreMin` / `scoreMax`，留空即不限；分数区间只在末日幻影出现），面板上的 `0-8 / 9-16 / 17-32 / 33-48` 只是快捷预设。异相仲裁的阶段在面板上分成「骑士关」与「将杀关（含绝境）」两组，其余模式统一为「首领关」，第 3 阶段带金色**星启**徽标（血量约为普通半区的 2–5 倍）。
-
-怪物图片统一经 `dataSource.ts` 的 `monsterImageUrl()` 生成，9 位实例怪物 id（`>= 1e8`）自动回退到基础 id 并对齐整十。血量口径为 `HPBase × HPModifyRatio × HardLevelGroup.HPRatio × (EliteGroup|InfiniteEliteGroup).HPRatio`，多阶段怪物追加 ` x<阶段数>`，但各阶段血量上限不相等时（`PhaseList[].phase_max_hp_ratio` 互异，如 4.5 异相仲裁将杀关的 `1.0 / 1.25 / 1.0`）改成按阶段顺序逐个列出、不再压成 `x3`；虚构叙事（`pf`）因上游未公开每季缩放系数而跳过血量展示。敌方面板的 WEAK / RESIST 用游戏内属性图标（`src/data/elementIcons.ts` 热链 + `src/components/ElementIcon.vue` 渲染，加载失败回落中文属性名）。
-
-## 数据更新流程
-
-同步脚本仅更新 `src/data/seed/` 下的种子数据，直连远程抓取，不下载图片：
-
-```bash
-# 同步怪物元数据（名称、弱点、图片 id 等）
-pnpm sync:monsters
-
-# 同步角色/光锥元数据
-pnpm sync:units
-
-# 抓取公众号文章（强敌侦察笔记等）-> src/data/articles.json
-# URL 清单在 scripts/article-sources.json，只存图片地址、不落盘图片
-# 收录判据是标题含「强敌侦察」，不限赛季；分类与首领名(subject)都从标题推导
-pnpm sync:articles
-```
-
-数据版本由环境变量 `HSR_DATA_VERSION` 控制（默认 `4.5`）。把 `config.json` 灌入/同步到数据库：
-
-```bash
-pnpm seed:archive            # 实际写入
-pnpm seed:archive:dry        # 空跑（等价于 seed:archive -- --dry-run）
-```
-
-更新后检查：
-
-```bash
-pnpm build
-```
-
-## 项目结构
-
-```text
-src/
-├── App.vue
-├── main.ts
-├── router/
-├── assets/
-├── components/
-│   ├── FlagIcon.vue                   # 标记图标唯一出口：热链图标 + lucide 回落
-│   ├── ElementIcon.vue                # 属性图标唯一出口：热链图标 + 中文属性名回落
-│   ├── PromoSlot.vue
-│   ├── admin/
-│   │   ├── AdminLoginDialog.vue
-│   │   └── AdminSubmissionCard.vue
-│   └── archive/
-│       ├── ArchiveDispatchPanel.vue
-│       ├── ArchiveWorkbench.vue
-│       ├── BossPanel.vue
-│       ├── MetaReportPanel.vue
-│       ├── ModeSeasonFilter.vue
-│       ├── RunGroupList.vue
-│       ├── SubmissionTeamSlot.vue
-│       ├── SubmitRunDialog.vue
-│       ├── SubmitRunForm.vue
-│       ├── UnitPickerDrawer.vue
-│       └── UnitSearchSelect.vue
-├── composables/
-│   ├── useAdminSubmissions.ts
-│   ├── useArchiveFilters.ts
-│   ├── useMetaStats.ts
-│   ├── useRunsQuery.ts
-│   ├── useSubmissionDialog.ts
-│   └── useSubmissionDraft.ts
-├── data/
-│   ├── seed/                          # config.json / runs.json / index.ts（+ 同步产物 hsr-*.json、运行时读取的 lightcone-pairs.json）
-│   ├── changelog.ts                   # 站点更新记录与当前版本号（appVersion）
-│   ├── articles.ts                    # 文章模块唯一取数入口（首页速报 / /articles*）
-│   ├── articles.json                  # pnpm sync:articles 产物（微信文章元数据 + 热链图地址）
-│   ├── flagIcons.ts                   # 三个标记图标的热链地址（与 elementIcons.ts 一起是不走 dataSource.ts 的图源）
-│   ├── elementIcons.ts                # 七个属性（弱点/抗性）图标的热链地址
-│   ├── signatureLightcones.ts         # 角色 -> 专武映射（投稿自动搭配）
-│   ├── unitAssets.ts
-│   └── unitPaths.ts
-├── services/
-│   ├── archiveService.ts
-│   ├── clipboard.ts
-│   ├── dataSource.ts
-│   ├── runUtils.ts
-│   ├── staticArchiveConfig.ts
-│   ├── submissionUtils.ts
-│   ├── submissionValidation.ts
-│   ├── unitCost.ts
-│   └── videoUrl.ts
-├── stores/
-├── types/
-└── views/
-    ├── AdminSubmissionsView.vue
-    ├── ArchiveView.vue
-    ├── ArticlesView.vue
-    ├── ArticleDetailView.vue
-    ├── ChangelogView.vue
-    ├── ContactView.vue
-    ├── FaqView.vue
-    ├── MySubmissionsView.vue
-    └── SubmitView.vue
-```
-
-## 资源策略
-
-`scripts/reference-inventory.mjs` 只生成参考观察清单，不下载 The Genius Archive 资源。角色、光锥、怪物与命途图片均直连 `static.nanoka.cc`（如 `https://static.nanoka.cc/hsr/4.5/character.json`、`lightcone.json` 提供 `sourceId` 映射，见 `src/data/unitAssets.ts`），不再把图片落盘到 `public/`。补充角色图、光锥图、boss 图或文章封面前，必须确认来源和授权，不能直接复制未确认授权的参考站文件。
-
-例外有三条。**其一是三个终局标记的图标**：`src/data/flagIcons.ts` 热链 `theherta.com/skill_icons/` 上的游戏内图标，只热链、不落盘、不代理，加载失败由 `src/components/FlagIcon.vue` 回落 lucide。**其二是文章模块的微信配图**：`src/data/articles.json` 里的封面与正文图全部热链 `mmbiz.qpic.cn`，由 `pnpm sync:articles` 从文章页提取；该图床按 Referer 防盗链（带外域 Referer 会拿到一张 140x140 占位图），因此渲染必须走 `src/components/ArticleImage.vue`，它内部固定 `referrerpolicy="no-referrer"` 并自检是否取到了原图。**其三是七个属性（弱点 / 抗性）图标**：`src/data/elementIcons.ts` 热链 `theherta.com/elements/`，同样只热链、不落盘，加载失败由 `src/components/ElementIcon.vue` 回落成中文属性名。三者的来源判断与脆弱点都登记在 [`AGENTS.md`](AGENTS.md)「资源与授权」。
-
-## 工程文档
-
-审计与现状记录放在 [`docs/wiki/`](./docs/wiki/Home.md)，与规范性的 `AGENTS.md` 分层文档分开维护：
-
-| 页面 | 内容 |
+| 记录状态 | 你可以做什么 |
 | --- | --- |
-| [Home](./docs/wiki/Home.md) | 文档索引 |
-| [01-类型检查与CI](./docs/wiki/01-类型检查与CI.md) | 类型检查的真实覆盖范围、CI 门禁构成，以及 `pnpm typecheck` 曾长期空转的根因 |
-| [02-类型错误审计](./docs/wiki/02-类型错误审计.md) | 门禁生效后暴露的 43 个历史类型错误，按严重度排序并给出 `file:line` 证据 |
-| [03-生产接口与投稿审核验证](./docs/wiki/03-生产接口与投稿审核验证.md) | 生产环境实跑的 14 端点全链路验证记录：取证方法、用例矩阵、逐条断言与复跑方法 |
-| [04-生产验证缺陷清单](./docs/wiki/04-生产验证缺陷清单.md) | 该轮实跑查出的缺陷与观察项，含线上复现证据、修法与一条待人工执行的清库 SQL |
-| [05-本轮任务报告-2026-09-14](./docs/wiki/05-本轮任务报告-2026-09-14.md) | 三个批次的全量执行台账：改动清单、在生产执行过的写操作、每条结论的验证档位（已实测 / 仅静态 / 未覆盖）与遗留项 |
+| 待审核 | 撤回 |
+| 已通过 | 编辑并重新提交（改动先进审核，通过前档案里仍是上一次通过的版本）、撤回 |
+| 已驳回 | 编辑并重新提交、隐藏展示、删除记录 |
+| 已撤回 | 隐藏展示 |
 
-更多协作约定见 [AGENTS.md](./AGENTS.md)。其中「文档同步契约」给出了**代码改动点 → 必改文档**的映射表和提交前检查清单：改完代码必须在同一次提交里同步本文档与对应模块的 `AGENTS.md`。
+- **隐藏**写在服务端，换浏览器或设备同样生效，也可以随时取消；被隐藏的投稿在页面里默认收起，页顶有「已隐藏 N 条 · 查看」的展开入口。
+- **删除**是彻底移除，不经审核、不可恢复，页面里需要在卡片内再确认一次。
+- 忘记某条凭证可以在页面上单独忘掉，或一键清空本机保存的全部凭证（只是让本机不再显示，不会删除服务端记录）。
+
+### 文章与规则
+
+- `/articles`：强敌机制类文章与站内的「档案速报」同源，内容取自《崩坏：星穹铁道》官方公众号的「强敌侦察笔记」系列，正文与配图跳转原文。
+- `/faq`：站内规则说明。
+- `/contact`：联系站主，只有微信号 `cduyzh` 与邮箱 `cduyzh@gmail.com` 两种方式。站内没有留言板、私信和投稿表单，**投稿只走首页右上角的「提交记录」**。
+
+## 数据与图片
+
+游戏数据与图片均直连社区静态数据源 `static.nanoka.cc`，本站不保存副本，也不代理。数值口径（血量、速度、韧性、弱点、抗性、场地机制）由社区整理推导，如与游戏内实际不符，欢迎通过 `/contact` 反馈并附上阶段与录像链接。
+
+## 说明
+
+本站是由玩家维护的非官方档案站，与米哈游无隶属关系。游戏名称、数据与图片素材的版权归上海米哈游网络科技股份有限公司所有，站内内容仅用于信息整理与交流。

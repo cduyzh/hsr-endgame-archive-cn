@@ -1,9 +1,0 @@
-packages:
-  - "."
-
-allowBuilds:
-  esbuild: false
-  vue-demi: false
-
-settings:
-  strict-peer-dependencies: false
